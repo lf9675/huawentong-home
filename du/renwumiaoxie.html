@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-SG">
+<head>
+    <meta charset="UTF-8">
+    <title>人物描写分析：四步闯关挑战 V4</title>
+    <style>
+        :root { --primary: #3498db; --secondary: #2ecc71; --accent: #e67e22; --bg: #f5f7fa; --text: #2c3e50; --wrong: #e74c3c; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; line-height: 1.6; }
+        .container { max-width: 950px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        
+        .target-sentence-box { background: #fffbe6; border-left: 6px solid #fadb14; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; font-size: 1.25em; line-height: 1.8; color: #333; }
+        .target-sentence-box strong { color: #d46b08; font-size: 0.85em; display: block; margin-bottom: 5px; text-transform: uppercase; }
+
+        .step-box { background: #fff; border: 2px solid #eef2f5; border-radius: 10px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
+        .step-title { font-size: 1.2em; font-weight: bold; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; }
+        .step-title span { background: var(--primary); color: white; border-radius: 50%; width: 28px; height: 28px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-size: 0.9em; }
+
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+        .btn-opt { background: #f9f9f9; border: 2px solid #ddd; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 1em; }
+        .btn-opt:hover { border-color: var(--primary); background: #ebf5ff; }
+        .btn-opt.selected { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .sentence-chunk { display: inline-block; padding: 5px 8px; margin: 4px; background: #f0f4f8; border-radius: 5px; cursor: pointer; font-size: 1.2em; border: 2px solid transparent; transition: 0.3s; }
+        .sentence-chunk:hover { background: #e2e8f0; }
+        .chunk-correct { background: #e8f8f5; border-color: var(--secondary); color: #16a085; }
+        .chunk-wrong { background: #fdedec; border-color: var(--wrong); color: #c0392b; animation: shake 0.4s; }
+        .icon-feedback { display: inline-block; margin-left: 2px; font-size: 1.1em; }
+        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-5px);} 75% {transform: translateX(5px);} }
+
+        .word-bank { display: flex; flex-wrap: wrap; gap: 10px; padding: 15px; background: #fafafa; border-radius: 8px; border: 1px dashed #ccc; }
+        .word-chip { background: white; border: 1px solid #bbb; padding: 8px 15px; border-radius: 20px; cursor: pointer; transition: 0.2s; font-size: 1.05em; }
+        .word-chip:hover { background: #e8f4fd; }
+        .word-chip.selected { background: var(--secondary); color: white; border-color: var(--secondary); }
+
+        .formula-hint { background: #e6f7ff; padding: 12px; border-left: 4px solid #1890ff; margin-bottom: 15px; font-size: 0.95em; color: #0050b3; }
+        textarea { width: 100%; height: 100px; padding: 15px; border: 2px solid #ccc; border-radius: 8px; font-size: 1.1em; font-family: inherit; resize: vertical; box-sizing: border-box; }
+        textarea:focus { border-color: var(--primary); outline: none; }
+
+        .btn-submit { display: block; width: 100%; padding: 15px; font-size: 1.2em; font-weight: bold; color: white; background: var(--accent); border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .btn-submit:hover { background: #d35400; }
+        
+        .feedback-area { margin-top: 20px; padding: 20px; border-radius: 8px; display: none; font-size: 1.1em; line-height: 1.6; }
+        .btn-next { display: none; width: 100%; padding: 15px; font-size: 1.2em; font-weight: bold; color: white; background: var(--secondary); border: none; border-radius: 8px; cursor: pointer; margin-top: 15px; }
+
+        /* 答案对比区域样式 */
+        .comparison-box { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
+        .comp-card { padding: 15px; border-radius: 8px; border-left: 5px solid; }
+        .comp-yours { background: #fff1f0; border-color: #ffa39e; }
+        .comp-standard { background: #f6ffed; border-color: #b7eb8f; }
+        .comp-title { font-weight: bold; margin-bottom: 5px; font-size: 0.9em; }
+
+        .progress-text { text-align: center; color: #7f8c8d; font-weight: bold; margin-bottom: 20px; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📝 人物描写分析：十关大挑战</h1>
+    <div class="progress-text" id="progress-text">第 1 / 10 题</div>
+    <div id="game-area"></div>
+</div>
+
+<script>
+    // --- 音效模块 ---
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+
+    function initAudio() {
+        if (!audioCtx) audioCtx = new AudioContext();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playTone(freq, type, duration, vol=0.1) {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playStar() { playTone(800, 'sine', 0.1, 0.2); setTimeout(() => playTone(1200, 'sine', 0.3, 0.2), 100); }
+    function playSad() { playTone(300, 'sawtooth', 0.1, 0.1); setTimeout(() => playTone(250, 'sawtooth', 0.3, 0.1), 100); }
+    function playApplause() { [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => { setTimeout(() => playTone(freq, 'triangle', 0.5, 0.2), i * 150); }); }
+
+    // --- 老师提供的 10 道题题库 ---
+    const questions = [
+        {
+            fullSentence: "看到 那个小男孩 快要 在泳池里 溺水了，志明 连衣服都来不及脱，扑通一声 就 跳进水里，奋力 向男孩 游去。",
+            chunks: [
+                {text: "看到 那个小男孩 快要 在泳池里 溺水了，志明", isKey: false},
+                {text: "连衣服都来不及脱，", isKey: true},
+                {text: "扑通一声 就", isKey: false},
+                {text: "跳进水里，", isKey: true},
+                {text: "奋力 向男孩 游去。", isKey: true}
+            ],
+            method: "行动描写 / 动作描写",
+            traits: ["勇敢", "见义勇为"],
+            person: "志明",
+            standardAnswer: "表现出志明在看到那个小男孩快要在泳池里溺水时勇敢、见义勇为的特点。"
+        },
+        {
+            fullSentence: "这位老爷爷 满头白发，身上 穿着 一件 洗得发白、打着 好几个 补丁 的 旧衬衫，脚上的一双布鞋 也 磨破了边。",
+            chunks: [
+                {text: "这位老爷爷 满头白发，身上 穿着 一件", isKey: false},
+                {text: "洗得发白、打着好几个补丁的", isKey: true},
+                {text: "旧衬衫，", isKey: true},
+                {text: "脚上的一双布鞋 也", isKey: false},
+                {text: "磨破了边。", isKey: true}
+            ],
+            method: "肖像描写 / 外貌描写",
+            traits: ["家境贫穷", "节俭"],
+            person: "老爷爷",
+            standardAnswer: "体现出老爷爷家境贫穷且节俭的品德。"
+        },
+        {
+            fullSentence: "小华 低着头，红着脸 对老师说：“老师，对不起，这次的默写 是 我偷看课本的，我 以后 再也 不敢了。”",
+            chunks: [
+                {text: "小华", isKey: false},
+                {text: "低着头，红着脸", isKey: true},
+                {text: "对老师说：“老师，", isKey: false},
+                {text: "对不起，", isKey: true},
+                {text: "这次的默写 是 我偷看课本的，我", isKey: false},
+                {text: "以后再也不敢了。”", isKey: true}
+            ],
+            method: "语言描写",
+            traits: ["诚实", "勇于认错"],
+            person: "小华",
+            standardAnswer: "表现了小华虽然做错了事，但勇于认错，表现出他是一个诚实的人。"
+        },
+        {
+            fullSentence: "演讲前，看着台下密密麻麻的观众，我的手心 直冒冷汗，心里 不停地 盘算着：万一 我演讲时 忘词了怎么办？大家 会不会嘲笑 我？",
+            chunks: [
+                {text: "演讲前，看着台下密密麻麻的观众，我的手心", isKey: false},
+                {text: "直冒冷汗，", isKey: true},
+                {text: "心里 不停地", isKey: false},
+                {text: "盘算着：", isKey: true},
+                {text: "万一 忘词怎么办？", isKey: true},
+                {text: "会不会嘲笑", isKey: true},
+                {text: "我？", isKey: false}
+            ],
+            method: "心理描写",
+            traits: ["紧张"],
+            person: "我",
+            standardAnswer: "表现了我演讲前在看到台下密密麻麻的观众时极其紧张的心理。"
+        },
+        {
+            fullSentence: "即使 到了 深夜，小明 依然 端坐 在书桌前，一边 翻阅着 厚厚的字典，一边 在笔记本上 密密麻麻地做着笔记，连妈妈端进来的牛奶凉了 没发觉。",
+            chunks: [
+                {text: "即使 到了 深夜，小明 依然", isKey: false},
+                {text: "端坐", isKey: true},
+                {text: "在书桌前，一边", isKey: false},
+                {text: "翻阅着厚厚的字典，", isKey: true},
+                {text: "一边 在笔记本上", isKey: false},
+                {text: "密密麻麻地做着笔记，", isKey: true},
+                {text: "连妈妈端进来的牛奶凉了", isKey: false},
+                {text: "没发觉。", isKey: true}
+            ],
+            method: "行动描写 / 动作描写",
+            traits: ["勤奋", "用功", "废寝忘食", "细心认真"],
+            person: "小明",
+            standardAnswer: "表现出小明学习非常勤奋/用功、废寝忘食，且做事细心认真。"
+        },
+        {
+            fullSentence: "妈妈 轻轻拍了拍 我的肩膀，温柔地说：“没关系，一次考试代表不了什么，只要你 尽力了就好。”",
+            chunks: [
+                {text: "妈妈 轻轻拍了拍 我的肩膀，", isKey: false},
+                {text: "温柔地说：", isKey: true},
+                {text: "“没关系，", isKey: true},
+                {text: "一次考试代表不了什么，只要你", isKey: false},
+                {text: "尽力了就好。”", isKey: true}
+            ],
+            method: "语言描写",
+            traits: ["善解人意", "体贴", "宽容"],
+            person: "妈妈",
+            standardAnswer: "表现出妈妈非常善解人意、体贴别人，性格宽容的特点。"
+        },
+        {
+            fullSentence: "面对 强劲的对手，她 昂首挺胸地 走上讲台，嘴角 挂着 一抹淡淡的微笑，眼神里 充满了光芒。",
+            chunks: [
+                {text: "面对 强劲的对手，她", isKey: false},
+                {text: "昂首挺胸地", isKey: true},
+                {text: "走上讲台，嘴角 挂着 一抹淡淡的", isKey: false},
+                {text: "微笑，", isKey: true},
+                {text: "眼神里", isKey: false},
+                {text: "充满光芒。", isKey: true}
+            ],
+            method: "肖像描写 / 外貌描写",
+            traits: ["自信", "积极乐观"],
+            person: "她",
+            standardAnswer: "体现出她面对强劲对手时仍保持自信，她是一个积极乐观的人。"
+        },
+        {
+            fullSentence: "看着 同桌 拿了第一名，小明 暗暗想：有什么了不起的，他肯定是 运气好 罢了，老师 就是 偏心！",
+            chunks: [
+                {text: "看着 同桌 拿了第一名，小明", isKey: false},
+                {text: "暗暗想：", isKey: true},
+                {text: "有什么了不起，", isKey: true},
+                {text: "他肯定是", isKey: false},
+                {text: "运气好", isKey: true},
+                {text: "罢了，老师 就是", isKey: false},
+                {text: "偏心！", isKey: true}
+            ],
+            method: "心理描写",
+            traits: ["心胸狭隘", "嫉妒"],
+            person: "小明",
+            standardAnswer: "表现出小明看到同桌拿了第一名后心胸狭隘的嫉妒心理。"
+        },
+        {
+            fullSentence: "当班长 提醒 大家 留下来 大扫除时，明伟却 不耐烦地 摆摆手说：“这又不是我家，扫那么干净干嘛？我还要 赶着去打游戏呢！”",
+            chunks: [
+                {text: "当班长 提醒 大家 留下来 大扫除时，明伟却", isKey: false},
+                {text: "不耐烦地", isKey: true},
+                {text: "摆摆手说：“这", isKey: false},
+                {text: "又不是我家，", isKey: true},
+                {text: "扫那么干净干嘛？我还要", isKey: false},
+                {text: "赶着去打游戏呢！”", isKey: true}
+            ],
+            method: "语言描写",
+            traits: ["没有责任心", "不负责任", "自私自利"],
+            person: "明伟",
+            standardAnswer: "表现出明伟对班级事务没有责任心/不负责任，自私自利的人特点。"
+        },
+        {
+            fullSentence: "小丽 每天放学 一回家，就 立刻放下 书包，熟练地 帮生病的奶奶 洗脸、喂饭，把家里 打扫得 干干净净。",
+            chunks: [
+                {text: "小丽 每天放学 一回家，就", isKey: false},
+                {text: "立刻放下", isKey: true},
+                {text: "书包，", isKey: false},
+                {text: "熟练地帮", isKey: true},
+                {text: "生病的奶奶", isKey: false},
+                {text: "洗脸、", isKey: true},
+                {text: "喂饭，", isKey: true},
+                {text: "把家里", isKey: false},
+                {text: "打扫得干干净净。", isKey: true}
+            ],
+            method: "行动描写 / 动作描写",
+            traits: ["孝顺", "懂事", "勤劳"],
+            person: "小丽",
+            standardAnswer: "表现出小丽是个非常孝顺、懂事且勤劳的孩子"
+        }
+    ];
+
+    // 描写手法选项
+    const methodOptions = ["肖像描写 / 外貌描写", "语言描写", "行动描写 / 动作描写", "心理描写"];
+    // 综合所有题目提取的性格词库，并增加几个干扰词
+    const fullTraitBank = [
+        "勇敢", "见义勇为", "家境贫穷", "节俭", "诚实", "勇于认错", "紧张", 
+        "勤奋", "用功", "废寝忘食", "细心认真", "善解人意", "体贴", "宽容", 
+        "自信", "积极乐观", "心胸狭隘", "嫉妒", "没有责任心", "不负责任", 
+        "自私自利", "孝顺", "懂事", "勤劳", "骄傲", "粗心大意", "懒惰"
+    ];
+
+    let currentIdx = 0;
+    let selectedMethod = "";
+    let foundKeywordsCount = 0;
+    let totalKeywordsCount = 0;
+    let attemptCount = 0; // 记录答题次数
+
+    function shuffleArray(array) { return array.sort(() => Math.random() - 0.5); }
+
+    function renderQuestion() {
+        initAudio();
+        const q = questions[currentIdx];
+        const area = document.getElementById('game-area');
+        
+        selectedMethod = "";
+        foundKeywordsCount = 0;
+        attemptCount = 0;
+        totalKeywordsCount = q.chunks.filter(c => c.isKey).length;
+        // 打乱词库
+        const shuffledTraits = shuffleArray([...fullTraitBank]);
+
+        let html = `
+            <div class="target-sentence-box">
+                <strong>🎯 任务：请分析下面这段话</strong>
+                ${q.fullSentence}
+            </div>
+
+            <div class="step-box">
+                <div class="step-title"><span>1</span> 第一步：判定描写手法</div>
+                <div class="options-grid">
+                    ${methodOptions.map(m => `<button class="btn-opt method-btn" onclick="selectMethod('${m}', this)">${m}</button>`).join('')}
+                </div>
+            </div>
+
+            <div class="step-box">
+                <div class="step-title"><span>2</span> 第二步：找出并点击这段话中的“关键词”</div>
+                <div style="line-height: 2.2;">
+                    ${q.chunks.map((chunk, index) => `
+                        <span class="sentence-chunk" onclick="handleChunkClick(this, ${chunk.isKey})">
+                            ${chunk.text} <span class="icon-feedback"></span>
+                        </span>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div class="step-box">
+                <div class="step-title"><span>3</span> 第三步：概括人物特点（可多选）</div>
+                <div class="word-bank">
+                    ${shuffledTraits.map(t => `<span class="word-chip trait-chip" onclick="this.classList.toggle('selected')">${t}</span>`).join('')}
+                </div>
+            </div>
+
+            <div class="step-box">
+                <div class="step-title"><span>4</span> 第四步：写出完整的分析结论</div>
+                <div class="formula-hint">
+                    💡 <b>老师提示格式：</b>表现了/体现了 <b>【什么人】</b> 在 <b>【什么情况下 / 做什么事时】</b> 具有 <b>【什么样的特点】</b>。
+                </div>
+                <textarea id="final-answer" placeholder="请结合上下文，打字完成完整分析..."></textarea>
+            </div>
+
+            <button class="btn-submit" id="btn-submit" onclick="checkAll()">提交分析</button>
+            
+            <div id="feedback-area" class="feedback-area"></div>
+            <button class="btn-next" id="btn-next" onclick="nextQuestion()">进入下一题 ➔</button>
+        `;
+        
+        area.innerHTML = html;
+        document.getElementById('progress-text').innerText = `第 ${currentIdx + 1} / ${questions.length} 题`;
+    }
+
+    function selectMethod(m, btn) {
+        selectedMethod = m;
+        document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+    }
+
+    function handleChunkClick(el, isKey) {
+        if (el.classList.contains('chunk-correct') || el.classList.contains('chunk-wrong')) return;
+        const iconBox = el.querySelector('.icon-feedback');
+        if (isKey) {
+            el.classList.add('chunk-correct');
+            iconBox.innerText = "⭐";
+            playStar();
+            foundKeywordsCount++;
+        } else {
+            el.classList.add('chunk-wrong');
+            iconBox.innerText = "😢";
+            playSad();
+            setTimeout(() => { el.classList.remove('chunk-wrong'); iconBox.innerText = ""; }, 1000);
+        }
+    }
+
+    function checkAll() {
+        const q = questions[currentIdx];
+        const feedback = document.getElementById('feedback-area');
+        let errors = [];
+
+        // 1. 检查手法 (处理外貌描写与行动描写的严格匹配)
+        if (selectedMethod !== q.method) errors.push("❌ <b>第一步：</b>描写手法选择错误。");
+        
+        // 2. 检查关键词
+        if (foundKeywordsCount < totalKeywordsCount) errors.push(`❌ <b>第二步：</b>还有 ${totalKeywordsCount - foundKeywordsCount} 个关键词没找到，请在原句上继续点击。`);
+        
+        // 3. 检查性格词语 (只要包含了老师要求的一个及以上即可)
+        const selectedTraits = Array.from(document.querySelectorAll('.trait-chip.selected')).map(el => el.innerText);
+        const hasCorrectTrait = q.traits.some(t => selectedTraits.includes(t));
+        if (!hasCorrectTrait) errors.push(`❌ <b>第三步：</b>人物特点概括不准确。请重新选择。`);
+
+        // 4. 检查打字：需包含人物名称，以及“表现”或“体现”等动作词，长度不能过短
+        const typedText = document.getElementById('final-answer').value.trim();
+        if (typedText.length < 10 || !typedText.includes(q.person) || !(typedText.includes("表现") || typedText.includes("体现"))) {
+            errors.push("❌ <b>第四步：</b>完整结论表述不规范。记得要写出“表现了/体现了 +【谁】+ 的特点”。");
+        }
+
+        feedback.style.display = 'block';
+
+        if (errors.length === 0) {
+            // 完全正确
+            feedback.style.background = "#f6ffed";
+            feedback.style.border = "2px solid #b7eb8f";
+            feedback.innerHTML = `
+                <h3 style="color:#52c41a; margin-top:0;">🎉 太棒了，分析完全正确！</h3>
+                <p><b>你的完美解答：</b><br>${typedText}</p>
+            `;
+            playApplause();
+            document.getElementById('btn-submit').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'block';
+        } else {
+            attemptCount++;
+            playSad();
+            
+            if (attemptCount === 1) {
+                // 第一次答错，给提示
+                feedback.style.background = "#fff2f0";
+                feedback.style.border = "2px solid #ffccc7";
+                feedback.innerHTML = `
+                    <h3 style="color:#f5222d; margin-top:0;">哎呀，有几个地方不太对哦：</h3>
+                    <div style="color:#d4380d; margin-bottom: 15px;">${errors.join('<br><br>')}</div>
+                    <strong style="color:#cf1322;">💡 别灰心，你还有一次机会，修改后再试一次吧！</strong>
+                `;
+            } else {
+                // 第二次答错，锁定并显示对比框
+                feedback.style.background = "#fff";
+                feedback.style.border = "2px solid #ddd";
+                feedback.innerHTML = `
+                    <h3 style="color:#f5222d; margin-top:0;">很遗憾，还是有错误。让我们来对比一下吧！</h3>
+                    <div class="comparison-box">
+                        <div class="comp-card comp-yours">
+                            <div class="comp-title" style="color:#cf1322;">❌ 你的表述：</div>
+                            ${typedText || "（未填写完整）"}
+                        </div>
+                        <div class="comp-card comp-standard">
+                            <div class="comp-title" style="color:#389e0d;">✅ 老师的标准答案：</div>
+                            ${q.standardAnswer}
+                        </div>
+                    </div>
+                    <p style="color:#888; font-size:0.9em; margin-top:15px;">请仔细观察标准答案是如何使用提示公式，以及抓取了哪些关键词的。</p>
+                `;
+                document.getElementById('btn-submit').style.display = 'none';
+                document.getElementById('btn-next').style.display = 'block';
+                document.getElementById('btn-next').innerText = "我明白了，进入下一题 ➔";
+            }
+        }
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < questions.length) {
+            renderQuestion();
+        } else {
+            document.getElementById('game-area').innerHTML = `
+                <div style="text-align:center; padding: 40px;">
+                    <h1 style="color:var(--secondary); font-size:2.5em;">🏆 恭喜通关！</h1>
+                    <p style="font-size:1.2em;">你已经完成了全部 10 题的强化练习！</p>
+                    <p>只要牢记 <b>判定手法 ➔ 抓关键词 ➔ 概括特点 ➔ 套用公式</b>，阅读理解的人物描写题就再也难不倒你了！</p>
+                    <button class="btn-submit" style="width:200px; margin:30px auto;" onclick="location.reload()">重新挑战</button>
+                </div>
+            `;
+            playApplause();
+            document.getElementById('progress-text').innerText = "10 关挑战全部完成！";
+        }
+    }
+
+    // 页面加载完毕即渲染第一题
+    renderQuestion();
+</script>
+</body>
+</html>

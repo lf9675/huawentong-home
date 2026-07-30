@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高级华文 · 开放题苏格拉底引导练习 v2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#f5f5f0;color:#1a1a1a;min-height:100vh;}
+.app{max-width:800px;margin:0 auto;padding:1.5rem 1.25rem;}
+
+/* ── 顶部栏 ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+.topbar h1{font-size:19px;font-weight:700;color:#1a1a1a;}
+.mode-btns{display:flex;gap:6px;}
+.mode-btn{padding:6px 14px;font-size:12px;font-weight:600;border:1px solid #d1d5db;border-radius:20px;cursor:pointer;background:#fff;color:#555;}
+.mode-btn.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8;}
+
+/* ── 学生模式 ── */
+.qtabs{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap;}
+.qtab{padding:6px 14px;font-size:13px;border:1px solid #ccc;border-radius:8px;cursor:pointer;background:#fff;color:#555;}
+.qtab:hover{background:#f0f0f0;}
+.qtab.active{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd;font-weight:700;}
+.qtab.done{border-color:#86efac;color:#166534;background:#f0fdf4;}
+
+.qcard{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:1rem;}
+.qcard-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.qcard-label{font-size:11px;font-weight:700;color:#1d4ed8;background:#dbeafe;padding:3px 9px;border-radius:5px;display:inline-block;margin-bottom:7px;flex-shrink:0;}
+.qcard-text{font-size:15px;color:#1a1a1a;line-height:1.7;}
+.qcard-marks{font-size:12px;color:#888;margin-top:5px;}
+.speak-btn{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:#0369a1;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+.speak-btn:hover{background:#e0f2fe;}
+.speak-btn.speaking{background:#fef3c7;border-color:#fcd34d;color:#92400e;}
+
+.progress-track{display:flex;gap:5px;margin-bottom:1rem;align-items:center;}
+.prog-dot{width:28px;height:28px;border-radius:50%;border:1px solid #ccc;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#aaa;background:#fff;flex-shrink:0;}
+.prog-dot.active{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd;}
+.prog-dot.done{background:#dcfce7;color:#166534;border-color:#86efac;}
+.prog-line{flex:1;height:1px;background:#e5e7eb;}
+
+.step-box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.2rem;margin-bottom:1rem;}
+.step-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px;}
+.step-q{font-size:15px;color:#1a1a1a;line-height:1.6;font-weight:700;flex:1;}
+.step-sub{font-size:13px;color:#555;margin-bottom:12px;line-height:1.55;}
+textarea{width:100%;border:1px solid #d1d5db;border-radius:8px;padding:10px 12px;font-size:14px;font-family:"Microsoft YaHei","PingFang SC",sans-serif;color:#1a1a1a;background:#fff;resize:vertical;min-height:80px;line-height:1.6;}
+textarea:focus{outline:none;border-color:#93c5fd;box-shadow:0 0 0 3px rgba(147,197,253,0.15);}
+textarea:disabled{background:#f9fafb;color:#444;}
+.btn-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
+.btn-submit{padding:8px 18px;font-size:13px;font-weight:700;border:1px solid #93c5fd;border-radius:8px;cursor:pointer;background:#dbeafe;color:#1d4ed8;}
+.btn-submit:hover{background:#bfdbfe;}
+.btn-next{padding:8px 18px;font-size:13px;font-weight:700;border:1px solid #86efac;border-radius:8px;cursor:pointer;background:#dcfce7;color:#166534;display:none;}
+.btn-next:hover{background:#bbf7d0;}
+.btn-reset{padding:7px 13px;font-size:12px;border:1px solid #d1d5db;border-radius:8px;cursor:pointer;background:#fff;color:#888;}
+.btn-reset:hover{background:#f3f4f6;}
+.btn-grade{padding:8px 18px;font-size:13px;font-weight:700;border:1px solid #c4b5fd;border-radius:8px;cursor:pointer;background:#ede9fe;color:#6d28d9;display:none;}
+.btn-grade:hover{background:#ddd6fe;}
+
+.feedback{display:none;border-radius:8px;padding:10px 13px;margin-top:10px;font-size:13px;line-height:1.65;}
+.feedback.good{background:#f0fdf4;color:#166534;border-left:3px solid #4ade80;}
+.feedback.warn{background:#fffbeb;color:#92400e;border-left:3px solid #fbbf24;}
+
+.history{margin-bottom:1rem;}
+.hist-item{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;margin-bottom:6px;}
+.hist-q{font-size:11px;color:#888;margin-bottom:2px;font-weight:700;}
+.hist-a{font-size:13px;color:#1a1a1a;line-height:1.5;}
+
+.done-banner{background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:1rem 1.2rem;margin-bottom:1rem;font-size:14px;color:#166534;font-weight:700;}
+
+.model-ans{display:none;background:#fff;border:1px solid #e5e7eb;border-left:3px solid #60a5fa;border-radius:10px;padding:1.1rem 1.25rem;margin-top:1rem;}
+.model-ans.show{display:block;}
+.ma-title{font-size:12px;font-weight:700;color:#1d4ed8;margin-bottom:11px;}
+.ma-row{margin-bottom:9px;}
+.ma-label{font-size:11px;color:#888;margin-bottom:2px;font-weight:700;}
+.ma-text{font-size:14px;color:#1a1a1a;line-height:1.7;}
+.ma-text em{font-style:normal;color:#1d4ed8;font-weight:700;}
+
+/* AI批改区 */
+.grade-box{background:#faf5ff;border:1px solid #c4b5fd;border-radius:12px;padding:1.2rem;margin-top:1rem;display:none;}
+.grade-box.show{display:block;}
+.grade-title{font-size:13px;font-weight:700;color:#6d28d9;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.grade-body{font-size:14px;color:#1a1a1a;line-height:1.8;white-space:pre-wrap;}
+.grade-loading{font-size:13px;color:#7c3aed;font-style:italic;}
+
+/* ── 老师模式 ── */
+.teacher-panel{display:none;}
+.teacher-panel.show{display:block;}
+.t-section{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.2rem;margin-bottom:1rem;}
+.t-section h2{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:4px;}
+.t-section p{font-size:13px;color:#666;margin-bottom:12px;line-height:1.5;}
+.t-label{font-size:12px;font-weight:700;color:#555;margin-bottom:5px;margin-top:10px;}
+input[type=password],input[type=text]{width:100%;border:1px solid #d1d5db;border-radius:8px;padding:9px 12px;font-size:14px;font-family:"Microsoft YaHei","PingFang SC",sans-serif;color:#1a1a1a;background:#fff;}
+input[type=password]:focus,input[type=text]:focus{outline:none;border-color:#93c5fd;}
+.t-textarea{width:100%;border:1px solid #d1d5db;border-radius:8px;padding:10px 12px;font-size:14px;font-family:"Microsoft YaHei","PingFang SC",sans-serif;color:#1a1a1a;background:#fff;resize:vertical;min-height:100px;line-height:1.6;}
+.t-textarea:focus{outline:none;border-color:#93c5fd;}
+.btn-gen{padding:9px 22px;font-size:13px;font-weight:700;border:1px solid #86efac;border-radius:8px;cursor:pointer;background:#dcfce7;color:#166534;margin-top:10px;}
+.btn-gen:hover{background:#bbf7d0;}
+.btn-save-key{padding:8px 18px;font-size:13px;font-weight:700;border:1px solid #93c5fd;border-radius:8px;cursor:pointer;background:#dbeafe;color:#1d4ed8;margin-top:10px;}
+.gen-output{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:1rem;margin-top:12px;font-size:13px;color:#1a1a1a;line-height:1.8;white-space:pre-wrap;display:none;}
+.gen-output.show{display:block;}
+.btn-add-q{padding:8px 18px;font-size:13px;font-weight:700;border:1px solid #c4b5fd;border-radius:8px;cursor:pointer;background:#ede9fe;color:#6d28d9;margin-top:8px;display:none;}
+.key-saved{font-size:12px;color:#166534;margin-top:6px;display:none;}
+
+.q-list{margin-top:6px;}
+.q-list-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:5px;background:#fff;font-size:13px;color:#1a1a1a;}
+.btn-del{padding:3px 9px;font-size:11px;border:1px solid #fca5a5;border-radius:6px;cursor:pointer;background:#fee2e2;color:#b91c1c;}
+
+.hidden{display:none!important;}
+.spin{display:inline-block;animation:spin 1s linear infinite;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+/* 关键词点选 */
+.kw-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px;}
+.kw-chip{padding:5px 13px;font-size:13px;border:1.5px solid #93c5fd;border-radius:20px;cursor:pointer;background:#fff;color:#1d4ed8;font-family:"Microsoft YaHei","PingFang SC",sans-serif;}
+.kw-chip:hover{background:#dbeafe;}
+.kw-chip.selected{background:#1d4ed8;color:#fff;border-color:#1d4ed8;}
+
+/* 角度选择 */
+.angle-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:8px;}
+.angle-opt{padding:9px 14px;font-size:13px;border:1.5px solid #d1d5db;border-radius:8px;cursor:pointer;background:#fff;color:#374151;text-align:left;font-family:"Microsoft YaHei","PingFang SC",sans-serif;}
+.angle-opt:hover{background:#f9fafb;border-color:#93c5fd;}
+.angle-opt.selected{background:#dcfce7;color:#166534;border-color:#86efac;}
+
+/* 解题准备标签 */
+.prep-badge{display:inline-block;background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:6px;font-size:11px;font-weight:700;padding:2px 8px;margin-right:6px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- 语音诊断 -->
+<div id="diag-panel" style="background:#fefce8;border:1px solid #fcd34d;border-radius:10px;padding:1rem;margin-bottom:1rem;font-size:13px;">
+  <strong>🔧 语音诊断工具</strong>（确认可用后可关闭）<br><br>
+  <button onclick="diagTest()" style="padding:6px 14px;background:#fbbf24;border:1px solid #f59e0b;border-radius:6px;cursor:pointer;font-weight:600;margin-right:8px;">① 测试最简单的语音</button>
+  <button onclick="diagList()" style="padding:6px 14px;background:#dbeafe;border:1px solid #93c5fd;border-radius:6px;cursor:pointer;font-weight:600;margin-right:8px;">② 列出所有可用声音</button>
+  <button onclick="document.getElementById('diag-panel').style.display='none'" style="padding:6px 14px;background:#f3f4f6;border:1px solid #d1d5db;border-radius:6px;cursor:pointer;">隐藏诊断</button>
+  <div id="diag-out" style="margin-top:10px;white-space:pre-wrap;font-family:monospace;font-size:12px;color:#1a1a1a;"></div>
+</div>
+
+<!-- 顶部 -->
+<div class="topbar">
+  <h1>📖 高级华文开放题练习</h1>
+  <div class="mode-btns">
+    <button class="mode-btn active" onclick="setMode('student')">学生模式</button>
+    <button class="mode-btn" onclick="setMode('teacher')">老师模式</button>
+  </div>
+</div>
+
+<!-- ══ 学生模式 ══ -->
+<div id="student-panel">
+  <div class="qtabs" id="qtabs"></div>
+  <div id="qcontent"></div>
+</div>
+
+<!-- ══ 老师模式 ══ -->
+<div class="teacher-panel" id="teacher-panel">
+
+  <div class="t-section">
+    <h2>🔑 设置 API Key</h2>
+    <p>AI批改和AI生成题目都需要Anthropic API Key，输入后保存在本地，不会上传到任何服务器。</p>
+    <div class="t-label">Anthropic API Key</div>
+    <input type="password" id="api-key-input" placeholder="sk-ant-..." />
+    <br>
+    <button class="btn-save-key" onclick="saveKey()">保存 Key</button>
+    <div class="key-saved" id="key-saved">✅ Key 已保存</div>
+  </div>
+
+  <div class="t-section">
+    <h2>✨ AI 生成新开放题</h2>
+    <p>输入一段文章或题目要求，AI会自动生成符合格式的开放题、苏格拉底追问步骤和范文答案。</p>
+    <div class="t-label">文章段落或题目要求（可以是中文或英文）</div>
+    <textarea class="t-textarea" id="gen-input" placeholder="例如：文章中说「失败是成功之母」，请围绕这句话出一道开放题……&#10;或者直接贴入文章段落，AI会从中提炼题目。"></textarea>
+    <div class="t-label" style="margin-top:10px;">分值设置</div>
+    <input type="text" id="gen-marks" value="5分（说明3分+例子2分）" style="max-width:260px;" />
+    <br>
+    <button class="btn-gen" onclick="genQuestion()">🤖 生成题目</button>
+    <div class="gen-output" id="gen-output"></div>
+    <button class="btn-add-q" id="btn-add-q" onclick="addGenQuestion()">➕ 加入练习库</button>
+  </div>
+
+  <div class="t-section">
+    <h2>📋 练习题目管理</h2>
+    <p>当前练习库中的题目。系统预设 4 道题，AI生成的新题加入后可以在学生模式中看到。</p>
+    <div class="q-list" id="q-list"></div>
+  </div>
+
+</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// 题库（初始4题）
+// ═══════════════════════════════════════════
+var QBANK = [
+  {
+    label: '题目一',
+    qtext: '作者认为「一个人的成功，是因为他有一些优秀的性格和品德」。你同意吗？试举生活中的例子加以说明。',
+    marks: '共 5 分（说明 3 分 + 例子 2 分）',
+    keywords: ['优秀的品德', '成功'],
+    modelAns: [
+      {label:'立场', text:'我同意。'},
+      {label:'理由（正向）', text:'拥有<em>诚实、为他人着想</em>等优秀品德的人，能赢得别人的信任和合作机会，这是走向成功的重要基础。'},
+      {label:'理由（反向）', text:'相反，一个缺乏品德的人，即使一时得逞，最终也会失去别人的信任，难以持久成功。'},
+      {label:'例子', text:'一名推销员靠着<em>诚实</em>脱颖而出——他如实告知顾客产品的优缺点，把顾客需要放第一。顾客被他的诚意打动，销售成绩因此非常出色。这正是<em>优秀品德带来成功</em>的体现。'}
+    ],
+    modelAnsEn: [
+      {label:'Position', text:'I agree with the author.'},
+      {label:'Positive Reasoning', text:'A person with strong moral character — such as honesty and consideration for others — earns the trust and cooperation of those around them. This trust forms the foundation for lasting success.'},
+      {label:'Counter Reasoning', text:'In contrast, a person who lacks good character may achieve short-term gains, but will eventually lose the trust of others and find it difficult to sustain any real success.'},
+      {label:'Example', text:'Consider a salesperson who stood out through his honesty. He always gave customers a fair and accurate picture of his products, putting their needs before his own commission. Customers were moved by his sincerity and chose to buy from him, resulting in outstanding sales performance. This clearly shows how strong moral character leads to success.'}
+    ],
+    steps: [
+      {type:'keyword', q:'解题准备：找出题目的关键词。', sub:'题目说「优秀的性格和品德」让人「成功」。请点选你认为最重要的关键词，然后说明它们之间的关系。', keywords:['优秀的品德','成功','性格','一个人'], ph:'关键词是「优秀的品德」和「成功」。有了优秀的品德，才能取得成功。', minLen:8, fb_good:'很好！抓住关键词是答题的第一步，你已经清楚题目在问什么了。', fb_warn:'请再想想：题目的核心是哪两个词？它们之间是什么关系？试着用「有了___，才能___」来表达。'},
+      {type:'text', q:'第一步：表明立场。', sub:'你同意还是不同意？用一句话写出来。', ph:'我同意 / 我不同意，因为……', minLen:4, fb_good:'立场清楚，答题必须有这一句。', fb_warn:'请明确写出「我同意」或「我不同意」，立场不清楚会直接失分。'},
+      {type:'angle', q:'第二步：选择你的分析角度。', sub:'想出理由有两个方向，你打算用哪个？（两个都用更有说服力）', options:['✅ 正向：有优秀品德 → 会怎样？（好处）','❌ 反向：没有品德 → 会怎样？（后果）','两个都用（最完整）'], ph:'我打算从正向/反向/两个方向来说理由……', minLen:4, fb_good:'好，选好角度，接下来就按这个方向想理由。', fb_warn:'请选择一个分析方向，这样你的理由才有结构。'},
+      {type:'text', q:'第三步（正向）：有优秀品德的人，会有什么好处？', sub:'紧扣关键词「优秀品德」和「成功」：有这种品德的人会怎么做？别人会怎么对他？最终怎么成功？', ph:'有优秀品德的人会……别人会……所以他能……', minLen:12, fb_good:'说出了正向的因果关系，这是得分的核心。', fb_warn:'你的理由还不够清楚。请紧扣「品德→成功」这条线：有品德的人会做什么？因此别人会怎样对他？他怎么成功？'},
+      {type:'text', q:'第四步（反向）：没有品德的人，会有什么后果？', sub:'从反面想：一个不诚实、不顾他人的人，别人会怎么看他？他能成功吗？', ph:'相反，一个缺乏品德的人会……别人会……所以他……', minLen:10, fb_good:'正反对比都有了，理由更有说服力。', fb_warn:'反面论证不够有力。请想：一个没有品德的人，短期内也许能得到一些东西，但长期结果会怎样？'},
+      {type:'text', q:'第五步：举一个生活中的例子，紧扣关键词。', sub:'例子中必须出现「优秀品德」和「成功」这两个元素。结构：人物 → 他有什么品德 → 因此怎么成功。最后一句说明例子怎么扣回关键词。', ph:'例如：有一个人……他……（品德）……因此……（成功）。这说明有优秀的品德，才能……', minLen:20, fb_good:'例子完整，而且扣回了关键词，答得好。', fb_warn:'你的例子缺少了关键内容。请检查：①人物有什么品德？②他因为这个品德怎么成功？③最后有没有一句话扣回「品德→成功」？'},
+      {type:'text', q:'第六步：总结，呼应立场。', sub:'用一句话把你的立场和关键词重新说一遍，让答案有始有终。', ph:'因此，我认为一个人的成功确实和他的……有关，因为……', minLen:8, fb_good:'有总结的答案更完整，印象分更好。', fb_warn:'总结太短。请用一句完整的话，把「品德」和「成功」都带进去，呼应你的立场。'}
+    ]
+  },
+  {
+    label: '题目二',
+    qtext: '「救济是不是真的能帮助穷人？」这个问题对你有什么启发？试举生活中的例子加以说明。',
+    marks: '共 4 分（说明 2 分 + 例子 2 分）',
+    keywords: ['救济', '帮助穷人'],
+    modelAns: [
+      {label:'解释关键词', text:'「救济」是指给予物质上的帮助，例如给钱、给食物。'},
+      {label:'启发（核心观点）', text:'单靠救济<em>不能真正帮助穷人</em>——长期接受救济会让人养成<em>依赖心理</em>，失去自力更生的动力，反而造成永久的贫穷。'},
+      {label:'正确做法', text:'真正的帮助，是教穷人学习一技之长，让他们靠自己的努力改变生活。'},
+      {label:'例子', text:'有些人长期靠政府援助度日，从不寻找工作，久而久之<em>丧失了自食其力的能力</em>。这说明：单靠救济，反而会让穷人<em>永远无法摆脱贫穷</em>。'}
+    ],
+    modelAnsEn: [
+      {label:'Key Term', text:'The word "relief aid" refers to providing material assistance to those in need — for example, giving money or food.'},
+      {label:'Core Insight', text:'This question teaches us that simply providing relief aid cannot truly help the poor. When people receive aid on a long-term basis, they tend to develop a mindset of dependency. They lose the motivation to support themselves, which ultimately traps them in permanent poverty.'},
+      {label:'Better Approach', text:'The right way to help the poor is to equip them with practical skills and knowledge, so they can earn a living through their own efforts and break the cycle of poverty.'},
+      {label:'Example', text:'Some people rely on government assistance for years without ever looking for work. Over time, they lose the ability and the will to support themselves. This shows that relying solely on relief aid does not solve the problem — it only makes the poor more dependent and less able to escape poverty on their own.'}
+    ],
+    steps: [
+      {type:'keyword', q:'解题准备：找出题目的关键词。', sub:'这道题问的是「救济」能不能「真正帮助穷人」。先想清楚：「救济」是什么意思？「真正帮助」又是什么意思？', keywords:['救济','帮助穷人','真正','启发'], ph:'「救济」是指……「真正帮助」是指……这道题启发我……', minLen:8, fb_good:'对，先把关键词解释清楚，答案才有基础。', fb_warn:'请先解释「救济」是什么意思，再说这道题给了你什么启发。'},
+      {type:'text', q:'第一步：说出你的启发（核心观点）。', sub:'注意：这道题问「启发」，不是问「同意/不同意」。你的启发是什么？', ph:'这道题启发我：救济……', minLen:8, fb_good:'核心观点清楚。', fb_warn:'你还没有说出「启发」是什么。请想一想：这道题让你明白了什么道理？'},
+      {type:'angle', q:'第二步：选择分析角度。', sub:'你打算从哪个方向来解释「救济不能真正帮助穷人」？', options:['❌ 反向：救济有什么问题？长期救济会带来什么后果？','✅ 正向：真正的帮助应该是什么？','两个都说（更完整）'], ph:'我打算从……方向来分析……', minLen:4, fb_good:'好，方向选定，接下来就按这个来写理由。', fb_warn:'请选择一个分析角度。'},
+      {type:'text', q:'第三步：救济有什么问题？长期接受救济的人会怎样？', sub:'紧扣关键词「救济」：长期接受救济，人的心理会发生什么变化？最终结果是什么？', ph:'长期接受救济，会让人……久而久之……结果……', minLen:12, fb_good:'说出了救济的根本问题——依赖心理，这是最重要的得分点。', fb_warn:'你还没有解释清楚。长期接受救济的人，心态会变成怎样？他还会努力工作吗？最终生活会怎样？'},
+      {type:'text', q:'第四步：真正帮助穷人的方法是什么？', sub:'紧扣关键词「真正帮助」：什么方法才能让穷人从根本上改变处境？', ph:'真正帮助穷人，应该……这样才能……', minLen:8, fb_good:'提出正面方向，答案更完整。', fb_warn:'请说出正确的做法：如果不给救济，应该怎么帮助穷人？'},
+      {type:'text', q:'第五步：举一个例子，紧扣「救济」和「真正帮助」。', sub:'例子结构：有人长期依赖救济 → 结果怎样（无法自立）→ 这说明了什么。最后一句扣回关键词。', ph:'有些人……长期依靠……久而久之……这说明，单靠救济……', minLen:20, fb_good:'例子完整，扣回了关键词。', fb_warn:'例子还不够完整。请检查：①他怎样依赖救济？②结果是什么（无法自立）？③最后一句有没有扣回「救济不能真正帮助」？'}
+    ]
+  },
+  {
+    label: '题目三',
+    qtext: '肯斯说：「开弓没有回头箭，要实现梦想就要义无反顾。」你同意这句话吗？试结合现实生活中的例子，谈谈你的看法。',
+    marks: '共 5 分（解释 2～3 分 + 例子 2～3 分）',
+    keywords: ['义无反顾', '实现梦想'],
+    modelAns: [
+      {label:'立场 + 解释', text:'我同意。这句话的意思是：一旦确定了梦想，就要<em>勇敢坚持，不轻易放弃</em>，即使遇到困难也要继续努力。'},
+      {label:'理由（正向）', text:'义无反顾的精神能激励我们在困难中爆发潜力，坚持到底的人往往能创造奇迹，实现梦想。'},
+      {label:'理由（反向）', text:'相反，意志不坚定、遇难就退的人，最终只会留下遗憾，后悔当初没有勇敢追梦。'},
+      {label:'例子', text:'我的姐姐从小梦想成为绘本作家，大学毕业后<em>毅然辞去高薪律师工作</em>，义无反顾地追梦。虽历经挫折，始终没有放弃，最终成为知名绘本作家。这正说明了<em>义无反顾</em>是实现梦想的关键。'}
+    ],
+    modelAnsEn: [
+      {label:'Position and Explanation', text:'I agree with this statement. It means that once a person has identified their dream, they must press forward with courage and determination, refusing to give up even when faced with difficulties and setbacks.'},
+      {label:'Positive Reasoning', text:'The spirit of wholehearted commitment drives us to tap into our inner potential when challenges arise. Those who persevere with unwavering resolve are often able to achieve remarkable results and realise their dreams.'},
+      {label:'Counter Reasoning', text:'On the other hand, a person who lacks determination and gives up at the first sign of difficulty will ultimately be left with nothing but regret — wishing they had been braver in pursuing what they truly wanted.'},
+      {label:'Example', text:'My elder sister had dreamed of becoming a picture book author since childhood. After graduating with a law degree, she made the bold decision to resign from a well-paying job as a lawyer and wholeheartedly pursue her passion. Despite facing many challenges along the way, she never gave up. She eventually became a well-known picture book author. Her story shows that wholehearted commitment is the key to realising one\'s dreams.'}
+    ],
+    steps: [
+      {type:'keyword', q:'解题准备：找出题目的关键词。', sub:'这句话有两个核心：「义无反顾」和「实现梦想」。先用自己的话解释这两个词的意思，再说它们之间的关系。', keywords:['义无反顾','实现梦想','开弓没有回头箭','梦想'], ph:'「义无反顾」是指……「实现梦想」是指……它们的关系是：只有……才能……', minLen:10, fb_good:'关键词解释清楚了，这是答这道题最重要的基础。', fb_warn:'请先用自己的话解释「义无反顾」的意思，再说它怎么帮助「实现梦想」。'},
+      {type:'text', q:'第一步：表明立场。', sub:'你同意还是不同意？写出来。', ph:'我同意 / 我不同意。', minLen:4, fb_good:'立场清楚。', fb_warn:'请明确写出立场。'},
+      {type:'angle', q:'第二步：选择分析角度。', sub:'你打算从哪个方向来说明「义无反顾」为什么重要？', options:['✅ 正向：义无反顾 → 有什么好处？能实现什么？','❌ 反向：没有义无反顾 → 会有什么后果？','两个方向都说（最完整）'], ph:'我打算从……方向来分析……', minLen:4, fb_good:'方向选好了，接下来按这个来写。', fb_warn:'请选一个分析方向。'},
+      {type:'text', q:'第三步（正向）：义无反顾追梦，有什么好处？', sub:'紧扣关键词：一个义无反顾的人，在追梦过程中可以克服什么？能得到什么？', ph:'义无反顾的人，能……即使遇到……也会……最终……', minLen:12, fb_good:'正向理由充分，而且紧扣了关键词。', fb_warn:'请更具体：义无反顾的人遇到困难时会怎么做？他的精神状态怎样？最终能得到什么？'},
+      {type:'text', q:'第四步（反向）：没有义无反顾，会有什么后果？', sub:'紧扣关键词：一个遇难就退、轻易放弃的人，最终结果是什么？', ph:'相反，如果缺乏义无反顾的精神……遇到困难就……最终……', minLen:10, fb_good:'正反对比都有，理由更完整。', fb_warn:'请想想反面：一个人追梦时遇到困难就放弃，最终会怎样？会有什么遗憾？'},
+      {type:'text', q:'第五步：举例子，紧扣「义无反顾」和「实现梦想」。', sub:'例子结构：梦想是什么 → 义无反顾的行动 → 遇到困难 → 最终实现梦想。最后一句扣回关键词。', ph:'我认识一个人……他的梦想是……他义无反顾地……虽然……但是……最终……这说明，义无反顾……', minLen:20, fb_good:'例子完整，结构清晰，最后也扣回了关键词。', fb_warn:'例子缺少了重要部分。请检查：①梦想是什么？②义无反顾的行动？③遇到什么困难？④结果？⑤最后有没有扣回关键词？'},
+      {type:'text', q:'第六步：总结，呼应立场。', sub:'把「义无反顾」和「实现梦想」这两个关键词带进总结，让答案首尾呼应。', ph:'因此，我认为要实现梦想，就必须……', minLen:8, fb_good:'总结到位，答案完整。', fb_warn:'总结太短。请用一句完整的话，把关键词带进去，呼应你的立场。'}
+    ]
+  },
+  {
+    label: '题目四',
+    qtext: '文中徐老师说：「挫折是把双刃剑。」你同意吗？为什么？试举生活中的例子加以说明。（必须从正反两方面说明）',
+    marks: '共 5 分（理由 3 分 + 例子 2 分）',
+    keywords: ['挫折', '双刃剑'],
+    modelAns: [
+      {label:'立场 + 解释', text:'我同意。「双刃剑」是说挫折<em>既有坏的一面，也有好的一面</em>，关键在于如何面对。'},
+      {label:'理由（坏的一面）', text:'如果消极面对、<em>自暴自弃</em>，挫折会让人陷入失败的痛苦，无法成功。'},
+      {label:'理由（好的一面）', text:'如果<em>积极面对、分析原因</em>，挫折反而能磨练意志，让人愈挫愈勇，最终成为强者。'},
+      {label:'例子', text:'我校乒乓队在小组赛中意外负于弱队，队员们<em>沮丧失落</em>（坏的一面）。但在老师鼓励下，大家认真检讨原因，最终<em>反败为胜</em>（好的一面）。这正说明：积极面对挫折，挫折就是成长的机会。'}
+    ],
+    modelAnsEn: [
+      {label:'Position and Explanation', text:'I agree. The metaphor of a "double-edged sword" means that setbacks can cut both ways — they can cause harm, but they can also bring growth. The key lies in how we choose to respond to them.'},
+      {label:'The Negative Side', text:'If a person responds to setbacks with negativity — giving up on themselves and wallowing in despair — they will sink into the pain of failure and find it nearly impossible to achieve success.'},
+      {label:'The Positive Side', text:'However, if a person faces setbacks with a positive attitude — calmly reflecting on what went wrong and actively seeking solutions — setbacks can strengthen their resolve and build their resilience. In this way, they grow stronger with every challenge and eventually emerge as a capable individual.'},
+      {label:'Example', text:'Our school table tennis team suffered an unexpected defeat against a much weaker opponent in the group stage. The players were deeply discouraged and disheartened — this was the negative side of the setback. However, encouraged by their coach, the team reflected seriously on their mistakes and worked hard to improve. In the semi-finals, they made a remarkable comeback and won. This experience shows that when we face setbacks with a positive mindset, they become valuable opportunities for growth.'}
+    ],
+    steps: [
+      {type:'keyword', q:'解题准备：找出题目的关键词，解释「双刃剑」。', sub:'「双刃剑」是这道题最重要的关键词。刀有两面刃，一面伤人，一面护己。挫折的「两面」是什么？请解释。', keywords:['挫折','双刃剑','正反两面','好的一面','坏的一面'], ph:'「双刃剑」的意思是：挫折既……也……关键在于……', minLen:10, fb_good:'说出了「两面」，这是这道题最核心的解释，也是得分关键。', fb_warn:'请想想「双刃剑」的比喻：刀有两面，挫折也有两面。这两面分别是什么？'},
+      {type:'text', q:'第一步：表明立场。', sub:'你同意「挫折是把双刃剑」吗？', ph:'我同意 / 我不同意。', minLen:4, fb_good:'立场清楚。', fb_warn:'请明确写出你的立场。'},
+      {type:'angle', q:'第二步：这道题审题要求「正反两方面」，两面都必须写。', sub:'请确认你的计划：你打算怎么安排正面和反面？', options:['先写坏的一面，再写好的一面','先写好的一面，再写坏的一面'], ph:'我打算先写……再写……', minLen:4, fb_good:'好，记住两面都要写，缺一面就会失分。', fb_warn:'这道题明确要求正反两方面，两面都必须写，请确认你的计划。'},
+      {type:'text', q:'第三步：挫折「坏的一面」——消极面对会怎样？', sub:'紧扣关键词「挫折」：消极面对挫折的人，心理状态怎样？最终结果是什么？', ph:'如果消极面对挫折，一个人会……陷入……最终……', minLen:12, fb_good:'坏的一面说清楚了。', fb_warn:'请更具体：消极面对挫折的人，他的心情怎样？行为怎样？最终人生结果是什么？'},
+      {type:'text', q:'第四步：挫折「好的一面」——积极面对会怎样？', sub:'紧扣关键词「挫折」：积极面对挫折的人，他会怎么做？最终能得到什么成长？', ph:'如果积极面对挫折，一个人会……从而……最终……', minLen:12, fb_good:'两面都答到了，这正是审题要求，做得好。', fb_warn:'请具体说：积极面对挫折的人，他会做哪些事？最终得到什么成长？'},
+      {type:'text', q:'第五步：举例，例子必须同时体现「坏的一面」和「好的一面」。', sub:'例子结构：遇到挫折（坏的感受）→ 转变态度积极面对 → 从挫折中成长（好的结果）。最后一句扣回「双刃剑」。', ph:'例如：……遇到了挫折，感到……（坏的一面）。但是……（积极面对）……最终……（好的结果）。这说明挫折确实是把双刃剑……', minLen:25, fb_good:'例子同时体现了正反两面，结构完整，最后也扣回了关键词。', fb_warn:'你的例子缺少了一面。请检查：①有没有写挫折带来的痛苦（坏的一面）？②有没有写积极面对后的成长（好的一面）？两面都要有，少一面就失分。'},
+      {type:'text', q:'第六步：总结，呼应立场。', sub:'把「挫折」和「双刃剑」这两个关键词带进总结句。', ph:'因此，我认为挫折确实是把双刃剑，关键在于……', minLen:8, fb_good:'总结完整，首尾呼应，答案有条理。', fb_warn:'总结太短。请用一句完整的话，把「挫折」和「双刃剑」都带进去。'}
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════
+// 状态
+// ═══════════════════════════════════════════
+var curMode = 'student';
+var curQ = 0;
+var apiKey = localStorage.getItem('hcw_api_key') || '';
+var genResult = null; // 暂存AI生成的题目JSON
+
+// 每道题的练习状态
+function freshState() { return {step:0, answers:[], done:false, pv:''}; }
+var STATE = QBANK.map(function(){ return freshState(); });
+
+// ═══════════════════════════════════════════
+// 模式切换
+// ═══════════════════════════════════════════
+function setMode(m) {
+  if (m === 'teacher') {
+    var pwd = prompt('请输入老师模式密码：');
+    if (pwd !== 'nhhs20262026') {
+      alert('密码错误，无法进入老师模式。');
+      return;
+    }
+  }
+  curMode = m;
+  document.querySelectorAll('.mode-btn').forEach(function(b,i){
+    b.classList.toggle('active', (i===0 && m==='student') || (i===1 && m==='teacher'));
+  });
+  document.getElementById('student-panel').style.display = m==='student' ? '' : 'none';
+  var tp = document.getElementById('teacher-panel');
+  tp.style.display = m==='teacher' ? 'block' : 'none';
+  if (m==='teacher') { renderQList(); if(apiKey) { document.getElementById('api-key-input').value=apiKey; document.getElementById('key-saved').style.display='block'; } }
+}
+
+// ═══════════════════════════════════════════
+// 渲染学生模式
+// ═══════════════════════════════════════════
+function renderTabs() {
+  var html = '';
+  QBANK.forEach(function(q, i){
+    var cls = 'qtab' + (i===curQ?' active':'') + (STATE[i].done?' done':'');
+    html += '<button class="' + cls + '" onclick="switchQ(' + i + ')">' + q.label + '</button>';
+  });
+  document.getElementById('qtabs').innerHTML = html;
+}
+
+function switchQ(i) {
+  curQ = i;
+  renderTabs();
+  renderQ(i);
+}
+
+function renderQ(qi) {
+  var q = QBANK[qi];
+  var s = STATE[qi];
+  var steps = q.steps;
+  var html = '';
+
+  // 题目卡片
+  html += '<div class="qcard">';
+  html += '<div class="qcard-top">';
+  html += '<div><span class="qcard-label">' + q.label + '</span><div class="qcard-text">' + escHtml(q.qtext) + '</div><div class="qcard-marks">' + q.marks + '</div></div>';
+  html += '<button class="speak-btn" id="speak-q-' + qi + '" onclick="speakText(' + qi + ', -1)">🔊 朗读题目</button>';
+  html += '</div></div>';
+
+  // 进度条
+  html += '<div class="progress-track">';
+  for (var i=0; i<steps.length; i++){
+    var cls = 'prog-dot';
+    if (i < s.step) cls='prog-dot done';
+    else if (i===s.step && !s.done) cls='prog-dot active';
+    var dotLabel = (i === 0) ? '准' : String(i); html += '<div class="' + cls + '">' + dotLabel + '</div>';
+    if (i < steps.length-1) html += '<div class="prog-line"></div>';
+  }
+  html += '</div>';
+
+  // 历史回答
+  if (s.answers.length > 0) {
+    html += '<div class="history">';
+    for (var j=0; j<s.answers.length; j++){
+      var lbl = steps[j].q.replace(/第.步[（）A-Za-z正反向：:]+/, '').replace('解题准备：','').trim();
+      html += '<div class="hist-item"><div class="hist-q">第'+(j+1)+'步：'+escHtml(lbl)+'</div><div class="hist-a">'+escHtml(s.answers[j])+'</div></div>';
+    }
+    html += '</div>';
+  }
+
+  // 当前步骤 or 完成
+  if (s.done) {
+    html += '<div class="done-banner">✅ 你已完成所有步骤！请对照范文，看看自己答得怎样。</div>';
+    // 批改按钮
+    html += '<div class="btn-row">';
+    html += '<button class="btn-grade" id="grade-btn-' + qi + '" style="display:inline-block" onclick="gradeAnswers(' + qi + ')">🤖 AI批改我的答案</button>';
+    html += '<button class="btn-reset" onclick="resetQ(' + qi + ')">重新练习</button>';
+    html += '</div>';
+    // AI批改结果区
+    html += '<div class="grade-box" id="grade-box-' + qi + '">' +
+    '<div class="grade-title">🤖 AI批改结果' +
+    '<button class="speak-btn" id="speak-grade-zh-' + qi + '" onclick="speakGrade(' + qi + ',\'zh\')" style="margin-left:8px;">🔊 中文朗读</button>' +
+    '<button class="speak-btn" id="speak-grade-en-' + qi + '" onclick="speakGrade(' + qi + ',\'en\')" style="margin-left:6px;">🔊 English</button>' +
+    '</div>' +
+    '<div class="grade-body" id="grade-body-' + qi + '"></div></div>';
+    // 范文
+    html += '<div class="model-ans show" id="model-ans-' + qi + '">' +
+    '<div class="ma-title" style="display:flex;align-items:center;gap:8px;">完整范文参考' +
+    '<button class="speak-btn" id="speak-model-zh-' + qi + '" onclick="speakModel(' + qi + ',\'zh\')">🔊 中文朗读</button>' +
+    '<button class="speak-btn" id="speak-model-en-' + qi + '" onclick="speakModel(' + qi + ',\'en\')">🔊 English</button>' +
+    '</div>';
+    q.modelAns.forEach(function(row){
+      html += '<div class="ma-row"><div class="ma-label">'+row.label+'</div><div class="ma-text">'+row.text+'</div></div>';
+    });
+    html += '</div>';
+  } else {
+    var cur = steps[s.step];
+    var isLast = s.step >= steps.length - 1;
+    html += '<div class="step-box">';
+    html += '<div class="step-head"><div class="step-q">' + escHtml(cur.q) + '</div>';
+    html += '<button class="speak-btn" id="speak-s-' + qi + '" onclick="speakText(' + qi + ',' + s.step + ')">🔊 朗读</button></div>';
+    html += '<div class="step-sub">' + escHtml(cur.sub) + '</div>';
+
+    // 关键词点选步骤
+    if (cur.type === 'keyword') {
+      html += '<div class="kw-chips" id="kwchips' + qi + '">';
+      cur.keywords.forEach(function(kw, ki) {
+        html += '<button class="kw-chip" id="kwc' + qi + '_' + ki + '" onclick="toggleKw(' + qi + ',' + ki + ',this)">' + escHtml(kw) + '</button>';
+      });
+      html += '</div>';
+      html += '<div class="step-sub" style="margin-top:6px;margin-bottom:8px;">点选关键词后，在下方说明它们之间的关系：</div>';
+    }
+
+    // 角度选择步骤
+    if (cur.type === 'angle') {
+      html += '<div class="angle-opts" id="angleopts' + qi + '">';
+      cur.options.forEach(function(opt, oi) {
+        html += '<button class="angle-opt" id="aopt' + qi + '_' + oi + '" onclick="selectAngle(' + qi + ',' + oi + ',this)">' + escHtml(opt) + '</button>';
+      });
+      html += '</div>';
+      html += '<div class="step-sub" style="margin-top:6px;margin-bottom:8px;">选好角度后，在下方简单说明你的计划：</div>';
+    }
+
+    html += '<textarea id="inp' + qi + '" placeholder="' + escHtml(cur.ph) + '" rows="3"></textarea>';
+    html += '<div class="btn-row">';
+    html += '<button class="btn-submit" id="sub' + qi + '" onclick="doSubmit(' + qi + ')">提交这一步</button>';
+    html += '<button class="btn-reset" onclick="resetQ(' + qi + ')">重新开始</button>';
+    html += '</div>';
+    html += '<div id="fb' + qi + '" class="feedback"></div>';
+    html += '<button id="nxt' + qi + '" class="btn-next" onclick="nextStep(' + qi + ')">' + (isLast ? '查看完整范文 →' : '继续下一步 →') + '</button>';
+    html += '</div>';
+  }
+
+  document.getElementById('qcontent').innerHTML = html;
+}
+
+// ═══════════════════════════════════════════
+// 练习逻辑
+// ═══════════════════════════════════════════
+function doSubmit(qi) {
+  var inp = document.getElementById('inp'+qi);
+  var val = inp ? inp.value : '';
+  var fb = document.getElementById('fb'+qi);
+  var nxt = document.getElementById('nxt'+qi);
+  var sub = document.getElementById('sub'+qi);
+  var cur = QBANK[qi].steps[STATE[qi].step];
+
+  if (!val.trim() || val.trim().length < 2) {
+    fb.className='feedback warn'; fb.style.display='block';
+    fb.textContent='请先填写你的回答，再提交。';
+    return;
+  }
+  fb.style.display='block';
+  if (val.trim().length >= cur.minLen) {
+    fb.className='feedback good'; fb.textContent=cur.fb_good;
+  } else {
+    fb.className='feedback warn'; fb.textContent=cur.fb_warn;
+  }
+  inp.disabled=true;
+  sub.style.display='none';
+  nxt.style.display='inline-block';
+  STATE[qi].pv=val;
+}
+
+function nextStep(qi) {
+  var s = STATE[qi];
+  s.answers.push(s.pv);
+  s.step++;
+  if (s.step >= QBANK[qi].steps.length) {
+    s.done=true;
+    document.querySelectorAll('.qtab')[qi] && document.querySelectorAll('.qtab')[qi].classList.add('done');
+  }
+  renderTabs();
+  renderQ(qi);
+}
+
+function resetQ(qi) {
+  STATE[qi] = freshState();
+  renderTabs();
+  renderQ(qi);
+}
+
+
+
+// ═══════════════════════════════════════════
+// AI 批改
+// ═══════════════════════════════════════════
+function gradeAnswers(qi) {
+  var key = apiKey;
+  if (!key) {
+    key = prompt('请输入你的 Anthropic API Key（sk-ant-...）：');
+    if (!key) return;
+    apiKey = key;
+    localStorage.setItem('hcw_api_key', key);
+  }
+
+  var q = QBANK[qi];
+  var s = STATE[qi];
+  var box = document.getElementById('grade-box-'+qi);
+  var body = document.getElementById('grade-body-'+qi);
+  var btn = document.getElementById('grade-btn-'+qi);
+
+  box.classList.add('show');
+  body.innerHTML = '<span class="grade-loading"><span class="spin">⏳</span> AI正在批改，请稍候……</span>';
+  if(btn) btn.disabled=true;
+
+  // 整理学生答案
+  var studentAns = '';
+  s.answers.forEach(function(a, i){
+    var stepLabel = q.steps[i].q.replace(/第.步[：:]/, '').trim();
+    studentAns += '【第'+(i+1)+'步 — '+stepLabel+'】\n'+a+'\n\n';
+  });
+
+  var modelText = '';
+  q.modelAns.forEach(function(r){ modelText += r.label + '：' + r.text.replace(/<[^>]+>/g,'') + '\n'; });
+
+  var prompt = '你是新加坡中学高级华文老师，请用简单清楚的中文批改以下学生的开放题回答。\n\n题目：' + q.qtext + '\n\n学生答案：\n' + studentAns + '\n范文参考：\n' + modelText + '\n\n请按以下格式给出批改意见：\n1. 【整体评价】：2-3句，直接说优点和不足。\n2. 【语言问题】：指出重复用词、句式不标准、用词不准确等具体问题，如果没有就写「语言表达流畅」。\n3. 【内容问题】：指出哪些得分点答到了，哪些还不足。\n4. 【改进建议】：给出1-2条具体、实用的改进方法。\n\n语气直接，不要夸奖太多，重点帮学生看到问题。';
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 800,
+      messages: [{role:'user', content: prompt}]
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    if (data.content && data.content[0] && data.content[0].text) {
+      body.innerHTML = data.content[0].text;
+    } else if (data.error) {
+      body.innerHTML = '批改失败：' + data.error.message + '\n\n请检查API Key是否正确。';
+    } else {
+      body.innerHTML = '批改失败，请重试。';
+    }
+    if(btn) btn.disabled=false;
+  })
+  .catch(function(e){
+    body.innerHTML = '网络错误：' + e.message + '\n请确认网络连接和API Key。';
+    if(btn) btn.disabled=false;
+  });
+}
+
+// ═══════════════════════════════════════════
+// 老师模式 — API Key
+// ═══════════════════════════════════════════
+function saveKey() {
+  var val = document.getElementById('api-key-input').value.trim();
+  if (!val) { alert('请输入API Key'); return; }
+  apiKey = val;
+  localStorage.setItem('hcw_api_key', val);
+  document.getElementById('key-saved').style.display='block';
+}
+
+// ═══════════════════════════════════════════
+// 老师模式 — AI生成题目
+// ═══════════════════════════════════════════
+function genQuestion() {
+  var key = apiKey;
+  if (!key) { alert('请先在上方保存API Key'); return; }
+  var input = document.getElementById('gen-input').value.trim();
+  if (!input) { alert('请输入文章段落或题目要求'); return; }
+  var marks = document.getElementById('gen-marks').value.trim() || '5分（说明3分+例子2分）';
+
+  var out = document.getElementById('gen-output');
+  var addBtn = document.getElementById('btn-add-q');
+  out.className='gen-output show';
+  out.textContent='⏳ AI正在生成题目，请稍候……';
+  addBtn.style.display='none';
+  genResult = null;
+
+  var sysPrompt = '你是新加坡中学高级华文老师，专门设计开放题练习材料。';
+  var userPrompt = '根据以下内容，设计一道高级华文开放题，分值为' + marks + '。\n\n内容：\n' + input + '\n\n请严格按照以下JSON格式输出，不要输出任何JSON以外的内容：\n{\n  "label": "新题目",\n  "qtext": "题目正文（包含引用的话和提问）",\n  "marks": "共X分（说明X分+例子X分）",\n  "modelAns": [\n    {"label": "立场", "text": "范文答案..."},\n    {"label": "理由", "text": "范文答案..."},\n    {"label": "例子", "text": "范文答案..."}\n  ],\n  "steps": [\n    {"q": "第一步：先表明你的立场。", "sub": "追问内容...", "ph": "填写提示...", "minLen": 4, "fb_good": "正确时的反馈", "fb_warn": "不足时的反馈"},\n    {"q": "第二步：...", "sub": "...", "ph": "...", "minLen": 10, "fb_good": "...", "fb_warn": "..."},\n    {"q": "第三步：...", "sub": "...", "ph": "...", "minLen": 10, "fb_good": "...", "fb_warn": "..."},\n    {"q": "第四步：请举一个生活中的例子。", "sub": "...", "ph": "...", "minLen": 15, "fb_good": "...", "fb_warn": "..."},\n    {"q": "第五步：最后，用一句话总结。", "sub": "...", "ph": "...", "minLen": 6, "fb_good": "...", "fb_warn": "..."}\n  ]\n}\n\n要求：\n- 题目要符合新加坡中学高级华文程度\n- 苏格拉底追问步骤要循序渐进，引导学生思考\n- 范文答案语言简洁，适合程度较弱的学生参考\n- 所有字符串值不能包含英文双引号，可以使用中文引号或单引号\n- 只输出JSON，不要有任何前言或解释';
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1500,
+      system: sysPrompt,
+      messages: [{role:'user', content: userPrompt}]
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    if (data.content && data.content[0] && data.content[0].text) {
+      var raw = data.content[0].text.trim();
+      // 去掉可能的markdown代码块
+      raw = raw.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
+      try {
+        var parsed = JSON.parse(raw);
+        genResult = parsed;
+        // 格式化显示
+        var preview = '题目：' + parsed.qtext + '\n' + parsed.marks + '\n\n';
+        preview += '范文答案：\n';
+        parsed.modelAns.forEach(function(r){ preview += '  ['+r.label+'] '+r.text.replace(/<[^>]+>/g,'')+'\n'; });
+        preview += '\n苏格拉底追问步骤：\n';
+        parsed.steps.forEach(function(s,i){ preview += '  '+(i+1)+'. '+s.q+'\n     '+s.sub+'\n'; });
+        out.textContent = preview;
+        addBtn.style.display='inline-block';
+      } catch(e) {
+        out.textContent = 'JSON解析失败，原始输出：\n' + raw;
+      }
+    } else if (data.error) {
+      out.textContent = '生成失败：' + data.error.message;
+    }
+  })
+  .catch(function(e){
+    out.textContent = '网络错误：' + e.message;
+  });
+}
+
+function addGenQuestion() {
+  if (!genResult) return;
+  genResult.label = '题目' + (QBANK.length + 1);
+  QBANK.push(genResult);
+  STATE.push(freshState());
+  saveCustomQuestions();
+  genResult = null;
+  document.getElementById('gen-output').className='gen-output';
+  document.getElementById('btn-add-q').style.display='none';
+  document.getElementById('gen-input').value='';
+  renderQList();
+  renderTabs();
+  alert('新题目已加入练习库！切换到「学生模式」即可看到。');
+}
+
+function saveCustomQuestions() {
+  try {
+    var custom = QBANK.slice(4); // 只保存第5题开始的AI生成题目
+    localStorage.setItem('hcw_custom_questions', JSON.stringify(custom));
+  } catch(e) {
+    console.warn('localStorage save failed:', e);
+  }
+}
+
+function loadCustomQuestions() {
+  try {
+    var saved = localStorage.getItem('hcw_custom_questions');
+    if (!saved) return;
+    var custom = JSON.parse(saved);
+    if (!Array.isArray(custom) || custom.length === 0) return;
+    custom.forEach(function(q) {
+      QBANK.push(q);
+      STATE.push(freshState());
+    });
+    console.log('Loaded ' + custom.length + ' custom question(s) from storage.');
+  } catch(e) {
+    console.warn('localStorage load failed:', e);
+  }
+}
+
+// ═══════════════════════════════════════════
+// 老师模式 — 题目列表
+// ═══════════════════════════════════════════
+function renderQList() {
+  var html = '';
+  QBANK.forEach(function(q, i){
+    html += '<div class="q-list-item">';
+    html += '<span>' + q.label + '：' + q.qtext.substring(0,40) + (q.qtext.length>40?'…':'') + '</span>';
+    if (i >= 4) { // 只允许删除AI生成的题目
+      html += '<button class="btn-del" onclick="delQuestion('+i+')">删除</button>';
+    } else {
+      html += '<span style="font-size:11px;color:#aaa;">预设题</span>';
+    }
+    html += '</div>';
+  });
+  var el = document.getElementById('q-list');
+  if(el) el.innerHTML = html;
+}
+
+function delQuestion(i) {
+  if (!confirm('确定删除「' + QBANK[i].label + '」？')) return;
+  QBANK.splice(i, 1);
+  STATE.splice(i, 1);
+  if (curQ >= QBANK.length) curQ = QBANK.length - 1;
+  saveCustomQuestions();
+  renderQList();
+  renderTabs();
+}
+
+// ═══════════════════════════════════════════
+// 工具函数
+// ═══════════════════════════════════════════
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+
+// ═══════════════════════════════════════════
+// 语音核心：cancel后必须等50ms再speak
+// ═══════════════════════════════════════════
+function getBestVoice(lang) {
+  var voices = window.speechSynthesis.getVoices();
+  if (lang === 'zh') {
+    var zhPriority = [
+      'Microsoft Xiaoxiao Online (Natural) - Chinese (Mainland)',
+      'Microsoft XiaoxiaoNeural',
+      'Microsoft Xiaoxiao - Chinese (Mainland)',
+      'Microsoft Huihui - Chinese (Mainland)',
+      'Tingting', 'Meijia', 'Ting-Ting'
+    ];
+    for (var i=0; i<zhPriority.length; i++) {
+      for (var j=0; j<voices.length; j++) {
+        if (voices[j].name === zhPriority[i]) return voices[j];
+      }
+    }
+    var zhPartial = ['Xiaoxiao','Huihui','Xiaoyi','Tingting','Meijia','Xiao'];
+    for (var p=0; p<zhPartial.length; p++) {
+      for (var j=0; j<voices.length; j++) {
+        if (voices[j].name.indexOf(zhPartial[p]) !== -1 && voices[j].lang.indexOf('zh') !== -1) return voices[j];
+      }
+    }
+    var malePat = /yunyang|yunxi|yunfeng|male|man|boy/i;
+    for (var j=0; j<voices.length; j++) {
+      if (voices[j].lang === 'zh-CN' && !malePat.test(voices[j].name)) return voices[j];
+    }
+    for (var j=0; j<voices.length; j++) {
+      if (voices[j].lang.indexOf('zh') !== -1) return voices[j];
+    }
+  } else {
+    var enFemale = ['Hazel','Kate','Serena','Moira','Fiona','Samantha','Karen','Victoria','Susan','Zira'];
+    for (var i=0; i<enFemale.length; i++) {
+      for (var j=0; j<voices.length; j++) {
+        if (voices[j].name.indexOf(enFemale[i]) !== -1) return voices[j];
+      }
+    }
+    for (var j=0; j<voices.length; j++) { if (voices[j].lang === 'en-GB') return voices[j]; }
+    for (var j=0; j<voices.length; j++) { if (voices[j].lang === 'en-AU') return voices[j]; }
+    for (var j=0; j<voices.length; j++) { if (voices[j].lang === 'en-US') return voices[j]; }
+  }
+  return null;
+}
+
+function doSpeak(text, lang) {
+  if (!window.speechSynthesis) { alert('你的浏览器不支持语音功能。'); return; }
+  window.speechSynthesis.cancel();
+  setTimeout(function() {
+    var utter = new SpeechSynthesisUtterance(text);
+    if (lang === 'zh') {
+      utter.lang = 'zh-CN'; utter.rate = 0.88; utter.pitch = 1.05;
+    } else {
+      utter.lang = 'en-GB'; utter.rate = 0.88; utter.pitch = 1.05;
+    }
+    var voice = getBestVoice(lang);
+    if (voice) utter.voice = voice;
+    window.speechSynthesis.speak(utter);
+  }, 50);
+}
+
+// 朗读题目或追问步骤
+function speakText(qi, stepIdx) {
+  var text = '';
+  if (stepIdx === -1) {
+    text = QBANK[qi].qtext;
+  } else {
+    var step = QBANK[qi].steps[stepIdx];
+    text = step.q + '。' + step.sub;
+  }
+  var btnId = stepIdx === -1 ? 'speak-q-'+qi : 'speak-s-'+qi;
+  var btn = document.getElementById(btnId);
+  if (btn) { btn.classList.add('speaking'); btn.textContent = '🔊 朗读中…'; }
+  if (!window.speechSynthesis) { alert('你的浏览器不支持语音功能。'); return; }
+  window.speechSynthesis.cancel();
+  setTimeout(function() {
+    var utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'zh-CN'; utter.rate = 0.88; utter.pitch = 1.05;
+    var voice = getBestVoice('zh');
+    if (voice) utter.voice = voice;
+    utter.onend = function() {
+      if (btn) { btn.classList.remove('speaking'); btn.textContent = stepIdx===-1 ? '🔊 朗读题目' : '🔊 朗读'; }
+    };
+    utter.onerror = function() {
+      if (btn) { btn.classList.remove('speaking'); btn.textContent = stepIdx===-1 ? '🔊 朗读题目' : '🔊 朗读'; }
+    };
+    window.speechSynthesis.speak(utter);
+  }, 50);
+}
+
+// 朗读批改结果区域
+function speakSection(elemId, lang) {
+  var el = document.getElementById(elemId);
+  if (!el) return;
+  var text = cleanForSpeech(el.innerText || el.textContent || '');
+  if (!text || text.indexOf('AI正在批改') !== -1) {
+    alert('批改结果还未生成，请先完成AI批改。'); return;
+  }
+  doSpeak(text, lang);
+}
+
+// 朗读范文参考
+function speakModelAns(qi, lang) {
+  var q = QBANK[qi];
+  var labelMap = {
+    '立场':'Position', '理由':'Reasoning', '例子':'Example', '启发':'Reflection',
+    '立场 + 解释':'Position and explanation',
+    '理由（正面 + 反面）':'Reasoning, with positive and negative sides',
+    '坏的一面':'The negative side', '好的一面':'The positive side'
+  };
+  var text = '';
+  if (lang === 'zh') {
+    text = '完整范文参考。';
+    q.modelAns.forEach(function(r) {
+      text += r.label + '：' + r.text.replace(/<[^>]+>/g,'') + '。';
+    });
+  } else {
+    text = 'Model answer reference. ';
+    q.modelAns.forEach(function(r) {
+      var lbl = labelMap[r.label] || r.label;
+      text += lbl + ': ' + r.text.replace(/<[^>]+>/g,'') + '. ';
+    });
+  }
+  doSpeak(text, lang);
+}
+
+// voices异步加载兼容
+if (window.speechSynthesis && window.speechSynthesis.onvoiceschanged !== undefined) {
+  window.speechSynthesis.onvoiceschanged = function() {};
+}
+
+// ═══════════════════════════════════════════
+// 关键词点选 & 角度选择
+// ═══════════════════════════════════════════
+function toggleKw(qi, ki, btn) {
+  btn.classList.toggle('selected');
+  // append keyword to textarea
+  var inp = document.getElementById('inp' + qi);
+  var kw = btn.textContent;
+  if (btn.classList.contains('selected')) {
+    if (inp.value && inp.value.slice(-1) !== '、' && inp.value.slice(-1) !== ' ') inp.value += '、';
+    inp.value += kw;
+  } else {
+    inp.value = inp.value.replace('、' + kw, '').replace(kw + '、', '').replace(kw, '').trim();
+  }
+}
+
+function selectAngle(qi, oi, btn) {
+  var container = document.getElementById('angleopts' + qi);
+  if (container) {
+    container.querySelectorAll('.angle-opt').forEach(function(b) { b.classList.remove('selected'); });
+  }
+  btn.classList.add('selected');
+  var inp = document.getElementById('inp' + qi);
+  inp.value = btn.textContent.replace(/^[✅❌]\s*/, '');
+}
+
+// ═══════════════════════════════════════════
+// 批改结果朗读 - 点击时才读取内容
+// ═══════════════════════════════════════════
+// 朗读前清理Markdown符号
+function cleanForSpeech(t) {
+  if (!t) return '';
+  t = t.replace(/#{1,6} */g, '');
+  t = t.replace(/\*\*/g, '');
+  t = t.replace(/\*/g, '');
+  t = t.replace(/^- /gm, '');
+  t = t.replace(/^• /gm, '');
+  t = t.replace(/`/g, '');
+  t = t.replace(/【[^】]*】/g, '');
+  t = t.replace(/\[[^\]]*\]/g, '');
+  t = t.replace(/「[^」]*」/g, '');
+  t = t.replace(/《[^》]*》/g, '');
+  return t.trim();
+}
+
+function speakGrade(qi, lang) {
+  var el = document.getElementById('grade-body-' + qi);
+  if (!el) { alert('找不到批改结果区域。'); return; }
+  var text = cleanForSpeech(el.innerText || el.textContent || '');
+  if (!text || text.length < 5 || text.indexOf('AI正在批改') !== -1 || text.indexOf('⏳') !== -1) {
+    alert('批改结果还未生成，请先点击「AI批改我的答案」并等待完成。');
+    return;
+  }
+  if (!window.speechSynthesis) { alert('Your browser does not support speech. Please use Chrome or Edge.'); return; }
+  var btn = document.getElementById('speak-grade-' + lang + '-' + qi);
+
+  if (lang === 'zh') {
+    // Chinese: speak directly
+    if (btn) { btn.textContent = '🔊 朗读中…'; btn.style.background = '#fef3c7'; }
+    window.speechSynthesis.cancel();
+    setTimeout(function() {
+      var utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'zh-CN'; utter.rate = 0.85; utter.pitch = 1.0;
+      var voice = getBestVoice('zh');
+      if (voice) utter.voice = voice;
+      utter.onend = function() { if (btn) { btn.textContent = '🔊 中文朗读'; btn.style.background = ''; } };
+      utter.onerror = function() { if (btn) { btn.textContent = '🔊 中文朗读'; btn.style.background = ''; } };
+      window.speechSynthesis.speak(utter);
+    }, 80);
+  } else {
+    // English: translate via API first, then speak
+    var key = apiKey;
+    if (!key) {
+      alert('Please set your API Key in Teacher Mode to enable English speech for grading results.');
+      return;
+    }
+    if (btn) { btn.textContent = '⏳ Translating…'; btn.style.background = '#fef3c7'; btn.disabled = true; }
+    fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 600,
+        messages: [{
+          role: 'user',
+          content: 'Translate the following Chinese feedback into clear, natural, professional English suitable for a secondary school student. Keep the structure and numbered points. Output only the translated text, nothing else.\n\n' + text
+        }]
+      })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (btn) { btn.disabled = false; }
+      var enText = '';
+      if (data.content && data.content[0] && data.content[0].text) {
+        enText = data.content[0].text.trim();
+      } else {
+        if (btn) { btn.textContent = '🔊 English'; btn.style.background = ''; }
+        alert('Translation failed. Please check your API Key.');
+        return;
+      }
+      if (btn) { btn.textContent = '🔊 Reading…'; }
+      window.speechSynthesis.cancel();
+      setTimeout(function() {
+        var utter = new SpeechSynthesisUtterance(enText);
+        utter.lang = 'en-GB'; utter.rate = 0.88; utter.pitch = 1.0;
+        var voice = getBestVoice('en');
+        if (voice) utter.voice = voice;
+        utter.onend = function() { if (btn) { btn.textContent = '🔊 English'; btn.style.background = ''; } };
+        utter.onerror = function() { if (btn) { btn.textContent = '🔊 English'; btn.style.background = ''; } };
+        window.speechSynthesis.speak(utter);
+      }, 80);
+    })
+    .catch(function(e) {
+      if (btn) { btn.textContent = '🔊 English'; btn.style.background = ''; btn.disabled = false; }
+      alert('Network error: ' + e.message);
+    });
+  }
+}
+
+function speakModel(qi, lang) {
+  var q = QBANK[qi];
+  var text = '';
+  if (lang === 'zh') {
+    text = '完整范文参考。';
+    q.modelAns.forEach(function(r) {
+      text += r.label + '：' + r.text.replace(/<[^>]+>/g, '') + '。';
+    });
+  } else {
+    // Use pre-written English translations stored in modelAnsEn
+    if (q.modelAnsEn && q.modelAnsEn.length > 0) {
+      text = 'Model answer reference. ';
+      q.modelAnsEn.forEach(function(r) {
+        text += r.label + '. ' + r.text.replace(/<[^>]+>/g, '') + ' ';
+      });
+    } else {
+      text = 'No English translation available for this question.';
+    }
+  }
+  if (!window.speechSynthesis) { alert('Your browser does not support speech. Please use Chrome or Edge.'); return; }
+  var btn = document.getElementById('speak-model-' + lang + '-' + qi);
+  if (btn) { btn.textContent = '🔊 朗读中…'; btn.style.background = '#fef3c7'; }
+  window.speechSynthesis.cancel();
+  setTimeout(function() {
+    var utter = new SpeechSynthesisUtterance(text);
+    if (lang === 'zh') { utter.lang = 'zh-CN'; utter.rate = 0.85; utter.pitch = 1.0; }
+    else { utter.lang = 'en-GB'; utter.rate = 0.88; utter.pitch = 1.0; }
+    var voice = getBestVoice(lang);
+    if (voice) utter.voice = voice;
+    utter.onend = function() {
+      if (btn) { btn.textContent = lang === 'zh' ? '🔊 中文朗读' : '🔊 English'; btn.style.background = ''; }
+    };
+    utter.onerror = function() {
+      if (btn) { btn.textContent = lang === 'zh' ? '🔊 中文朗读' : '🔊 English'; btn.style.background = ''; }
+    };
+    window.speechSynthesis.speak(utter);
+  }, 80);
+}
+
+// ═══════════════════════════════════════════
+// 语音诊断函数
+// ═══════════════════════════════════════════
+function diagTest() {
+  var out = document.getElementById('diag-out');
+  out.textContent = '正在测试…';
+  if (!window.speechSynthesis) {
+    out.textContent = '❌ 你的浏览器完全不支持 speechSynthesis。请改用 Chrome 或 Edge。';
+    return;
+  }
+  // 最简单的测试：不选声音，直接speak
+  window.speechSynthesis.cancel();
+  setTimeout(function() {
+    var u = new SpeechSynthesisUtterance('你好，语音测试。Hello, speech test.');
+    u.onstart = function() { out.textContent += '\n✅ onstart 触发了（语音开始播放）'; };
+    u.onend   = function() { out.textContent += '\n✅ onend 触发了（语音播放完毕）'; };
+    u.onerror = function(e) { out.textContent += '\n❌ onerror: ' + e.error; };
+    out.textContent = 'speechSynthesis 存在: ✅\n已调用 speak()，等待 onstart…';
+    window.speechSynthesis.speak(u);
+    setTimeout(function() {
+      out.textContent += '\n（500ms后）pending: ' + window.speechSynthesis.pending +
+                         '  speaking: ' + window.speechSynthesis.speaking +
+                         '  paused: '   + window.speechSynthesis.paused;
+    }, 500);
+  }, 100);
+}
+
+function diagList() {
+  var out = document.getElementById('diag-out');
+  var voices = window.speechSynthesis.getVoices();
+  if (!voices || voices.length === 0) {
+    out.textContent = '⚠️ getVoices() 返回空数组。\n可能原因：\n1. 浏览器还未加载声音列表，请等2秒后再点。\n2. 设备没有安装语音包。';
+    // try again after 1s
+    setTimeout(function() {
+      voices = window.speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        showVoices(voices, out);
+      } else {
+        out.textContent += '\n1秒后重试仍为空。请确认：系统是否安装了TTS语音包？';
+      }
+    }, 1000);
+    return;
+  }
+  showVoices(voices, out);
+}
+
+function showVoices(voices, out) {
+  var lines = ['共找到 ' + voices.length + ' 个声音：\n'];
+  voices.forEach(function(v, i) {
+    lines.push((i+1) + '. [' + v.lang + '] ' + v.name + (v.default?' (默认)':''));
+  });
+  out.textContent = lines.join('\n');
+}
+
+// ═══════════════════════════════════════════
+// 初始化
+// ═══════════════════════════════════════════
+loadCustomQuestions();
+renderTabs();
+renderQ(0);
+</script>
+</body>
+</html>

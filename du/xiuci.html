@@ -1,0 +1,3120 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>分析修辞的作用</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+:root {
+  --bg: #f7f3eb;
+  --paper: #fdfaf4;
+  --ink: #1c2b1a;
+  --ink2: #2d3e2b;
+  --gold: #b8841a;
+  --gold2: #d4a035;
+  --green: #2a5c3f;
+  --green2: #3a7a55;
+  --green-light: #e8f2ec;
+  --red: #b03a2e;
+  --red-light: #fdf0ee;
+  --border: #d6cdb8;
+  --muted: #7a6e5a;
+  --shadow: 0 4px 20px rgba(28,43,26,0.10);
+  --radius: 16px;
+  --step-active: #2a5c3f;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Noto Sans SC', sans-serif;
+  min-height: 100vh;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(42,92,63,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(184,132,26,0.04) 0%, transparent 40%);
+}
+
+/* ─── HEADER ─── */
+.header {
+  background: var(--ink);
+  padding: 16px 20px 14px;
+  position: sticky; top: 0; z-index: 200;
+  border-bottom: 2px solid var(--gold);
+}
+.header-inner { max-width: 640px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+.header-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px; font-weight: 900;
+  color: var(--gold2); letter-spacing: 2px;
+}
+.header-sub { font-size: 11px; color: #7a8a6a; letter-spacing: 1px; margin-top: 2px; }
+.score-pill {
+  background: rgba(184,132,26,0.15);
+  border: 1px solid rgba(184,132,26,0.3);
+  color: var(--gold2); font-weight: 700; font-size: 13px;
+  padding: 5px 14px; border-radius: 20px;
+}
+
+/* ─── MAIN WRAPPER ─── */
+.main { max-width: 640px; margin: 0 auto; padding: 20px 16px 60px; }
+
+/* ─── SCREENS ─── */
+.screen { display: none; }
+.screen.active { display: block; animation: fadeUp .3s ease; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+/* ─── SETUP SCREEN ─── */
+.setup-hero {
+  background: var(--ink);
+  border-radius: var(--radius);
+  padding: 28px 24px 24px;
+  margin-bottom: 24px;
+  position: relative; overflow: hidden;
+}
+.setup-hero::after {
+  content: '修辞'; position: absolute; right: -10px; bottom: -20px;
+  font-family: 'Noto Serif SC', serif; font-size: 90px; font-weight: 900;
+  color: rgba(184,132,26,0.07); line-height: 1; pointer-events: none;
+  letter-spacing: -4px;
+}
+.setup-hero h1 {
+  font-family: 'Noto Serif SC', serif; font-size: 24px; font-weight: 900;
+  color: var(--gold2); letter-spacing: 3px; margin-bottom: 8px;
+}
+.setup-hero p { font-size: 13px; color: #9aaa8a; line-height: 1.7; }
+
+.setup-section { margin-bottom: 24px; }
+.setup-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--muted);
+  text-transform: uppercase; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.setup-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.level-toggle {
+  display: flex; gap: 10px;
+}
+.level-btn {
+  flex: 1; padding: 16px 10px; border: 2px solid var(--border);
+  border-radius: 12px; background: var(--paper); cursor: pointer;
+  text-align: center; transition: all .2s; font-family: 'Noto Sans SC', sans-serif;
+}
+.level-btn .lv-num { font-size: 22px; font-weight: 900; color: var(--border); display: block; font-family: 'Noto Serif SC', serif; }
+.level-btn .lv-name { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.level-btn.selected { border-color: var(--green); background: var(--green-light); }
+.level-btn.selected .lv-num { color: var(--green); }
+.level-btn.selected .lv-name { color: var(--green2); }
+
+.rhetoric-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+}
+.rhet-chip {
+  padding: 12px 8px; border: 2px solid var(--border);
+  border-radius: 10px; background: var(--paper); cursor: pointer;
+  text-align: center; font-size: 15px; font-weight: 600;
+  transition: all .2s; font-family: 'Noto Sans SC', sans-serif;
+  color: var(--muted);
+}
+.rhet-chip.sel { border-color: var(--gold); background: #fdf3e0; color: var(--gold); }
+.rhet-chip .rhet-en { display: block; font-size: 9px; color: var(--muted); font-weight: 400; margin-top: 3px; letter-spacing: 0.3px; }
+
+.start-btn {
+  width: 100%; background: var(--green); color: #fff;
+  border: none; border-radius: 12px; padding: 17px;
+  font-size: 16px; font-weight: 700; letter-spacing: 2px;
+  cursor: pointer; font-family: 'Noto Sans SC', sans-serif;
+  transition: all .2s; margin-top: 8px;
+}
+.start-btn:active { transform: scale(.98); }
+.start-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+/* ─── PRACTICE SCREEN ─── */
+.progress-bar-wrap {
+  background: var(--border); border-radius: 99px;
+  height: 5px; margin-bottom: 20px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; background: var(--green); border-radius: 99px;
+  transition: width .4s ease;
+}
+
+.q-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.q-meta-left { display: flex; align-items: center; gap: 8px; }
+.rhet-badge {
+  font-size: 11px; font-weight: 700; padding: 4px 10px;
+  border-radius: 8px; letter-spacing: 0.5px;
+}
+.rhet-badge.比喻 { background: #fff3e0; color: #b8841a; }
+.rhet-badge.拟人 { background: #fce4ec; color: #c2185b; }
+.rhet-badge.夸张 { background: #fff8e1; color: #f57f17; }
+.rhet-badge.排比 { background: #e8f5e9; color: #2e7d32; }
+.rhet-badge.反问 { background: #e3f2fd; color: #1565c0; }
+.rhet-badge.设问 { background: #f3e5f5; color: #6a1b9a; }
+
+.q-counter { font-size: 12px; color: var(--muted); font-weight: 600; }
+
+/* step indicator */
+.steps-row {
+  display: flex; gap: 6px; margin-bottom: 18px; align-items: center;
+}
+.step-dot {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+  border: 2px solid var(--border); color: var(--muted); background: var(--paper);
+  transition: all .25s;
+}
+.step-dot.active { background: var(--green); border-color: var(--green); color: #fff; }
+.step-dot.done { background: var(--green-light); border-color: var(--green); color: var(--green); }
+.step-line { flex: 1; height: 2px; background: var(--border); border-radius: 2px; }
+.step-line.done { background: var(--green); }
+
+/* sentence card */
+.sentence-card {
+  background: var(--paper); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 22px 18px;
+  margin-bottom: 16px; box-shadow: var(--shadow);
+  border-left: 4px solid var(--gold);
+}
+.sentence-label { font-size: 11px; color: var(--muted); letter-spacing: 1.5px; margin-bottom: 10px; font-weight: 600; }
+.sentence-text {
+  font-family: 'Noto Serif SC', serif; font-size: 18px;
+  line-height: 1.9; color: var(--ink);
+}
+.sentence-text .kw-highlight {
+  background: #fff3cd; border-bottom: 2px solid var(--gold);
+  border-radius: 3px; padding: 0 2px; font-weight: 700; color: var(--ink);
+}
+.sentence-text .kw-selected {
+  background: var(--green-light); border-bottom: 2px solid var(--green);
+  border-radius: 3px; padding: 0 2px; font-weight: 700; color: var(--green);
+  cursor: pointer;
+}
+.sentence-text .kw-tap {
+  cursor: pointer; border-bottom: 2px dashed var(--border); border-radius: 3px;
+  padding: 0 2px; transition: all .15s;
+}
+.sentence-text .kw-tap:active { background: #f0ece4; }
+
+/* interaction panels */
+.panel {
+  background: var(--paper); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 18px 16px;
+  margin-bottom: 14px; box-shadow: var(--shadow);
+  animation: fadeUp .25s ease;
+}
+.panel-title {
+  font-size: 13px; font-weight: 700; color: var(--ink2);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+}
+.panel-title .step-num {
+  width: 22px; height: 22px; background: var(--green); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+
+/* choice grid */
+.choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.choice-grid.single { grid-template-columns: 1fr; }
+.choice-btn {
+  padding: 13px 12px; border: 2px solid var(--border);
+  border-radius: 10px; background: var(--bg); cursor: pointer;
+  font-size: 14px; font-weight: 500; color: var(--ink);
+  text-align: center; transition: all .15s; font-family: 'Noto Sans SC', sans-serif;
+}
+.choice-btn:active { transform: scale(.97); }
+.choice-btn.selected { border-color: var(--gold); background: #fdf3e0; color: var(--gold); font-weight: 700; }
+.choice-btn.correct { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 700; }
+.choice-btn.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); font-weight: 700; }
+.choice-btn.reveal { border-color: var(--green); background: var(--green-light); color: var(--green); }
+.choice-btn:disabled { cursor: not-allowed; }
+
+/* keyword tokens */
+.token-area { display: flex; flex-wrap: wrap; gap: 8px; }
+.token {
+  padding: 9px 14px; border: 2px solid var(--border);
+  border-radius: 8px; background: var(--bg); cursor: pointer;
+  font-size: 14px; font-family: 'Noto Serif SC', serif;
+  transition: all .15s; color: var(--ink2);
+}
+.token:active { transform: scale(.96); }
+.token.selected { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 700; }
+.token.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+.token.reveal { border-color: var(--green); background: var(--green-light); color: var(--green); }
+
+/* ─── FORMULA BUILDER ─── */
+.formula-header {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px; color: var(--muted);
+  text-transform: uppercase; margin-bottom: 10px;
+}
+/* The formula display: dark card showing the sentence being assembled */
+.formula-sentence {
+  background: var(--ink); border-radius: 12px; padding: 16px 16px 14px;
+  margin-bottom: 14px; line-height: 2.2;
+  font-family: 'Noto Serif SC', serif; font-size: 15px;
+}
+.fs-static { color: #c8b88a; }
+/* A slot in the formula sentence */
+.fs-slot {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 6px; padding: 2px 10px; margin: 0 2px;
+  font-size: 14px; font-weight: 600; vertical-align: middle;
+  min-width: 52px; transition: all .25s;
+}
+.fs-slot.prefilled {
+  background: rgba(42,92,63,0.45); border: 1.5px solid rgba(100,200,140,0.5);
+  color: #88d8a8;
+}
+.fs-slot.prefilled-gold {
+  background: rgba(184,132,26,0.25); border: 1.5px solid rgba(212,160,53,0.5);
+  color: var(--gold2);
+}
+.fs-slot.empty {
+  background: rgba(255,255,255,0.06); border: 2px dashed rgba(200,184,138,0.35);
+  color: #6a7a6a; cursor: default; min-width: 70px;
+}
+.fs-slot.filled-correct {
+  background: rgba(42,92,63,0.6); border: 2px solid #6ad8a0;
+  color: #b0f0c8; animation: slotPop .25s ease;
+}
+.fs-slot.filled-wrong {
+  background: rgba(176,58,46,0.4); border: 2px solid rgba(220,100,90,0.6);
+  color: #f8a0a0;
+}
+@keyframes slotPop {
+  0%   { transform: scale(0.85); opacity:0.5; }
+  60%  { transform: scale(1.08); }
+  100% { transform: scale(1);   opacity:1; }
+}
+
+/* The word-bank below the formula */
+.wordbank-label {
+  font-size: 11px; color: var(--muted); font-weight: 700;
+  letter-spacing: 1px; margin: 12px 0 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.wordbank-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.wordbank { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+.wb-chip {
+  padding: 9px 14px; border: 2px solid var(--border);
+  border-radius: 20px; background: var(--bg); cursor: pointer;
+  font-size: 14px; font-family: 'Noto Serif SC', serif;
+  transition: all .15s; color: var(--ink2);
+  user-select: none;
+}
+.wb-chip:active { transform: scale(.95); }
+.wb-chip.selected { border-color: var(--gold); background: #fdf3e0; color: var(--gold); font-weight: 700; }
+.wb-chip.correct  { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 700; pointer-events: none; }
+.wb-chip.wrong    { border-color: var(--red); background: var(--red-light); color: var(--red); pointer-events: none; }
+.wb-chip.reveal   { border-color: var(--green); background: var(--green-light); color: var(--green); pointer-events: none; opacity:.7; }
+.wb-chip.disabled { pointer-events: none; opacity:.45; }
+
+/* model answer reveal */
+.model-answer-box {
+  background: #f0f7f3; border-radius: 10px; padding: 14px 16px;
+  border-left: 3px solid var(--green); margin-top: 12px;
+  font-family: 'Noto Serif SC', serif; font-size: 15px; line-height: 1.9;
+  color: var(--ink); animation: fadeUp .3s ease;
+}
+.model-answer-label {
+  font-size: 11px; font-weight: 700; color: var(--green);
+  letter-spacing: 1px; margin-bottom: 6px;
+}
+
+/* answer textarea (kept for possible future use) */
+
+/* ─── METHOD CARD (dark box with steps + audio + EN) ─── */
+.method-card {
+  background: var(--ink); border-radius: 12px;
+  padding: 14px 16px; margin-bottom: 4px;
+}
+.method-title-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.method-badge {
+  font-family: 'Noto Serif SC', serif; font-size: 13px; font-weight: 700;
+  color: var(--gold2); letter-spacing: 1px;
+}
+.method-btn-audio {
+  background: rgba(184,132,26,0.2); border: 1px solid rgba(184,132,26,0.4);
+  color: var(--gold2); border-radius: 20px; padding: 5px 12px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  font-family: 'Noto Sans SC', sans-serif; transition: all .15s;
+}
+.method-btn-audio:active { transform: scale(.95); background: rgba(184,132,26,0.35); }
+.method-btn-en {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  color: #9aaa8a; border-radius: 20px; padding: 5px 12px;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  font-family: 'Noto Sans SC', sans-serif; letter-spacing: 0.5px; transition: all .15s;
+}
+.method-btn-en:active { transform: scale(.95); background: rgba(255,255,255,0.15); }
+.method-steps { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.method-step {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 8px; background: rgba(255,255,255,0.05); border-radius: 8px;
+  padding: 8px 10px;
+}
+.method-step-text {
+  font-size: 13px; color: #d0d8b8; line-height: 1.5; flex: 1;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.method-step-audio {
+  background: none; border: none; cursor: pointer; font-size: 14px;
+  opacity: 0.6; flex-shrink: 0; padding: 0 2px; transition: opacity .15s;
+}
+.method-step-audio:active { opacity: 1; transform: scale(1.1); }
+.method-formula-line {
+  display: flex; align-items: center; margin-bottom: 4px;
+}
+.method-formula-text {
+  font-size: 12px; color: #7a9a6a; font-family: 'Noto Sans SC', sans-serif;
+  background: rgba(255,255,255,0.04); border-radius: 6px; padding: 6px 10px;
+  letter-spacing: 0.3px;
+}
+
+/* feedback */
+.feedback {
+  border-radius: 10px; padding: 14px 16px; margin-bottom: 14px;
+  font-size: 14px; line-height: 1.7; display: none;
+  animation: fadeUp .2s ease;
+}
+.feedback.show { display: block; }
+.feedback.ok { background: var(--green-light); border-left: 3px solid var(--green); }
+.feedback.ng { background: var(--red-light); border-left: 3px solid var(--red); }
+.feedback.info { background: #fff8e1; border-left: 3px solid var(--gold); }
+.feedback strong { display: block; margin-bottom: 4px; font-size: 15px; }
+.model-answer {
+  background: #f0f7f3; border-radius: 8px; padding: 12px 14px;
+  font-family: 'Noto Serif SC', serif; font-size: 14px; line-height: 1.9;
+  border-left: 3px solid var(--green); margin-top: 10px; color: var(--ink);
+}
+
+/* action buttons */
+.action-btn {
+  width: 100%; border: none; border-radius: 12px; padding: 15px;
+  font-size: 15px; font-weight: 700; letter-spacing: 1px;
+  cursor: pointer; font-family: 'Noto Sans SC', sans-serif; transition: all .15s;
+}
+.action-btn:active { transform: scale(.98); }
+.action-btn.primary { background: var(--green); color: #fff; }
+.action-btn.secondary { background: var(--ink); color: var(--gold2); }
+.action-btn.gold { background: var(--gold); color: #fff; }
+.action-btn:disabled { background: var(--border); color: var(--muted); cursor: wait; }
+.btn-gap { height: 10px; }
+
+/* loading */
+.loading { display: flex; gap: 5px; justify-content: center; padding: 16px 0; }
+.loading span { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: bounce 1s infinite; }
+.loading span:nth-child(2) { animation-delay: .15s; }
+.loading span:nth-child(3) { animation-delay: .3s; }
+@keyframes bounce { 0%,100%{transform:translateY(0);opacity:.4} 50%{transform:translateY(-7px);opacity:1} }
+
+/* result screen */
+.result-card {
+  background: var(--ink); border-radius: var(--radius); padding: 28px 22px;
+  text-align: center; margin-bottom: 20px;
+}
+.result-emoji { font-size: 56px; margin-bottom: 10px; }
+.result-title { font-family: 'Noto Serif SC', serif; font-size: 22px; font-weight: 900; color: var(--gold2); }
+.result-score { font-size: 52px; font-weight: 900; color: var(--gold2); margin: 6px 0 4px; }
+.result-sub { font-size: 13px; color: #7a8a6a; }
+.stat-row { display: flex; gap: 10px; margin-bottom: 16px; }
+.stat-box { flex: 1; background: var(--paper); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 10px; text-align: center; }
+.stat-num { font-size: 26px; font-weight: 900; color: var(--green); }
+.stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* toast */
+.toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--ink); color: var(--gold2); padding: 10px 20px;
+  border-radius: 20px; font-size: 13px; font-weight: 600;
+  opacity: 0; transition: all .3s; z-index: 999; white-space: nowrap;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* hint toggle */
+.hint-toggle {
+  font-size: 12px; color: var(--gold); cursor: pointer;
+  text-decoration: underline; display: inline-block; margin-bottom: 8px;
+}
+.hint-box {
+  background: #fff8e1; border-radius: 8px; padding: 10px 14px;
+  font-size: 13px; color: #7a5a00; line-height: 1.6;
+  border-left: 3px solid var(--gold); margin-bottom: 10px;
+  display: none;
+}
+.hint-box.show { display: block; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header-title">分析修辞的作用</div>
+      <div class="header-sub">HCL 修辞手法互动练习</div>
+    </div>
+    <div class="score-pill" id="scorePill">0 分</div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ══════════════════════════════════ -->
+<!-- SETUP SCREEN                       -->
+<!-- ══════════════════════════════════ -->
+<div class="screen active" id="screen-setup">
+  <div class="setup-hero">
+    <h1>修辞分析练习</h1>
+    <p>五步引导，从识别修辞到写出完整分析句。<br>请选择年级和要练习的修辞手法。</p>
+  </div>
+
+  <div class="setup-section">
+    <div class="setup-label">选择年级</div>
+    <div class="level-toggle">
+      <button class="level-btn selected" id="btn-s1" onclick="selectLevel(1)">
+        <span class="lv-num">中一</span>
+      </button>
+      <button class="level-btn" id="btn-s2" onclick="selectLevel(2)">
+        <span class="lv-num">中二</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="setup-section">
+    <div class="setup-label">选择修辞手法（可多选）</div>
+    <div class="rhetoric-grid" id="rhetoricGrid">
+      <!-- injected by JS -->
+    </div>
+  </div>
+
+  <button class="start-btn" id="startBtn" onclick="startPractice()">开始练习 →</button>
+  <!-- note: enabled by default since chips are pre-selected -->
+</div>
+
+<!-- ══════════════════════════════════ -->
+<!-- PRACTICE SCREEN                    -->
+<!-- ══════════════════════════════════ -->
+<div class="screen" id="screen-practice">
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+  </div>
+
+  <div class="q-header">
+    <div class="q-meta-left">
+      <span class="rhet-badge" id="qRhetBadge">比喻</span>
+    </div>
+    <span class="q-counter" id="qCounter">1 / 5</span>
+  </div>
+
+  <div class="steps-row" id="stepsRow"></div>
+
+  <!-- sentence display -->
+  <div class="sentence-card">
+    <div class="sentence-label">📖 请阅读以下句子</div>
+    <div class="sentence-text" id="sentenceDisplay"></div>
+  </div>
+
+  <!-- dynamic step panels -->
+  <div id="stepPanels"></div>
+
+  <!-- feedback area -->
+  <div class="feedback" id="mainFeedback"></div>
+
+  <!-- action button -->
+  <button class="action-btn primary" id="mainActionBtn" onclick="handleAction()">确认</button>
+</div>
+
+<!-- ══════════════════════════════════ -->
+<!-- RESULT SCREEN                      -->
+<!-- ══════════════════════════════════ -->
+<div class="screen" id="screen-result">
+  <div class="result-card" id="resultCard"></div>
+  <div class="stat-row" id="statRow"></div>
+  <button class="action-btn secondary" onclick="goSetup()">重新选择练习</button>
+  <div class="btn-gap"></div>
+  <button class="action-btn gold" onclick="restartSame()">再练一遍 ↺</button>
+</div>
+
+</div><!-- /main -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+
+const RHETORICS_BY_LEVEL = {
+  1: ['比喻','拟人','夸张','反问','设问','排比'],
+  2: ['比喻','拟人','夸张','反问','排比']
+};
+
+// Each question:
+// sentence: display string, {kw:...} marks keyword tokens for step 4
+// rhetoric: which type
+// writeType: '写人'|'写事物'|'写观点/感情'
+// writeTypeChoices: options to show
+// target: what is being described (人物名/事物名)
+// keywords: array of {text, isKey} — the tokens shown in step 4
+//   isKey=true means this is the answer token(s) students should pick
+// keyHint: brief explanation of why this is the keyword
+// emotionChoices: options for emotion step
+// correctEmotion: correct answer
+// formula: template string with slots
+// modelAnswer: full answer sentence
+
+const QUESTIONS = {
+  "1": {
+    "比喻": [
+      {
+        "sentence": "马小跳开心得{像只快乐的鸟儿}，蹦着跳着，恨不得马上就回到家。",
+        "context": "1A《我的新同学》｜马小跳得到找老师的表扬，赵老师还让他把这个蛋带回家送给爸爸妈妈。",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写人（马小跳）",
+          "写景物",
+          "写事物",
+          "写观点"
+        ],
+        "writeTypeCorrect": "写人（马小跳）",
+        "target": "马小跳",
+        "keywordPrompt": "比喻句中，喻体（马小跳被比作什么）是什么？",
+        "tokens": [
+          "马小跳",
+          "像只快乐的鸟儿",
+          "蹦着跳着",
+          "开心",
+          "回家"
+        ],
+        "correctTokens": [
+          "像只快乐的鸟儿"
+        ],
+        "keyHint": "喻体是「像只快乐的鸟儿」——把马小跳比作鸟儿，说明他走路轻快、蹦蹦跳跳。",
+        "emotionChoices": [
+          "他心里非常高兴",
+          "他很伤心、难过",
+          "他很生气",
+          "他很担心"
+        ],
+        "correctEmotion": "他心里非常高兴",
+        "correctFeature": "走路轻快、活蹦乱跳",
+        "featureChoices": [
+          "走路轻快、活蹦乱跳",
+          "走路慢吞吞、无精打采",
+          "走路稳重、不慌不忙"
+        ],
+        "formulaTemplate": "运用比喻，将马小跳比作__①__，生动地写出了他__②__的特点，表现出__③__。",
+        "modelAnswer": "运用比喻的修辞手法，将马小跳比作快乐的鸟儿，生动地写出了他走路轻快、活蹦乱跳的特点，表现出他心里非常高兴。"
+      },
+      {
+        "sentence": "闪亮的星耀樟宜{像一颗宝石}镶嵌在樟宜机场第一搭客大厦的旁边。",
+        "context": "1A《星耀樟宜》（单句练习）",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写建筑（星耀樟宜）",
+          "写人",
+          "写感情",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写建筑（星耀樟宜）",
+        "target": "星耀樟宜",
+        "keywordPrompt": "比喻句中，喻体（星耀樟宜被比作什么）是什么？",
+        "tokens": [
+          "星耀樟宜",
+          "像一颗宝石",
+          "闪亮",
+          "镶嵌",
+          "机场"
+        ],
+        "correctTokens": [
+          "像一颗宝石"
+        ],
+        "keyHint": "喻体是「宝石」——把星耀樟宜比作宝石，突出它闪闪发光、非常漂亮的外观特征。",
+        "emotionChoices": [
+          "赞美、惊叹",
+          "批评、失望",
+          "忧愁担心",
+          "平淡无感"
+        ],
+        "correctEmotion": "赞美、惊叹",
+        "correctFeature": "闪闪发光、非常漂亮",
+        "featureChoices": [
+          "闪闪发光、非常漂亮",
+          "普通平凡、毫不起眼",
+          "古旧破旧"
+        ],
+        "formulaTemplate": "运用比喻，将星耀樟宜比作__①__，生动地突出了它__②__的外观特征，表达了__③__之情。",
+        "modelAnswer": "运用比喻的修辞手法，将星耀樟宜比作一颗宝石，生动地突出了这个建筑闪闪发光、非常漂亮的外观特征，表达了赞美与惊叹之情。"
+      },
+      {
+        "sentence": "林小飞垂头丧气地站在那里，{像泄了气的皮球}。",
+        "context": "1A《一个蛋两个蛋三个蛋》｜林小飞冤枉了陈小双，被欧阳甜甜反驳得哑口无言。",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写人（林小飞）",
+          "写景物",
+          "写事物",
+          "写感情"
+        ],
+        "writeTypeCorrect": "写人（林小飞）",
+        "target": "林小飞",
+        "keywordPrompt": "比喻句中，喻体（林小飞被比作什么）是什么？",
+        "tokens": [
+          "林小飞",
+          "垂头丧气",
+          "像泄了气的皮球",
+          "站在那里",
+          "哑口无言"
+        ],
+        "correctTokens": [
+          "像泄了气的皮球"
+        ],
+        "keyHint": "喻体是「泄了气的皮球」——把林小飞比作没气的皮球，生动地写出了他被欧阳甜甜说得哑口无言、一副垂头丧气的样子。",
+        "emotionChoices": [
+          "哑口无言、垂头丧气",
+          "开心得意、充满活力",
+          "紧张害怕",
+          "平静淡然"
+        ],
+        "correctEmotion": "哑口无言、垂头丧气",
+        "correctFeature": "哑口无言、垂头丧气",
+        "featureChoices": [
+          "哑口无言、垂头丧气",
+          "充满活力、精神抖擞",
+          "冷静从容"
+        ],
+        "formulaTemplate": "运用比喻，将林小飞比作__①__，生动地写出了他被欧阳甜甜说得__②__的样子，表达了__③__。",
+        "modelAnswer": "运用比喻的修辞手法，将林小飞比作泄了气的皮球，生动地写出了林小飞被欧阳甜甜说得哑口无言、一副垂头丧气的样子。"
+      },
+      {
+        "sentence": "全班同学都被王老师那{金属般}的声音镇住了。",
+        "context": "1A课文（单句练习）",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写声音（王老师的声音）",
+          "写人",
+          "写感情",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写声音（王老师的声音）",
+        "target": "王老师的声音",
+        "keywordPrompt": "比喻句中，喻体（声音被比作什么）是什么？",
+        "tokens": [
+          "声音",
+          "金属般",
+          "镇住了",
+          "王老师",
+          "全班"
+        ],
+        "correctTokens": [
+          "金属般"
+        ],
+        "keyHint": "喻体是「金属」——把王老师的声音比作金属，突出声音非常响亮、清脆的特点。",
+        "emotionChoices": [
+          "震撼、敬畏",
+          "开心放松",
+          "悲伤难过",
+          "无所谓"
+        ],
+        "correctEmotion": "震撼、敬畏",
+        "correctFeature": "非常响亮、清脆",
+        "featureChoices": [
+          "非常响亮、清脆",
+          "轻柔温和、细声细气",
+          "普通平常"
+        ],
+        "formulaTemplate": "运用比喻，将声音比作__①__，生动地突出了王老师的声音__②__的特点，令全班__③__。",
+        "modelAnswer": "运用比喻的修辞手法，将声音比作金属，生动地突出了王老师的声音非常响亮、清脆的特点，令全班同学都被镇住了，感到震撼与敬畏。"
+      },
+      {
+        "sentence": "时间真是个{贼}，而且还是个{神偷}。",
+        "context": "1A课文（单句练习）",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写时间（事物）",
+          "写人",
+          "写感情",
+          "写景色"
+        ],
+        "writeTypeCorrect": "写时间（事物）",
+        "target": "时间",
+        "keywordPrompt": "比喻句中，喻体（时间被比作什么）是什么？",
+        "tokens": [
+          "时间",
+          "贼",
+          "神偷",
+          "不知不觉",
+          "溜走"
+        ],
+        "correctTokens": [
+          "贼",
+          "神偷"
+        ],
+        "keyHint": "喻体是「贼」和「神偷」——把时间比作小偷，说明时间悄悄溜走，让人抓不住。",
+        "emotionChoices": [
+          "感叹、警惕（要珍惜时间）",
+          "开心满足",
+          "愤怒抗议",
+          "无所谓"
+        ],
+        "correctEmotion": "感叹、警惕（要珍惜时间）",
+        "correctFeature": "悄悄溜走、抓不住",
+        "featureChoices": [
+          "悄悄溜走、抓不住",
+          "慢慢流动、可以掌控",
+          "充裕宽松"
+        ],
+        "formulaTemplate": "运用比喻，将时间比作__①__，生动地写出了时间__②__的特点，表达了__③__。",
+        "modelAnswer": "运用比喻的修辞手法，将时间比作神偷，生动地写出了时间在不知不觉中飞快溜走、抓不住的特点，警示人们要珍惜时间。"
+      },
+      {
+        "sentence": "面饼越甩越大，也越来越薄，最后薄得{像纸片一样}。",
+        "context": "1A课文｜店里的印度大叔像耍杂技一样甩面饼。",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写面饼（事物）",
+          "写人",
+          "写感情",
+          "写景色"
+        ],
+        "writeTypeCorrect": "写面饼（事物）",
+        "target": "面饼",
+        "keywordPrompt": "比喻句中，喻体（面饼被比作什么）是什么？",
+        "tokens": [
+          "面饼",
+          "像纸片一样",
+          "越甩越大",
+          "薄得",
+          "印度大叔"
+        ],
+        "correctTokens": [
+          "像纸片一样"
+        ],
+        "keyHint": "喻体是「纸片」——把面饼比作纸片，突出面饼被拉得非常非常薄的特点。",
+        "emotionChoices": [
+          "赞叹、佩服技术",
+          "担忧害怕",
+          "嫌弃不满",
+          "平淡无感"
+        ],
+        "correctEmotion": "赞叹、佩服技术",
+        "correctFeature": "非常非常薄",
+        "featureChoices": [
+          "非常非常薄",
+          "又厚又重",
+          "形状奇特"
+        ],
+        "formulaTemplate": "运用比喻，将面饼比作__①__，生动地突出了面饼__②__的特点，表达了__③__之情。",
+        "modelAnswer": "运用比喻的修辞手法，将面饼比作纸片，生动地突出了面饼被拉得非常非常薄的特点，表达了对印度大叔技术的赞叹与佩服之情。"
+      },
+      {
+        "sentence": "我{像一只狼狈的小狗}，被女佣抱上了人力车。",
+        "context": "1B课文｜「我」因为不愿上学被父亲责罚，因为下雨第一次花钱坐人力车去上学。",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写人（「我」）",
+          "写景色",
+          "写动物",
+          "写感情"
+        ],
+        "writeTypeCorrect": "写人（「我」）",
+        "target": "「我」",
+        "keywordPrompt": "比喻句中，喻体（「我」被比作什么）是什么？",
+        "tokens": [
+          "我",
+          "像一只狼狈的小狗",
+          "被女佣抱上",
+          "人力车",
+          "不愿上学"
+        ],
+        "correctTokens": [
+          "像一只狼狈的小狗"
+        ],
+        "keyHint": "喻体是「狼狈的小狗」——把「我」比作小狗，说明「我」当时不愿上学但又没办法、一副可怜无助的样子。",
+        "emotionChoices": [
+          "不愿上学、可怜无助",
+          "开心兴奋",
+          "骄傲自豪",
+          "平静淡然"
+        ],
+        "correctEmotion": "不愿上学、可怜无助",
+        "correctFeature": "不愿上学但没办法、可怜无助",
+        "featureChoices": [
+          "不愿上学但没办法、可怜无助",
+          "从容优雅、镇定自若",
+          "开心活泼"
+        ],
+        "formulaTemplate": "运用比喻，将「我」比作__①__，生动地写出了「我」__②__的样子，表达了__③__。",
+        "modelAnswer": "运用比喻的修辞手法，将「我」比作狼狈的小狗，生动地写出了「我」当时不愿上学但又没办法、一副可怜无助的样子。"
+      },
+      {
+        "sentence": "海面上风平浪静，{像一块无边无际的玻璃}。",
+        "context": "1B课文（单句练习）",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写景物（海面）",
+          "写人",
+          "写感情",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写景物（海面）",
+        "target": "海面",
+        "keywordPrompt": "比喻句中，喻体（海面被比作什么）是什么？",
+        "tokens": [
+          "海面",
+          "像一块无边无际的玻璃",
+          "风平浪静",
+          "平静",
+          "清澈"
+        ],
+        "correctTokens": [
+          "像一块无边无际的玻璃"
+        ],
+        "keyHint": "喻体是「玻璃」——把海面比作玻璃，说明海面非常平静、水面很清澈。",
+        "emotionChoices": [
+          "宁静、开阔的感觉",
+          "紧张害怕",
+          "悲伤惆怅",
+          "无聊疲倦"
+        ],
+        "correctEmotion": "宁静、开阔的感觉",
+        "correctFeature": "非常平静、水面清澈",
+        "featureChoices": [
+          "非常平静、水面清澈",
+          "波涛汹涌、危险",
+          "浑浊狭小"
+        ],
+        "formulaTemplate": "运用比喻，将海面比作__①__，生动地写出了海面__②__的特点，带给人__③__。",
+        "modelAnswer": "运用比喻的修辞手法，将海面比作一块无边无际的玻璃，生动地写出了海面非常平静、水面很清澈的特点，带给人宁静、开阔的感觉。"
+      },
+      {
+        "sentence": "这里有两座摩天大楼，看上去就{像薄薄的刀片}一样。",
+        "context": "1B课文（单句练习）",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写建筑（大楼）",
+          "写人",
+          "写感情",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写建筑（大楼）",
+        "target": "摩天大楼",
+        "keywordPrompt": "比喻句中，喻体（大楼被比作什么）是什么？",
+        "tokens": [
+          "大楼",
+          "像薄薄的刀片",
+          "摩天",
+          "扁平",
+          "特别"
+        ],
+        "correctTokens": [
+          "像薄薄的刀片"
+        ],
+        "keyHint": "喻体是「刀片」——把大楼比作刀片，突出大楼外形特别、非常扁平的特点。",
+        "emotionChoices": [
+          "惊奇、印象深刻",
+          "害怕不安",
+          "悲伤惆怅",
+          "无所谓"
+        ],
+        "correctEmotion": "惊奇、印象深刻",
+        "correctFeature": "外形特别、非常扁平",
+        "featureChoices": [
+          "外形特别、非常扁平",
+          "又圆又胖、普通常见",
+          "高大雄伟但普通"
+        ],
+        "formulaTemplate": "运用比喻，将大楼比作__①__，生动地刻画出大楼__②__的特点，令人__③__。",
+        "modelAnswer": "运用比喻的修辞手法，将大楼比作薄薄的刀片，生动地刻画出大楼外形特别、非常扁平的特点，令人感到惊奇、印象深刻。"
+      }
+    ],
+    "拟人": [
+      {
+        "sentence": "老巴刹{像一位饱经风霜的老人}，{安详地坐}在市中心，{欢迎}着各族同胞和来自世界各地的游客。",
+        "context": "1A《老巴刹》｜作者在介绍市中心这座历史悠久的老建筑。",
+        "rhetoric": "拟人",
+        "writeTypeChoices": [
+          "写建筑（老巴刹）",
+          "写人",
+          "写景色",
+          "写感情"
+        ],
+        "writeTypeCorrect": "写建筑（老巴刹）",
+        "target": "老巴刹",
+        "keywordPrompt": "哪些词语把老巴刹写得像人一样（人的神态和动作）？",
+        "tokens": [
+          "老人",
+          "安详地坐",
+          "欢迎",
+          "饱经风霜",
+          "市中心"
+        ],
+        "correctTokens": [
+          "安详地坐",
+          "欢迎"
+        ],
+        "keyHint": "关键词是「安详地坐」和「欢迎」——这些是人的动作和神态，用来写建筑，把老巴刹写活了，生动地写出了这座建筑历史非常悠久、稳重安静的特点。",
+        "emotionChoices": [
+          "亲切喜爱",
+          "冷漠陌生",
+          "批评讽刺",
+          "害怕敬畏"
+        ],
+        "correctEmotion": "亲切喜爱",
+        "correctFeature": "历史悠久、稳重安静",
+        "featureChoices": [
+          "历史悠久、稳重安静",
+          "破旧衰败、冷漠",
+          "嘈杂热闹、现代感强"
+        ],
+        "formulaTemplate": "运用拟人，用「__①__」等词语赋予老巴刹人的神态，生动地写出了它__②__的特点，表达了作者的__③__之情。",
+        "modelAnswer": "运用拟人的修辞手法，用「安详地坐」「欢迎」等词语赋予老巴刹人的神态和动作，生动地写出了这座建筑历史非常悠久、稳重安静的特点，表达了作者的亲切与喜爱之情。",
+        "extraRhetoric": "比喻",
+        "fullRhetoricLabel": "拟人（兼比喻）"
+      },
+      {
+        "sentence": "王老师脸上的每一个器官，每一条皱纹，甚至每一根头发都在{微笑}！",
+        "context": "1A课文｜教室里三分钟过去了，王老师没有说话，只是站在那里哑笑。",
+        "rhetoric": "拟人",
+        "writeTypeChoices": [
+          "写人（王老师）",
+          "写景色",
+          "写事物",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写人（王老师）",
+        "target": "王老师",
+        "keywordPrompt": "哪个词语把「头发」和「皱纹」写得像人一样？",
+        "tokens": [
+          "器官",
+          "皱纹",
+          "头发",
+          "都在微笑",
+          "幽默"
+        ],
+        "correctTokens": [
+          "都在微笑"
+        ],
+        "keyHint": "关键词是「都在微笑」——用人的表情来写头发和皱纹，故意夸大，生动地写出了王老师幽默搞笑的特点。",
+        "emotionChoices": [
+          "幽默搞笑、令人喜爱",
+          "严肃冷漠",
+          "生气愤怒",
+          "悲伤难过"
+        ],
+        "correctEmotion": "幽默搞笑、令人喜爱",
+        "correctFeature": "幽默搞笑",
+        "featureChoices": [
+          "幽默搞笑",
+          "严肃刻板、面无表情",
+          "疲惫憔悴"
+        ],
+        "formulaTemplate": "运用拟人（兼夸张），用「__①__」赋予头发人的表情，故意夸大，生动地写出了王老师__②__的特点，表达了__③__。",
+        "modelAnswer": "运用拟人的修辞手法（兼夸张），用「都在微笑」赋予头发和皱纹人的表情，故意夸大，生动地写出了王老师幽默搞笑的特点，令学生们忍俊不禁。",
+        "extraRhetoric": "夸张",
+        "fullRhetoricLabel": "拟人、夸张"
+      },
+      {
+        "sentence": "我和我的建筑都像竹子，再大的风雨也只是{弯弯腰}而已。",
+        "context": "1B课文｜这是建筑师贝聿铭在自己设计的建筑被别人批评后说的话。",
+        "rhetoric": "拟人",
+        "writeTypeChoices": [
+          "写建筑和人（事物）",
+          "写景色",
+          "写感情",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写建筑和人（事物）",
+        "target": "建筑师贝聿铭和他的建筑",
+        "keywordPrompt": "哪个词语把「建筑」写得像人一样？",
+        "tokens": [
+          "建筑",
+          "弯弯腰",
+          "竹子",
+          "风雨",
+          "韧性"
+        ],
+        "correctTokens": [
+          "弯弯腰"
+        ],
+        "keyHint": "关键词是「弯弯腰」——这是人的动作，用来写建筑，生动地表现了建筑师贝聿铭和他设计的建筑很有韧性、抗压能力极强的特点。",
+        "emotionChoices": [
+          "坚韧自信",
+          "脆弱害怕",
+          "骄傲自大",
+          "平淡无感"
+        ],
+        "correctEmotion": "坚韧自信",
+        "correctFeature": "很有韧性、抗压能力极强",
+        "featureChoices": [
+          "很有韧性、抗压能力极强",
+          "脆弱易倒、经不起风雨",
+          "普通平凡"
+        ],
+        "formulaTemplate": "运用拟人（兼比喻），用「__①__」赋予建筑人的动作，生动地表现了建筑师贝聿铭和他的建筑__②__的特点，表达了__③__。",
+        "modelAnswer": "运用拟人的修辞手法（兼比喻），用「弯弯腰」赋予建筑人的动作，生动地表现了建筑师贝聿铭和他设计的建筑很有韧性、抗压能力极强的特点，表达了坚韧自信的态度。",
+        "extraRhetoric": "比喻",
+        "fullRhetoricLabel": "拟人（兼比喻）"
+      },
+      {
+        "sentence": "我远远地就看到老树的枝叶在风中{婆娑起舞}。",
+        "context": "新增练习（单句）",
+        "rhetoric": "拟人",
+        "writeTypeChoices": [
+          "写植物（老树枝叶）",
+          "写人",
+          "写景色",
+          "写感情"
+        ],
+        "writeTypeCorrect": "写植物（老树枝叶）",
+        "target": "老树的枝叶",
+        "keywordPrompt": "哪个词语把「枝叶」写得像人一样？",
+        "tokens": [
+          "老树",
+          "枝叶",
+          "婆娑起舞",
+          "风中",
+          "摇摆"
+        ],
+        "correctTokens": [
+          "婆娑起舞"
+        ],
+        "keyHint": "关键词是「婆娑起舞」——这是人跳舞的动作，用来写枝叶，说明树叶在风中摇摆得非常优美。",
+        "emotionChoices": [
+          "赞美喜爱",
+          "悲伤惆怅",
+          "紧张不安",
+          "无聊疲倦"
+        ],
+        "correctEmotion": "赞美喜爱",
+        "correctFeature": "随风摇摆、姿态优美",
+        "featureChoices": [
+          "随风摇摆、姿态优美",
+          "枯萎凋零、毫无生气",
+          "僵硬呆板"
+        ],
+        "formulaTemplate": "运用拟人，用「__①__」赋予枝叶跳舞的动作，生动地描写出它__②__的特点，表达了__③__之情。",
+        "modelAnswer": "运用拟人的修辞手法，用「婆娑起舞」赋予枝叶跳舞的动作，生动地描写出树叶在风中摇摆时姿态优美的特点，表达了赞美与喜爱之情。"
+      },
+      {
+        "sentence": "它从不{忌妒}飘飞的白云……日子虽然寂寞，却也{自得其乐}。",
+        "context": "新增练习（单句）",
+        "rhetoric": "拟人",
+        "writeTypeChoices": [
+          "写植物（大树）",
+          "写人",
+          "写景色",
+          "写感情"
+        ],
+        "writeTypeCorrect": "写植物（大树）",
+        "target": "大树",
+        "keywordPrompt": "哪些词语把「大树」写得像人一样，有人的感情？",
+        "tokens": [
+          "大树",
+          "忌妒",
+          "聆听",
+          "自得其乐",
+          "寂寞"
+        ],
+        "correctTokens": [
+          "忌妒",
+          "自得其乐"
+        ],
+        "keyHint": "关键词是「忌妒」和「自得其乐」——这些是人才有的情感，把大树写得像一个知足快乐的人。",
+        "emotionChoices": [
+          "赞美敬佩",
+          "嫌弃轻视",
+          "悲伤同情",
+          "无所谓"
+        ],
+        "correctEmotion": "赞美敬佩",
+        "correctFeature": "不与人争、内心知足快乐",
+        "featureChoices": [
+          "不与人争、内心知足快乐",
+          "狭隘自私、贪得无厌",
+          "孤独悲伤、消极颓废"
+        ],
+        "formulaTemplate": "运用拟人，用「__①__」等词语赋予大树人的情感，生动地写出了它__②__的性格特点，表达了__③__之情。",
+        "modelAnswer": "运用拟人的修辞手法，用「忌妒」「自得其乐」等词语赋予大树人的情感，生动地写出了大树不与人争、内心知足快乐的性格特点，表达了赞美与敬佩之情。"
+      },
+      {
+        "sentence": "清风吹来……{揉碎}了水面上的倒影。",
+        "context": "新增练习（单句）",
+        "rhetoric": "拟人",
+        "writeTypeChoices": [
+          "写自然事物（清风）",
+          "写人",
+          "写景色",
+          "写感情"
+        ],
+        "writeTypeCorrect": "写自然事物（清风）",
+        "target": "清风",
+        "keywordPrompt": "哪个词语把「清风」写得像人一样？",
+        "tokens": [
+          "清风",
+          "揉碎了",
+          "水面",
+          "倒影",
+          "波纹"
+        ],
+        "correctTokens": [
+          "揉碎了"
+        ],
+        "keyHint": "关键词是「揉碎了」——这是人用手揉的动作，用来写清风，把风吹过水面的样子写得很生动。",
+        "emotionChoices": [
+          "宁静喜爱",
+          "悲伤失落",
+          "紧张担忧",
+          "无聊疲倦"
+        ],
+        "correctEmotion": "宁静喜爱",
+        "correctFeature": "倒影散乱破碎、动态美丽",
+        "featureChoices": [
+          "倒影散乱破碎、动态美丽",
+          "水面平静如镜",
+          "水面污浊翻腾"
+        ],
+        "formulaTemplate": "运用拟人，用「__①__」赋予清风人的动作，生动地描写出水面__②__，表达了__③__之情。",
+        "modelAnswer": "运用拟人的修辞手法，用「揉碎了」赋予清风人的动作，生动地描写出风吹过水面后倒影散乱破碎的动态特征，表达了宁静与喜爱之情。"
+      }
+    ],
+    "夸张": [
+      {
+        "sentence": "淘气包马小跳……他的故事{几天几夜都说不完}。",
+        "context": "1A《我的新同学》｜课文在介绍马小跳的性格，他贪玩好动，经常惹麻烦。",
+        "rhetoric": "夸张",
+        "writeTypeChoices": [
+          "写事物（马小跳的故事）",
+          "写景色",
+          "写感情",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写事物（马小跳的故事）",
+        "target": "马小跳的故事",
+        "keywordPrompt": "哪个短语是故意夸大的表达？",
+        "tokens": [
+          "故事",
+          "几天几夜都说不完",
+          "马小跳",
+          "调皮",
+          "非常多"
+        ],
+        "correctTokens": [
+          "几天几夜都说不完"
+        ],
+        "keyHint": "关键词是「几天几夜都说不完」——故意夸大时间，强调马小跳的故事数量极其丰富、非常多。",
+        "emotionChoices": [
+          "幽默生动、印象深刻",
+          "批评嫌弃",
+          "担忧焦虑",
+          "平淡无感"
+        ],
+        "correctEmotion": "幽默生动、印象深刻",
+        "correctFeature": "数量极其丰富、非常多",
+        "featureChoices": [
+          "数量极其丰富、非常多",
+          "数量很少、没什么故事",
+          "普通平常"
+        ],
+        "formulaTemplate": "运用夸张，用「__①__」故意夸大时间，强调了马小跳的故事__②__的特点，表达了__③__的效果。",
+        "modelAnswer": "运用夸张的修辞手法，用「几天几夜都说不完」故意夸大时间，强调了马小跳的故事数量极其丰富、非常多的特点，给读者留下了幽默生动、印象深刻的效果。"
+      },
+      {
+        "sentence": "教室里更安静了，{静得只听见}周围深沉的呼吸。",
+        "context": "1A《一个蛋两个蛋三个蛋》｜赵老师布置了特别的画画任务，全班同学都在思考。",
+        "rhetoric": "夸张",
+        "writeTypeChoices": [
+          "写环境（教室）",
+          "写人",
+          "写感情",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写环境（教室）",
+        "target": "教室",
+        "keywordPrompt": "哪个短语是故意夸大的表达？",
+        "tokens": [
+          "教室",
+          "更安静",
+          "静得只听见",
+          "深沉的呼吸",
+          "紧张"
+        ],
+        "correctTokens": [
+          "静得只听见"
+        ],
+        "keyHint": "关键词是「静得只听见呼吸声」——故意夸大安静的程度，反映出大家极其紧张的状态。",
+        "emotionChoices": [
+          "紧张专注",
+          "轻松愉快",
+          "悲伤沉重",
+          "愤怒不满"
+        ],
+        "correctEmotion": "紧张专注",
+        "correctFeature": "极其安静",
+        "featureChoices": [
+          "极其安静",
+          "嘈杂喧闹",
+          "轻松活泼"
+        ],
+        "formulaTemplate": "运用夸张，用「__①__」极度强调了教室__②__的特点，反映出大家__③__的状态。",
+        "modelAnswer": "运用夸张的修辞手法，通过只听见呼吸声，极度夸张地强调了教室极其安静的特点，反映出大家当时极度紧张的心理状态。"
+      },
+      {
+        "sentence": "中年人（王几何老师）{眨眼工夫}就站到了黑板前。",
+        "context": "1A课文｜一个胖胖的中年人夹着书和圆规挤进门，站到黑板前。",
+        "rhetoric": "夸张",
+        "writeTypeChoices": [
+          "写人（王几何老师）",
+          "写景色",
+          "写感情",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写人（王几何老师）",
+        "target": "王几何老师",
+        "keywordPrompt": "哪个短语是故意夸大的表达？",
+        "tokens": [
+          "眨眼工夫",
+          "站到了黑板前",
+          "中年人",
+          "迅速",
+          "敏捷"
+        ],
+        "correctTokens": [
+          "眨眼工夫"
+        ],
+        "keyHint": "关键词是「眨眼工夫」——故意夸大时间之短，强调这个人动作极其迅速、敏捷。",
+        "emotionChoices": [
+          "惊讶印象深刻",
+          "平静无感",
+          "担忧害怕",
+          "幽默有趣"
+        ],
+        "correctEmotion": "惊讶印象深刻",
+        "correctFeature": "动作极其迅速、敏捷",
+        "featureChoices": [
+          "动作极其迅速、敏捷",
+          "动作缓慢懒洋洋",
+          "动作普通平常"
+        ],
+        "formulaTemplate": "运用夸张，用「__①__」故意夸大时间之短，强调了这个人__②__的特点，令人__③__。",
+        "modelAnswer": "运用夸张的修辞手法，用「眨眼工夫」故意夸大时间之短，强调了这个中年人动作极其迅速、敏捷的特点，令人感到惊讶、印象深刻。"
+      },
+      {
+        "sentence": "我刚平静下来的心一下子又{提到了嗓子眼}！",
+        "context": "1B课文｜「我」很疑惑爸爸为什么突然追到学校来。",
+        "rhetoric": "夸张",
+        "writeTypeChoices": [
+          "写人的心情（「我」）",
+          "写景色",
+          "写事物",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写人的心情（「我」）",
+        "target": "「我」",
+        "keywordPrompt": "哪个短语是故意夸大的表达？",
+        "tokens": [
+          "我的心",
+          "提到了嗓子眼",
+          "平静",
+          "紧张",
+          "惊恐"
+        ],
+        "correctTokens": [
+          "提到了嗓子眼"
+        ],
+        "keyHint": "关键词是「提到了嗓子眼」——故意夸大心脏的位置感受，强调「我」当时极度紧张、受了惊吓。",
+        "emotionChoices": [
+          "极度紧张、受惊吓",
+          "轻松愉快",
+          "悲伤难过",
+          "骄傲自满"
+        ],
+        "correctEmotion": "极度紧张、受惊吓",
+        "correctFeature": "极度紧张、受惊吓",
+        "featureChoices": [
+          "极度紧张、受惊吓",
+          "非常平静从容",
+          "开心期待"
+        ],
+        "formulaTemplate": "运用夸张，用「__①__」故意夸大心理感受，强调了「我」__②__的心理特点，表达了__③__。",
+        "modelAnswer": "运用夸张的修辞手法，用「提到了嗓子眼」故意夸大心脏的位置感受，强调了「我」当时极度紧张、受惊吓的心理特点。"
+      },
+      {
+        "sentence": "教室里安静得{连一根针掉在地上都能听见}。",
+        "context": "新增练习（单句）",
+        "rhetoric": "夸张",
+        "writeTypeChoices": [
+          "写环境（教室）",
+          "写人",
+          "写感情",
+          "写景色"
+        ],
+        "writeTypeCorrect": "写环境（教室）",
+        "target": "教室",
+        "keywordPrompt": "哪个短语是故意夸大的表达？",
+        "tokens": [
+          "教室",
+          "安静得",
+          "连一根针掉在地上都能听见",
+          "极度",
+          "寂静"
+        ],
+        "correctTokens": [
+          "连一根针掉在地上都能听见"
+        ],
+        "keyHint": "关键词是「连一根针掉地上都能听见」——极度夸大声音的微小程度，强调教室环境极其死寂无声。",
+        "emotionChoices": [
+          "严肃专注",
+          "轻松自由",
+          "悲伤沉重",
+          "愤怒压抑"
+        ],
+        "correctEmotion": "严肃专注",
+        "correctFeature": "极其死寂、无声无息",
+        "featureChoices": [
+          "极其死寂、无声无息",
+          "嘈杂混乱",
+          "轻松愉快"
+        ],
+        "formulaTemplate": "运用夸张，用「__①__」极度夸大声音的微小程度，强烈地强调了教室__②__的特点，表达了__③__的气氛。",
+        "modelAnswer": "运用夸张的修辞手法，用「连一根针掉在地上都能听见」极度夸大声音的微小程度，强烈地强调了教室环境极其死寂无声的特点，表达了严肃专注的气氛。"
+      }
+    ],
+    "反问": [
+      {
+        "sentence": "生我养我的故乡，我{怎么能忘怀}呢？",
+        "context": "新增练习（单句）",
+        "rhetoric": "反问",
+        "writeTypeChoices": [
+          "写对故乡的感情",
+          "写景色",
+          "写事物",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写对故乡的感情",
+        "target": "故乡",
+        "keywordPrompt": "哪个短语是反问词语，加强了语气？",
+        "tokens": [
+          "生我养我的故乡",
+          "怎么能忘怀",
+          "我",
+          "永远",
+          "眷恋"
+        ],
+        "correctTokens": [
+          "怎么能忘怀"
+        ],
+        "keyHint": "关键词是「怎么能忘怀呢」——反问句，只问不答，意思是「我永远不会忘记故乡」，语气更加强烈坚定。",
+        "emotionChoices": [
+          "永远无法忘记、深深眷恋",
+          "轻松淡忘",
+          "愤怒怨恨",
+          "无所谓"
+        ],
+        "correctEmotion": "永远无法忘记、深深眷恋",
+        "correctFeature": "让作者永远无法忘记",
+        "featureChoices": [
+          "让作者永远无法忘记",
+          "已经被作者忘记",
+          "普通平淡没什么特别"
+        ],
+        "formulaTemplate": "运用反问，用「__①__」加强语气，强烈地强调了故乡__②__的特点，表达了作者对故乡__③__之情。",
+        "modelAnswer": "运用反问的修辞手法，用「怎么能忘怀呢」加强语气，强烈地强调了故乡让作者永远无法忘记的特点，表达了作者对故乡永远无法忘记、深深眷恋之情。"
+      },
+      {
+        "sentence": "人与山的关系日益密切，{怎能不}使我们感到亲切、舒服呢？",
+        "context": "新增练习（单句）",
+        "rhetoric": "反问",
+        "writeTypeChoices": [
+          "写人与大自然的关系（观点）",
+          "写景色",
+          "写事物",
+          "写感情"
+        ],
+        "writeTypeCorrect": "写人与大自然的关系（观点）",
+        "target": "人与大自然的关系",
+        "keywordPrompt": "哪个短语是反问词语？",
+        "tokens": [
+          "人与山",
+          "怎能不",
+          "亲切舒服",
+          "日益密切",
+          "感受"
+        ],
+        "correctTokens": [
+          "怎能不"
+        ],
+        "keyHint": "关键词是「怎能不」——反问句，意思是「人靠近大自然，一定会感到亲切舒服」，语气更加肯定。",
+        "emotionChoices": [
+          "肯定愉悦（必然感到亲切）",
+          "怀疑不确定",
+          "悲伤失落",
+          "无所谓"
+        ],
+        "correctEmotion": "肯定愉悦（必然感到亲切）",
+        "correctFeature": "必然让人感到亲切舒服",
+        "featureChoices": [
+          "必然让人感到亲切舒服",
+          "让人感到不舒服",
+          "没有什么特别感受"
+        ],
+        "formulaTemplate": "运用反问，用「__①__」加强语气，强烈地肯定了__②__，表达了__③__。",
+        "modelAnswer": "运用反问的修辞手法，用「怎能不」加强语气，强烈地肯定了人靠近大自然时必然会产生亲切舒服的感觉，表达了肯定与愉悦的感受。"
+      },
+      {
+        "sentence": "这个瀑布以水量多而闻名远近，{怎么可能枯竭}呢？",
+        "context": "新增练习（单句）",
+        "rhetoric": "反问",
+        "writeTypeChoices": [
+          "写景物（瀑布）",
+          "写人",
+          "写感情",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写景物（瀑布）",
+        "target": "瀑布",
+        "keywordPrompt": "哪个短语是反问词语？",
+        "tokens": [
+          "瀑布",
+          "怎么可能枯竭",
+          "水量多",
+          "闻名远近",
+          "绝不断流"
+        ],
+        "correctTokens": [
+          "怎么可能枯竭"
+        ],
+        "keyHint": "关键词是「怎么可能枯竭呢」——反问句，意思是「这个瀑布绝对不会断流」，语气更加强烈肯定。",
+        "emotionChoices": [
+          "信心肯定（绝不断流）",
+          "担忧不确定",
+          "悲伤惋惜",
+          "无所谓"
+        ],
+        "correctEmotion": "信心肯定（绝不断流）",
+        "correctFeature": "水量极大、绝对不会断流",
+        "featureChoices": [
+          "水量极大、绝对不会断流",
+          "水量很少、容易断流",
+          "普通平常"
+        ],
+        "formulaTemplate": "运用反问，用「__①__」加强语气，强烈地强调了瀑布__②__的特点，表达了__③__。",
+        "modelAnswer": "运用反问的修辞手法，用「怎么可能枯竭呢」加强语气，强烈地强调了这个瀑布水量极大、绝对不会断流的特点，表达了对瀑布的信心与肯定。"
+      }
+    ],
+    "设问": [
+      {
+        "sentence": "{海底有声音吗？}海底有各种动物发出的细微的声音。",
+        "context": "新增练习（单句）",
+        "rhetoric": "设问",
+        "writeTypeChoices": [
+          "写事物（海底世界）",
+          "写人",
+          "写感情",
+          "写景色"
+        ],
+        "writeTypeCorrect": "写事物（海底世界）",
+        "target": "海底的声音",
+        "keywordPrompt": "哪一句是「问」？（设问＝自己问、自己答）",
+        "tokens": [
+          "海底有声音吗",
+          "有各种动物发出的声音",
+          "自问自答",
+          "引起好奇",
+          "强调"
+        ],
+        "correctTokens": [
+          "海底有声音吗"
+        ],
+        "keyHint": "关键词是「海底有声音吗？」——设问句，自己问、自己答，引起读者好奇，让人更想了解海底世界。",
+        "emotionChoices": [
+          "引起好奇吸引读者",
+          "悲伤沉重",
+          "愤怒批评",
+          "平淡无感"
+        ],
+        "correctEmotion": "引起好奇吸引读者",
+        "correctFeature": "其实充满声音、并不安静",
+        "featureChoices": [
+          "其实充满声音、并不安静",
+          "完全寂静毫无声音",
+          "声音极其嘈杂"
+        ],
+        "formulaTemplate": "运用设问，用「__①__」自问自答，引起读者好奇，强调了海底世界__②__的特点，表达了__③__的效果。",
+        "modelAnswer": "运用设问的修辞手法，用「海底有声音吗？」自问自答，引起读者好奇，强调了海底世界并不安静、其实充满声音的特点，达到了吸引读者的效果。"
+      }
+    ],
+    "排比": [
+      {
+        "sentence": "有时候大海{像一位母亲}……有时候{像蓝色绸缎}；还有时候，大海又{像一位演奏暴风雨的音乐家}！",
+        "context": "新增练习（单句）",
+        "rhetoric": "排比",
+        "writeTypeChoices": [
+          "写景物（大海）",
+          "写人",
+          "写感情",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写景物（大海）",
+        "target": "大海",
+        "keywordPrompt": "排比句中，大海被连续比作哪三种事物？",
+        "tokens": [
+          "像一位母亲",
+          "像蓝色绸缎",
+          "像一位演奏暴风雨的音乐家",
+          "有时候",
+          "大海"
+        ],
+        "correctTokens": [
+          "像一位母亲",
+          "像蓝色绸缎",
+          "像一位演奏暴风雨的音乐家"
+        ],
+        "keyHint": "关键词是三个「有时候大海像……」——连续使用三个比喻加强语气，把大海的不同状态写得非常生动。",
+        "emotionChoices": [
+          "热爱赞美大海",
+          "恐惧害怕大海",
+          "悲伤惆怅",
+          "平淡无感"
+        ],
+        "correctEmotion": "热爱赞美大海",
+        "correctFeature": "状态多变（温柔/平静/凶猛）",
+        "featureChoices": [
+          "状态多变（温柔/平静/凶猛）",
+          "单调乏味、一成不变",
+          "冷漠静止"
+        ],
+        "formulaTemplate": "运用排比（兼比喻），用三个「有时候像……」__①__，全面且生动地刻画了大海__②__的特点，抒发了作者对大海的__③__之情。",
+        "modelAnswer": "运用排比的修辞手法（兼比喻），连续使用三个「有时候大海像……」增强语气，全面且生动地刻画了大海状态多变（温柔/平静/凶猛）的特点，抒发了作者对大海的热爱与赞美之情。",
+        "extraRhetoric": "比喻",
+        "fullRhetoricLabel": "排比、比喻"
+      }
+    ]
+  },
+  "2": {
+    "比喻": [
+      {
+        "sentence": "你妈妈是{刀子嘴}，{豆腐心}，说不定她现在也很内疚。",
+        "context": "2A《我想对您说》｜美华因为很晚回家被妈妈教训了，辅导员开导她。",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写人（妈妈）",
+          "写景色",
+          "写事物",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写人（妈妈）",
+        "target": "妈妈",
+        "keywordPrompt": "喻体（言语和内心分别被比作什么）是什么？",
+        "tokens": [
+          "刀子嘴",
+          "豆腐心",
+          "妈妈",
+          "内疚",
+          "严厉"
+        ],
+        "correctTokens": [
+          "刀子嘴",
+          "豆腐心"
+        ],
+        "keyHint": "关键词是「刀子嘴」和「豆腐心」——把言语比作刀子，把内心比作豆腐，一硬一软，生动地写出妈妈说话严厉但内心善良疼爱孩子的性格特点。",
+        "emotionChoices": [
+          "说话严厉但内心善良疼爱孩子",
+          "冷漠无情不关心孩子",
+          "软弱没有原则",
+          "平淡普通"
+        ],
+        "correctEmotion": "说话严厉但内心善良疼爱孩子",
+        "correctFeature": "说话严厉但内心善良疼爱孩子",
+        "featureChoices": [
+          "说话严厉但内心善良疼爱孩子",
+          "冷漠无情",
+          "软弱没有原则"
+        ],
+        "formulaTemplate": "运用比喻，将言语比作「刀子」，内心比作「豆腐」，生动地写出了妈妈__①__的性格特点，使人物形象__②__，表达了__③__。",
+        "modelAnswer": "运用比喻的修辞手法，把「言语」比作「刀子」，「内心」比作「豆腐」，生动地写出了妈妈说话严厉但内心善良疼爱孩子的性格特点，使人物形象非常鲜明。"
+      },
+      {
+        "sentence": "看着看着，雨树竟然变成了{姿态婆娑的舞蹈员}。",
+        "context": "2B课文｜作者站在树下，出神地看着雨树。",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写植物（雨树）",
+          "写人",
+          "写感情",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写植物（雨树）",
+        "target": "雨树",
+        "keywordPrompt": "比喻句中，喻体（雨树被比作什么）是什么？",
+        "tokens": [
+          "雨树",
+          "姿态婆娑的舞蹈员",
+          "变成了",
+          "枝干",
+          "随风"
+        ],
+        "correctTokens": [
+          "姿态婆娑的舞蹈员"
+        ],
+        "keyHint": "喻体是「舞蹈员」——把雨树比作跳舞的人，说明雨树枝干随风摆动时姿态非常优美。",
+        "emotionChoices": [
+          "赞美喜爱",
+          "批评不喜欢",
+          "悲伤难过",
+          "无所谓"
+        ],
+        "correctEmotion": "赞美喜爱",
+        "correctFeature": "枝干随风摆动、姿态优美",
+        "featureChoices": [
+          "枝干随风摆动、姿态优美",
+          "枝干枯萎毫无生气",
+          "枝干坚硬毫不动摇"
+        ],
+        "formulaTemplate": "运用比喻，将雨树比作__①__，生动地写出了雨树__②__的特点，表达了作者的__③__之情。",
+        "modelAnswer": "运用比喻的修辞手法，将雨树比作姿态婆娑的舞蹈员，生动地写出了雨树的枝干随风摆动时姿态优美的特点，表达了作者的赞美与喜爱之情。"
+      },
+      {
+        "sentence": "风筝却{像个不听话的孩子}，用力挣脱。",
+        "context": "2A《风筝》｜一阵风吹来，「我」想拉回风筝，它却用力挣脱断了线。",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写事物（风筝）",
+          "写人",
+          "写感情",
+          "写景色"
+        ],
+        "writeTypeCorrect": "写事物（风筝）",
+        "target": "风筝",
+        "keywordPrompt": "比喻句中，喻体（风筝被比作什么）是什么？",
+        "tokens": [
+          "风筝",
+          "像个不听话的孩子",
+          "用力挣脱",
+          "风中",
+          "断了线"
+        ],
+        "correctTokens": [
+          "像个不听话的孩子"
+        ],
+        "keyHint": "喻体是「不听话的孩子」——把风筝比作不听话的小孩，说明风筝在空中难以控制、剧烈摇摆。",
+        "emotionChoices": [
+          "无奈感慨",
+          "开心期待",
+          "愤怒不满",
+          "平静接受"
+        ],
+        "correctEmotion": "无奈感慨",
+        "correctFeature": "难以控制、剧烈摇摆",
+        "featureChoices": [
+          "难以控制、剧烈摇摆",
+          "乖巧听话、稳稳飞翔",
+          "安静平稳"
+        ],
+        "formulaTemplate": "运用比喻，将风筝比作__①__，生动地写出了风筝__②__的特点，表达了__③__之情。",
+        "modelAnswer": "运用比喻的修辞手法，将风筝比作不听话的孩子，生动地写出了风筝在空中难以控制、剧烈摇摆的特点，表达了无奈与感慨之情。"
+      },
+      {
+        "sentence": "小鸟蛋{像宝石一样}，漂亮极了！",
+        "context": "2A课文｜草里躺着三颗滚圆的、天蓝色带斑点的小鸟蛋。",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写事物（小鸟蛋）",
+          "写人",
+          "写感情",
+          "写景色"
+        ],
+        "writeTypeCorrect": "写事物（小鸟蛋）",
+        "target": "小鸟蛋",
+        "keywordPrompt": "比喻句中，喻体（小鸟蛋被比作什么）是什么？",
+        "tokens": [
+          "小鸟蛋",
+          "像宝石一样",
+          "滚圆",
+          "天蓝色",
+          "漂亮"
+        ],
+        "correctTokens": [
+          "像宝石一样"
+        ],
+        "keyHint": "喻体是「宝石」——把鸟蛋比作宝石，突出鸟蛋颜色鲜艳、光彩夺目的外观特点。",
+        "emotionChoices": [
+          "喜爱惊喜",
+          "平淡无感",
+          "担忧害怕",
+          "悲伤难过"
+        ],
+        "correctEmotion": "喜爱惊喜",
+        "correctFeature": "颜色鲜艳、光彩夺目",
+        "featureChoices": [
+          "颜色鲜艳、光彩夺目",
+          "颜色暗淡毫不起眼",
+          "形状奇怪不好看"
+        ],
+        "formulaTemplate": "运用比喻，将小鸟蛋比作__①__，生动地突出了它__②__的特点，表达了__③__之情。",
+        "modelAnswer": "运用比喻的修辞手法，将小鸟蛋比作宝石，生动地突出了鸟蛋颜色鲜艳、光彩夺目的外观特点，表达了「我们」的喜爱与惊喜之情。"
+      },
+      {
+        "sentence": "小珍珠鸟好肥，整个身子好像{一个蓬松的球儿}。",
+        "context": "2A课文（单句练习）",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写动物（小珍珠鸟）",
+          "写人",
+          "写感情",
+          "写景色"
+        ],
+        "writeTypeCorrect": "写动物（小珍珠鸟）",
+        "target": "小珍珠鸟",
+        "keywordPrompt": "比喻句中，喻体（小珍珠鸟被比作什么）是什么？",
+        "tokens": [
+          "整个身子",
+          "一个蓬松的球儿",
+          "好肥",
+          "可爱",
+          "珍珠鸟"
+        ],
+        "correctTokens": [
+          "一个蓬松的球儿"
+        ],
+        "keyHint": "喻体是「蓬松的球儿」——把珍珠鸟比作球儿，说明小鸟身形肥胖、毛茸茸的，非常可爱。",
+        "emotionChoices": [
+          "喜爱亲昵",
+          "厌烦嫌弃",
+          "担忧害怕",
+          "赞叹敬佩"
+        ],
+        "correctEmotion": "喜爱亲昵",
+        "correctFeature": "身形肥胖、毛茸茸的可爱",
+        "featureChoices": [
+          "身形肥胖、毛茸茸的可爱",
+          "瘦骨嶙峋毫不可爱",
+          "凶猛危险"
+        ],
+        "formulaTemplate": "运用比喻，将小珍珠鸟比作__①__，生动地描写出它__②__的特点，表达了作者的__③__之情。",
+        "modelAnswer": "运用比喻的修辞手法，将小珍珠鸟比作蓬松的球儿，生动地描写出小鸟身形肥胖、毛茸茸的可爱特点，表达了作者的喜爱与亲昵之情。"
+      },
+      {
+        "sentence": "即便是别人不经意的一瞥，都会成为{射向我的利箭}。",
+        "context": "2B课文｜「我」因为脖子歪，变得非常敏感自卑。",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写人的心理（「我」）",
+          "写景色",
+          "写事物",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写人的心理（「我」）",
+        "target": "别人的目光",
+        "keywordPrompt": "比喻句中，喻体（别人的目光被比作什么）是什么？",
+        "tokens": [
+          "别人的目光",
+          "射向我的利箭",
+          "心理压力",
+          "受伤",
+          "自卑"
+        ],
+        "correctTokens": [
+          "射向我的利箭"
+        ],
+        "keyHint": "喻体是「利箭」——把别人的目光比作利箭，突出这种目光极具杀伤力、让「我」内心深感受伤的特点。",
+        "emotionChoices": [
+          "极度受伤内心痛苦",
+          "开心骄傲",
+          "平静无感",
+          "愤怒抗拒"
+        ],
+        "correctEmotion": "极度受伤内心痛苦",
+        "correctFeature": "极具杀伤力、让「我」极度受伤",
+        "featureChoices": [
+          "极具杀伤力、让「我」极度受伤",
+          "给予温暖鼓励",
+          "毫无影响"
+        ],
+        "formulaTemplate": "运用比喻，将别人的目光比作__①__，生动地突出了它__②__的特点，表达了「我」__③__的心理。",
+        "modelAnswer": "运用比喻的修辞手法，将别人的目光比作射向我的利箭，生动地突出了这种目光极具杀伤力、让「我」内心深感受伤的特点，表达了「我」极度受伤、内心痛苦的心理。"
+      },
+      {
+        "sentence": "我觉得自己……{犹如被烈日炙烤着}。",
+        "context": "2B课文｜全班朗读诗歌时，同学们的目光都落在我歪着的脖子上。",
+        "rhetoric": "比喻",
+        "writeTypeChoices": [
+          "写人的感受（「我」）",
+          "写景色",
+          "写事物",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写人的感受（「我」）",
+        "target": "「我」的感受",
+        "keywordPrompt": "比喻句中，喻体（「我」的感受被比作什么）是什么？",
+        "tokens": [
+          "尴尬的心情",
+          "犹如被烈日炙烤着",
+          "我",
+          "被注视",
+          "煎熬"
+        ],
+        "correctTokens": [
+          "犹如被烈日炙烤着"
+        ],
+        "keyHint": "喻体是「被烈日炙烤」——把尴尬的心情比作被太阳烤，说明「我」当时非常难堪、备受煎熬。",
+        "emotionChoices": [
+          "极度难堪、备受煎熬",
+          "轻松开心",
+          "平静无感",
+          "愤怒抗拒"
+        ],
+        "correctEmotion": "极度难堪、备受煎熬",
+        "correctFeature": "极度难堪、备受煎熬",
+        "featureChoices": [
+          "极度难堪、备受煎熬",
+          "轻松自在毫无压力",
+          "开心期待"
+        ],
+        "formulaTemplate": "运用比喻，将「我」的感受比作__①__，生动地表现出「我」__②__的心理，表达了__③__。",
+        "modelAnswer": "运用比喻的修辞手法，将「我」的感受比作被烈日炙烤，生动地表现出「我」被注视时极度难堪、备受煎熬的心理特点，表达了「我」的痛苦与不安。"
+      }
+    ],
+    "拟人": [
+      {
+        "sentence": "望着我渐行渐远的背影，她似乎知道我一定会回来，总在身后依依地{叮咛}：「出国在外，自己保重！」",
+        "context": "2B课文｜作者每次去机场路上都会看到一路相伴的雨树。",
+        "rhetoric": "拟人",
+        "writeTypeChoices": [
+          "写植物（雨树）",
+          "写人",
+          "写景色",
+          "写感情"
+        ],
+        "writeTypeCorrect": "写植物（雨树）",
+        "target": "雨树",
+        "keywordPrompt": "哪个词语把「雨树」写得像人一样，有人的感情和行为？",
+        "tokens": [
+          "雨树",
+          "叮咛",
+          "保重",
+          "依依",
+          "陪伴"
+        ],
+        "correctTokens": [
+          "叮咛"
+        ],
+        "keyHint": "关键词是「叮咛」——这是人才有的说话关心行为，用来写雨树，说明雨树就像亲人一样陪伴守护着作者。",
+        "emotionChoices": [
+          "喜爱温馨（如亲人般守护）",
+          "冷漠疏远",
+          "批评讽刺",
+          "害怕敬畏"
+        ],
+        "correctEmotion": "喜爱温馨（如亲人般守护）",
+        "correctFeature": "如同亲人般陪伴守护",
+        "featureChoices": [
+          "如同亲人般陪伴守护",
+          "冷漠无情毫不在乎",
+          "危险可怕令人害怕"
+        ],
+        "formulaTemplate": "运用拟人，用「__①__」赋予雨树人的感情，生动地写出了它__②__的特点，表达了作者的__③__之情。",
+        "modelAnswer": "运用拟人的修辞手法，用「叮咛」赋予雨树人的感情和说话的能力，生动地写出了雨树如同亲人般陪伴守护的特点，表达了作者对它的喜爱之情。"
+      },
+      {
+        "sentence": "非洲企鹅班杰和贝拉喜欢{大摇大摆}地四处{探索}新事物。",
+        "context": "2B课文（单句练习）",
+        "rhetoric": "拟人",
+        "writeTypeChoices": [
+          "写动物（企鹅）",
+          "写人",
+          "写景色",
+          "写感情"
+        ],
+        "writeTypeCorrect": "写动物（企鹅）",
+        "target": "企鹅",
+        "keywordPrompt": "哪些词语把「企鹅」写得像人一样？",
+        "tokens": [
+          "企鹅",
+          "大摇大摆",
+          "探索",
+          "四处",
+          "神气十足"
+        ],
+        "correctTokens": [
+          "大摇大摆",
+          "探索"
+        ],
+        "keyHint": "关键词是「大摇大摆」和「探索」——这些是人的动作和行为，用来写企鹅，突出企鹅走路神气十足、充满好奇心的特点。",
+        "emotionChoices": [
+          "喜爱觉得有趣可爱",
+          "嫌弃不喜欢",
+          "害怕恐惧",
+          "无所谓"
+        ],
+        "correctEmotion": "喜爱觉得有趣可爱",
+        "correctFeature": "走路神气十足、充满好奇心",
+        "featureChoices": [
+          "走路神气十足、充满好奇心",
+          "走路缓慢毫无活力",
+          "胆小怕事不敢探索"
+        ],
+        "formulaTemplate": "运用拟人，用「__①__」等词语赋予企鹅人的动作，生动地描写出它__②__的特点，表达了__③__。",
+        "modelAnswer": "运用拟人的修辞手法，用「大摇大摆」「探索」等词语赋予企鹅人的动作，生动地描写出企鹅走路神气十足、充满好奇心的特点，表达了对它的喜爱与觉得有趣可爱之情。"
+      },
+      {
+        "sentence": "它们的叫声越来越急促，似乎在{生气地骂着什么}。",
+        "context": "2A课文｜两只大鸟越飞越低，差点扑到人们脸上。",
+        "rhetoric": "拟人",
+        "writeTypeChoices": [
+          "写动物（小鸟）",
+          "写人",
+          "写景色",
+          "写感情"
+        ],
+        "writeTypeCorrect": "写动物（小鸟）",
+        "target": "小鸟（大鸟）",
+        "keywordPrompt": "哪个短语赋予了小鸟人的愤怒情感？",
+        "tokens": [
+          "叫声急促",
+          "生气地骂着什么",
+          "小鸟",
+          "愤怒",
+          "失去鸟蛋"
+        ],
+        "correctTokens": [
+          "生气地骂着什么"
+        ],
+        "keyHint": "关键词是「生气地骂着什么」——这是人才有的愤怒行为，用来写小鸟，生动地表现出大鸟失去鸟蛋后极度焦急、生气的特点。",
+        "emotionChoices": [
+          "极度焦急生气",
+          "开心欢喜",
+          "悲伤沉默",
+          "平静接受"
+        ],
+        "correctEmotion": "极度焦急生气",
+        "correctFeature": "极度焦急、愤怒",
+        "featureChoices": [
+          "极度焦急、愤怒",
+          "轻松快乐",
+          "淡然无感"
+        ],
+        "formulaTemplate": "运用拟人，用「__①__」赋予小鸟人的愤怒，生动地表现出大鸟__②__的特点，表达了__③__之情。",
+        "modelAnswer": "运用拟人的修辞手法，用「生气地骂着什么」赋予小鸟人的愤怒情感，生动地表现出大鸟失去鸟蛋后极度焦急、生气的特点，表达了动物间浓厚的亲情。"
+      },
+      {
+        "sentence": "它们停止了蹦跳，呆呆地看着鸟蛋的碎片，仿佛在{默哀}。",
+        "context": "2A课文｜两只大鸟绕着碎了的鸟蛋停止了叫唤。",
+        "rhetoric": "拟人",
+        "writeTypeChoices": [
+          "写动物（小鸟）",
+          "写人",
+          "写景色",
+          "写感情"
+        ],
+        "writeTypeCorrect": "写动物（小鸟）",
+        "target": "小鸟",
+        "keywordPrompt": "哪个词语把「小鸟」写得像人一样？",
+        "tokens": [
+          "小鸟",
+          "呆呆地看",
+          "默哀",
+          "鸟蛋碎片",
+          "悲伤"
+        ],
+        "correctTokens": [
+          "默哀"
+        ],
+        "keyHint": "关键词是「默哀」——这是人类才有的哀悼行为，用来写小鸟，说明大鸟面对失去的孩子时极度悲伤、难过。",
+        "emotionChoices": [
+          "极度悲伤难过",
+          "开心轻松",
+          "愤怒激动",
+          "平静冷漠"
+        ],
+        "correctEmotion": "极度悲伤难过",
+        "correctFeature": "极度悲伤、难过",
+        "featureChoices": [
+          "极度悲伤、难过",
+          "轻松无忧",
+          "残忍无情"
+        ],
+        "formulaTemplate": "运用拟人，用「__①__」赋予小鸟人的哀悼行为，生动地写出了大鸟__②__的特点，表达了作者的__③__之情。",
+        "modelAnswer": "运用拟人的修辞手法，用「默哀」赋予小鸟人的哀悼行为，生动地写出了大鸟面对失去的孩子时极度悲伤、难过的特点，表达了作者的同情与惋惜之情。"
+      }
+    ],
+    "夸张": [
+      {
+        "sentence": "我在家根本没有自由，我{快要窒息}了！",
+        "context": "2A《我想对您说》｜匿名同学玩游戏被爸爸严格监督，觉得没有一点自由。",
+        "rhetoric": "夸张",
+        "writeTypeChoices": [
+          "写人的心理（这个同学）",
+          "写景色",
+          "写事物",
+          "写道理"
+        ],
+        "writeTypeCorrect": "写人的心理（这个同学）",
+        "target": "这个同学",
+        "keywordPrompt": "哪个短语是故意夸大的表达？",
+        "tokens": [
+          "我",
+          "根本没有自由",
+          "快要窒息",
+          "在家",
+          "压抑"
+        ],
+        "correctTokens": [
+          "快要窒息"
+        ],
+        "keyHint": "关键词是「快要窒息」——故意夸大心理感受，极度强调这个同学被严厉管教后极度压抑、痛苦的心理特点。",
+        "emotionChoices": [
+          "极度压抑痛苦",
+          "开心自由",
+          "平静接受",
+          "骄傲自满"
+        ],
+        "correctEmotion": "极度压抑痛苦",
+        "correctFeature": "极度压抑、痛苦",
+        "featureChoices": [
+          "极度压抑、痛苦",
+          "自由自在快乐无忧",
+          "无所谓不在乎"
+        ],
+        "formulaTemplate": "运用夸张，用「__①__」故意夸大心理感受，极度强调了这个同学__②__的心理特点，表达了__③__。",
+        "modelAnswer": "运用夸张的修辞手法，用「快要窒息」故意夸大心理感受，极度强调了这个同学被严厉管教后极度压抑、痛苦的心理特点。"
+      },
+      {
+        "sentence": "宿舍中的空气仿佛凝固起来，房间里安静得{可以听到彼此心跳的声音}。",
+        "context": "2B课文｜「我」忍无可忍大声吼了室友，两人不再说话。",
+        "rhetoric": "夸张",
+        "writeTypeChoices": [
+          "写环境（宿舍）",
+          "写人",
+          "写感情",
+          "写景色"
+        ],
+        "writeTypeCorrect": "写环境（宿舍）",
+        "target": "宿舍",
+        "keywordPrompt": "哪个短语是故意夸大的表达？",
+        "tokens": [
+          "空气凝固",
+          "可以听到彼此心跳的声音",
+          "宿舍",
+          "极度寂静",
+          "尴尬"
+        ],
+        "correctTokens": [
+          "可以听到彼此心跳的声音"
+        ],
+        "keyHint": "关键词是「可以听到彼此心跳的声音」——故意夸大听觉感受，极度强调宿舍环境极其死寂、气氛极其尴尬紧张的特点。",
+        "emotionChoices": [
+          "尴尬紧张关系僵持",
+          "轻松愉快",
+          "悲伤沉重",
+          "愤怒压抑"
+        ],
+        "correctEmotion": "尴尬紧张关系僵持",
+        "correctFeature": "极其死寂、气氛极其尴尬紧张",
+        "featureChoices": [
+          "极其死寂、气氛极其尴尬紧张",
+          "热闹欢快和谐融洽",
+          "安静舒适令人放松"
+        ],
+        "formulaTemplate": "运用夸张，用「__①__」故意夸大听觉感受，极度强调了宿舍__②__的特点，反映了室友间__③__的关系。",
+        "modelAnswer": "运用夸张的修辞手法，用「可以听到彼此心跳的声音」故意夸大听觉感受，极度强调了宿舍环境极其死寂、气氛极其尴尬紧张的特点，反映了室友间关系的僵持。"
+      }
+    ],
+    "反问": [
+      {
+        "sentence": "孩子不就是{父母手中的风筝}吗？",
+        "context": "2A《风筝》｜听了爸爸的话，看到断了线的风筝越飘越远，作者有此感悟。",
+        "rhetoric": "反问",
+        "writeTypeChoices": [
+          "写观点（父母和孩子的关系）",
+          "写景色",
+          "写事物",
+          "写感情"
+        ],
+        "writeTypeCorrect": "写观点（父母和孩子的关系）",
+        "target": "父母和孩子的关系",
+        "keywordPrompt": "哪个短语是反问词语，加强了语气？",
+        "tokens": [
+          "孩子",
+          "不就是……吗",
+          "父母手中的风筝",
+          "管教",
+          "放手"
+        ],
+        "correctTokens": [
+          "不就是……吗"
+        ],
+        "keyHint": "关键词是「不就是……吗」——反问句，用不容置疑的语气，强烈地肯定了父母和孩子就像放风筝的关系。同时这也是比喻，把孩子比作风筝。",
+        "emotionChoices": [
+          "感慨肯定（必须兼顾管教与放手）",
+          "轻松无所谓",
+          "愤怒反抗",
+          "害怕担忧"
+        ],
+        "correctEmotion": "感慨肯定（必须兼顾管教与放手）",
+        "correctFeature": "必须兼顾管教与放手",
+        "featureChoices": [
+          "必须兼顾管教与放手",
+          "可以完全自由毫无管束",
+          "只要管教不需要放手"
+        ],
+        "formulaTemplate": "运用反问（兼比喻），用「__①__」加强语气，强烈地肯定了__②__的特点，表达了__③__。",
+        "modelAnswer": "运用反问的修辞手法（兼比喻），用「不就是……吗」加强语气，把孩子比作风筝，强烈地肯定了父母和孩子的关系就像放风筝一样，必须兼顾管教与放手的特点，表达了感慨与深思之情。",
+        "extraRhetoric": "比喻",
+        "fullRhetoricLabel": "反问（兼比喻）"
+      },
+      {
+        "sentence": "我又{何尝}是对矿泉水情有独钟呢？……又{岂能}与故乡清甜甘美的山泉水相比呢？",
+        "context": "2B课文（单句练习）",
+        "rhetoric": "反问",
+        "writeTypeChoices": [
+          "写观点（故乡的水）",
+          "写景色",
+          "写人",
+          "写感情"
+        ],
+        "writeTypeCorrect": "写观点（故乡的水）",
+        "target": "故乡的山泉水",
+        "keywordPrompt": "哪些短语是反问词语？",
+        "tokens": [
+          "何尝",
+          "岂能相比",
+          "矿泉水",
+          "故乡山泉水",
+          "思乡"
+        ],
+        "correctTokens": [
+          "何尝",
+          "岂能相比"
+        ],
+        "keyHint": "关键词是「何尝」和「岂能相比」——这两个反问词加强语气，强烈地强调了故乡的水无可替代。",
+        "emotionChoices": [
+          "思念故乡深深眷恋",
+          "轻松淡忘",
+          "愤怒怨恨",
+          "无所谓"
+        ],
+        "correctEmotion": "思念故乡深深眷恋",
+        "correctFeature": "无可替代",
+        "featureChoices": [
+          "无可替代",
+          "普通平常可以替代",
+          "不如矿泉水好喝"
+        ],
+        "formulaTemplate": "运用反问，用「__①__」等词加强语气，强烈地强调了故乡的水__②__的特点，表达了作者__③__之情。",
+        "modelAnswer": "运用反问的修辞手法，用「何尝」「岂能相比」等词加强语气，强烈地强调了故乡的水无可替代的特点，突出了作者对故乡的思念与深深眷恋之情。"
+      }
+    ],
+    "排比": [
+      {
+        "sentence": "她{为曝晒在烈日下的汽车遮阳}；她{把炎阳遮挡成柔柔的凉意}；她{用枝干繁叶合拢成}一片美丽的林荫大道。",
+        "context": "2B课文｜作者在介绍新加坡无处不在的雨树。",
+        "rhetoric": "排比",
+        "writeTypeChoices": [
+          "写植物的作用（雨树）",
+          "写人",
+          "写感情",
+          "写景色"
+        ],
+        "writeTypeCorrect": "写植物的作用（雨树）",
+        "target": "雨树的作用",
+        "keywordPrompt": "排比句中，三个「她……」分别做了什么？",
+        "tokens": [
+          "她为……遮阳",
+          "她把……遮挡成凉意",
+          "她用……合拢成林荫大道",
+          "连续句式",
+          "加强语气"
+        ],
+        "correctTokens": [
+          "她为……遮阳",
+          "她把……遮挡成凉意",
+          "她用……合拢成林荫大道"
+        ],
+        "keyHint": "关键词是三个「她……」——连续使用相同句式加强语气，全面地写出了雨树在各个地方为人遮阴纳凉的贡献。",
+        "emotionChoices": [
+          "赞美感激雨树",
+          "批评嫌弃",
+          "悲伤惆怅",
+          "无所谓"
+        ],
+        "correctEmotion": "赞美感激雨树",
+        "correctFeature": "在各个地方为人遮阴纳凉",
+        "featureChoices": [
+          "在各个地方为人遮阴纳凉",
+          "毫无用处不帮任何人",
+          "只对少数人有用"
+        ],
+        "formulaTemplate": "运用排比（兼拟人），用三个「__①__」连续使用相同句式加强语气，全面地写出了雨树__②__的特点，表达了作者的__③__之情。",
+        "modelAnswer": "运用排比的修辞手法（兼拟人），连续使用三个「她……」增强语气，全面地写出了雨树在各个地方为人遮阴纳凉的特点和贡献，表达了作者对雨树的赞美与感激之情。"
+      },
+      {
+        "sentence": "雨树的枝干或似楚楚可人的{美女}；或如撑起半边天的{壮汉}；或像顽童一般跟翱翔的鸟儿玩捉迷藏的{顽童}。",
+        "context": "2B课文｜作者出神地看着雨树粗糙又随意的枝干。",
+        "rhetoric": "排比",
+        "writeTypeChoices": [
+          "写植物（雨树枝干）",
+          "写人",
+          "写感情",
+          "写景色"
+        ],
+        "writeTypeCorrect": "写植物（雨树枝干）",
+        "target": "雨树的枝干",
+        "keywordPrompt": "排比句中，雨树的枝干被连续比作哪三种人？",
+        "tokens": [
+          "美女",
+          "壮汉",
+          "顽童",
+          "或似……或如……或像……",
+          "千姿百态"
+        ],
+        "correctTokens": [
+          "美女",
+          "壮汉",
+          "顽童"
+        ],
+        "keyHint": "关键词是「美女」「壮汉」「顽童」——连续使用三个比喻加强语气，极度生动地突出了雨树枝干千姿百态的特点。",
+        "emotionChoices": [
+          "赞叹惊喜（千姿百态）",
+          "嫌弃批评",
+          "悲伤惆怅",
+          "无所谓"
+        ],
+        "correctEmotion": "赞叹惊喜（千姿百态）",
+        "correctFeature": "千姿百态、形状奇特",
+        "featureChoices": [
+          "千姿百态、形状奇特",
+          "单调乏味毫无特色",
+          "整齐划一毫无变化"
+        ],
+        "formulaTemplate": "运用排比（兼比喻），连续用三个比喻__①__加强语气，极度生动地突出了雨树枝干__②__的特点，表达了作者的__③__。",
+        "modelAnswer": "运用排比的修辞手法（兼比喻），连续使用三个「或似……或如……或像……」增强语气，极度生动地突出了雨树枝干千姿百态、形状奇特的特点，表达了作者的赞叹与惊喜之情。",
+        "extraRhetoric": "比喻",
+        "fullRhetoricLabel": "排比、比喻"
+      },
+      {
+        "sentence": "这里有华族传统的南音，也有极富时代特色的新谣；有婉转悠扬的{马来班顿诗}，也有姿态优美的{印度婆罗多舞}。",
+        "context": "2B课文｜课文在介绍不同族群的文化在新加坡生根发芽。",
+        "rhetoric": "排比",
+        "writeTypeChoices": [
+          "写事物（新加坡文化艺术）",
+          "写人",
+          "写感情",
+          "写景色"
+        ],
+        "writeTypeCorrect": "写事物（新加坡文化艺术）",
+        "target": "新加坡的文化艺术",
+        "keywordPrompt": "排比句中，「有……也有……」重复出现，点选全部关键文化艺术词。",
+        "tokens": [
+          "华族南音",
+          "新谣",
+          "马来班顿诗",
+          "印度婆罗多舞",
+          "有……也有……"
+        ],
+        "correctTokens": [
+          "华族南音",
+          "新谣",
+          "马来班顿诗",
+          "印度婆罗多舞"
+        ],
+        "keyHint": "关键词是四种文化艺术——「有……也有……」反复出现，连续列举加强语气，全面展示了新加坡文化种类繁多、极度丰富的特点。",
+        "emotionChoices": [
+          "自豪赞美（多元丰富）",
+          "批评忧虑",
+          "悲伤惆怅",
+          "漠然无感"
+        ],
+        "correctEmotion": "自豪赞美（多元丰富）",
+        "correctFeature": "种类繁多、极度丰富",
+        "featureChoices": [
+          "种类繁多、极度丰富",
+          "单一乏味缺乏多元",
+          "文化冲突互相排斥"
+        ],
+        "formulaTemplate": "运用排比，用「__①__」连续列举加强语气，全面地展示了新加坡文化艺术__②__的特点，表达了__③__之情。",
+        "modelAnswer": "运用排比的修辞手法，连续用「有……也有……」列举加强语气，全面地展示了新加坡的文化艺术种类繁多、极度丰富的特点，表达了自豪与赞美之情。"
+      }
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let S = {
+  level: 1,
+  selectedRhetorics: ['比喻'],
+  queue: [],
+  qIdx: 0,
+  step: 0,  // 0=rhetoric, 1=writeType, 2=keyword, 3=answer
+  score: 0,
+  correct: 0,
+  // current q temps
+  selectedRhetoric: null,
+  selectedWriteType: null,
+  selectedTokens: [],
+  answerText: '',
+  aiResult: null
+};
+
+// ═══════════════════════════════════════════════
+// SETUP
+// ═══════════════════════════════════════════════
+function selectLevel(lv) {
+  S.level = lv;
+  S.selectedRhetorics = [...RHETORICS_BY_LEVEL[lv]]; // reset to all for new level
+  document.getElementById('btn-s1').classList.toggle('selected', lv===1);
+  document.getElementById('btn-s2').classList.toggle('selected', lv===2);
+  renderRhetoricChips();
+}
+
+function renderRhetoricChips() {
+  const avail = RHETORICS_BY_LEVEL[S.level];
+  const grid = document.getElementById('rhetoricGrid');
+  const enMap = {比喻:'Simile/Metaphor', 拟人:'Personification', 夸张:'Hyperbole', 排比:'Parallelism', 反问:'Rhetoric Q.', 设问:'Self-Q&A'};
+  grid.innerHTML = avail.map(r => `
+    <button class="rhet-chip ${S.selectedRhetorics.includes(r)?'sel':''}" onclick="toggleRhetic('${r}')">
+      ${r}
+      <span class="rhet-en">${enMap[r]||''}</span>
+    </button>
+  `).join('');
+  updateStartBtn();
+}
+
+function toggleRhetic(r) {
+  if (S.selectedRhetorics.includes(r)) {
+    if (S.selectedRhetorics.length === 1) { showToast('请至少选择一种修辞'); return; }
+    S.selectedRhetorics = S.selectedRhetorics.filter(x=>x!==r);
+  } else {
+    S.selectedRhetorics.push(r);
+  }
+  renderRhetoricChips();
+}
+
+function updateStartBtn() {
+  document.getElementById('startBtn').disabled = S.selectedRhetorics.length === 0;
+}
+
+function startPractice() {
+  S.queue = [];
+  const selectedSet = new Set(S.selectedRhetorics);
+  const allSelected = selectedSet.size === RHETORICS_BY_LEVEL[S.level].length;
+
+  S.selectedRhetorics.forEach(r => {
+    const pool = (QUESTIONS[S.level][r] || []).slice();
+    // Filter: if player selected only ONE rhetoric type, exclude sentences
+    // that belong to TWO rhetorics (they'd be confusing / marked wrong)
+    // If multiple rhetorics selected, include dual-rhetoric sentences
+    const filtered = pool.filter(q => {
+      if (!q.extraRhetoric) return true; // single rhetoric, always include
+      // dual-rhetoric: include only if the extra is also selected, OR all selected
+      return allSelected || selectedSet.has(q.extraRhetoric);
+    });
+    // shuffle
+    for (let i=filtered.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[filtered[i],filtered[j]]=[filtered[j],filtered[i]];}
+    S.queue.push(...filtered.slice(0, 4)); // up to 4 per rhetoric
+  });
+  // deduplicate (dual-rhetoric sentence may appear in two buckets)
+  const seen = new Set();
+  S.queue = S.queue.filter(q => {
+    const key = q.sentence;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  // shuffle full queue
+  for(let i=S.queue.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[S.queue[i],S.queue[j]]=[S.queue[j],S.queue[i]];}
+  S.qIdx=0; S.score=0; S.correct=0;
+  showScreen('practice');
+  renderQuestion();
+}
+
+function goSetup() { showScreen('setup'); }
+function restartSame() { startPractice(); }
+
+// ═══════════════════════════════════════════════
+// SCREEN MANAGEMENT
+// ═══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ═══════════════════════════════════════════════
+// QUESTION RENDERING
+// ═══════════════════════════════════════════════
+function renderQuestion() {
+  const q = S.queue[S.qIdx];
+  S.step = 0;
+  S.selectedRhetoric = null;
+  S.selectedWriteType = null;
+  S.selectedTokens = [];
+  S.answerText = '';
+  S.aiResult = null;
+  S.formulaSlots = { feature: null, emotion: null };
+
+  // progress
+  const pct = (S.qIdx / S.queue.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('qCounter').textContent = (S.qIdx+1) + ' / ' + S.queue.length;
+
+  // badge
+  const badge = document.getElementById('qRhetBadge');
+  badge.textContent = '?';
+  badge.className = 'rhet-badge';
+
+  // sentence
+  const sentEl = document.getElementById('sentenceDisplay');
+  // parse {word} as tapable tokens
+  sentEl.innerHTML = parseSentence(q.sentence, false);
+
+  // steps
+  renderStepsRow(0);
+  renderStep(0);
+  hideFeedback();
+  document.getElementById('mainActionBtn').textContent = '确认';
+  document.getElementById('mainActionBtn').disabled = false;
+  document.getElementById('scorePill').textContent = S.score + ' 分';
+}
+
+function parseSentence(sentence, highlightKeys) {
+  // {word} marks keyword hints shown after step 2
+  return sentence.replace(/\{([^}]+)\}/g, (_, w) => {
+    if (highlightKeys) {
+      return `<span class="kw-highlight">${w}</span>`;
+    }
+    return w;
+  });
+}
+
+function renderStepsRow(activeStep) {
+  const steps = ['识别修辞','分析对象','找关键词','写分析句'];
+  const row = document.getElementById('stepsRow');
+  row.innerHTML = steps.map((s,i) => {
+    let cls = i < activeStep ? 'done' : i === activeStep ? 'active' : '';
+    const lineClass = i < activeStep ? 'done' : '';
+    return (i>0?`<div class="step-line ${lineClass}"></div>`:'') + 
+           `<div class="step-dot ${cls}" title="${s}">${i+1}</div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+// STEP RENDERING
+// ═══════════════════════════════════════════════
+function renderStep(step) {
+  const q = S.queue[S.qIdx];
+  const container = document.getElementById('stepPanels');
+  hideFeedback();
+
+  if (step === 0) {
+    // STEP 1: Identify rhetoric
+    // For dual-rhetoric sentences, both answers are valid choices
+    const allOptions = ['比喻','拟人','夸张','排比','反问','设问'];
+    const correctAnswers = new Set([q.rhetoric]);
+    if (q.extraRhetoric) correctAnswers.add(q.extraRhetoric);
+
+    // Build choice pool: correct answers + distractors to fill up to 4
+    const distractors = allOptions.filter(o => !correctAnswers.has(o));
+    const shuffledDistractors = shuffle(distractors);
+    const pool = [...correctAnswers, ...shuffledDistractors].slice(0, 4);
+    // Ensure we have exactly 4 (pad with more distractors if needed)
+    const shuffled = shuffle(pool);
+
+    // Hint for dual-rhetoric
+    const dualHint = q.extraRhetoric
+      ? `<div class="hint-box show" style="margin-top:8px;font-size:12px;">💡 这个句子用了<strong>${q.fullRhetoricLabel || q.rhetoric + '、' + q.extraRhetoric}</strong>两种修辞，选其中一种都算对！</div>`
+      : '';
+
+    container.innerHTML = `
+      <div class="panel">
+        <div class="panel-title"><div class="step-num">1</div>这个句子用了哪种修辞手法？</div>
+        ${q.extraRhetoric ? '<div style="font-size:12px;color:var(--gold);margin-bottom:10px;font-weight:600;">⭐ 这句话有两种修辞哦！</div>' : ''}
+        <div class="choice-grid" id="step0-choices">
+          ${shuffled.map(c=>`<button class="choice-btn" onclick="selectRhetoric('${c}',this)">${c}</button>`).join('')}
+        </div>
+        ${dualHint}
+      </div>`;
+    document.getElementById('mainActionBtn').style.display = 'block';
+    document.getElementById('mainActionBtn').textContent = '确认';
+
+  } else if (step === 1) {
+    // STEP 2: Write type
+    container.innerHTML = `
+      <div class="panel">
+        <div class="panel-title"><div class="step-num">2</div>这个修辞句子在写什么？</div>
+        <div class="choice-grid single" id="step1-choices">
+          ${q.writeTypeChoices.map(c=>`<button class="choice-btn" onclick="selectWriteType('${c}',this)">${c}</button>`).join('')}
+        </div>
+      </div>`;
+    document.getElementById('mainActionBtn').textContent = '确认';
+
+  } else if (step === 2) {
+    // STEP 3: Keywords
+    // highlight the {tokens} in sentence now
+    const sentEl = document.getElementById('sentenceDisplay');
+    sentEl.innerHTML = parseSentence(q.sentence, false); // plain for now
+
+    container.innerHTML = `
+      <div class="panel">
+        <div class="panel-title"><div class="step-num">3</div>${q.keywordPrompt}</div>
+        <div class="token-area" id="tokenArea">
+          ${q.tokens.map(t=>`<div class="token" onclick="toggleToken('${escHtml(t)}',this)">${t}</div>`).join('')}
+        </div>
+        <div style="margin-top:10px">
+          <span class="hint-toggle" onclick="toggleHint()">💡 查看提示</span>
+          <div class="hint-box" id="kwHint">${q.keyHint}</div>
+        </div>
+      </div>`;
+    document.getElementById('mainActionBtn').textContent = '确认';
+
+  } else if (step === 3) {
+    // STEP 4: Formula puzzle — click-to-fill slots
+    // Highlight keywords in sentence display
+    const sentEl = document.getElementById('sentenceDisplay');
+    let shtml = q.sentence;
+    q.correctTokens.forEach(kw => {
+      shtml = shtml.replace(new RegExp('\\{?' + escRegex(kw) + '\\}?', 'g'),
+        '<span class="kw-highlight">' + kw + '</span>');
+    });
+    shtml = shtml.replace(/\{([^}]+)\}/g, '$1');
+    sentEl.innerHTML = shtml;
+
+    // Reset slot state
+    S.formulaSlots = { feature: null, emotion: null };
+
+    container.innerHTML = buildFormulaPuzzle(q);
+    document.getElementById('mainActionBtn').textContent = '查看答案 ✓';
+    document.getElementById('mainActionBtn').style.display = 'block';
+  }
+}
+
+// ── FORMULA PUZZLE BUILDER ──────────────────────
+
+// Per-rhetoric: step labels, method description (Chinese + English), TTS text
+const RHETORIC_META = {
+  '比喻': {
+    s1: '关键词（喻体）', s2: '突出的特点', s3: '表达的感情',
+    method: '把A比作B → 说B的特点 → 表达感情',
+    methodEn: 'Simile or Metaphor. Step one: find what the subject is compared to. Step two: describe the feature it highlights. Step three: identify the emotion expressed.',
+    tts: '分析比喻的方法：第一步，找出喻体，也就是"像什么"；第二步，说明这个比喻突出了什么特点；第三步，表达了什么感情。答题格式：运用比喻，将某某比作某某，生动地写出了它的某个特点，表达了某种感情。',
+    steps: [
+      { zh: '① 找喻体：本体被"像/是/如"比作了什么？', en: 'Step one. Find the comparison. What is the subject compared to? Look for words like "like" or "as".' },
+      { zh: '② 说特点：这个比喻突出了什么特点？', en: 'Step two. State the feature. What quality or characteristic does this comparison highlight?' },
+      { zh: '③ 表感情：写出感情（赞美？喜爱？惋惜？）', en: 'Step three. Express the feeling. What emotion does the writer convey? For example, admiration, love, or regret.' }
+    ]
+  },
+  '拟人': {
+    s1: '拟人词语', s2: '突出的特点', s3: '表达的感情',
+    method: '找人的词语 → 说它的特点 → 表达感情',
+    methodEn: 'Personification. Step one: find the human word that brings the object to life. Step two: describe the feature highlighted. Step three: identify the emotion expressed.',
+    tts: '分析拟人的方法：第一步，找出把非人事物写得像人一样的词语；第二步，说明这样写突出了什么特点；第三步，表达了什么感情。答题格式：运用拟人，用某某词语赋予某某人的动作，生动地写出了它的特点，表达了某种感情。',
+    steps: [
+      { zh: '① 找拟人词：哪个词把它写得像人一样？（人的动作/感情）', en: 'Step one. Find the human word. Which word gives a non-human thing human actions or feelings?' },
+      { zh: '② 说特点：把它写得像人一样，突出了什么特点？', en: 'Step two. State the feature. By describing it as human, what quality is brought out?' },
+      { zh: '③ 表感情：写出感情（赞美？喜爱？同情？）', en: 'Step three. Express the feeling. What emotion does the writer show? For example, praise, love, or sympathy.' }
+    ]
+  },
+  '夸张': {
+    s1: '夸张表达', s2: '突出的特点', s3: '表达的效果/感情',
+    method: '找夸大的词 → 说突出了什么 → 表达感情',
+    methodEn: 'Hyperbole. Step one: find the exaggerated expression. Step two: state what feature it emphasises. Step three: describe the effect or emotion.',
+    tts: '分析夸张的方法：第一步，找出故意夸大的表达；第二步，说明夸张突出了什么特点；第三步，表达了什么感情或效果。答题格式：运用夸张，用某某词语故意夸大，强调了某某特点，表达了某种感情。',
+    steps: [
+      { zh: '① 找夸大的词：哪里故意夸得过分了？', en: 'Step one. Find the exaggeration. Which part is deliberately over the top or impossible in real life?' },
+      { zh: '② 说突出了什么：这样夸张，是为了强调什么特点？', en: 'Step two. What does it emphasise? What quality is being strongly highlighted through the exaggeration?' },
+      { zh: '③ 表感情/效果：有什么效果？表达了什么感情？', en: 'Step three. Describe the effect and feeling. What impact does it create on the reader, and what emotion does it express?' }
+    ]
+  },
+  '反问': {
+    s1: '反问词语', s2: '强调的内容', s3: '表达的感情',
+    method: '找反问词 → 说强调了什么 → 表达感情',
+    methodEn: 'Rhetorical Question. Step one: find the question that needs no answer. Step two: flip it into a statement to find what it emphasises. Step three: identify the emotion.',
+    tts: '分析反问的方法：反问句只问不答，意思反过来理解。第一步，找出反问词语；第二步，把反问句变成肯定句，说明它强调了什么；第三步，表达了什么感情。答题格式：运用反问，加强语气，强烈地强调了某某特点，表达了某种感情。',
+    steps: [
+      { zh: '① 找反问词：哪里是"只问不答"的句子？（怎能？岂不是？）', en: 'Step one. Find the rhetorical question. Where is the question that expects no answer?' },
+      { zh: '② 反过来理解：把问句变成肯定句，它强调了什么？', en: 'Step two. Flip the meaning. Turn the question into a positive statement. What point does it strongly make?' },
+      { zh: '③ 表感情：语气更强烈，表达了什么感情？', en: 'Step three. Express the feeling. The stronger tone conveys what emotion in the writer?' }
+    ]
+  },
+  '设问': {
+    s1: '问句', s2: '强调的内容', s3: '表达的效果',
+    method: '自己问 → 自己答 → 引起读者注意',
+    methodEn: 'Self-questioning. The writer asks a question and then answers it, in order to draw the reader in and highlight a key point.',
+    tts: '分析设问的方法：设问句自己问、自己答。第一步，找出问句；第二步，说明设问强调了什么内容；第三步，说明它引起了读者什么效果。答题格式：运用设问，自问自答，引起读者好奇，强调了某某特点。',
+    steps: [
+      { zh: '① 找问句：哪一句是自己问的？', en: 'Step one. Find the self-asked question. Which sentence is the writer asking themselves?' },
+      { zh: '② 说强调了什么：自问自答，是为了强调什么内容？', en: 'Step two. What is being emphasised? What key point does the self-question-and-answer want to stress?' },
+      { zh: '③ 说效果：这样写有什么效果？（引起读者好奇？吸引注意？）', en: 'Step three. State the effect. Does it arouse curiosity, attract attention, or make the point more memorable?' }
+    ]
+  },
+  '排比': {
+    s1: '排比项', s2: '全面描写的内容', s3: '表达的感情',
+    method: '找相同句式 → 说写了什么 → 表达感情',
+    methodEn: 'Parallelism. Step one: find the repeated sentence structure. Step two: describe what it covers comprehensively. Step three: identify the emotion it builds.',
+    tts: '分析排比的方法：第一步，找出连续使用的相同句式；第二步，说明排比全面写出了什么；第三步，说明表达了什么感情。答题格式：运用排比，连续用某某句式加强语气，全面地写出了某某特点，表达了某种感情。',
+    steps: [
+      { zh: '① 找排比项：哪几句结构相同、内容相关？', en: 'Step one. Find the parallel items. Which sentences share the same structure and relate to the same topic?' },
+      { zh: '② 说写了什么：这些并列的句子，全面写出了什么？', en: 'Step two. What is being described? What does the series of parallel sentences cover in full?' },
+      { zh: '③ 表感情：语气更强烈，表达了什么感情？', en: 'Step three. Express the feeling. The building rhythm creates what emotion in the reader?' }
+    ]
+  }
+};
+
+// ── TTS：完全采用参考代码的有效写法 ──────────────────
+function speak(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = 'zh-CN';
+    msg.rate = 0.95;
+    window.speechSynthesis.speak(msg);
+  } else {
+    alert('您的浏览器不支持语音播报功能，请使用最新版的 Chrome 或 Safari 浏览器。');
+  }
+}
+
+function speakEn(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = 'en-US';
+    msg.rate = 0.92;
+    msg.pitch = 1.0;
+    window.speechSynthesis.speak(msg);
+  }
+}
+
+function speakText(text) { speak(text); }
+
+function toggleEnTranslation(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function buildFormulaPuzzle(q) {
+  const tpl = q.formulaTemplate;
+  const parts = tpl.split(/(__ *[①②③] *__)/g);
+  const normalize = s => s.replace(/\s/g,'');
+  const meta = RHETORIC_META[q.rhetoric] || RHETORIC_META['比喻'];
+
+  const preKeyword = S.selectedTokens.length ? S.selectedTokens.join('、') : q.correctTokens.join('、');
+  const hasSlot1 = tpl.includes('__①__');
+  const hasSlot2 = tpl.includes('__②__');
+  const hasSlot3 = tpl.includes('__③__');
+
+  // Build formula sentence HTML
+  let sentHtml = '';
+  parts.forEach(p => {
+    const clean = normalize(p);
+    if (clean === '__①__') {
+      sentHtml += '<span class="fs-slot prefilled-gold" id="slot-1">' + escHtmlDisplay(preKeyword) + '</span>';
+    } else if (clean === '__②__') {
+      sentHtml += '<span class="fs-slot empty" id="slot-2">' + meta.s2 + '…</span>';
+    } else if (clean === '__③__') {
+      sentHtml += '<span class="fs-slot empty" id="slot-3">' + meta.s3 + '…</span>';
+    } else if (p.trim()) {
+      sentHtml += '<span class="fs-static">' + p + '</span>';
+    }
+  });
+
+  const featChoices = shuffle([...q.featureChoices]);
+  const emotChoices = shuffle([...q.emotionChoices]);
+
+  // Build the 5-step method guide card (dark box)
+  // FIX: JSON.stringify produces double-quotes that break onclick="..." attributes.
+  // Solution: .replace(/"/g, '&quot;') so the HTML stays valid.
+  const formulaText = '答题格式：' + tpl.replace(/__[①②③]__/g,'____');
+
+  const stepsCardHtml = '<div class="method-card" id="methodCard">'
+    + '<div class="method-title-row">'
+    + '<span class="method-badge">' + q.rhetoric + ' 答题口诀</span>'
+    + '<div style="display:flex;gap:6px;">'
+    + '<button class="method-btn-audio" onclick="speakText(' + JSON.stringify(meta.tts).replace(/"/g, '&quot;') + ')" title="中文语音讲解">🔊 听讲解</button>'
+    + '<button class="method-btn-en" onclick="toggleEnTranslation(&apos;methodEn&apos;);speakEn(' + JSON.stringify(meta.methodEn).replace(/"/g, '&quot;') + ')" title="English translation">EN &#128266;</button>'
+    + '</div>'
+    + '</div>'
+    + '<div id="methodEn" style="display:none;background:rgba(255,255,255,0.06);border-radius:8px;padding:10px 12px;margin-bottom:10px;">'
+    + '<div style="font-size:11px;color:#9aaa7a;font-weight:700;letter-spacing:1px;margin-bottom:6px;">ENGLISH GUIDE</div>'
+    + meta.steps.map((s,i) => '<div style="font-size:12px;color:#b8c8a0;margin-bottom:4px;">' + s.en + '</div>').join('')
+    + '</div>'
+    + '<div class="method-steps">'
+    + meta.steps.map((s,i) => {
+        const audioText = s.zh.replace(/[①②③]/g, ['第一步','第二步','第三步'][i]);
+        return '<div class="method-step">'
+          + '<span class="method-step-text">' + s.zh + '</span>'
+          + '<button class="method-step-audio" onclick="speakText(' + JSON.stringify(audioText).replace(/"/g, '&quot;') + ')" title="朗读这一步">🔊</button>'
+          + '</div>';
+      }).join('')
+    + '</div>'
+    + '<div class="method-formula-line">'
+    + '<span style="font-size:10px;color:#7a8a6a;font-weight:700;letter-spacing:1px;">答题格式</span>'
+    + '<button class="method-step-audio" onclick="speakText(' + JSON.stringify(formulaText).replace(/"/g, '&quot;') + ')" style="margin-left:6px;">🔊</button>'
+    + '</div>'
+    + '<div class="method-formula-text">' + escHtmlDisplay(meta.method) + '</div>'
+    + '</div>'; // end method-card
+
+  // Colour key
+  const keyHtml = '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">'
+    + (hasSlot1 ? '<span style="font-size:11px;background:rgba(212,160,53,0.2);border:1px solid rgba(212,160,53,0.5);border-radius:6px;padding:3px 8px;color:#b8841a;">🔑 ' + meta.s1 + '（上一步已答）</span>' : '')
+    + (hasSlot2 ? '<span style="font-size:11px;background:rgba(42,92,63,0.12);border:1px solid rgba(42,92,63,0.3);border-radius:6px;padding:3px 8px;color:#2a5c3f;">② 点选 → ' + meta.s2 + '</span>' : '')
+    + (hasSlot3 ? '<span style="font-size:11px;background:rgba(42,92,63,0.12);border:1px solid rgba(42,92,63,0.3);border-radius:6px;padding:3px 8px;color:#2a5c3f;">③ 点选 → ' + meta.s3 + '</span>' : '')
+    + '</div>';
+
+  return '<div class="panel">'
+    + '<div class="panel-title"><div class="step-num">4</div>点选词块，拼出完整的分析句</div>'
+    + stepsCardHtml
+    + '<div class="formula-header" style="margin-top:14px;">📝 拼出分析句</div>'
+    + keyHtml
+    + '<div class="formula-sentence" id="formulaSentence">' + sentHtml + '</div>'
+    + (hasSlot2
+        ? '<div class="wordbank-label">② ' + meta.s2 + '</div>'
+          + '<div class="wordbank" id="wb-feature">'
+          + featChoices.map(c => '<button class="wb-chip" onclick="pickSlot(\'feature\',\'' + escHtmlAttr(c) + '\',this)">' + c + '</button>').join('')
+          + '</div>'
+        : '')
+    + (hasSlot3
+        ? '<div class="wordbank-label">③ ' + meta.s3 + '</div>'
+          + '<div class="wordbank" id="wb-emotion">'
+          + emotChoices.map(c => '<button class="wb-chip" onclick="pickSlot(\'emotion\',\'' + escHtmlAttr(c) + '\',this)">' + c + '</button>').join('')
+          + '</div>'
+        : '')
+    + '<div id="formula-feedback"></div>'
+    + '</div>';
+}
+
+function pickSlot(slotName, val, el) {
+  const q = S.queue[S.qIdx];
+  const wbId = 'wb-' + slotName;
+  const slotNum = slotName === 'feature' ? '2' : '3';
+  const correctVal = slotName === 'feature' ? q.correctFeature : q.correctEmotion;
+
+  // Deselect others in same wordbank
+  document.querySelectorAll('#' + wbId + ' .wb-chip').forEach(b => {
+    if (b !== el) b.classList.remove('selected');
+  });
+  el.classList.toggle('selected');
+
+  if (el.classList.contains('selected')) {
+    S.formulaSlots[slotName] = val;
+    // Update slot in formula
+    const slot = document.getElementById('slot-' + slotNum);
+    if (slot) {
+      slot.textContent = val;
+      slot.className = 'fs-slot filled-correct';
+    }
+  } else {
+    S.formulaSlots[slotName] = null;
+    const slot = document.getElementById('slot-' + slotNum);
+    if (slot) {
+      slot.textContent = slotNum === '2' ? '特点…' : '感情…';
+      slot.className = 'fs-slot empty';
+    }
+  }
+}
+
+function confirmStep3(q) {
+  const feat = S.formulaSlots.feature;
+  const emot = S.formulaSlots.emotion;
+  const hasSlot2 = q.formulaTemplate.includes('__②__');
+  const hasSlot3 = q.formulaTemplate.includes('__③__');
+
+  if (hasSlot2 && !feat && hasSlot3 && !emot) { showToast('请先点选词块'); return; }
+  if (hasSlot2 && !feat) { showToast('请点选②的词块'); return; }
+  if (hasSlot3 && !emot) { showToast('请点选③的词块'); return; }
+
+  const featCorrect = !hasSlot2 || feat === q.correctFeature;
+  const emotCorrect = !hasSlot3 || emot === q.correctEmotion;
+  let pts = 0;
+
+  // Lock + mark feature wordbank
+  if (hasSlot2) {
+    document.querySelectorAll('#wb-feature .wb-chip').forEach(b => {
+      const bVal = b.textContent.trim();
+      b.classList.remove('selected');
+      if (bVal === q.correctFeature) b.classList.add('correct');
+      else if (bVal === feat && feat !== q.correctFeature) b.classList.add('wrong');
+      else b.classList.add('disabled');
+      b.onclick = null;
+    });
+    const slot2 = document.getElementById('slot-2');
+    if (slot2) {
+      slot2.className = featCorrect ? 'fs-slot filled-correct' : 'fs-slot prefilled';
+      slot2.textContent = q.correctFeature;
+      if (featCorrect) pts += 15;
+    }
+  }
+
+  // Lock + mark emotion wordbank
+  if (hasSlot3) {
+    document.querySelectorAll('#wb-emotion .wb-chip').forEach(b => {
+      const bVal = b.textContent.trim();
+      b.classList.remove('selected');
+      if (bVal === q.correctEmotion) b.classList.add('correct');
+      else if (bVal === emot && emot !== q.correctEmotion) b.classList.add('wrong');
+      else b.classList.add('disabled');
+      b.onclick = null;
+    });
+    const slot3 = document.getElementById('slot-3');
+    if (slot3) {
+      slot3.className = emotCorrect ? 'fs-slot filled-correct' : 'fs-slot prefilled';
+      slot3.textContent = q.correctEmotion;
+      if (emotCorrect) pts += 10;
+    }
+  }
+
+  updateScore(pts);
+
+  const allGood = featCorrect && emotCorrect;
+  const fb = document.getElementById('formula-feedback');
+  let msg = '';
+
+  if (allGood) {
+    msg = '<div style="color:var(--green);font-weight:700;font-size:15px;margin-bottom:10px;">✅ 全对！+' + pts + '分</div>';
+  } else {
+    msg = '<div style="font-weight:700;font-size:14px;margin-bottom:8px;color:var(--gold);">📝 已更正，请对照参考答案：</div>';
+    if (hasSlot2 && !featCorrect) msg += '<div style="font-size:13px;margin-bottom:4px;color:var(--red);">② 正确答案：<strong>' + q.correctFeature + '</strong></div>';
+    if (hasSlot3 && !emotCorrect) msg += '<div style="font-size:13px;margin-bottom:6px;color:var(--red);">③ 正确答案：<strong>' + q.correctEmotion + '</strong></div>';
+  }
+
+  msg += '<div class="model-answer-label" style="margin-top:10px;">📌 完整参考答案</div>'
+       + '<div class="model-answer-box">' + q.modelAnswer + '</div>';
+  fb.innerHTML = msg;
+
+  const btn = document.getElementById('mainActionBtn');
+  btn.textContent = S.qIdx < S.queue.length - 1 ? '下一题 →' : '查看成绩 →';
+  btn.onclick = nextQuestion;
+}
+// ═══════════════════════════════════════════════
+function selectRhetoric(val, el) {
+  S.selectedRhetoric = val;
+  document.querySelectorAll('#step0-choices .choice-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function selectWriteType(val, el) {
+  S.selectedWriteType = val;
+  document.querySelectorAll('#step1-choices .choice-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function toggleToken(val, el) {
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    S.selectedTokens = S.selectedTokens.filter(t=>t!==val);
+  } else {
+    el.classList.add('selected');
+    S.selectedTokens.push(val);
+  }
+}
+
+function toggleHint() {
+  const h = document.getElementById('kwHint');
+  h.classList.toggle('show');
+}
+
+// ═══════════════════════════════════════════════
+// ACTION HANDLER
+// ═══════════════════════════════════════════════
+function handleAction() {
+  const q = S.queue[S.qIdx];
+  if (S.step === 0) confirmStep0(q);
+  else if (S.step === 1) confirmStep1(q);
+  else if (S.step === 2) confirmStep2(q);
+  else if (S.step === 3) confirmStep3(q);
+}
+
+function confirmStep0(q) {
+  if (!S.selectedRhetoric) { showToast('请选择一种修辞手法'); return; }
+
+  // For dual-rhetoric sentences, either answer is correct
+  const correctAnswers = new Set([q.rhetoric]);
+  if (q.extraRhetoric) correctAnswers.add(q.extraRhetoric);
+  const correct = correctAnswers.has(S.selectedRhetoric);
+
+  const btns = document.querySelectorAll('#step0-choices .choice-btn');
+  btns.forEach(b => {
+    b.disabled = true;
+    const bText = b.textContent.trim();
+    if (correctAnswers.has(bText)) b.classList.add('reveal');
+    if (bText === S.selectedRhetoric && !correct) b.classList.add('wrong');
+  });
+
+  if (correct) {
+    const badge = document.getElementById('qRhetBadge');
+    badge.textContent = q.rhetoric;
+    badge.className = 'rhet-badge ' + q.rhetoric;
+    updateScore(10);
+    S.correct++;
+
+    let msg = `✅ 答对了！这句话用了<strong>${S.selectedRhetoric}</strong>。`;
+    // If dual-rhetoric, inform about the other one
+    if (q.extraRhetoric && S.selectedRhetoric !== q.extraRhetoric) {
+      msg += `<br><span style="font-size:13px;color:var(--green);">🌟 加分！这句话还用了<strong>${q.extraRhetoric}</strong>，两种修辞都用了哦！</span>`;
+    } else if (q.extraRhetoric && S.selectedRhetoric !== q.rhetoric) {
+      msg += `<br><span style="font-size:13px;color:var(--green);">🌟 这句话还用了<strong>${q.rhetoric}</strong>，两种修辞都用了哦！</span>`;
+    }
+    showFeedback('ok', msg);
+  } else {
+    const correctList = [...correctAnswers].join('或');
+    showFeedback('ng', `这句话用的是<strong>${correctList}</strong>，不是${S.selectedRhetoric}。`);
+  }
+
+  setTimeout(() => {
+    S.step = 1;
+    renderStepsRow(1);
+    renderStep(1);
+    hideFeedback();
+  }, correct ? 1400 : 1800);
+}
+
+function confirmStep1(q) {
+  if (!S.selectedWriteType) { showToast('请选择这句话在写什么'); return; }
+  const correct = S.selectedWriteType === q.writeTypeCorrect;
+  const btns = document.querySelectorAll('#step1-choices .choice-btn');
+  btns.forEach(b => {
+    b.disabled = true;
+    if (b.textContent === q.writeTypeCorrect) b.classList.add('reveal');
+    if (b.textContent === S.selectedWriteType && !correct) b.classList.add('wrong');
+  });
+  if (correct) {
+    showFeedback('ok', `✅ 正确！这句${q.rhetoric}是在<strong>${q.writeTypeCorrect}</strong>。`);
+    updateScore(8);
+  } else {
+    showFeedback('ng', `这句${q.rhetoric}是在<strong>${q.writeTypeCorrect}</strong>，不是${S.selectedWriteType}。`);
+  }
+  setTimeout(() => {
+    S.step = 2;
+    renderStepsRow(2);
+    renderStep(2);
+    hideFeedback();
+  }, correct ? 900 : 1600);
+}
+
+function confirmStep2(q) {
+  if (S.selectedTokens.length === 0) { showToast('请点选关键词'); return; }
+  // check if intersection with correct
+  const hit = S.selectedTokens.some(t => q.correctTokens.includes(t));
+  const allCorrect = q.correctTokens.every(t => S.selectedTokens.includes(t)) &&
+    S.selectedTokens.every(t => q.correctTokens.includes(t));
+
+  // mark tokens
+  document.querySelectorAll('#tokenArea .token').forEach(el => {
+    const t = el.textContent.trim();
+    el.style.cursor = 'default';
+    if (q.correctTokens.includes(t)) el.classList.add('reveal');
+    else if (S.selectedTokens.includes(t)) el.classList.add('wrong');
+    el.onclick = null;
+  });
+
+  // show hint always
+  document.getElementById('kwHint').classList.add('show');
+
+  if (allCorrect) {
+    showFeedback('ok', `✅ 关键词找对了！<br><small>${q.keyHint}</small>`);
+    updateScore(12);
+  } else if (hit) {
+    showFeedback('info', `找到了部分关键词。完整关键词：<strong>${q.correctTokens.join('、')}</strong><br><small>${q.keyHint}</small>`);
+    updateScore(6);
+  } else {
+    showFeedback('ng', `关键词应该是：<strong>${q.correctTokens.join('、')}</strong><br><small>${q.keyHint}</small>`);
+  }
+  setTimeout(() => {
+    S.step = 3;
+    renderStepsRow(3);
+    renderStep(3);
+    hideFeedback();
+  }, 1800);
+}
+
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+function nextQuestion() {
+  S.qIdx++;
+  if (S.qIdx >= S.queue.length) {
+    showResult();
+  } else {
+    document.getElementById('mainActionBtn').onclick = handleAction;
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  const total = S.queue.length;
+  const pct = Math.round(S.correct/total*100);
+  const emoji = pct>=80?'🏆':pct>=60?'😊':'💪';
+  document.getElementById('resultCard').innerHTML = `
+    <div class="result-emoji">${emoji}</div>
+    <div class="result-title">练习完成！</div>
+    <div class="result-score">${S.score}</div>
+    <div class="result-sub">总积分 · 答对 ${S.correct}/${total} 题（第一步）</div>
+  `;
+  document.getElementById('statRow').innerHTML = `
+    <div class="stat-box"><div class="stat-num">${S.correct}</div><div class="stat-label">修辞识别正确</div></div>
+    <div class="stat-box"><div class="stat-num">${total-S.correct}</div><div class="stat-label">需要复习</div></div>
+    <div class="stat-box"><div class="stat-num">${S.score}</div><div class="stat-label">总积分</div></div>
+  `;
+  showScreen('result');
+}
+
+// ═══════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════
+function updateScore(d) {
+  S.score += d;
+  document.getElementById('scorePill').textContent = S.score + ' 分';
+}
+function showFeedback(type, html) {
+  const fb = document.getElementById('mainFeedback');
+  fb.className = 'feedback show ' + type;
+  fb.innerHTML = html;
+}
+function hideFeedback() {
+  const fb = document.getElementById('mainFeedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+function shuffle(arr) {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function escHtml(s) { return s.replace(/'/g,"\\'"); }
+function escHtmlDisplay(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escHtmlAttr(s) { return s.replace(/'/g,'&#39;').replace(/"/g,'&quot;'); }
+function escRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
+// Score chip styles inline
+const styleEl = document.createElement('style');
+styleEl.textContent = `.score-high{background:#e8f5e9;color:#2e7d32}.score-mid{background:#fff8e1;color:#f57f17}.score-low{background:#fdecea;color:#b03a2e}`;
+document.head.appendChild(styleEl);
+
+// Init
+S.selectedRhetorics = [...RHETORICS_BY_LEVEL[S.level]]; // select all by default
+renderRhetoricChips();
+document.getElementById('startBtn').disabled = false;
+</script>
+</body>
+</html>

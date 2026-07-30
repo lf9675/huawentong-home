@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>汉字听写练习</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCg39rW_fGCF3jSCZc8KwrR_782KgUQ26k",
+    authDomain: "tingxie-a13b5.firebaseapp.com",
+    databaseURL: "https://tingxie-a13b5-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "tingxie-a13b5",
+    storageBucket: "tingxie-a13b5.firebasestorage.app",
+    messagingSenderId: "1070167144871",
+    appId: "1:1070167144871:web:c0e244d0d0c699d270de82"
+  };
+  let fbDB = null;          
+  try {
+    firebase.initializeApp(firebaseConfig);
+    fbDB = firebase.database();
+  } catch (e) {
+    console.warn('Firebase 初始化失败，将仅使用本机存储。');
+  }
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap');
+  :root { --ink: #1a1a2e; --paper: #fdf6e3; --accent: #c0392b; --gold: #d4a017; --sage: #5a7a5a; --muted: #8b7355; --correct: #1e8449; --wrong: #c0392b; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--paper); color: var(--ink); font-family: 'Noto Serif SC', serif; min-height: 100vh; overflow-x: hidden; }
+  
+  header { background: var(--ink); color: var(--paper); padding: 12px 24px; display: flex; align-items: center; gap: 16px; box-shadow: 0 3px 12px rgba(0,0,0,0.4); }
+  .logo { font-family: 'Ma Shan Zheng', cursive; font-size: 1.8rem; color: var(--gold); letter-spacing: 2px; }
+  .subtitle { font-size: 0.75rem; color: rgba(253,246,227,0.55); letter-spacing: 1px; }
+  
+  #selector-panel { background: var(--ink); color: var(--paper); padding: 10px 20px 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; border-bottom: 3px solid var(--gold); }
+  .sel-label { font-size: 0.8rem; color: var(--gold); letter-spacing: 1px; white-space: nowrap; }
+  select { background: #2a2a45; color: var(--paper); border: 1px solid rgba(212,160,23,0.5); border-radius: 4px; padding: 5px 10px; font-family: 'Noto Serif SC', serif; font-size: 0.85rem; cursor: pointer; }
+  
+  .tag { display: inline-block; background: rgba(192,57,43,0.2); border: 1px solid var(--accent); color: #f1948a; border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; cursor: pointer; transition: all .2s; white-space: nowrap; }
+  .tag.active { background: var(--accent); color: white; }
+  
+  #stage { display: flex; flex-direction: column; align-items: center; padding: 20px 20px 60px; gap: 16px; }
+  #reading-status { font-size: 0.92rem; color: var(--muted); letter-spacing: 2px; height: 28px; display: flex; align-items: center; }
+  
+  .phase { display: none; flex-direction: column; align-items: center; gap: 16px; width: 100%; max-width: 560px; }
+  .phase.active { display: flex; }
+  
+  #phase-ready { gap: 22px; padding-top: 20px; }
+  .ready-icon { font-family: 'Ma Shan Zheng', cursive; font-size: 5.5rem; color: var(--gold); opacity: 0.5; line-height: 1; }
+  .ready-msg { font-family: 'ZCOOL XiaoWei', serif; font-size: 1.25rem; color: var(--muted); letter-spacing: 3px; }
+  #name-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; width: min(340px, 88vw); }
+  #name-wrap input { width: 100%; padding: 12px 14px; border-radius: 8px; border: 2px solid rgba(180,160,120,0.4); font-family: 'Noto Serif SC', serif; font-size: 1rem; text-align: center; }
+  
+  #canvas-wrap { position: relative; width: min(500px, 92vw); height: min(500px, 92vw); border: 3px solid rgba(180,160,120,0.5); border-radius: 12px; background: white; touch-action: none; box-shadow: inset 0 0 40px rgba(180,160,120,0.08), 0 6px 24px rgba(0,0,0,0.10); overflow: hidden; }
+  #handwrite-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: crosshair; }
+  #writing-controls { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; width: 100%; }
+  
+  #answer-reveal { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px 32px; background: white; border: 2px solid rgba(180,160,120,0.3); border-radius: 14px; width: 100%; }
+  #answer-word { font-family: 'Ma Shan Zheng', cursive; font-size: 6rem; line-height: 1.1; text-align: center; }
+  
+  #ai-verdict { display: none; width: 100%; text-align: center; font-size: 0.92rem; padding: 12px; border-radius: 10px; line-height: 1.6; }
+  #ai-verdict.show { display: block; }
+  #ai-verdict.v-correct { background: rgba(30,132,73,0.10); border: 1.5px solid rgba(30,132,73,0.4); color: var(--correct); }
+  #ai-verdict.v-wrong { background: rgba(192,57,43,0.08); border: 1.5px solid rgba(192,57,43,0.4); color: var(--wrong); }
+  #ai-verdict.v-loading { background: rgba(180,160,120,0.10); border: 1.5px dashed rgba(180,160,120,0.5); color: var(--muted); }
+  #marking-btns { display: flex; gap: 16px; margin-top: 10px; }
+  
+  .btn { padding: 11px 26px; border: none; border-radius: 8px; font-family: 'Noto Serif SC', serif; font-size: 0.95rem; cursor: pointer; transition: all .2s; }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-orange { background: #e67e22; color: white; }
+  .btn-muted { background: rgba(180,160,120,0.18); color: var(--muted); border: 1px solid rgba(180,160,120,0.4); }
+  .btn-correct { background: var(--correct); color: white; }
+  .btn-wrong { background: var(--wrong); color: white; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">汉字听写</div>
+  <div class="subtitle">AI 智能评测版</div>
+</header>
+
+<div id="selector-panel">
+  <span class="sel-label">年级：</span>
+  <select id="grade-select"><option value="中一">中一</option><option value="中二">中二</option></select>
+  <span class="sel-label">单元：</span>
+  <div id="unit-tags"></div>
+  <span class="sel-label">课文：</span>
+  <select id="lesson-select"><option value="all">全部课文</option></select>
+</div>
+
+<div id="stage">
+  <div id="reading-status">选好课文后点击「开始听写」</div>
+
+  <div class="phase active" id="phase-ready">
+    <div class="ready-icon">写</div>
+    <div class="ready-msg">准备好了吗？</div>
+    <div id="name-wrap">
+      <input type="text" id="student-class" placeholder="你的班级 (如：205)" maxlength="10">
+      <input type="text" id="student-name" placeholder="你的姓名 (如：小明)" maxlength="20">
+    </div>
+    <button class="btn btn-primary" id="btn-start" style="padding:14px 48px;font-size:1.05rem">开始听写</button>
+    <button class="btn btn-orange" id="btn-wrong-book">📖 练习我的错字本</button>
+  </div>
+
+  <div class="phase" id="phase-writing">
+    <div style="font-size: 0.82rem; color: var(--muted); text-align: center;">✏️ 请在下方写出听到的词语<br><span style="font-size:0.74rem;color:#aaa">写好后点击「提交」</span></div>
+    <div id="canvas-wrap"><canvas id="handwrite-canvas"></canvas></div>
+    <div id="writing-controls">
+      <button class="btn btn-orange" id="btn-repeat">🔊 再读一遍</button>
+      <button class="btn btn-muted" id="btn-clear">🗑 清除</button>
+      <button class="btn btn-primary" id="btn-submit">提交 →</button>
+    </div>
+  </div>
+
+  <div class="phase" id="phase-marking">
+    <div id="answer-reveal">
+      <div style="font-size:0.76rem;color:var(--muted)">正确答案</div>
+      <div id="answer-word"></div>
+    </div>
+    <div id="ai-verdict"></div>
+    <div id="marking-btns" style="display:none;">
+      <button class="btn btn-correct" onclick="markWord(true)">✅ 写对了</button>
+      <button class="btn btn-wrong" onclick="markWord(false)">❌ 写错了</button>
+    </div>
+  </div>
+
+  <div class="phase" id="phase-complete">
+    <h2 style="color:var(--ink)">听写完成！</h2>
+    <p>正确：<span id="res-c" style="color:var(--correct);font-size:2rem">0</span></p>
+    <p>错误：<span id="res-w" style="color:var(--wrong);font-size:2rem">0</span></p>
+    <button class="btn btn-primary" onclick="location.reload()" style="margin-top:20px;">返回首页</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// 无删减版：完整的中一与中二词库
+// ══════════════════════════════════════
+const VOCAB = {
+  "中一": {
+    "单元一": {
+      "第一课": ["疲惫","犹豫","不分青红皂白","内疚","不妨","匿名","监督","窒息","代沟","上瘾","疏远","迎刃而解"],
+      "第二课": ["崇拜","爱不释手","碰钉子","泼冷水","抽屉","精疲力竭","衰老","抑郁","启齿","扪心自问","害羞","懊恼","伺机","疙瘩","心不在焉","破天荒","仓促"],
+      "第三课": ["战战兢兢","钥匙","锁","安抚","何况","和事佬","惊讶","斑","缠绕","搂"],
+      "第四课": ["臃肿","庸俗","枚","戒指","身躯","姿势","熬","打瞌睡","蹒跚","惺忪","光辉"]
+    },
+    "单元二": {
+      "第一课": ["捐款","拯救","优惠","券","四肢","敏捷","穿梭","辨识","馋","捧跤","凶猛"],
+      "第二课": ["光泽","缩","枕","啾啾","仰","凝望","鸟笼","隔","惩罚","畏罪潜逃","喵","衔","搞","谴责","估计"],
+      "第三课": ["光彩夺目","小心翼翼","褐","盘旋","愣","傻","啼","鸣","面面相觑","揪心"],
+      "第四课": ["茂盛","扒开","娇嫩","掀开","啄","俯下","蹦来蹦去","涂上颜色","绒毛","呼唤","肩头"]
+    },
+    "单元三": {
+      "第一课": ["因素","水喉","艰巨","昂贵","消耗","干旱","扩大","蓄水池","洗澡","浴室","趋势"],
+      "第二课": ["媒体","塑料","吨","廉价","风靡","垄断","提供","危害","焚烧","烟尘","毒","土壤","遏制","税","倡导","逐渐","机构","充斥","妥善","煞费苦心"],
+      "第三课": ["统计","大型","日新月异","泛滥","寿命","途径","缺乏","亿","遗憾","谨慎","渗透"],
+      "第四课": ["宣布","狩猎","聘请","啃","疾病","锐减","糟蹋","毁灭","罪魁祸首","研究","目睹","违背","拼搏"]
+    },
+    "单元四": {
+      "第一课": ["自卑","羡慕","诱惑","毅力","茫然","魂不守舍","睡眠","闪烁其词","嫌","逼","霸道","怄气","烹饪","符合"],
+      "第二课": ["憋","委婉","吼","反驳","缝","吭声","掩","走廊","熄灯","诡异","蜷缩","瑟瑟","恐怖","通宵","惊悚"],
+      "第三课": ["脖子","瞥","炙","社交媒体","掩饰","拘束","嘈杂","局促","沮丧","睿智"],
+      "第四课": ["搓澡","涩涩","筹划","拾掇","颔首","棉","掏","崭新","喃喃","涌动","县","捅","珍藏"]
+    },
+    "单元五": {
+      "第一课": ["简陋","政府","开辟","小贩","宗教","综合","诊疗所","经济","富裕","变迁","障碍","驰名","屡次","荣誉"],
+      "第二课": ["接触","翠绿","心旷神怡","曝晒","林荫大道","樟宜","耸立","叮咛","温馨","欣赏","粗糙","婆娑","翱翔","同甘共苦","茁壮","接纳"],
+      "第三课": ["妻子","患","失智症","寻找","流逝","叮嘱","嬉戏","俏皮","惬意","烦躁"],
+      "第四课": ["矿泉水","竹竿","一缕","涓涓","缸","舀","滋养","黯然","漂泊","惆怅","跋涉","尘封","岂有此理"]
+    },
+    "单元六": {
+      "第一课": ["丝绸","陆地","奢侈","瓷器","仪式","秉持","枢纽","港口","勾勒","高瞻远瞩"],
+      "第二课": ["可谓","岛屿","海峡","历史","钱币","区域","汇集","赋予","椰浆饭","黄姜饭","初来乍到","啧啧称奇","发芽","兼容并蓄","海纳百川","求同存异"]
+    }
+  },
+   "中二": {
+    "单元一": {
+      "第一课": ["疲惫","犹豫","不分青红皂白","内疚","不妨","匿名","监督","窒息","代沟","上瘾","疏远","迎刃而解"],
+      "第二课": ["崇拜","爱不释手","碰钉子","泼冷水","抽屉","精疲力竭","衰老","抑郁","启齿","扪心自问","害羞","懊恼","伺机","疙瘩","心不在焉","破天荒","仓促"],
+      "第三课": ["战战兢兢","钥匙","锁","安抚","何况","和事佬","惊讶","斑","缠绕","搂"],
+      "第四课": ["臃肿","庸俗","枚","戒指","身躯","姿势","熬","打瞌睡","蹒跚","惺忪","光辉"]
+    },
+    "单元二": {
+      "第一课": ["捐款","拯救","优惠","券","四肢","敏捷","穿梭","辨识","馋","捧跤","凶猛"],
+      "第二课": ["光泽","缩","枕","啾啾","仰","凝望","鸟笼","隔","惩罚","畏罪潜逃","喵","衔","搞","谴责","估计"],
+      "第三课": ["光彩夺目","小心翼翼","褐","盘旋","愣","傻","啼","鸣","面面相觑","揪心"],
+      "第四课": ["茂盛","扒开","娇嫩","掀开","啄","俯下","蹦来蹦去","涂上颜色","绒毛","呼唤","肩头"]
+    },
+    "单元三": {
+      "第一课": ["因素","水喉","艰巨","昂贵","消耗","干旱","扩大","蓄水池","洗澡","浴室","趋势"],
+      "第二课": ["媒体","塑料","吨","廉价","风靡","垄断","提供","危害","焚烧","烟尘","毒","土壤","遏制","税","倡导","逐渐","机构","充斥","妥善","煞费苦心"],
+      "第三课": ["统计","大型","日新月异","泛滥","寿命","途径","缺乏","亿","遗憾","谨慎","渗透"],
+      "第四课": ["宣布","狩猎","聘请","啃","疾病","锐减","糟蹋","毁灭","罪魁祸首","研究","目睹","违背","拼搏"]
+    },
+    "单元四": {
+      "第一课": ["自卑","羡慕","诱惑","毅力","茫然","魂不守舍","睡眠","闪烁其词","嫌","逼","霸道","怄气","烹饪","符合"],
+      "第二课": ["憋","委婉","吼","反驳","缝","吭声","掩","走廊","熄灯","诡异","蜷缩","瑟瑟","恐怖","通宵","惊悚"],
+      "第三课": ["脖子","瞥","炙","社交媒体","掩饰","拘束","嘈杂","局促","沮丧","睿智"],
+      "第四课": ["搓澡","涩涩","筹划","拾掇","颔首","棉","掏","崭新","喃喃","涌动","县","捅","珍藏"]
+    },
+    "单元五": {
+      "第一课": ["简陋","政府","开辟","小贩","宗教","综合","诊疗所","经济","富裕","变迁","障碍","驰名","屡次","荣誉"],
+      "第二课": ["接触","翠绿","心旷神怡","曝晒","林荫大道","樟宜","耸立","叮咛","温馨","欣赏","粗糙","婆娑","翱翔","同甘共苦","茁壮","接纳"],
+      "第三课": ["妻子","患","失智症","寻找","流逝","叮嘱","嬉戏","俏皮","惬意","烦躁"],
+      "第四课": ["矿泉水","竹竿","一缕","涓涓","缸","舀","滋养","黯然","漂泊","惆怅","跋涉","尘封","岂有此理"]
+    },
+    "单元六": {
+      "第一课": ["丝绸","陆地","奢侈","瓷器","仪式","秉持","枢纽","港口","勾勒","高瞻远瞩"],
+      "第二课": ["可谓","岛屿","海峡","历史","钱币","区域","汇集","赋予","椰浆饭","黄姜饭","初来乍到","啧啧称奇","发芽","兼容并蓄","携手","辉煌","海纳百川","求同存异"],
+      "第三课": ["砍","无远弗届","真伪","陷阱","步伐","询问","人云亦云","免疫","凝聚力"],
+      "第四课": ["缔造","小溪","硕果","美洲","湮灭","尘埃","建筑","震惊","辣椒","变革","灿烂","翻天覆地","停滞"]
+    }
+  }
+};
+
+// 状态与变量
+let currentGrade = "中一";
+let selectedUnits = new Set(["单元一"]);
+let currentLesson = "all";
+let wordQueue = [];
+let currentIndex = 0;
+let results = [];
+let scoreCorrect = 0;
+let scoreWrong = 0;
+let studentName = "";
+let studentClass = ""; 
+let speechUnlocked = false;
+
+// ── 界面渲染与数据准备 ──
+function renderUnitTags() {
+  const c = document.getElementById('unit-tags');
+  if (!c) return;
+  c.innerHTML = '';
+  Object.keys(VOCAB[currentGrade] || {}).forEach(u => {
+    const t = document.createElement('span');
+    t.className = 'tag' + (selectedUnits.has(u) ? ' active' : '');
+    t.textContent = u;
+    t.onclick = () => {
+      if (selectedUnits.has(u)) { 
+        selectedUnits.delete(u); 
+        t.classList.remove('active'); 
+      } else { 
+        selectedUnits.add(u); 
+        t.classList.add('active'); 
+      }
+      renderLessonSelect();
+      buildWordQueue();
+    };
+    c.appendChild(t);
+  });
+}
+
+function renderLessonSelect() {
+  const sel = document.getElementById('lesson-select');
+  if(!sel) return;
+  sel.innerHTML = '<option value="all">全部课文</option>';
+  selectedUnits.forEach(u => {
+    Object.keys(VOCAB[currentGrade][u] || {}).forEach(l => {
+      const o = document.createElement('option');
+      o.value = u + '|' + l;
+      o.textContent = u + ' · ' + l;
+      sel.appendChild(o);
+    });
+  });
+  currentLesson = 'all';
+}
+
+function buildWordQueue() {
+  const raw = [];
+  selectedUnits.forEach(u => {
+    Object.entries(VOCAB[currentGrade][u] || {}).forEach(([lesson, words]) => {
+      if (currentLesson === 'all' || currentLesson === (u + '|' + lesson)) {
+        words.forEach(w => raw.push({ word: w, unit: u, lesson: lesson }));
+      }
+    });
+  });
+  wordQueue = raw.sort(() => Math.random() - 0.5);
+}
+
+// ── 本地错字本存储 ──
+const STORAGE_KEY = 'tingxie_history_v2';
+function loadRecords() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { return []; }
+}
+function saveRecord(rec) {
+  try {
+    const recs = loadRecords();
+    recs.unshift(rec);
+    if (recs.length > 50) recs.length = 50;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(recs));
+  } catch (e) {}
+}
+
+// ── 初始化与事件绑定 ──
+window.addEventListener('DOMContentLoaded', () => {
+  renderUnitTags();
+  renderLessonSelect();
+  buildWordQueue();
+
+  document.getElementById('lesson-select').addEventListener('change', (e) => {
+    currentLesson = e.target.value;
+    buildWordQueue();
+  });
+
+  document.getElementById('btn-start').addEventListener('click', () => {
+    studentClass = document.getElementById('student-class').value.trim(); 
+    studentName = document.getElementById('student-name').value.trim();
+    if (!studentClass) { alert('请先输入班级！'); return; }
+    if (!studentName) { alert('请先输入姓名！'); return; }
+    if (wordQueue.length === 0) { alert('当前词库为空，请先勾选上方单元！'); return; }
+    
+    // 安全地解锁引擎
+    window.speechSynthesis.cancel();
+    unlockSpeech();
+    startDictation();
+  });
+
+  document.getElementById('btn-wrong-book').addEventListener('click', () => {
+    studentClass = document.getElementById('student-class').value.trim(); 
+    studentName = document.getElementById('student-name').value.trim();
+    if (!studentClass || !studentName) { alert('请先输入班级和姓名！'); return; }
+
+    const history = [...loadRecords()].reverse(); 
+    const wordStatus = {}; 
+    
+    history.forEach(r => {
+      if (r.wrongWords) r.wrongWords.forEach(w => { wordStatus[w] = 0; });
+      if (r.correctWords) r.correctWords.forEach(w => {
+        if (wordStatus[w] !== undefined) {
+          wordStatus[w]++;
+          if (wordStatus[w] >= 3) delete wordStatus[w]; 
+        }
+      });
+    });
+
+    const wwArray = Object.keys(wordStatus);
+    if (wwArray.length === 0) {
+      alert('🎉太棒了！你的错字本已经被全部消灭，目前不需要复习。');
+      return;
+    }
+    
+    wordQueue = wwArray.map(w => ({ word: w })).sort(() => Math.random() - 0.5);
+    alert(`你的错字本中还有 ${wwArray.length} 个词需要消灭，现在开始复习！`);
+    
+    window.speechSynthesis.cancel();
+    unlockSpeech(); 
+    startDictation();
+  });
+
+  // “再读一遍”功能
+  document.getElementById('btn-repeat').addEventListener('click', () => {
+    window.speechSynthesis.cancel(); // 用户直接点击，安全取消当前声音
+    playWord(); // 重新朗读当前词
+  });
+});
+
+// ── 画板逻辑 ──
+const canvas = document.getElementById('handwrite-canvas');
+const ctx = canvas.getContext('2d');
+let isDrawing = false;
+
+function initCanvas() {
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = 8; 
+  ctx.strokeStyle = '#1a1a2e';
+}
+
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
+  return {
+    x: clientX - rect.left,
+    y: clientY - rect.top
+  };
+}
+
+function startDraw(e) {
+  e.preventDefault(); 
+  isDrawing = true;
+  const pos = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(pos.x, pos.y);
+  ctx.lineTo(pos.x, pos.y); 
+  ctx.stroke();
+}
+
+function draw(e) {
+  if (!isDrawing) return;
+  e.preventDefault();
+  const pos = getPos(e);
+  ctx.lineTo(pos.x, pos.y);
+  ctx.stroke();
+}
+
+function stopDraw(e) {
+  if (e) e.preventDefault();
+  isDrawing = false;
+}
+
+canvas.addEventListener('mousedown', startDraw);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', stopDraw);
+canvas.addEventListener('mouseout', stopDraw);
+
+canvas.addEventListener('touchstart', startDraw, { passive: false });
+canvas.addEventListener('touchmove', draw, { passive: false });
+canvas.addEventListener('touchend', stopDraw);
+canvas.addEventListener('touchcancel', stopDraw);
+
+document.getElementById('btn-clear').addEventListener('click', () => { 
+  ctx.clearRect(0,0,canvas.width,canvas.height); 
+});
+
+// ══════════════════════════════════════
+// 🔥 终极朗读引擎：完全抛弃延迟代码，一次性连贯发声，防苹果屏蔽
+// ══════════════════════════════════════
+function unlockSpeech() {
+  if (speechUnlocked) return;
+  const u = new SpeechSynthesisUtterance(' ');
+  u.volume = 0;
+  window.speechSynthesis.speak(u);
+  speechUnlocked = true;
+}
+
+// 防垃圾回收变量
+window.currentTTS = null; 
+
+function playWord() {
+  const word = wordQueue[currentIndex].word;
+  document.getElementById('reading-status').textContent = `正在朗读：🔊 (第 ${currentIndex + 1}/${wordQueue.length} 词)`;
+  
+  // 核心改动：把3遍朗读和长长的停顿，浓缩成一句话。句号会让声音产生自然的降调和长时间停顿。
+  // 这样就不需要用到会导致苹果系统断声的 setTimeout 了。
+  const textToSpeak = `${word}。 。 。 ${word}。 。 。 ${word}`;
+  
+  const u = new SpeechSynthesisUtterance(textToSpeak);
+  u.lang = 'zh-CN';
+  // 完美恢复你要求的语速和音调
+  u.rate = 0.76; 
+  u.pitch = 1.15;
+  
+  const voices = window.speechSynthesis.getVoices();
+  // 强制抓取大陆普通话，严防香港粤语混入
+  const zhVoice = voices.find(v => v.lang === 'zh-CN' || v.lang === 'zh_CN') 
+               || voices.find(v => v.lang.includes('zh') && !v.lang.toLowerCase().includes('hk'));
+               
+  if (zhVoice) {
+    u.voice = zhVoice;
+  }
+
+  // 绑定全局变量，防止声音在后台被苹果系统意外“杀掉”
+  window.currentTTS = u;
+  
+  u.onend = () => {
+    document.getElementById('reading-status').textContent = '请写完词语后点击「提交」';
+  };
+
+  window.speechSynthesis.speak(u);
+}
+
+function startDictation() {
+  currentIndex = 0; scoreCorrect = 0; scoreWrong = 0; results = [];
+  document.querySelectorAll('.phase').forEach(el => el.classList.remove('active'));
+  document.getElementById('phase-writing').classList.add('active');
+  
+  initCanvas(); 
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  playWord();
+}
+
+// ── 提交与 AI 判卷 (Tesseract.js) ──
+let _ocrReqId = 0;
+
+document.getElementById('btn-submit').addEventListener('click', () => {
+  // 注意：这里绝对不能写 window.speechSynthesis.cancel() ！！！
+  // 让声音自然播完，防止打断苹果的音频授权链条。
+
+  let snapshot = canvas.toDataURL('image/png');
+  document.querySelectorAll('.phase').forEach(el => el.classList.remove('active'));
+  document.getElementById('phase-marking').classList.add('active');
+  
+  const item = wordQueue[currentIndex];
+  document.getElementById('answer-word').textContent = item.word;
+  document.getElementById('marking-btns').style.display = 'none'; 
+  
+  runRecognition(snapshot, item.word);
+});
+
+async function runRecognition(snapshot, answer) {
+  const myReq = ++_ocrReqId;
+  const v = document.getElementById('ai-verdict');
+  v.className = 'v-loading show';
+  v.innerHTML = 'AI 正在自动识别你的笔迹...';
+  
+  if (!snapshot || typeof Tesseract === 'undefined') {
+    v.className = 'v-wrong show';
+    v.innerHTML = '⚠️ AI 识别引擎未加载，请手动判分。';
+    document.getElementById('marking-btns').style.display = 'flex';
+    return;
+  }
+  
+  try {
+    const { data } = await Tesseract.recognize(snapshot, 'chi_sim');
+    if (myReq !== _ocrReqId) return; 
+
+    const recog = (data.text || '').replace(/[^\u4E00-\u9FA5]/g, '');
+    const ans = answer.replace(/[^\u4E00-\u9FA5]/g, '');
+
+    if (recog === ans || (ans.length > 0 && recog.includes(ans))) {
+      v.className = 'v-correct show';
+      v.innerHTML = '✅ 识别完全正确！系统已记录，即将进入下一题...';
+      setTimeout(() => markWord(true), 1500); 
+    } else {
+      v.className = 'v-wrong show';
+      v.innerHTML = `❌ AI 判定为错字。<br>你写成了「${recog || '未识别出文字'}」，正确答案如上。<br>如果 AI 误判，你可以点击下方按钮手动纠正。`;
+      document.getElementById('marking-btns').style.display = 'flex';
+    }
+  } catch (err) {
+    if (myReq !== _ocrReqId) return;
+    v.className = 'v-wrong show';
+    v.innerHTML = '⚠️ 识别引擎出错，请手动判分。';
+    document.getElementById('marking-btns').style.display = 'flex';
+  }
+}
+
+function markWord(isCorrect) {
+  _ocrReqId++; 
+  document.getElementById('ai-verdict').className = ''; 
+  
+  const item = wordQueue[currentIndex];
+  results.push({ word: item.word, correct: isCorrect });
+  if (isCorrect) scoreCorrect++; else scoreWrong++;
+  
+  currentIndex++;
+  if (currentIndex >= wordQueue.length) {
+    finishDictation();
+  } else {
+    document.querySelectorAll('.phase').forEach(el => el.classList.remove('active'));
+    document.getElementById('phase-writing').classList.add('active');
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 8;
+    
+    // 进入下一题并清空画板
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    playWord();
+  }
+}
+
+function finishDictation() {
+  document.querySelectorAll('.phase').forEach(el => el.classList.remove('active'));
+  document.getElementById('phase-complete').classList.add('active');
+  document.getElementById('res-c').textContent = scoreCorrect;
+  document.getElementById('res-w').textContent = scoreWrong;
+  document.getElementById('reading-status').textContent = '听写结束！';
+
+  const wrongWords = results.filter(r => !r.correct).map(r => r.word);
+  const correctWords = results.filter(r => r.correct).map(r => r.word); 
+
+  saveRecord({
+    name: studentName,
+    class: studentClass,
+    scope: currentLesson,
+    correct: scoreCorrect,
+    wrong: scoreWrong,
+    total: wordQueue.length,
+    wrongWords: wrongWords,
+    correctWords: correctWords, 
+    date: new Date().toLocaleString()
+  });
+}
+</script>
+</body>
+</html>

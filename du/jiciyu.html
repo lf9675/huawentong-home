@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>汉字结构大乱斗 v2.0</title>
+<style>
+:root{--red:#e74c3c;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--gold:#f39c12;--bg:#fdf6e3;--text:#2c3e50;--card:#fff;--sh:0 2px 12px rgba(0,0,0,.1)}
+*{box-sizing:border-box;touch-action:none;margin:0;padding:0}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);display:flex;flex-direction:column;align-items:center;min-height:100vh;overflow-y:auto;touch-action:auto;padding-bottom:72px;padding-top:57px}
+.header{width:100%;background:var(--card);padding:8px 12px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--sh);position:fixed;top:0;left:0;right:0;z-index:50}
+.select-group{display:flex;gap:6px}
+select{padding:6px 8px;border-radius:8px;font-size:14px;border:1.5px solid #ddd;font-weight:bold;background:#f8f9fa;color:var(--text);outline:none;font-family:inherit}
+.header-mid{font-size:12px;color:#95a5a6;text-align:center;flex:1;padding:0 6px}
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+.score-display{font-size:17px;font-weight:bold;color:var(--red)}
+.combo-display{font-size:11px;font-weight:bold;min-height:14px;color:var(--orange)}
+.progress-wrap{width:100%;height:5px;background:#ecf0f1;position:fixed;top:52px;left:0;right:0;z-index:49}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),#2ecc71);transition:width .5s cubic-bezier(.4,0,.2,1);width:0%}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;display:flex;align-items:center;justify-content:center}
+.modal{background:var(--card);border-radius:20px;padding:32px 24px;width:88%;max-width:360px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-emoji{font-size:52px;margin-bottom:12px}
+.modal-title{font-size:22px;font-weight:bold;color:var(--text);margin-bottom:6px}
+.modal-sub{font-size:13px;color:#7f8c8d;margin-bottom:20px;line-height:1.5}
+.modal-input{width:100%;padding:13px;font-size:17px;border:2px solid #ecf0f1;border-radius:10px;text-align:center;margin-bottom:14px;font-family:inherit;outline:none;transition:border-color .2s}
+.modal-input:focus{border-color:var(--green)}
+.modal-btn{width:100%;padding:14px;font-size:16px;background:var(--green);color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-family:inherit}
+.modal-btn:active{opacity:.9;transform:scale(.98)}
+.ach-toast{position:fixed;top:62px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f39c12,#e67e22);color:#fff;padding:10px 22px;border-radius:30px;font-size:14px;font-weight:bold;z-index:400;box-shadow:0 6px 20px rgba(243,156,18,.45);animation:toastIn .35s cubic-bezier(.34,1.56,.64,1);display:none;white-space:nowrap}
+@keyframes toastIn{from{transform:translateX(-50%) translateY(-20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+.pool-container{width:95%;max-width:500px;min-height:108px;background:rgba(255,255,255,.85);border:2px dashed #b2bec3;border-radius:14px;margin:12px 0 6px;padding:12px 14px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px}
+.pool-title{width:100%;text-align:center;font-size:11px;color:#95a5a6;margin:-4px 0}
+.component{width:46px;height:46px;background:var(--card);border:2px solid #2c3e50;border-radius:9px;font-size:24px;font-family:"KaiTi","楷体",serif;display:flex;align-items:center;justify-content:center;cursor:grab;user-select:none;box-shadow:2px 2px 0 #2c3e50;transition:transform .1s}
+.component:active{cursor:grabbing;transform:scale(1.12)}
+.target-info{font-size:14px;color:var(--text);font-weight:bold;text-align:center;margin-bottom:4px}
+.pinyin-display{font-size:36px;color:var(--green);font-family:Arial,sans-serif;letter-spacing:3px;display:block;margin-top:2px;font-weight:bold}
+.struct-hint{font-size:12px;color:var(--orange);margin:4px 0 10px}
+.dynamic-board{width:160px;height:160px;background:var(--red);border:4px solid var(--red);gap:2px;margin-bottom:14px;transition:transform .35s,border-color .35s,background-color .35s}
+.dynamic-board.success{transform:scale(1.06);box-shadow:0 0 24px rgba(39,174,96,.5);border-color:var(--green);background-color:var(--green)}
+.grid-cell{background:#fff;display:flex;align-items:center;justify-content:center;font-size:46px;font-family:"KaiTi","楷体",serif;color:#000}
+.grid-cell.shake{animation:cellShake .3s ease}
+@keyframes cellShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.layout-lr{display:grid;grid-template-columns:1fr 1fr}
+.layout-tb{display:grid;grid-template-rows:1fr 1fr}
+.layout-lmr{display:grid;grid-template-columns:1fr 1fr 1fr;font-size:36px}
+.layout-tmb{display:grid;grid-template-rows:1fr 1fr 1fr;font-size:36px}
+.layout-l-tr-br{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.layout-l-tr-br .cell-0{grid-row:1/3;grid-column:1/2}
+.layout-l-tr-br .cell-1{grid-row:1/2;grid-column:2/3;font-size:35px}
+.layout-l-tr-br .cell-2{grid-row:2/3;grid-column:2/3;font-size:35px}
+.layout-l-tmb{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr 1fr}
+.layout-l-tmb .cell-0{grid-row:1/4;grid-column:1/2}
+.layout-l-tmb .cell-1{grid-row:1/2;grid-column:2/3;font-size:25px}
+.layout-l-tmb .cell-2{grid-row:2/3;grid-column:2/3;font-size:25px}
+.layout-l-tmb .cell-3{grid-row:3/4;grid-column:2/3;font-size:25px}
+.layout-tb4{display:grid;grid-template-columns:1fr;grid-template-rows:1fr 1fr 1fr 1fr}
+.layout-tb4 .cell-0,.layout-tb4 .cell-1,.layout-tb4 .cell-2,.layout-tb4 .cell-3{font-size:25px}
+.layout-l-tb{display:block;position:relative;width:160px;height:160px;background:transparent;border:none;margin-bottom:14px}
+.layout-l-tb.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
+.layout-l-tb .cell-0{position:absolute;top:0;left:0;width:100%;height:100%;border-top:6px dashed #9b59b6;border-left:6px dashed #9b59b6;border-bottom:6px dashed #9b59b6;border-radius:12px 0 0 12px;background:rgba(155,89,182,.05);font-size:42px;display:flex;align-items:center;padding-left:10px}
+.layout-l-tb .cell-1{position:absolute;top:50%;transform:translateY(-50%);right:5px;width:78px;height:78px;border:4px dashed #1abc9c;border-radius:8px;background:rgba(26,188,156,.1);font-size:36px;display:flex;align-items:center;justify-content:center}
+/* semi-bl: bottom-left wraps (辶/走 type) — TOP is open — inner at top-right */
+.layout-semi-bl{display:block;position:relative;width:160px;height:160px;background:transparent;border:none;margin-bottom:14px}
+.layout-semi-bl.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
+.layout-semi-bl .cell-0{position:absolute;top:0;left:0;width:100%;height:100%;border-left:6px dashed #9b59b6;border-bottom:6px dashed #9b59b6;border-radius:0 0 0 12px;background:rgba(155,89,182,.05);font-size:42px;display:flex;align-items:flex-end;padding-bottom:8px;padding-left:8px}
+.layout-semi-bl .cell-1{position:absolute;top:5px;right:5px;width:100px;height:78px;border:4px dashed #1abc9c;border-radius:8px;background:rgba(26,188,156,.1);font-size:36px;display:flex;align-items:center;justify-content:center}
+/* semi-tl: top-left wraps (厂/疒/尸/广 type) — BOTTOM is open — inner at bottom-right */
+.layout-semi-tl{display:block;position:relative;width:160px;height:160px;background:transparent;border:none;margin-bottom:14px}
+.layout-semi-tl.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
+.layout-semi-tl .cell-0{position:absolute;top:0;left:0;width:100%;height:100%;border-left:6px dashed #9b59b6;border-top:6px dashed #9b59b6;border-radius:12px 0 0 0;background:rgba(155,89,182,.05);font-size:42px;display:flex;align-items:flex-start;padding-top:8px;padding-left:8px}
+.layout-semi-tl .cell-1{position:absolute;bottom:5px;right:5px;width:100px;height:78px;border:4px dashed #1abc9c;border-radius:8px;background:rgba(26,188,156,.1);font-size:36px;display:flex;align-items:center;justify-content:center}
+.quiz-panel{width:95%;max-width:500px;background:var(--card);border-radius:14px;padding:16px;box-shadow:var(--sh);display:none;flex-direction:column;gap:9px;margin-bottom:16px;animation:slideUp .3s ease-out}
+@keyframes slideUp{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
+.quiz-title{font-size:14px;color:#34495e;text-align:center}
+.quiz-word{font-size:22px;color:var(--green);font-weight:bold;letter-spacing:2px}
+.quiz-btn{width:100%;padding:13px;font-size:14px;text-align:left;background:#f8f9fa;border:2px solid #ecf0f1;border-radius:9px;cursor:pointer;transition:all .18s;font-family:inherit}
+.quiz-btn:active{transform:scale(.98)}
+.quiz-btn.correct{background:var(--green);color:#fff;border-color:var(--green)}
+.quiz-btn.wrong{background:var(--red);color:#fff;border-color:var(--red)}
+/* === 字形切割模式 === */
+.cut-piece{padding:0!important;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fff}
+.cut-piece svg{display:block}
+.cut-board-v{display:flex;flex-direction:row;width:auto;height:160px;background:transparent;border:none;gap:0}
+.cut-board-h{display:flex;flex-direction:column;width:160px;height:auto;background:transparent;border:none;gap:0}
+.cut-cell{position:relative;border:2px dashed #b2bec3;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cut-board-v .cut-cell{width:80px;height:160px}
+.cut-board-h .cut-cell{width:160px;height:53px}
+.cut-cell[data-filled='true']{border-style:solid;border-color:var(--green)}
+.cut-ghost{position:absolute;inset:0;opacity:0.12;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.cut-ghost svg{width:100%;height:100%}
+/* === 同字词配对 === */
+.match-panel{width:95%;max-width:500px;background:var(--card);border-radius:14px;padding:16px;box-shadow:var(--sh);display:none;flex-direction:column;gap:12px;margin-bottom:16px;animation:slideUp .3s ease-out}
+.match-panel.show{display:flex}
+.match-title{font-size:14px;color:#34495e;text-align:center;line-height:1.7}
+.match-char{font-family:"KaiTi","楷体",serif;font-size:22px;color:var(--green);font-weight:bold}
+.match-sub{font-size:12px;color:#95a5a6}
+.match-area{display:flex;flex-direction:column;gap:10px}
+.match-row{display:flex;align-items:stretch;gap:10px;min-height:52px}
+.match-word{flex:0 0 96px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ebf5fb,#d6eaf8);border:2px solid var(--blue);border-radius:10px;font-size:17px;font-weight:bold;color:var(--text);cursor:grab;user-select:none;font-family:"KaiTi","楷体",serif;touch-action:none;transition:transform .12s,opacity .2s}
+.match-word:active{cursor:grabbing;transform:scale(1.06)}
+.match-word.placed{opacity:.35;pointer-events:none;border-style:dashed}
+.match-word.dragging{opacity:.7;box-shadow:0 6px 18px rgba(41,128,185,.4)}
+.match-def{flex:1;display:flex;align-items:center;gap:8px;background:#f8f9fa;border:2px dashed #cdd5db;border-radius:10px;padding:8px 12px;font-size:13px;color:var(--text);min-height:52px;transition:all .15s}
+.match-def .drop-slot{flex:0 0 90px;min-height:36px;border:2px dashed #b2bec3;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;color:#b2bec3;font-family:"KaiTi","楷体",serif}
+.match-def.over{border-color:var(--blue);background:#eaf4fb}
+.match-def.correct{border-color:var(--green);border-style:solid;background:rgba(39,174,96,.08)}
+.match-def.correct .drop-slot{border-color:var(--green);border-style:solid;color:var(--green)}
+.match-def.wrong-shake{animation:cellShake .3s ease}
+.match-def-text{flex:1}
+.match-def-en{color:#95a5a6;font-size:11px}
+.progress-label{font-size:11px;color:#b2bec3;margin-bottom:6px}
+.feedback-overlay{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);z-index:300;pointer-events:none;display:none;text-align:center;width:90%}
+.feedback-text{font-size:38px;font-weight:bold;text-shadow:0 4px 12px rgba(0,0,0,.2);animation:bounceIn .45s}
+@keyframes bounceIn{0%{transform:scale(0)}75%{transform:scale(1.12)}100%{transform:scale(1)}}
+.particle{position:fixed;pointer-events:none;z-index:350;width:9px;height:9px;border-radius:50%;animation:pFly .75s ease-out forwards}
+@keyframes pFly{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
+.bottom-nav{position:fixed;bottom:0;width:100%;max-width:600px;background:var(--card);display:flex;border-top:1px solid #ecf0f1;z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,.07)}
+.nav-btn{flex:1;padding:10px 0;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;font-family:inherit;position:relative}
+.nav-btn:active{background:#f8f9fa}
+.nav-icon{font-size:21px}
+.nav-label{font-size:10px;color:#95a5a6}
+.nav-btn.active .nav-label{color:var(--green);font-weight:bold}
+.nav-badge{position:absolute;top:6px;right:calc(50% - 18px);background:var(--red);color:#fff;font-size:9px;font-weight:bold;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px}
+.page{width:100%;max-width:500px;display:none;padding:10px 12px}
+.page.active{display:block}
+#gamePage{flex-direction:column;align-items:center}
+#gamePage.active{display:flex;flex-direction:column;align-items:center}
+.page-title{font-size:18px;font-weight:bold;color:var(--text);margin:8px 0 4px;text-align:center}
+.page-sub{font-size:12px;color:#95a5a6;text-align:center;margin-bottom:14px}
+.stats-row{display:flex;justify-content:space-around;background:var(--card);border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:var(--sh)}
+.stat-item{text-align:center}
+.stat-num{font-size:24px;font-weight:bold;color:var(--text)}
+.stat-lbl{font-size:11px;color:#95a5a6;margin-top:2px}
+.unit-hd{font-size:13px;font-weight:bold;color:var(--text);background:#ecf0f1;padding:5px 12px;border-radius:7px;margin:12px 0 8px;display:flex;justify-content:space-between;align-items:center}
+.unit-pct{font-size:11px;color:var(--green)}
+.char-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:6px}
+.char-card{aspect-ratio:1;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:"KaiTi","楷体",serif;font-size:22px;border:2px solid #ecf0f1;background:#f8f9fa;color:#bdc3c7;position:relative}
+.char-card.blue{background:linear-gradient(135deg,#ebf5fb,#d6eaf8);border-color:#2980b9;color:var(--text)}
+.char-card.gold{background:linear-gradient(135deg,#fef9e7,#fdebd0);border-color:var(--gold);color:var(--text);box-shadow:0 2px 8px rgba(243,156,18,.3)}
+.card-badge{position:absolute;top:1px;right:2px;font-size:9px}
+.error-list{display:flex;flex-direction:column;gap:9px}
+.error-item{background:var(--card);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh);border-left:4px solid var(--red)}
+.error-char{font-family:"KaiTi","楷体",serif;font-size:40px;min-width:46px;text-align:center}
+.error-info{flex:1}
+.error-word{font-size:15px;font-weight:bold;color:var(--text)}
+.error-def{font-size:12px;color:#7f8c8d;margin-top:2px}
+.error-cnt{font-size:11px;color:var(--red);margin-top:3px;font-weight:bold}
+.empty-state{text-align:center;padding:50px 20px;color:#b2bec3}
+.empty-icon{font-size:52px;margin-bottom:12px}
+.empty-txt{font-size:14px;line-height:1.6}
+.ach-list{display:flex;flex-direction:column;gap:10px}
+.ach-item{background:var(--card);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:var(--sh);opacity:.4;transition:opacity .3s}
+.ach-item.done{opacity:1}
+.ach-icon{font-size:38px;min-width:46px;text-align:center}
+.ach-info{flex:1}
+.ach-name{font-size:15px;font-weight:bold;color:var(--text)}
+.ach-desc{font-size:12px;color:#7f8c8d;margin-top:3px;line-height:1.4}
+.ach-badge{font-size:11px;padding:4px 10px;border-radius:12px;background:#ecf0f1;color:#95a5a6;white-space:nowrap}
+.ach-item.done .ach-badge{background:#d5f5e3;color:var(--green)}
+
+.teacher-card{background:var(--card);border-radius:14px;padding:16px;box-shadow:var(--sh);margin-bottom:12px}
+.teacher-card-title{font-size:14px;font-weight:bold;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.class-code{font-size:36px;font-weight:bold;letter-spacing:6px;color:var(--blue);text-align:center;padding:10px 0;font-family:monospace}
+.copy-btn{width:100%;padding:11px;background:var(--blue);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:bold;cursor:pointer;font-family:inherit;margin-top:4px}
+.copy-btn:active{opacity:.85}
+.copy-btn.green{background:var(--green)}
+.dictation-list{list-style:none;padding:0;margin:0}
+.dictation-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:14px}
+.dictation-item:last-child{border-bottom:none}
+.dictation-num{font-size:12px;color:#b2bec3;min-width:20px}
+.dictation-char{font-family:"KaiTi","楷体",serif;font-size:24px;min-width:30px}
+.dictation-py{color:#95a5a6;font-size:12px;flex:1}
+.top-errors-row{display:flex;gap:8px;flex-wrap:wrap}
+.top-err-chip{background:#fdebd0;border:1px solid #e59866;border-radius:8px;padding:6px 12px;display:flex;align-items:center;gap:6px;font-size:13px}
+.top-err-chip span{font-family:"KaiTi","楷体",serif;font-size:22px}
+.top-err-cnt{font-size:10px;color:var(--red);font-weight:bold}
+
+.unit-picker-btn{padding:5px 9px;border-radius:8px;font-size:12px;border:1.5px solid #ddd;font-weight:bold;background:#f8f9fa;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:3px;font-family:inherit;max-width:130px;overflow:hidden;white-space:nowrap}
+.unit-picker-panel{position:fixed;top:58px;left:8px;background:var(--card);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.2);z-index:200;padding:8px 10px;min-width:155px;display:none}
+.unit-picker-panel.open{display:block}
+.unit-check-item{display:flex;align-items:center;gap:8px;padding:6px 4px;border-radius:7px;cursor:pointer;font-size:14px}
+.unit-check-item input{width:16px;height:16px;cursor:pointer;accent-color:var(--green)}
+.unit-check-all{font-weight:bold;border-bottom:1px solid #ecf0f1;margin-bottom:3px;padding-bottom:8px}
+
+/* === Side feedback text === */
+.feedback-left-side{position:fixed;right:calc(50% + 90px);top:38%;writing-mode:vertical-rl;text-orientation:mixed;font-size:30px;font-weight:900;color:#e74c3c;pointer-events:none;z-index:310;display:none;text-shadow:0 3px 10px rgba(231,76,60,.4);letter-spacing:4px}
+.feedback-right-side{position:fixed;left:calc(50% + 90px);top:34%;writing-mode:vertical-rl;text-orientation:mixed;font-size:22px;font-weight:900;color:#e74c3c;pointer-events:none;z-index:310;display:none;text-shadow:0 3px 10px rgba(231,76,60,.4);letter-spacing:3px}
+.feedback-side-anim{animation:sideIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes sideIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+<div class="overlay" id="nameModal">
+<div class="modal">
+<div class="modal-emoji">🎮</div>
+<div class="modal-title">欢迎来到汉字大乱斗！</div>
+<div class="modal-sub">请先填写你的班级和姓名<br>老师才能看到你的学习记录哦</div>
+<input class="modal-input" id="classInput" placeholder="班级（例如：中二3班）" maxlength="12" type="text">
+<input class="modal-input" id="nameInput" placeholder="姓名（例如：小明）" maxlength="8" type="text">
+<button class="modal-btn" onclick="savePlayerName()">开始游戏 🚀</button>
+</div>
+</div>
+<div class="ach-toast" id="achToast"></div>
+<div class="header">
+<div class="select-group">
+<select id="gradeSelect" onchange="updateUnits()"><option value="S1">中一</option><option value="S2">中二</option></select>
+<button class="unit-picker-btn" id="unitPickerBtn" onclick="toggleUnitPicker()"><span id="unitPickerLabel">加载中...</span> ▾</button>
+<select id="lessonSelect" onchange="onLessonChange()"><option value="all">全部课文</option></select>
+</div>
+<div class="header-mid" id="playerLabel"></div>
+<div class="header-right">
+<div class="score-display">积分: <span id="scoreVal">0</span></div>
+<div class="combo-display" id="comboDisplay"></div>
+</div>
+</div>
+<div class="unit-picker-panel" id="unitPickerPanel"></div>
+<div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+<div class="feedback-left-side" id="feedbackLeft"></div>
+<div class="feedback-right-side" id="feedbackRight"></div>
+<div class="feedback-overlay" id="feedbackMsg"><div class="feedback-text" id="fbText"></div></div>
+<div class="page active" id="gamePage">
+<div class="pool-container" id="pool"><div class="pool-title">请从下方找出正确的偏旁部首，拖入红框中</div></div>
+<div class="target-info">请根据读音拼出汉字：<span id="pinyinHint" class="pinyin-display"></span><div id="structHint" class="struct-hint"></div></div>
+<div id="board" class="dynamic-board layout-lr"></div>
+<div class="quiz-panel" id="quizPanel">
+<div class="quiz-title">拼写成功！请选出 <span class="quiz-word" id="qw">-</span> 的正确解释：</div>
+<div id="optionsContainer"></div>
+</div>
+<div class="match-panel" id="matchPanel">
+<div class="match-title">太棒了！「<span class="match-char" id="matchChar">-</span>」还能组成这些词<br><span class="match-sub">把左边的词语拖到右边正确的解释上</span></div>
+<div class="match-area" id="matchArea"></div>
+</div>
+<div class="progress-label" id="progressLabel">第 1/5 字</div>
+</div>
+<div class="page" id="collectionPage">
+<div class="page-title">📖 我的汉字收藏册</div>
+<div class="stats-row">
+<div class="stat-item"><div class="stat-num" id="sTotalDone">0</div><div class="stat-lbl">练习过</div></div>
+<div class="stat-item"><div class="stat-num" style="color:var(--blue)" id="sBlue">0</div><div class="stat-lbl">🔵 蓝卡</div></div>
+<div class="stat-item"><div class="stat-num" style="color:var(--gold)" id="sGold">0</div><div class="stat-lbl">🥇 金卡</div></div>
+</div>
+<div id="collectionBody"></div>
+</div>
+<div class="page" id="errorPage">
+<div class="page-title">❌ 我的错字本</div>
+<div class="page-sub">坚持练习，让错字变成金卡！</div>
+<div id="errorBody"></div>
+</div>
+<div class="page" id="achPage">
+<div class="page-title">🏅 成就</div>
+<div class="page-sub" id="achSub">已解锁 0 / 6</div>
+<div class="ach-list" id="achList"></div>
+</div>
+
+<div class="page" id="teacherPage">
+<div class="page-title">👩‍🏫 老师管理</div>
+<div class="page-sub">快速生成教学工具，无需登录</div>
+<div class="teacher-card">
+  <div class="teacher-card-title">🔑 班级码</div>
+  <div class="class-code" id="classCode">------</div>
+  <button class="copy-btn" onclick="copyClassCode()">📋 复制班级码</button>
+  <button class="copy-btn green" onclick="genNewCode()" style="margin-top:8px">🔄 生成新班级码</button>
+</div>
+<div class="teacher-card">
+  <div class="teacher-card-title">⚠️ 本班错误率最高的字</div>
+  <div class="top-errors-row" id="topErrorsRow"><div style="color:#b2bec3;font-size:13px">暂无数据，请先开始游戏</div></div>
+</div>
+<div class="teacher-card">
+  <div class="teacher-card-title">📝 当前单元听写清单</div>
+  <div style="font-size:12px;color:#95a5a6;margin-bottom:8px">点击游戏页选好单元后，回来这里查看</div>
+  <ul class="dictation-list" id="dictationList"></ul>
+  <button class="copy-btn" onclick="copyDictation()" style="margin-top:10px">📋 复制听写清单（可发到家长群）</button>
+</div>
+</div>
+<div class="bottom-nav">
+<button class="nav-btn active" id="nav-game" onclick="switchPage('game')"><span class="nav-icon">🎮</span><span class="nav-label">游戏</span></button>
+<button class="nav-btn" id="nav-collection" onclick="switchPage('collection')"><span class="nav-icon">📖</span><span class="nav-label">收藏册</span></button>
+<button class="nav-btn" id="nav-error" onclick="switchPage('error')"><span class="nav-icon">❌</span><span class="nav-label">错字本</span><span class="nav-badge" id="errorBadge" style="display:none">0</span></button>
+<button class="nav-btn" id="nav-ach" onclick="switchPage('ach')"><span class="nav-icon">🏅</span><span class="nav-label">成就</span></button>
+<button class="nav-btn" id="nav-teacher" onclick="switchPage('teacher')"><span class="nav-icon">👩‍🏫</span><span class="nav-label">老师</span></button>
+</div>
+<script>
+
+// ═══════════════════════════════════════════════════════════
+//  词库（完整原版）
+// ═══════════════════════════════════════════════════════════
+const rawDatabase = `
+S1_U1_L1|淘|táo|lr|氵,匋|淘气|调皮 (Naughty)|S
+S1_U1_L1|惹|rě|tb|若,心|娘惹|引起麻烦 (Provoke)|S
+S1_U1_L1|肋|lē|lr|月,力|两肋插刀||S
+S1_U1_L1|拒|jù|lr|扌,巨|来者不拒|什么都不拒绝 (Accept everything)|S
+S1_U1_L1|禅|chán|lr|礻,单|口头禅|常说的话 (Catchphrase)|S
+S1_U1_L1|桩|zhuāng|lr|木,庄|小事一桩|很容易的事 (A piece of cake)|S
+S1_U1_L1|缘|yuán|lr|纟,彖|人缘|跟别人的关系好 (Good relations with others)|S
+S1_U1_L1|润|rùn|lr|氵,闰|红润|脸色好，有点红 (Rosy)|S
+S1_U1_L1|率|lǜ|cut|h:2|直率||C
+S1_U1_L1|寡|guǎ|tmb|宀,直,分|沉默寡言||S
+S1_U1_L1|辩|biàn|lmr|辛,讠,辛|争辩|为了对错而争吵 (Argue)|S
+S1_U1_L1|冤|yuān|tb|冖,兔|冤枉||S
+S1_U1_L1|荐|jiàn|tb|艹,存|推荐||S
+S1_U1_L2|捣|dǎo|lr|扌,岛|捣乱|制造麻烦 (Make trouble)|S
+S1_U1_L2|瞬|shùn|lr|目,舜|瞬间||S
+S1_U1_L2|勃|bó|lr|孛,力|兴致勃勃||S
+S1_U1_L2|狈|bèi|lr|犭,贝|狼狈||S
+S1_U1_L2|讽|fěng|lr|讠,风|讥讽||S
+S1_U1_L2|吻|wěn|lr|口,勿|口吻||S
+S1_U1_L2|赌|dǔ|lr|贝,者|赌气||S
+S1_U1_L2|扯|chě|lr|扌,止|拉扯||S
+S1_U1_L2|措|cuò|lr|扌,昔|手足无措||S
+S1_U1_L3|案|àn|tb|安,木|审案||S
+S1_U1_L3|律|lǜ|lr|彳,聿|律师||S
+S1_U1_L3|拔|bá|lr|扌,犮|拔刀相助|愿意为朋友吃苦 (Help friends at any cost)|S
+S1_U1_L3|振|zhèn|lr|扌,辰|振振有词||S
+S1_U1_L3|虚|xū|semi-tl|虍,业|心虚||S
+S1_U1_L3|哑|yǎ|lr|口,亚|哑口无言||S
+S1_U1_L3|判|pàn|lr|半,刂|判决||S
+S1_U1_L4|皱|zhòu|lr|刍,皮|皱纹|脸上的纹路 (Wrinkle)|S
+S1_U1_L4|哄|hǒng|lr|口,共|哄堂大笑|全屋子的人一起大笑 (Roar with laughter)|S
+S1_U1_L4|准|zhǔn|lr|冫,隹|标准||S
+S1_U1_L4|属|shǔ|semi-tl|尸,禹|金属|一类材料 (Metal)|S
+S1_U1_L4|绰|chuò|lr|纟,卓|绰号|外号 (Nickname)|S
+S1_U1_L4|谱|pǔ|lr|讠,普|离谱|不合常理 (Absurd)|S
+S1_U1_L4|叛|pàn|lr|半,反|叛逆|不服从 (Rebellious)|S
+S1_U1_L4|逆|nì|semi-bl|辶,屰|叛逆||S
+S1_U1_L4|誓|shì|tb|折,言|发誓|郑重承诺 (Vow)|S
+S1_U1_L4|牢|láo|tb|宀,牛|牢记||S
+S1_U1_L4|恒|héng|lr|忄,亘|持之以恒||S
+S1_U1_L4|鸦|yā|lr|牙,鸟|鸦雀无声||S
+S1_U1_L4|雀|què|tb|小,隹|鸦雀无声||S
+S1_U2_L1|葡|pú|tb|艹,匍|葡萄|一种紫色的水果 (Grapes)|S
+S1_U2_L1|萄|táo|tb|艹,匋|葡萄||S
+S1_U2_L1|征|zhēng|lr|彳,正|象征|代表某种意义 (Symbolize)|S
+S1_U2_L1|俗|sú|lr|亻,谷|风俗|社会上流传的习惯 (Custom)|S
+S1_U2_L1|辞|cí|lr|舌,辛|辞旧迎新|告别旧年，迎接新年 (Welcome the new year)|S
+S1_U2_L1|燃|rán|lr|火,然|燃放|点燃鞭炮等 (Set off)|S
+S1_U2_L1|翩|piān|lr|扁,羽|翩翩起舞|跳起优美的舞蹈 (Dance beautifully)|S
+S1_U2_L1|罐|guàn|lr|缶,雚|瓶瓶罐罐|各种瓶子和罐子 (Bottles and cans)|S
+S1_U2_L1|厄|è|cut|h:2|厄运|不好的运气 (Bad luck)|C
+S1_U2_L1|夕|xī|cut|h:2|前夕||C
+S1_U2_L1|预|yù|lr|予,页|预示||S
+S1_U2_L1|兆|zhào|cut|h:2|兆头||C
+S1_U2_L1|碌|lù|lr|石,录|忙碌||S
+S1_U2_L1|遥|yáo|semi-bl|辶,䍃|遥远|距离非常远 (Distant)|S
+S1_U2_L1|恭|gōng|tmb|共,小,丶|恭敬|对别人很有礼貌 (Respectful)|S
+S1_U2_L1|戚|qī|semi-tl|戊,尗|亲戚|家人和亲属 (Relatives)|S
+S1_U2_L1|诸|zhū|lr|讠,者|诸事大吉||S
+S1_U2_L1|旦|dàn|tb|日,一|元旦||S
+S1_U2_L2|贼|zéi|lr|贝,戎|贼||S
+S1_U2_L2|诞|dàn|lr|讠,延|圣诞|纪念耶稣诞生的节日 (Christmas)|S
+S1_U2_L2|嫁|jià|lr|女,家|嫁||S
+S1_U2_L2|讯|xùn|lr|讠,卂|视讯||S
+S1_U2_L2|酷|kù|lr|酉,告|酷||S
+S1_U2_L2|诺|nuò|lr|讠,若|承诺|答应的话非常可靠 (Promise)|S
+S1_U2_L2|剃|tì|lr|弟,刂|剃||S
+S1_U2_L2|蒸|zhēng|tmb|艹,丞,灬|蒸腾|热气往上升 (Transpire)|S
+S1_U2_L2|肴|yáo|tb|⺅,月|佳肴|非常好吃的菜 (Delicacy)|S
+S1_U2_L2|喳|zhā|lr|口,查|叽叽喳喳||S
+S1_U2_L2|缺|quē|lr|缶,夬|缺席|该到而没到 (Absent)|S
+S1_U2_L2|悦|yuè|lr|忄,兑|悦耳||S
+S1_U2_L3|饺|jiǎo|lr|饣,交|饺子|一种有馅的食物 (Dumplings)|S
+S1_U2_L3|剁|duò|lr|朵,刂|剁肉||S
+S1_U2_L3|馅|xiàn|lr|饣,臽|馅料|包在食物里的东西 (Filling)|S
+S1_U2_L3|莫|mò|tmb|艹,日,大|莫名其妙||S
+S1_U2_L3|妙|miào|lr|女,少|莫名其妙||S
+S1_U2_L3|偷|tōu|lr|亻,俞|偷龙转凤||S
+S1_U2_L4|涯|yá|lr|氵,厓|天涯海角|很远的地方 (Ends of the earth)|S
+S1_U2_L4|割|gē|lr|害,刂|分割||S
+S1_U2_L4|嚼|jué|lr|口,爵|嚼|用牙磨碎食物 (Chew)|S
+S1_U2_L4|溢|yì|lr|氵,益|溢|满了流出来 (Overflow)|S
+S1_U2_L4|盏|zhǎn|tb|戋,皿|盏|量词，灯 (Measure word for lamp)|S
+S1_U3_L1|魅|mèi|semi-tl|鬼,未|魅力|很吸引人的力量 (Charm)|S
+S1_U3_L1|悠|yōu|tb|攸,心|悠久|悠闲的样子 (Leisurely)|S
+S1_U3_L1|遗|yí|semi-bl|辶,贵|遗产|祖先留下来的东西 (Heritage)|S
+S1_U3_L1|刹|shā|lr|杀,刂|巴刹||S
+S1_U3_L1|饱|bǎo|lr|饣,包|饱经风霜||S
+S1_U3_L1|胞|bāo|lr|月,包|同胞|同一个国家的人 (Compatriot)|S
+S1_U3_L1|融|róng|lr|鬲,虫|融合|合在一起 (Integrate)|S
+S1_U3_L1|郁|yù|lr|有,阝|浓郁|气味色彩很浓 (Rich)|S
+S1_U3_L1|宫|gōng|tb|宀,吕|皇宫||S
+S1_U3_L1|堡|bǎo|tb|保,土|城堡||S
+S1_U3_L1|绘|huì|lr|纟,会|彩绘||S
+S1_U3_L1|索|suǒ|tb|十冖,糸|探索||S
+S1_U3_L1|娘|niáng|lr|女,良|娘惹||S
+S1_U3_L1|惹|rě|tb|若,心|娘惹|引起麻烦 (Provoke)|S
+S1_U3_L1|摄|shè|lr|扌,聂|拍摄||S
+S1_U3_L2|镶|xiāng|lr|钅,襄|镶嵌|嵌入 (Inlay)|S
+S1_U3_L2|嵌|qiàn|lr|山,欠|镶嵌|填入 (Embed)|S
+S1_U3_L2|梁|liáng|cut|h:2|横梁||C
+S1_U3_L2|璃|lí|lr|王,离|玻璃|透明材料 (Glass)|S
+S1_U3_L2|循|xún|lr|彳,盾|循环||S
+S1_U3_L2|衬|chèn|lr|衤,寸|映衬|衬托 (Set off)|S
+S1_U3_L2|盎|àng|tb|央,皿|盎然||S
+S1_U3_L2|株|zhū|lr|木,朱|株||S
+S1_U3_L2|懈|xiè|lr|忄,解|松懈|不紧张 (Slack)|S
+S1_U3_L2|略|lüè|lr|田,各|领略|做事的计谋方法 (Strategy)|S
+S1_U3_L2|施|shī|lr|方,也|设施||S
+S1_U3_L3|殖|zhí|lr|歹,直|殖民地|被占领的地方 (Colony)|S
+S1_U3_L3|降|jiàng|lr|阝,夅|投降|认输 (Surrender)|S
+S1_U3_L3|棕|zōng|lr|木,宗|棕色|颜色 (Brown)|S
+S1_U3_L3|氧|yǎng|semi-tl|气,羊|氧化|与氧结合 (Oxidize)|S
+S1_U3_L3|碑|bēi|lr|石,卑|里程碑||S
+S1_U3_L3|掘|jué|lr|扌,屈|发掘|挖出来 (Excavate)|S
+S1_U3_L4|擅|shàn|lr|扌,亶|擅长|很会做某事 (Be good at)|S
+S1_U3_L4|凑|còu|lr|冫,奏|紧凑|密集 (Compact)|S
+S1_U3_L4|府|fǔ|semi-tl|广,付|政府|管理国家事务的机构 (Government)|S
+S1_U3_L4|技|jì|lr|扌,支|科技|科学技术 (Technology)|S
+S1_U3_L4|甩|shuǎi|cut|h:2|甩||C
+S1_U3_L4|薄|báo|tmb|艹,氵,尃|薄||S
+S1_U3_L4|倚|yǐ|lr|亻,奇|不偏不倚||S
+S1_U3_L4|喱|lí|lr|口,厘|咖喱|一种调料 (Curry)|S
+S1_U3_L4|沾|zhān|lr|氵,占|沾|碰到、附着 (Touch/Dip)|S
+S1_U3_L4|沫|mò|lr|氵,末|泡沫||S
+S1_U3_L4|赞|zàn|tb|兟,贝|称赞|夸奖 (Praise)|S
+S1_U4_L1|诺|nuò|lr|讠,若|承诺|答应的话非常可靠 (Promise)|S
+S1_U4_L1|码|mǎ|lr|石,马|起码||S
+S1_U4_L1|卷|juǎn|tb|龹,㔾|开卷有益||S
+S1_U4_L1|颖|yǐng|lmr|匕,禾,页|新颖|新鲜特别 (Novel)|S
+S1_U4_L1|坊|fāng|lr|土,方|工作坊||S
+S1_U4_L1|尴|gān|semi-tl|尢,监|尴尬|难为情 (Awkward)|S
+S1_U4_L1|尬|gà|semi-tl|尢,介|尴尬|难为情 (Awkward)|S
+S1_U4_L1|维|wéi|lr|纟,隹|维护||S
+S1_U4_L1|谊|yì|lr|讠,宜|友谊|友情 (Friendship)|S
+S1_U4_L1|帆|fān|lr|巾,凡|一帆风顺||S
+S1_U4_L1|效|xiào|lr|交,攵|有效||S
+S1_U4_L1|策|cè|tb|⺮,朿|策略|计谋 (Strategy)|S
+S1_U4_L1|略|lüè|lr|田,各|领略|做事的计谋方法 (Strategy)|S
+S1_U4_L1|嘉|jiā|tb|壴,加|嘉宾|贵客 (Guest)|S
+S1_U4_L1|辅|fǔ|lr|车,甫|辅导员||S
+S1_U4_L2|赖|lài|lr|束负,负|赖床||S
+S1_U4_L2|辫|biàn|lmr|辛,纟,辛|辫子||S
+S1_U4_L2|惧|jù|lr|忄,具|恐惧||S
+S1_U4_L2|袄|ǎo|lr|衤,夭|夹袄||S
+S1_U4_L2|滋|zī|lr|氵,兹|滋味|提供养分使成长 (Nourish)|S
+S1_U4_L2|催|cuī|lr|亻,崔|催促||S
+S1_U4_L2|哀|āi|tmb|亠,口,𧘇|哀求||S
+S1_U4_L2|挪|nuó|lr|扌,那|挪窝||S
+S1_U4_L2|鞭|biān|lr|革,便|藤鞭||S
+S1_U4_L2|抡|lūn|lr|扌,仑|抡||S
+S1_U4_L2|挨|āi|lr|扌,矣|挨打||S
+S1_U4_L2|狈|bèi|lr|犭,贝|狼狈||S
+S1_U4_L2|佣|yōng|lr|亻,用|女佣||S
+S1_U4_L2|篷|péng|tb|⺮,逢|雨篷|临时住所 (Tent)|S
+S1_U4_L2|缘|yuán|lr|纟,彖|人缘|跟别人的关系好 (Good relations with others)|S
+S1_U4_L2|痕|hén|semi-tl|疒,艮|泪痕||S
+S1_U4_L2|嗓|sǎng|lr|口,桑|嗓子眼||S
+S1_U4_L2|袱|fú|lr|衤,伏|包袱||S
+S1_U4_L3|皆|jiē|tb|比,白|人人皆晓||S
+S1_U4_L3|铺|pù|lr|钅,甫|当铺||S
+S1_U4_L3|账|zhàng|lr|贝,长|记账||S
+S1_U4_L3|亏|kuī|tb|二,丂|亏||S
+S1_U4_L3|撇|piē|lr|扌,敝|撇||S
+S1_U4_L3|慢|màn|lr|忄,曼|缓慢|速度很慢 (Slow)|S
+S1_U4_L3|斯|sī|lr|其,斤|慢条斯理||S
+S1_U4_L3|航|háng|lr|舟,亢|起航||S
+S1_U4_L3|呜|wū|lr|口,乌|一命呜呼||S
+S1_U4_L3|赞|zàn|tb|兟,贝|称赞|夸奖 (Praise)|S
+S1_U4_L4|寓|yù|tb|宀,禺|寓言|有道理的故事 (Fable)|S
+S1_U4_L4|篷|péng|tb|⺮,逢|雨篷|临时住所 (Tent)|S
+S1_U4_L4|徒|tú|lr|彳,走|徒劳无功||S
+S1_U5_L1|剩|shèng|lr|乘,刂|剩||S
+S1_U5_L1|膏|gāo|tb|高,月|牙膏|膏状物 (Paste)|S
+S1_U5_L1|擦|cā|lr|扌,察|橡皮擦||S
+S1_U5_L1|薯|shǔ|tb|艹,署|薯条|薯类食物 (Potato)|S
+S1_U5_L1|茄|jiā|tb|艹,加|番茄酱|一种蔬菜 (Tomato)|S
+S1_U5_L1|偶|ǒu|lr|亻,禺|偶尔||S
+S1_U5_L1|晋|jìn|tb|亚,日|晋级|升级 (Advance)|S
+S1_U5_L1|企|qǐ|tb|人,止|企业||S
+S1_U5_L2|潜|qián|lr|氵,替|潜水|在水面下活动 (Dive)|S
+S1_U5_L2|拢|lǒng|lr|扌,龙|收拢|聚集在一起 (Gather)|S
+S1_U5_L2|艘|sōu|lr|舟,叟|艘||S
+S1_U5_L2|屁|pì|semi-tl|尸,比|屁股||S
+S1_U5_L2|翘|qiào|lr|尧,羽|翘||S
+S1_U5_L3|拜|bài|lr|手,丰|拜访|登门探望 (Pay a visit)|S
+S1_U5_L3|漫|màn|lr|氵,曼|漫步||S
+S1_U5_L3|绞|jiǎo|lr|纟,交|绞尽脑汁|费尽心思 (Rack brains)|S
+S1_U5_L3|侨|qiáo|lr|亻,乔|华侨|海外华人 (Overseas Chinese)|S
+S1_U5_L3|衷|zhōng|tmb|亠,中,𧘇|由衷|发自内心 (Heartfelt)|S
+S1_U5_L3|摩|mó|semi-tl|麻,手|摩天大楼||S
+S1_U5_L3|帜|zhì|lr|巾,只|独树一帜||S
+S1_U5_L3|塔|tǎ|lr|土,荅|金字塔||S
+S1_U5_L3|抨|pēng|lr|扌,平|抨击|批评 (Attack)|S
+S1_U5_L4|鼎|dǐng|cut|h:2|大名鼎鼎||C
+S1_U5_L4|籍|jí|tb|⺮,耤|书籍|书 (Books)|S
+S1_U5_L4|播|bō|lr|扌,番|传播||S
+S1_U5_L4|胶|jiāo|lr|月,交|胶泥||S
+S1_U5_L4|雕|diāo|lr|周,隹|雕刻|刻 (Carve)|S
+S1_U5_L4|凸|tū|cut|h:2|凸||C
+S1_U5_L4|框|kuāng|lr|木,匡|框||S
+S1_U5_L4|蜡|là|lr|虫,昔|蜡|蜡烛材料 (Wax)|S
+S1_U5_L4|熔|róng|lr|火,容|熔化|受热变软 (Melt)|S
+S1_U5_L4|窍|qiào|tb|穴,巧|窍门|好方法 (Knack)|S
+S1_U6_L1|漆|qī|lr|氵,桼|油漆|涂在墙上的颜料 (Paint)|S
+S1_U6_L1|卸|xiè|lmr|午,止,卩|拆卸|把东西拆开 (Dismantle)|S
+S1_U6_L1|宿|sù|tb|宀,佰|宿舍||S
+S1_U6_L1|凭|píng|tb|任,几|凭||S
+S1_U6_L2|截|jié|lmr|十,戈,隹|截至||S
+S1_U6_L2|驶|shǐ|lr|马,史|行驶||S
+S1_U6_L2|误|wù|lr|讠,吴|错误|耽误、拖延 (Delay)|S
+S1_U6_L2|稳|wěn|lr|禾,急|稳定||S
+S1_U6_L2|漏|lòu|lr|氵,屚|漏液||S
+S1_U6_L2|轨|guǐ|lr|车,九|轨道|火车走的路 (Track)|S
+S1_U6_L2|晨|chén|tb|日,辰|凌晨||S
+S1_U6_L2|绪|xù|lr|纟,者|就绪||S
+S1_U6_L2|隧|suì|lr|阝,遂|隧道||S
+S1_U6_L2|描|miáo|lr|扌,苗|扫描||S
+S1_U6_L2|畅|chàng|lr|申,易|顺畅||S
+S1_U6_L2|赴|fù|semi-bl|走,卜|全力以赴||S
+S1_U6_L2|职|zhí|lr|耳,只|职业||S
+S1_U6_L2|故|gù|lr|古,攵|缘故|机器出毛病 (Malfunction)|S
+S1_U6_L2|障|zhàng|lr|阝,章|故障|挡路的东西 (Obstacle)|S
+S1_U6_L2|岗|gǎng|tb|山,冈|岗位||S
+S1_U6_L2|献|xiàn|lr|南,犬|奉献||S
+S1_U6_L3|谣|yáo|lr|讠,䍃|新谣||S
+S1_U6_L3|芝|zhī|tb|艹,之|芝麻||S
+S1_U6_L3|琐|suǒ|lmr|王,小,贝|琐事||S
+S1_U6_L3|朗|lǎng|lr|良,月|朗朗上口||S
+S1_U6_L3|繁|fán|tb|敏,糸|繁荣昌盛||S
+S1_U6_L3|昌|chāng|tb|日,日|繁荣昌盛||S
+S1_U6_L3|芒|máng|tb|艹,亡|光芒||S
+S1_U6_L4|葬|zàng|tmb|艹,死,廾|埋葬|安葬 (Bury)|S
+S1_U6_L4|炬|jù|lr|火,巨|火炬|火把 (Torch)|S
+S1_U6_L4|贸|mào|tb|卯,贝|贸易||S
+S1_U6_L4|隙|xì|lr|阝,𡭴|间隙|缝隙 (Gap)|S
+S1_U6_L4|撤|chè|lmr|扌,育,攵|撤离|退走 (Withdraw)|S
+S1_U6_L4|塌|tā|lr|土,日勿|倒塌|倒下 (Collapse)|S
+S1_U6_L4|胁|xié|lr|月,办|威胁||S
+S1_U6_L4|镇|zhèn|lr|钅,真|镇静||S
+S1_U6_L4|移|yí|lr|禾,多|移民||S
+S1_U6_L4|牺|xī|lr|牜,西|牺牲|为某事舍弃 (Sacrifice)|S
+S1_U6_L4|牲|shēng|lr|牜,生|牺牲||S
+S1_U6_L4|喻|yù|lr|口,俞|家喻户晓||S
+S1_U6_L4|晓|xiǎo|lr|日,尧|人人皆晓|每个人都知道 (Everyone knows)|S
+S2_U1_L1|惫|bèi|tb|备,心|疲惫|非常累 (Exhausted)|S
+S2_U1_L1|犹|yóu|lr|犭,尤|犹豫||S
+S2_U1_L1|豫|yù|lr|予,象|犹豫|拿不定主意 (Hesitate)|S
+S2_U1_L1|疚|jiù|semi-tl|疒,久|内疚|觉得对不起别人 (Guilty)|S
+S2_U1_L1|匿|nì|semi-tl|匚,若|匿名||S
+S2_U1_L1|监|jiān|cut|h:2|监督||C
+S2_U1_L1|督|dū|tb|叔,目|监督||S
+S2_U1_L1|窒|zhì|tb|穴,至|窒息||S
+S2_U1_L1|沟|gōu|lr|氵,勾|代沟||S
+S2_U1_L1|瘾|yǐn|semi-tl|疒,隐|上瘾||S
+S2_U1_L1|疏|shū|lr|疋,㐬|疏远||S
+S2_U1_L1|刃|rèn|cut|h:2|迎刃而解||C
+S2_U1_L2|崇|chóng|tb|山,宗|崇拜||S
+S2_U1_L2|释|shì|lr|采,睪|爱不释手||S
+S2_U1_L2|钉|dīng|lr|钅,丁|碰钉子||S
+S2_U1_L2|泼|pō|lr|氵,发|泼冷水||S
+S2_U1_L2|屉|tì|semi-tl|尸,世|抽屉|桌子里拉出来的格子 (Drawer)|S
+S2_U1_L2|竭|jié|lr|立,曷|精疲力竭|一点力气都没了 (Exhausted)|S
+S2_U1_L2|抑|yì|lr|扌,卬|抑郁|心情非常不好 (Depressed)|S
+S2_U1_L2|郁|yù|lr|有,阝|浓郁|气味色彩很浓 (Rich)|S
+S2_U1_L2|齿|chǐ|tb|止,凵|牙齿|吃东西用的器官 (Teeth)|S
+S2_U1_L2|扪|mén|lr|扌,门|扪心自问||S
+S2_U1_L2|羞|xiū|tb|羊,丑|害羞|不好意思 (Shy)|S
+S2_U1_L2|懊|ào|lr|忄,奥|懊恼||S
+S2_U1_L2|伺|cì|lr|亻,司|伺机||S
+S2_U1_L2|疙|gē|semi-tl|疒,乞|疙瘩||S
+S2_U1_L2|瘩|dā|semi-tl|疒,荅|疙瘩||S
+S2_U1_L2|焉|yān|cut|h:2|心不在焉||C
+S2_U1_L2|荒|huāng|tb|艹,巟|破天荒|荒唐不合常理 (Absurd)|S
+S2_U1_L2|促|cù|lr|亻,足|催促|推动使前进 (Promote)|S
+S2_U1_L3|兢|jīng|lr|克,克|战战兢兢|很害怕的样子 (Trembling with fear)|S
+S2_U1_L3|钥|yào|lr|钅,月|钥匙|开门用的工具 (Key)|S
+S2_U1_L3|匙|shi|tb|是,匕|钥匙||S
+S2_U1_L3|锁|suǒ|lr|钅,小贝|锁|把门锁上的东西 (Lock)|S
+S2_U1_L3|抚|fǔ|lr|扌,无|安抚|安慰别人不要生气或害怕 (Comfort)|S
+S2_U1_L3|况|kuàng|lr|冫,兄|何况||S
+S2_U1_L3|佬|lǎo|lr|亻,老|和事佬|帮忙解决吵架的人 (Peacemaker)|S
+S2_U1_L3|讶|yà|lr|讠,牙|惊讶||S
+S2_U1_L3|斑|bān|lmr|王,文,王|斑|点点相间 (Mottled)|S
+S2_U1_L3|缠|chán|lr|纟,廛|缠绕|绕在一起 (Twine)|S
+S2_U1_L3|搂|lǒu|lr|扌,娄|搂|抱 (Hug)|S
+S2_U1_L4|臃|yōng|lr|月,雍|臃肿|肥胖 (Bloated)|S
+S2_U1_L4|肿|zhǒng|lr|月,中|臃肿||S
+S2_U1_L4|庸|yōng|semi-tl|广,聿|庸俗||S
+S2_U1_L4|俗|sú|lr|亻,谷|风俗|社会上流传的习惯 (Custom)|S
+S2_U1_L4|枚|méi|lr|木,攵|枚||S
+S2_U1_L4|戒|jiè|tb|廾,戈|戒指||S
+S2_U1_L4|躯|qū|lr|身,区|身躯|身体 (Body)|S
+S2_U1_L4|姿|zī|tb|次,女|姿势|身体的样子 (Posture)|S
+S2_U1_L4|熬|áo|tb|敖,灬|熬||S
+S2_U1_L4|瞌|kē|lr|目,盍|打瞌睡|想睡 (Drowsy)|S
+S2_U1_L4|蹒|pán|lmr|⻊,日,羽|蹒跚||S
+S2_U1_L4|跚|shān|lr|⻊,册|蹒跚||S
+S2_U1_L4|惺|xīng|lr|忄,星|惺忪||S
+S2_U1_L4|忪|sōng|lr|忄,公|惺忪||S
+S2_U1_L4|辉|huī|lr|光,军|光辉|光彩耀眼 (Brilliant)|S
+S2_U2_L1|捐|juān|lr|扌,肙|捐款|把钱捐给有需要的人 (Donate)|S
+S2_U2_L1|拯|zhěng|lr|扌,丞|拯救|救人或动物 (Save)|S
+S2_U2_L1|惠|huì|tb|叀,心|优惠|便宜一点 (Discount)|S
+S2_U2_L1|券|quàn|tb|龹,刀|券|可以当钱用的票 (Voucher)|S
+S2_U2_L1|肢|zhī|lr|月,支|四肢|两只手和两只脚 (Limbs)|S
+S2_U2_L1|捷|jié|lr|扌,疌|敏捷||S
+S2_U2_L1|梭|suō|lr|木,夋|穿梭|在中间来回穿过 (Shuttle)|S
+S2_U2_L1|辨|biàn|lmr|辛,刂,辛|辨识|认出来 (Identify)|S
+S2_U2_L1|馋|chán|lr|饣,兔|馋|很想吃东西 (Greedy for food)|S
+S2_U2_L1|跤|jiāo|lr|⻊,交|摔跤||S
+S2_U2_L1|猛|měng|lr|犭,孟|凶猛|很凶 (Fierce)|S
+S2_U2_L2|泽|zé|lr|氵,𠬤|光泽|亮亮的光芒 (Luster)|S
+S2_U2_L2|缩|suō|lr|纟,宿|蜷缩|变小或退回 (Shrink)|S
+S2_U2_L2|枕|zhěn|lr|木,冘|枕|靠在上面睡觉 (Pillow)|S
+S2_U2_L2|啾|jiū|lr|口,秋|啾啾|小鸟叫的声音 (Chirping)|S
+S2_U2_L2|凝|níng|lr|冫,疑|凝望|一直盯着看 (Gaze)|S
+S2_U2_L2|笼|lóng|tb|⺮,龙|鸟笼|关鸟的笼子 (Birdcage)|S
+S2_U2_L2|隔|gé|lr|阝,鬲|隔|中间有东西挡着 (Separate)|S
+S2_U2_L2|惩|chéng|tb|征,心|惩罚|做错事受罚 (Punish)|S
+S2_U2_L2|罚|fá|tb|罒,刂|惩罚||S
+S2_U2_L2|畏|wèi|tb|田,𧗤|畏罪潜逃|做错事怕被抓跑掉 (Flee to escape punishment)|S
+S2_U2_L2|潜|qián|lr|氵,替|潜水|在水面下活动 (Dive)|S
+S2_U2_L2|喵|miāo|lr|口,苗|喵|猫叫声 (Meow)|S
+S2_U2_L2|衔|xián|lmr|彳,钅,亍|衔|用嘴叼着 (Hold in mouth)|S
+S2_U2_L2|谴|qiǎn|lr|讠,遣|谴责|严厉地骂 (Condemn)|S
+S2_U2_L2|估|gū|lr|亻,古|估计|猜一猜 (Estimate)|S
+S2_U2_L3|翼|yì|tmb|羽,田,共|小心翼翼|非常小心 (Careful)|S
+S2_U2_L3|褐|hè|lr|衤,曷|褐|像咖啡一样的颜色 (Brown)|S
+S2_U2_L3|旋|xuán|lr|方,疋|盘旋||S
+S2_U2_L3|愣|lèng|lr|忄,夌|愣|发呆 (Stunned)|S
+S2_U2_L3|傻|shǎ|lr|亻,夋|傻|笨笨的 (Silly)|S
+S2_U2_L3|啼|tí|lr|口,帝|啼|叫 (Cry/Sing)|S
+S2_U2_L3|鸣|míng|lr|口,鸟|鸣|鸟叫 (Chirp)|S
+S2_U2_L3|觑|qù|lr|虚,见|面面相觑|不知怎么办 (Look at each other in dismay)|S
+S2_U2_L3|揪|jiū|lr|扌,秋|揪心|心里很难受 (Anxious)|S
+S2_U2_L4|茂|mào|tb|艹,戊|茂盛|植物长得很好 (Lush)|S
+S2_U2_L4|扒|bā|lr|扌,八|扒开|用手拨开 (Push aside)|S
+S2_U2_L4|娇|jiāo|lr|女,乔|娇嫩||S
+S2_U2_L4|嫩|nèn|lmr|女,束,攵|娇嫩|很脆弱，需要保护 (Delicate)|S
+S2_U2_L4|掀|xiān|lr|扌,欣|掀开|揭开 (Lift open)|S
+S2_U2_L4|啄|zhuó|lr|口,豕|啄|鸟用嘴吃东西 (Peck)|S
+S2_U2_L4|俯|fǔ|lr|亻,府|俯下|弯下身子 (Bend down)|S
+S2_U2_L4|蹦|bèng|lr|⻊,崩|蹦来蹦去|跳跃 (Jump)|S
+S2_U2_L4|涂|tú|lr|氵,余|涂上颜色|抹抹画画 (Apply/Paint)|S
+S2_U2_L4|绒|róng|lr|纟,戎|绒毛|细细软软的毛 (Fluff)|S
+S2_U2_L4|唤|huàn|lr|口,奂|呼唤|大声叫 (Call)|S
+S2_U2_L4|肩|jiān|l-tb|户,月|肩头|身体的部位 (Shoulder)|S
+S2_U3_L1|素|sù|tb|龶,糸|因素|原因 (Factor)|S
+S2_U3_L1|喉|hóu|lr|口,侯|水喉|嗓子 (Throat)|S
+S2_U3_L1|艰|jiān|lr|又,艮|艰巨|非常困难 (Arduous)|S
+S2_U3_L1|昂|áng|tb|日,卬|昂贵|很贵 (Expensive)|S
+S2_U3_L1|耗|hào|lr|耒,毛|消耗|用掉 (Consume)|S
+S2_U3_L1|旱|hàn|tb|日,干|干旱|很久不下雨 (Drought)|S
+S2_U3_L1|扩|kuò|lr|扌,广|扩大|变大 (Expand)|S
+S2_U3_L1|蓄|xù|tb|艹,畜|蓄水池|装水的大池子 (Reservoir)|S
+S2_U3_L1|澡|zǎo|lr|氵,喿|洗澡|用水洗身子 (Bath)|S
+S2_U3_L1|浴|yù|lr|氵,谷|浴室|洗澡的房间 (Bathroom)|S
+S2_U3_L1|趋|qū|semi-bl|走,刍|趋势|事物发展的方向 (Trend)|S
+S2_U3_L2|媒|méi|lr|女,某|媒体|报纸、电视等新闻机构 (Media)|S
+S2_U3_L2|塑|sù|tb|朔,土|塑料|做袋子或瓶子的材料 (Plastic)|S
+S2_U3_L2|吨|dūn|lr|口,屯|吨|很重的重量单位 (Ton)|S
+S2_U3_L2|廉|lián|semi-tl|广,兼|廉价|很便宜 (Cheap)|S
+S2_U3_L2|靡|mí|semi-tl|麻,非|风靡|非常流行 (Popular)|S
+S2_U3_L2|垄|lǒng|tb|龙,土|垄断|全部控制住 (Monopolize)|S
+S2_U3_L2|危|wēi|tb|⺈,厄|危害|伤害 (Endanger)|S
+S2_U3_L2|焚|fén|tb|林,火|焚烧|烧掉 (Burn)|S
+S2_U3_L2|尘|chén|tb|小,土|烟尘|细小的泥土 (Dust)|S
+S2_U3_L2|壤|rǎng|lr|土,襄|土壤|泥土 (Soil)|S
+S2_U3_L2|遏|è|semi-bl|辶,曷|遏制|阻止 (Contain)|S
+S2_U3_L2|税|shuì|lr|禾,兑|税|交给政府的钱 (Tax)|S
+S2_U3_L2|倡|chàng|lr|亻,昌|倡导|带头提倡 (Advocate)|S
+S2_U3_L2|逐|zhú|semi-bl|辶,豕|逐渐|一点一点地 (Gradually)|S
+S2_U3_L2|斥|chì|lr|斤,丶|充斥|到处都是 (Full of)|S
+S2_U3_L2|妥|tuǒ|tb|爫,女|妥善|很好地处理 (Properly)|S
+S2_U3_L2|煞|shā|tb|⿱,灬|煞费苦心|费了很多心思 (Take great pains)|S
+S2_U3_L3|统|tǒng|lr|纟,充|统计|把数字加起来算 (Statistics)|S
+S2_U3_L3|型|xíng|tb|刑,土|大型|形状和样子 (Type)|S
+S2_U3_L3|异|yì|tb|巳,廾|诡异|不一样的地方 (Different)|S
+S2_U3_L3|泛|fàn|lr|氵,乏|泛起|漾起、浮现 (Ripple up)|S
+S2_U3_L3|滥|làn|lr|氵,监|泛滥|多得到处都是 (Overflow)|S
+S2_U3_L3|寿|shòu|tb|⺻,寸|寿命|活多长时间 (Lifespan)|S
+S2_U3_L3|途|tú|semi-bl|辶,余|途径|方法、路线 (Way/Channel)|S
+S2_U3_L3|径|jìng|lr|彳,圣|途径||S
+S2_U3_L3|乏|fá|tb|丿,之|缺乏|没有或不够 (Lack)|S
+S2_U3_L3|亿|yì|lr|亻,乙|亿|极大的数字 (Hundred million)|S
+S2_U3_L3|憾|hàn|lr|忄,感|遗憾|觉得可惜 (Regret)|S
+S2_U3_L3|慎|shèn|lr|忄,真|谨慎|很小心 (Cautious)|S
+S2_U3_L3|渗|shèn|lr|氵,参|渗透|水慢慢渗进去 (Penetrate)|S
+S2_U3_L4|宣|xuān|tb|宀,亘|宣布|告诉大家 (Declare)|S
+S2_U3_L4|狩|shòu|lr|犭,守|狩猎|打猎 (Hunt)|S
+S2_U3_L4|聘|pìn|lr|耳,甹|聘请|请人来工作 (Hire)|S
+S2_U3_L4|啃|kěn|lr|口,肯|啃|用力咬 (Gnaw)|S
+S2_U3_L4|疾|jí|semi-tl|疒,矢|疾病|生病 (Disease)|S
+S2_U3_L4|锐|ruì|lr|钅,兑|锐减|快速减少 (Decrease sharply)|S
+S2_U3_L4|糟|zāo|lr|米,曹|糟蹋|浪费或破坏好东西 (Waste/Ruin)|S
+S2_U3_L4|毁|huǐ|lmr|臼,工,殳|毁灭|全部破坏掉 (Destroy)|S
+S2_U3_L4|罪|zuì|tb|罒,非|畏罪潜逃|做坏事的领头人 (Culprit)|S
+S2_U3_L4|魁|kuí|semi-bl|鬼,斗|罪魁祸首|做坏事的领头人 (Chief culprit)|S
+S2_U3_L4|睹|dǔ|lr|目,者|目睹|亲眼看到 (Witness)|S
+S2_U3_L4|违|wéi|semi-bl|辶,韦|违背|不遵守 (Violate)|S
+S2_U3_L4|搏|bó|lr|扌,尃|拼搏|非常努力地去争取 (Struggle/Fight)|S
+S2_U4_L1|卑|bēi|cut|h:2|自卑|觉得自己不如别人 (Inferiority)|C
+S2_U4_L1|羡|xiàn|tb|羊,次|羡慕|觉得别人好，自己也想要 (Envy)|S
+S2_U4_L1|诱|yòu|lr|讠,秀|诱惑|吸引人去做坏事的事物 (Temptation)|S
+S2_U4_L1|毅|yì|lr|豙,殳|毅力|不怕困难坚持下去的心 (Perseverance)|S
+S2_U4_L1|茫|máng|tmb|艹,氵,亡|茫然|不知道该怎么办 (At a loss)|S
+S2_U4_L1|魂|hún|lr|云,鬼|魂不守舍|精神不集中 (Distracted)|S
+S2_U4_L1|眠|mián|lr|目,民|睡眠|睡觉 (Sleep)|S
+S2_U4_L1|烁|shuò|lr|火,乐|闪烁其词|光亮动来动去 (Flicker)|S
+S2_U4_L1|嫌|xián|lr|女,兼|嫌|讨厌 (Dislike)|S
+S2_U4_L1|逼|bī|semi-bl|辶,畐|逼|强迫别人做 (Force)|S
+S2_U4_L1|霸|bà|tmb|雨,革,月|霸道|不讲理，欺负人 (Overbearing)|S
+S2_U4_L1|怄|òu|lr|忄,区|怄气|生闷气 (Sulk)|S
+S2_U4_L1|饪|rèn|lr|饣,壬|烹饪|做饭 (Cooking)|S
+S2_U4_L1|符|fú|tb|⺮,付|符合|要求完全一样 (Match)|S
+S2_U4_L2|憋|biē|tb|敝,心|憋|强忍住呼吸 (Hold in)|S
+S2_U4_L2|婉|wǎn|lr|女,宛|委婉|说话很温和，不直接伤人 (Tactful)|S
+S2_U4_L2|吼|hǒu|lr|口,孔|吼|大声喊叫 (Roar)|S
+S2_U4_L2|驳|bó|lr|马,爻|反驳|说别人不对 (Refute)|S
+S2_U4_L2|缝|fèng|lr|纟,逢|缝|裂开的口子 (Seam)|S
+S2_U4_L2|吭|kēng|lr|口,亢|吭声|出声说话 (Utter a word)|S
+S2_U4_L2|掩|yǎn|lr|扌,奄|掩饰|故意藏起来 (Conceal)|S
+S2_U4_L2|廊|láng|semi-tl|广,郎|走廊|通道 (Corridor)|S
+S2_U4_L2|熄|xī|lr|火,息|熄灯|关灯 (Turn off lights)|S
+S2_U4_L2|诡|guǐ|lr|讠,危|诡异|很奇怪、有点吓人 (Weird)|S
+S2_U4_L2|蜷|quán|lr|虫,卷|蜷缩|身体缩成一团 (Curl up)|S
+S2_U4_L2|瑟|sè|tmb|王,王,必|瑟瑟|发抖的样子 (Shiver)|S
+S2_U4_L2|怖|bù|lr|忄,布|恐怖|非常害怕 (Terror)|S
+S2_U4_L2|宵|xiāo|tb|宀,肖|通宵|整夜不睡 (All night)|S
+S2_U4_L2|悚|sǒng|lr|忄,束|惊悚|让人害怕的 (Thriller)|S
+S2_U4_L3|脖|bó|lr|月,孛|脖子|头和身体连接的地方 (Neck)|S
+S2_U4_L3|瞥|piē|tb|敝,目|瞥|很快地看一眼 (Glance)|S
+S2_U4_L3|炙|zhì|tb|⺼,火|炙|烤、很热 (Roast/Hot)|S
+S2_U4_L3|媒|méi|lr|女,某|媒体|报纸、电视等新闻机构 (Media)|S
+S2_U4_L3|饰|shì|l-tr-br|饣,𠂉,巾|掩饰|故意藏起来 (Conceal)|S
+S2_U4_L3|拘|jū|lr|扌,句|拘束|不自然、放不开 (Restrained)|S
+S2_U4_L3|嘈|cáo|lr|口,曹|嘈杂|声音很吵 (Noisy)|S
+S2_U4_L3|局|jú|semi-tl|尸,句|局促|很不自然的样子 (Constrained)|S
+S2_U4_L3|促|cù|lr|亻,足|催促|推动使前进 (Promote)|S
+S2_U4_L3|沮|jǔ|lr|氵,且|沮丧||S
+S2_U4_L3|睿|ruì|cut|h:2|睿智|非常聪明有智慧 (Wise)|C
+S2_U4_L4|搓|cuō|lr|扌,差|搓澡|洗澡时用力搓身体 (Scrub)|S
+S2_U4_L4|涩|sè|lr|氵,刃止|涩涩|不湿润 (Astringent)|S
+S2_U4_L4|筹|chóu|tb|⺮,寿|筹划|计划 (Plan)|S
+S2_U4_L4|掇|duō|lr|扌,叕|拾掇|整理、收拾 (Tidy up)|S
+S2_U4_L4|颔|hàn|lr|含,页|颔首|点头 (Nod)|S
+S2_U4_L4|棉|mián|l-tr-br|木,白,巾|棉|一种植物和布料 (Cotton)|S
+S2_U4_L4|掏|tāo|lr|扌,匋|掏|从口袋里拿出来 (Take out)|S
+S2_U4_L4|崭|zhǎn|tb|山,斩|崭新|全新的 (Brand new)|S
+S2_U4_L4|喃|nán|lr|口,南|喃喃|小声说话 (Mutter)|S
+S2_U4_L4|涌|yǒng|lr|氵,甬|涌动|水冲出来 (Gush)|S
+S2_U4_L4|捅|tǒng|lr|扌,甬|捅|戳 (Poke)|S
+S2_U4_L4|藏|cáng|tb|艹,臧|珍藏|收起来 (Store)|S
+S2_U5_L1|陋|lòu|lr|阝,匧|简陋|非常简单，条件不好 (Simple)|S
+S2_U5_L1|辟|pì|lr|尸口,辛|开辟|开发新的地方 (Open up)|S
+S2_U5_L1|贩|fàn|lr|贝,反|小贩|在街上卖东西的人 (Hawker)|S
+S2_U5_L1|宗|zōng|tb|宀,示|宗教|信仰 (Religion)|S
+S2_U5_L1|综|zōng|lr|纟,宗|综合|结合起来 (Comprehensive)|S
+S2_U5_L1|诊|zhěn|lr|讠,㐱|诊疗所|看病的小医院 (Clinic)|S
+S2_U5_L1|裕|yù|lr|衤,谷|富裕|很有钱 (Wealthy)|S
+S2_U5_L1|迁|qiān|semi-bl|辶,千|变迁|换个地方住 (Move)|S
+S2_U5_L1|障|zhàng|lr|阝,章|故障|挡路的东西 (Obstacle)|S
+S2_U5_L1|驰|chí|lr|马,也|驰名|非常出名 (Famous)|S
+S2_U5_L1|屡|lǚ|l-tr-br|尸,米,女|屡次|很多次 (Repeatedly)|S
+S2_U5_L1|荣|róng|tmb|艹,冖,木|荣誉|光荣的名声 (Honor)|S
+S2_U5_L2|触|chù|lr|角,虫|接触|碰到或交往 (Contact)|S
+S2_U5_L2|翠|cuì|tb|羽,卒|翠绿|非常绿 (Emerald green)|S
+S2_U5_L2|怡|yí|lr|忄,台|心旷神怡||S
+S2_U5_L2|曝|pù|lr|日,暴|曝晒|在太阳底下晒 (Exposed to the sun)|S
+S2_U5_L2|荫|yīn|tb|艹,阴|林荫大道|树下的阴凉处 (Shade)|S
+S2_U5_L2|樟|zhāng|lr|木,章|樟宜|一种大树 (Camphor tree)|S
+S2_U5_L2|耸|sǒng|tb|从,耳|耸立|高高地立着 (Stand tall)|S
+S2_U5_L2|咛|níng|lr|口,宁|叮咛|再三嘱咐 (Urge/Warn)|S
+S2_U5_L2|馨|xīn|tb|殸,香|温馨|温暖舒服的感觉 (Warm)|S
+S2_U5_L2|糙|cāo|lr|米,造|粗糙|摸起来不光滑 (Rough)|S
+S2_U5_L2|婆|pó|tb|波,女|婆娑|老奶奶 (Grandmother)|S
+S2_U5_L2|娑|suō|tb|沙,女|婆娑||S
+S2_U5_L2|翱|áo|lr|皋,羽|翱翔|在天空中飞 (Soar)|S
+S2_U5_L2|翔|xiáng|lr|羊,羽|翱翔||S
+S2_U5_L2|茁|zhuó|tb|艹,出|茁壮|强壮健康地成长 (Thriving)|S
+S2_U5_L2|纳|nà|lr|纟,内|接纳|接受 (Accept)|S
+S2_U5_L3|妻|qī|tmb|十,彐,女|妻子|老婆 (Wife)|S
+S2_U5_L3|患|huàn|tb|串,心|患|得病 (Suffer from)|S
+S2_U5_L3|症|zhèng|semi-tl|疒,正|失智症|生病的表现 (Symptom)|S
+S2_U5_L3|逝|shì|semi-bl|辶,折|流逝|时间悄悄走掉 (Pass by)|S
+S2_U5_L3|嘱|zhǔ|lr|口,属|叮嘱|再三地关照别人 (Urge again)|S
+S2_U5_L3|嬉|xī|lr|女,喜|嬉戏|开心地玩耍 (Play)|S
+S2_U5_L3|俏|qiào|lr|亻,肖|俏皮|调皮可爱 (Playful)|S
+S2_U5_L3|惬|qiè|lr|忄,夹|惬意|满意、舒服 (Cozy)|S
+S2_U5_L3|躁|zào|lr|足,喿|烦躁|心里很烦，不耐烦 (Irritable)|S
+S2_U5_L4|矿|kuàng|lr|石,广|矿泉水||S
+S2_U5_L4|缕|lǚ|lr|纟,娄|缕||S
+S2_U5_L4|竿|gān|tb|⺮,干|竹竿||S
+S2_U5_L4|涓|juān|lr|氵,肙|涓涓||S
+S2_U5_L4|缸|gāng|lr|缶,工|缸||S
+S2_U5_L4|舀|yǎo|tb|爫,臼|舀||S
+S2_U5_L4|滋|zī|lr|氵,兹|滋味|提供养分使成长 (Nourish)|S
+S2_U5_L4|恙|yàng|tb|羊,心|安然无恙||S
+S2_U5_L4|漂|piāo|lr|氵,票|漂泊||S
+S2_U5_L4|惆|chóu|lr|忄,周|惆怅||S
+S2_U5_L4|怅|chàng|lr|忄,长|惆怅||S
+S2_U5_L4|跋|bá|lr|⻊,犮|跋涉||S
+S2_U5_L4|尘|chén|tb|小,土|烟尘|细小的泥土 (Dust)|S
+S2_U5_L4|岂|qǐ|tb|山,己|岂||S
+S2_U6_L1|绸|chóu|lr|纟,周|丝绸|用蚕丝做的好布料 (Silk)|S
+S2_U6_L1|陆|lù|lr|阝,击|陆地|地球上没有水的地方 (Land)|S
+S2_U6_L1|奢|shē|tb|大,者|奢侈|花很多钱在不需要的东西上 (Luxurious)|S
+S2_U6_L1|侈|chǐ|lr|亻,多|奢侈||S
+S2_U6_L1|瓷|cí|tb|次,瓦|瓷器|用泥土烧出来的漂亮器皿 (Porcelain)|S
+S2_U6_L1|仪|yí|lr|亻,义|仪式|正式的活动过程 (Ceremony)|S
+S2_U6_L1|秉|bǐng|tb|禾,彐|秉持|一直坚持某种想法 (Uphold)|S
+S2_U6_L1|枢|shū|lr|木,区|枢纽|非常重要的中心位置 (Hub)|S
+S2_U6_L1|纽|niǔ|lr|纟,丑|枢纽||S
+S2_U6_L1|港|gǎng|lr|氵,巷|港口|船停靠的地方 (Port)|S
+S2_U6_L1|勾|gōu|semi-tl|勹,厶|勾勒||S
+S2_U6_L1|勒|lēi|lr|革,力|勾勒|画出轮廓 (Outline)|S
+S2_U6_L1|瞻|zhān|lr|目,詹|高瞻远瞩|看得很远，很有眼光 (Foresight)|S
+S2_U6_L1|瞩|zhǔ|lr|目,属|高瞻远瞩|吸引大家注意 (Eye-catching)|S
+S2_U6_L1|致|zhì|lr|至,攵|致力于|努力专注做某事 (Devote to)|S
+S2_U6_L1|促|cù|lr|亻,足|催促|推动使前进 (Promote)|S
+S2_U6_L1|愿|yuàn|semi-tl|厂,原心|愿景||S
+S2_U6_L1|惠|huì|tb|叀,心|优惠|便宜一点 (Discount)|S
+S2_U6_L2|谓|wèi|lr|讠,胃|可谓|可以说是 (Can be described as)|S
+S2_U6_L2|屿|yǔ|lr|山,与|岛屿|四周都是水的小片陆地 (Island)|S
+S2_U6_L2|峡|xiá|lr|山,夹|海峡|两块陆地中间的海水通道 (Strait)|S
+S2_U6_L2|币|bì|tb|丿,巾|钱币||S
+S2_U6_L2|域|yù|lr|土,或|区域||S
+S2_U6_L2|赋|fù|lr|贝,武|赋予||S
+S2_U6_L2|乍|zhà|cut|h:2|初来乍到||C
+S2_U6_L2|啧|zé|lr|口,责|啧啧称奇||S
+S2_U6_L2|芽|yá|tb|艹,牙|发芽||S
+S2_U6_L2|兼|jiān|tb|丷,⺕|兼容并蓄||S
+S2_U6_L2|煌|huáng|lr|火,皇|辉煌||S
+S2_U6_L2|誉|yù|tb|兴,言|荣誉|给予很高的赞扬 (Praise)|S
+S2_U6_L2|纳|nà|lr|纟,内|接纳|接受 (Accept)|S
+S2_U6_L2|川|chuān|cut|h:2|一马平川||C
+S2_U6_L2|瞩|zhǔ|lr|目,属|高瞻远瞩|吸引大家注意 (Eye-catching)|S
+S2_U6_L2|迁|qiān|semi-bl|辶,千|变迁|换个地方住 (Move)|S
+S2_U6_L3|砍|kǎn|lr|石,欠|砍||S
+S2_U6_L3|弗|fú|cut|h:2|无远弗届||C
+S2_U6_L3|伪|wěi|lr|亻,为|真伪||S
+S2_U6_L3|陷|xiàn|lr|阝,臽|陷入|诱人上当的圈套 (Trap)|S
+S2_U6_L3|伐|fá|lr|亻,戈|步伐||S
+S2_U6_L3|询|xún|lr|讠,旬|询问||S
+S2_U6_L3|亦|yì|cut|h:2|人云亦云||C
+S2_U6_L3|疫|yì|semi-tl|疒,殳|免疫||S
+S2_U6_L3|诞|dàn|lr|讠,延|圣诞|纪念耶稣诞生的节日 (Christmas)|S
+S2_U6_L3|聚|jù|tb|取,乑|凝聚力||S
+S2_U6_L4|缔|dì|lr|纟,帝|缔造||S
+S2_U6_L4|溪|xī|lr|氵,奚|溪||S
+S2_U6_L4|硕|shuò|lr|石,页|硕果||S
+S2_U6_L4|洲|zhōu|lr|氵,州|美洲||S
+S2_U6_L4|湮|yān|lr|氵,垔|湮灭||S
+S2_U6_L4|埃|āi|lr|土,矣|尘埃||S
+S2_U6_L4|震|zhèn|tb|雨,辰|震惊||S
+S2_U6_L4|辣|là|lr|辛,束|辣椒||S
+S2_U6_L4|革|gé|cut|h:2|变革||C
+S2_U6_L4|灿|càn|lr|火,山|灿烂||S
+S2_U6_L4|翻|fān|lr|番,羽|翻天覆地||S
+S2_U6_L4|滞|zhì|lr|氵,带|停滞||S
+`;
+
+const wordBank={};
+const allDistractors=[];
+const allGlobalParts=[];
+// 课文元数据：unitKey(如 S1_U1_L1) -> {grade,unitNum,lessonNum}
+const LESSON_NAMES={
+ 1:'第一课',2:'第二课',3:'第三课',4:'第四课'
+};
+rawDatabase.trim().split('\n').forEach(line=>{
+  if(!line.trim())return;
+  const p=line.split('|');
+  if(p.length<7)return;
+  const[unit,w,py,layout,partsStr,vocab,def,mode]=p;
+  if(!wordBank[unit])wordBank[unit]=[];
+  const m=(mode||'S').trim();
+  if(m==='C'){
+    // 字形切割模式：partsStr 形如 "h:2" 或 "v:3"
+    const [dir,nStr]=partsStr.split(':');
+    wordBank[unit].push({w,py,layout:'cut',mode:'cut',cutDir:dir,cutN:parseInt(nStr)||2,vocab,def});
+  }else{
+    const parts=partsStr.split(',');
+    wordBank[unit].push({w,py,layout,mode:'semantic',parts,vocab,def});
+    parts.forEach(q=>{if(!allGlobalParts.includes(q))allGlobalParts.push(q);});
+  }
+  if(def)allDistractors.push(def);
+});
+
+// ═══════════════════════════════════════════════════════════
+//  同字词配对数据：字 -> [{w:词, d:释义}, ...]（仅含≥2个同字词的难字）
+// ═══════════════════════════════════════════════════════════
+const PAIRMAP={"惹":[{w:"惹",d:"招来（麻烦等） (Provoke)"},{w:"娘惹",d:"华人与马来人通婚的女性后裔 (Nyonya)"}],
+"技":[{w:"科技",d:"科学技术 (Technology)"},{w:"杂技",d:"高难度的表演技艺 (Acrobatics)"}],
+"缘":[{w:"人缘",d:"跟别人的关系好 (Good relations with others)"},{w:"缘故",d:"原因 (Reason)"}],
+"致":[{w:"兴致勃勃",d:"兴趣非常浓厚 (Full of enthusiasm)"},{w:"致力于",d:"努力专注做某事 (Devote oneself to)"}],
+"误":[{w:"错误",d:"不正确的地方 (Mistake)"},{w:"延误",d:"耽误、拖延 (Delay)"}],
+"哄":[{w:"哄堂大笑",d:"全屋子的人一起大笑 (Roar with laughter)"},{w:"一哄而散",d:"一下子吵闹着散开 (Disperse in a hubbub)"}],
+"俗":[{w:"风俗",d:"社会上流传的习惯 (Custom)"},{w:"庸俗",d:"低级、不高雅 (Vulgar)"}],
+"诞":[{w:"圣诞",d:"纪念耶稣诞生的节日 (Christmas)"},{w:"荒诞不经",d:"荒唐、不合常理 (Absurd)"}],
+"诺":[{w:"承诺",d:"答应做某事 (Promise)"},{w:"一诺千金",d:"答应的话非常可靠 (A promise worth a thousand pieces of gold)"}],
+"缺":[{w:"缺席",d:"该到而没到 (Absent)"},{w:"缺乏",d:"没有或不够 (Lack)"}],
+"悠":[{w:"悠久",d:"时间很长很久 (Long-standing)"},{w:"悠然自得",d:"悠闲自在的样子 (Carefree and content)"}],
+"遗":[{w:"遗产",d:"祖先留下来的东西 (Heritage)"},{w:"遗憾",d:"觉得可惜 (Regret)"}],
+"郁":[{w:"浓郁",d:"（气味、色彩）很浓 (Rich and strong)"},{w:"抑郁",d:"心情非常不好 (Depressed)"}],
+"略":[{w:"领略",d:"体会、欣赏 (Appreciate)"},{w:"策略",d:"做事的计谋方法 (Strategy)"}],
+"府":[{w:"打道回府",d:"原路返回家去 (Head back home)"},{w:"政府",d:"管理国家事务的机构 (Government)"}],
+"赞":[{w:"赞不绝口",d:"不停地称赞 (Praise endlessly)"},{w:"称赞",d:"夸奖 (Praise)"},{w:"赞誉有加",d:"给予很高的赞扬 (Highly praised)"}],
+"滋":[{w:"滋味",d:"味道、感受 (Taste/Feeling)"},{w:"滋养",d:"提供养分使成长 (Nourish)"}],
+"促":[{w:"催促",d:"叫人赶快做 (Urge)"},{w:"仓促",d:"匆忙、来不及准备 (Hasty)"},{w:"局促",d:"很不自然的样子 (Constrained)"},{w:"促进",d:"推动使前进 (Promote)"}],
+"篷":[{w:"雨篷",d:"挡雨的篷子 (Awning)"},{w:"帐篷",d:"野外用来遮风挡雨的临时住所 (Tent)"}],
+"故":[{w:"缘故",d:"原因 (Reason)"},{w:"故障",d:"机器出毛病 (Malfunction)"}],
+"晓":[{w:"人人皆晓",d:"每个人都知道 (Everyone knows)"},{w:"家喻户晓",d:"家家户户都知道 (Widely known)"}],
+"慢":[{w:"慢条斯理",d:"做事不慌不忙 (Unhurried)"},{w:"缓慢",d:"速度很慢 (Slow)"}],
+"潜":[{w:"潜水",d:"在水面下活动 (Dive)"},{w:"潜水艇",d:"能在水下航行的船 (Submarine)"},{w:"畏罪潜逃",d:"做错事怕被抓跑掉 (Flee to escape punishment)"}],
+"齿":[{w:"牙齿",d:"吃东西用的器官 (Teeth)"},{w:"启齿",d:"开口说话（多指难说的事） (Bring oneself to mention)"}],
+"势":[{w:"手势",d:"用手做出的动作 (Gesture)"},{w:"姿势",d:"身体摆出的样子 (Posture)"},{w:"趋势",d:"事物发展的方向 (Trend)"}],
+"泛":[{w:"泛起",d:"（水面等）漾起、浮现 (Ripple up)"},{w:"泛滥",d:"多得到处都是 (Overflow)"}],
+"拜":[{w:"拜访",d:"登门探望 (Pay a visit)"},{w:"崇拜",d:"非常敬佩 (Worship)"}],
+"陷":[{w:"陷入",d:"落入（困境等） (Fall into)"},{w:"陷阱",d:"诱人上当的圈套 (Trap)"}],
+"协":[{w:"协助",d:"从旁帮助 (Assist)"},{w:"协调",d:"配合得当、不冲突 (Coordinate)"}],
+"障":[{w:"故障",d:"机器出毛病 (Malfunction)"},{w:"障碍",d:"挡路的东西 (Obstacle)"}],
+"荣":[{w:"繁荣昌盛",d:"兴旺发达 (Prosperous)"},{w:"荣誉",d:"光荣的名声 (Honor)"}],
+"荒":[{w:"破天荒",d:"从未有过、第一次 (Unprecedented)"},{w:"荒诞不经",d:"荒唐、不合常理 (Absurd)"}],
+"辉":[{w:"光辉",d:"明亮的光芒 (Radiance)"},{w:"辉煌",d:"光彩耀眼、成就极大 (Brilliant)"}],
+"惠":[{w:"优惠",d:"便宜一点 (Discount)"},{w:"受惠",d:"得到好处 (Benefit from)"}],
+"缩":[{w:"缩",d:"变小或退回 (Shrink)"},{w:"蜷缩",d:"身体缩成一团 (Curl up)"}],
+"凝":[{w:"凝望",d:"一直盯着看 (Gaze)"},{w:"凝聚力",d:"把大家团结在一起的力量 (Cohesion)"}],
+"罪":[{w:"畏罪潜逃",d:"做错事怕被抓跑掉 (Flee to escape punishment)"},{w:"罪魁祸首",d:"做坏事的领头人 (Chief culprit)"}],
+"蓄":[{w:"蓄水池",d:"装水的大池子 (Reservoir)"},{w:"兼容并蓄",d:"同时容纳不同的事物 (Be all-embracing)"}],
+"澡":[{w:"洗澡",d:"用水洗身子 (Bath)"},{w:"搓澡",d:"洗澡时用力搓身体 (Scrub)"}],
+"媒":[{w:"媒体",d:"报纸、电视等新闻机构 (Media)"},{w:"社交媒体",d:"网上交流的平台 (Social media)"}],
+"尘":[{w:"烟尘",d:"烟雾和灰尘 (Smoke and dust)"},{w:"尘封",d:"积满灰尘、长久没动 (Dust-laden)"},{w:"尘埃",d:"细小的灰尘 (Dust)"}],
+"型":[{w:"大型",d:"规模很大的 (Large-scale)"},{w:"典型",d:"有代表性的例子 (Typical)"}],
+"异":[{w:"日新月异",d:"变化又快又大 (Change rapidly)"},{w:"诡异",d:"很奇怪、有点吓人 (Weird)"},{w:"求同存异",d:"找共同点，保留分歧 (Seek common ground)"}],
+"乏":[{w:"缺乏",d:"没有或不够 (Lack)"},{w:"不乏",d:"不缺少 (Not lacking)"}],
+"掩":[{w:"掩",d:"遮盖、关上 (Cover)"},{w:"掩饰",d:"故意藏起来 (Conceal)"}],
+"誉":[{w:"荣誉",d:"光荣的名声 (Honor)"},{w:"赞誉有加",d:"给予很高的赞扬 (Highly praised)"}],
+"纳":[{w:"接纳",d:"接受 (Accept)"},{w:"海纳百川",d:"像大海容纳众多河流，比喻气度宽广 (All-embracing)"}],
+"瞩":[{w:"高瞻远瞩",d:"看得很远，很有眼光 (Foresight)"},{w:"引人瞩目",d:"吸引大家的注意 (Eye-catching)"}]};
+
+// 从 unitKey 解析出 年级码/单元号/课文号。键格式：S1_U1_L1
+function parseUnitKey(uk){
+  const m=uk.match(/^(S\d)_U(\d+)_L(\d+)$/);
+  if(!m)return null;
+  return {gradeCode:m[1],unitNum:+m[2],lessonNum:+m[3]};
+}
+// 取某年级下所有"单元号"（去重排序）
+function unitsOfGrade(gradeCode){
+  const s=new Set();
+  Object.keys(wordBank).forEach(uk=>{
+    const pk=parseUnitKey(uk);
+    if(pk&&pk.gradeCode===gradeCode)s.add(pk.unitNum);
+  });
+  return [...s].sort((a,b)=>a-b);
+}
+// 取某年级某单元下所有课文 unitKey（按课文号排序）
+function lessonKeysOf(gradeCode,unitNum){
+  return Object.keys(wordBank).filter(uk=>{
+    const pk=parseUnitKey(uk);
+    return pk&&pk.gradeCode===gradeCode&&pk.unitNum===unitNum;
+  }).sort((a,b)=>parseUnitKey(a).lessonNum-parseUnitKey(b).lessonNum);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  存储
+// ═══════════════════════════════════════════════════════════
+const SK={name:'hzld_name',cls:'hzld_class',score:'hzld_score',mastery:'hzld_mastery',errors:'hzld_errors',ach:'hzld_ach',dates:'hzld_dates',maxCombo:'hzld_maxCombo'};
+const ls={get:k=>{try{return JSON.parse(localStorage.getItem(k));}catch{return null;}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}}};
+
+// ═══════════════════════════════════════════════════════════
+//  游戏状态
+// ═══════════════════════════════════════════════════════════
+let score=0,combo=0,unitPlayQueue={},currentSet=[],currentWordIndex=0,activePiece=null,playerName='',playerClass='',consecutiveCorrect=0,currentPoolKey='';
+
+// ═══════════════════════════════════════════════════════════
+//  玩家名字
+// ═══════════════════════════════════════════════════════════
+function checkPlayerName(){
+  playerName=ls.get(SK.name)||'';
+  playerClass=ls.get(SK.cls)||'';
+  if(!playerName||!playerClass){document.getElementById('nameModal').style.display='flex';}
+  else{document.getElementById('nameModal').style.display='none';document.getElementById('playerLabel').innerText='👤 '+playerClass+' '+playerName;}
+  recordDate();
+}
+function savePlayerName(){
+  const cls=document.getElementById('classInput').value.trim();
+  const v=document.getElementById('nameInput').value.trim();
+  if(!cls){document.getElementById('classInput').style.borderColor='var(--red)';return;}
+  if(!v){document.getElementById('nameInput').style.borderColor='var(--red)';return;}
+  playerClass=cls; playerName=v;
+  ls.set(SK.cls,playerClass); ls.set(SK.name,playerName);
+  document.getElementById('nameModal').style.display='none';
+  document.getElementById('playerLabel').innerText='👤 '+playerClass+' '+playerName;
+  recordDate();checkAchievements();
+}
+function recordDate(){
+  const today=new Date().toDateString();
+  const dates=ls.get(SK.dates)||[];
+  if(!dates.includes(today)){dates.push(today);ls.set(SK.dates,dates);}
+}
+
+// ═══════════════════════════════════════════════════════════
+//  积分 & 连击
+// ═══════════════════════════════════════════════════════════
+function addScore(pts){
+  const mult=combo>=5?3:combo>=3?2:1;
+  score=Math.max(0,score+pts*mult);
+  ls.set(SK.score,score);
+  document.getElementById('scoreVal').innerText=score;
+  return pts*mult;
+}
+function incCombo(){
+  combo++;
+  const mx=ls.get(SK.maxCombo)||0;
+  if(combo>mx)ls.set(SK.maxCombo,combo);
+  renderCombo();
+}
+function resetCombo(){combo=0;renderCombo();}
+function renderCombo(){
+  const el=document.getElementById('comboDisplay');
+  if(combo>=5)el.innerText=`🔥 ${combo}连击  ×3积分！`;
+  else if(combo>=3)el.innerText=`⚡ ${combo}连击  ×2积分！`;
+  else if(combo>=2)el.innerText=`✨ ${combo}连击！`;
+  else el.innerText='';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  掌握度
+// ═══════════════════════════════════════════════════════════
+function cKey(u,w){return u+'|'+w;}
+function masteryLevel(key){
+  const m=ls.get(SK.mastery)||{};
+  const d=m[key];
+  if(!d)return 0;
+  if(d.correct>=3)return 2;
+  if(d.correct>=1)return 1;
+  return 0;
+}
+function recordCorrect(u,w){
+  const key=cKey(u,w),m=ls.get(SK.mastery)||{};
+  if(!m[key])m[key]={correct:0,wrong:0};
+  m[key].correct++;ls.set(SK.mastery,m);
+}
+function recordWrong(u,w,data){
+  const key=cKey(u,w),m=ls.get(SK.mastery)||{};
+  if(!m[key])m[key]={correct:0,wrong:0};
+  m[key].wrong++;ls.set(SK.mastery,m);
+  const errs=ls.get(SK.errors)||{};
+  if(!errs[key])errs[key]={count:0,data};
+  errs[key].count++;errs[key].data=data;
+  ls.set(SK.errors,errs);updateErrorBadge();
+}
+function updateErrorBadge(){
+  const errs=ls.get(SK.errors)||{};
+  const n=Object.keys(errs).length;
+  const b=document.getElementById('errorBadge');
+  b.style.display=n>0?'flex':'none';
+  b.innerText=n>99?'99+':n;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  页面切换
+// ═══════════════════════════════════════════════════════════
+function switchPage(pg){
+  ['game','collection','error','ach','teacher'].forEach(p=>{
+    document.getElementById(p+'Page').classList.remove('active');
+    document.getElementById('nav-'+p).classList.remove('active');
+  });
+  document.getElementById(pg+'Page').classList.add('active');
+  document.getElementById('nav-'+pg).classList.add('active');
+  if(pg==='collection')renderCollection();
+  if(pg==='error')renderErrors();
+  if(pg==='ach')renderAchievements();
+  if(pg==='teacher')renderTeacher();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  收藏册
+// ═══════════════════════════════════════════════════════════
+function renderCollection(){
+  const grade=document.getElementById('gradeSelect').value;
+  const units=Object.keys(wordBank).filter(k=>k.startsWith(grade)).sort();
+  const body=document.getElementById('collectionBody');
+  body.innerHTML='';
+  let totDone=0,totBlue=0,totGold=0;
+  units.forEach(unitKey=>{
+    const num=unitKey.split('_U')[1];
+    const words=wordBank[unitKey];
+    let unitBlue=0;
+    words.forEach(item=>{
+      const lv=masteryLevel(cKey(unitKey,item.w));
+      if(lv>=1){unitBlue++;totDone++;totBlue++;}
+      if(lv===2)totGold++;
+    });
+    const pct=Math.round(unitBlue/words.length*100);
+    const hd=document.createElement('div');
+    hd.className='unit-hd';
+    hd.innerHTML=`<span>单元${['一','二','三','四','五','六'][num-1]}</span><span class="unit-pct">${pct}% 完成</span>`;
+    body.appendChild(hd);
+    const grid=document.createElement('div');
+    grid.className='char-grid';
+    words.forEach(item=>{
+      const lv=masteryLevel(cKey(unitKey,item.w));
+      const card=document.createElement('div');
+      card.className='char-card'+(lv===2?' gold':lv===1?' blue':'');
+      card.innerHTML=item.w+(lv===2?'<span class="card-badge">🥇</span>':lv===1?'<span class="card-badge">🔵</span>':'');
+      grid.appendChild(card);
+    });
+    body.appendChild(grid);
+  });
+  document.getElementById('sTotalDone').innerText=totDone;
+  document.getElementById('sBlue').innerText=totBlue;
+  document.getElementById('sGold').innerText=totGold;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  错字本
+// ═══════════════════════════════════════════════════════════
+function renderErrors(){
+  const body=document.getElementById('errorBody');
+  const errs=ls.get(SK.errors)||{};
+  const entries=Object.entries(errs).sort((a,b)=>b[1].count-a[1].count);
+  if(entries.length===0){
+    body.innerHTML='<div class="empty-state"><div class="empty-icon">🎉</div><div class="empty-txt">太棒了！<br>还没有错字记录，继续保持！</div></div>';
+    return;
+  }
+  const list=document.createElement('div');
+  list.className='error-list';
+  entries.forEach(([key,val])=>{
+    const d=val.data;
+    const dm=(d.def||'').match(/(.*?)\s*\((.*?)\)/);
+    const defTxt=dm?dm[1]:d.def;
+    const item=document.createElement('div');
+    item.className='error-item';
+    item.innerHTML=`<div class="error-char">${d.w}</div><div class="error-info"><div class="error-word">${d.vocab}</div><div class="error-def">${defTxt}</div><div class="error-cnt">已错 ${val.count} 次</div></div>`;
+    list.appendChild(item);
+  });
+  body.innerHTML='';body.appendChild(list);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  成就
+// ═══════════════════════════════════════════════════════════
+const ACH_TIERS=[
+  {id:'streak10',icon:'🏅',name:'初学者',  target:10,desc:'连续准确完成10个字'},
+  {id:'streak20',icon:'🔥',name:'连击王',  target:20,desc:'连续准确完成20个字'},
+  {id:'streak30',icon:'🔵',name:'收藏家',  target:30,desc:'连续准确完成30个字'},
+  {id:'streak40',icon:'🥇',name:'默写达人',target:40,desc:'连续准确完成40个字'},
+  {id:'streak50',icon:'📅',name:'每日达人',target:50,desc:'连续准确完成50个字'},
+  {id:'streak60',icon:'⭐',name:'班级达人',target:60,desc:'连续准确完成60个字'},
+];
+const ACHS=ACH_TIERS;
+function checkAchievements(){
+  const done=ls.get(SK.ach)||{};
+  let nw=null;
+  ACH_TIERS.forEach(a=>{if(!done[a.id]&&consecutiveCorrect>=a.target){done[a.id]=true;if(!nw)nw=a;}});
+  ls.set(SK.ach,done);
+  if(nw)showAchToast(nw);
+}
+function showAchToast(a){
+  const t=document.getElementById('achToast');
+  t.innerText=`🎉 解锁成就：${a.icon} ${a.name}！`;
+  t.style.display='block';
+  setTimeout(()=>{t.style.display='none';},3200);
+}
+function renderAchievements(){
+  const done=ls.get(SK.ach)||{};
+  const list=document.getElementById('achList');
+  list.innerHTML='';
+  let unlocked=0;
+  ACH_TIERS.forEach((a,i)=>{
+    const isDone=!!done[a.id];
+    if(isDone)unlocked++;
+    const prevTarget=i>0?ACH_TIERS[i-1].target:0;
+    const pct=isDone?100:Math.min(100,Math.max(0,Math.round((consecutiveCorrect-prevTarget)/(a.target-prevTarget)*100)));
+    const el=document.createElement('div');
+    el.className='ach-item'+(isDone?' done':'');
+    el.innerHTML=`<div class="ach-icon">${a.icon}</div><div class="ach-info"><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div><div style="margin-top:5px;background:#ecf0f1;border-radius:4px;height:5px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${isDone?'var(--green)':'var(--orange)'};transition:width .4s"></div></div></div><div class="ach-badge" style="min-width:64px;text-align:right">${isDone?'✅ 已解锁':consecutiveCorrect+'/'+a.target}</div>`;
+    list.appendChild(el);
+  });
+  document.getElementById('achSub').innerText=`已解锁 ${unlocked} / ${ACH_TIERS.length}`;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  粒子
+// ═══════════════════════════════════════════════════════════
+function spawnParticles(x,y){
+  const colors=['#27ae60','#2ecc71','#f39c12','#3498db','#e74c3c','#9b59b6'];
+  for(let i=0;i<10;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const angle=(i/10)*360,dist=35+Math.random()*55;
+    const dx=Math.cos(angle*Math.PI/180)*dist,dy=Math.sin(angle*Math.PI/180)*dist;
+    p.style.cssText=`left:${x}px;top:${y}px;background:${colors[i%colors.length]};--dx:${dx}px;--dy:${dy}px`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),800);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  游戏逻辑
+// ═══════════════════════════════════════════════════════════
+function unitNumLabel(n){return['一','二','三','四','五','六'][n-1]||n;}
+
+// 当前选中的"单元号"集合（复选框存的是单元号，如 "1"）
+function getSelectedUnitNums(gradeCode,allUnitNums){
+  const panel=document.getElementById('unitPickerPanel');
+  const checked=[...panel.querySelectorAll('input[value]:checked')].map(c=>+c.value);
+  return checked.length>0?checked:[...allUnitNums];
+}
+function updateUnitPickerLabel(gradeCode,allUnitNums){
+  const sel=getSelectedUnitNums(gradeCode,allUnitNums);
+  const lbl=document.getElementById('unitPickerLabel');
+  if(sel.length===allUnitNums.length)lbl.innerText='全部单元';
+  else lbl.innerText=sel.map(n=>'单元'+unitNumLabel(n)).join('、');
+}
+function toggleUnitPicker(){
+  const p=document.getElementById('unitPickerPanel');
+  p.classList.toggle('open');
+  if(p.classList.contains('open'))document.addEventListener('click',closePickerOutside,true);
+}
+function closePickerOutside(e){
+  const p=document.getElementById('unitPickerPanel');
+  const b=document.getElementById('unitPickerBtn');
+  if(!p.contains(e.target)&&!b.contains(e.target)){
+    p.classList.remove('open');
+    document.removeEventListener('click',closePickerOutside,true);
+  }
+}
+function updateUnits(){
+  const gradeCode=document.getElementById('gradeSelect').value;
+  const allUnitNums=unitsOfGrade(gradeCode);
+  let saved=ls.get('hzld_selU_'+gradeCode);
+  if(!saved||!saved.length)saved=[...allUnitNums];
+  const panel=document.getElementById('unitPickerPanel');
+  panel.innerHTML='';
+  // 全部 checkbox
+  const allDiv=document.createElement('div');
+  allDiv.className='unit-check-item unit-check-all';
+  const allChk=saved.length===allUnitNums.length;
+  allDiv.innerHTML=`<input type="checkbox" id="ck_all" ${allChk?'checked':''}><label for="ck_all" style="cursor:pointer;font-size:14px">全部单元</label>`;
+  panel.appendChild(allDiv);
+  allUnitNums.forEach(n=>{
+    const div=document.createElement('div');
+    div.className='unit-check-item';
+    div.innerHTML=`<input type="checkbox" id="ck_U${n}" value="${n}" ${saved.includes(n)?'checked':''}><label for="ck_U${n}" style="cursor:pointer;font-size:14px">单元${unitNumLabel(n)}</label>`;
+    panel.appendChild(div);
+  });
+  const onUnitChange=()=>{
+    const allCbs=[...panel.querySelectorAll('input[value]')];
+    document.getElementById('ck_all').checked=allCbs.every(c=>c.checked);
+    const sel=getSelectedUnitNums(gradeCode,allUnitNums);
+    ls.set('hzld_selU_'+gradeCode,sel);
+    updateUnitPickerLabel(gradeCode,allUnitNums);
+    rebuildLessonSelect();
+    initUnitGame(true);
+  };
+  panel.querySelectorAll('input[value]').forEach(cb=>cb.addEventListener('change',onUnitChange));
+  document.getElementById('ck_all').addEventListener('change',e=>{
+    panel.querySelectorAll('input[value]').forEach(cb=>cb.checked=e.target.checked);
+    const sel=getSelectedUnitNums(gradeCode,allUnitNums);
+    ls.set('hzld_selU_'+gradeCode,sel);
+    updateUnitPickerLabel(gradeCode,allUnitNums);
+    rebuildLessonSelect();
+    initUnitGame(true);
+  });
+  updateUnitPickerLabel(gradeCode,allUnitNums);
+  rebuildLessonSelect();
+  initUnitGame(true);
+}
+
+// 当前选中的课文：'all' 表示选中单元下全部课文，否则是具体 unitKey
+let currentLessonKey='all';
+// 重建课文下拉：列出当前选中单元下的所有课文
+function rebuildLessonSelect(){
+  const gradeCode=document.getElementById('gradeSelect').value;
+  const allUnitNums=unitsOfGrade(gradeCode);
+  const selUnits=getSelectedUnitNums(gradeCode,allUnitNums);
+  const sel=document.getElementById('lessonSelect');
+  sel.innerHTML='<option value="all">全部课文</option>';
+  selUnits.forEach(un=>{
+    lessonKeysOf(gradeCode,un).forEach(uk=>{
+      const pk=parseUnitKey(uk);
+      const o=document.createElement('option');
+      o.value=uk;
+      o.textContent='单元'+unitNumLabel(un)+' · '+LESSON_NAMES[pk.lessonNum];
+      sel.appendChild(o);
+    });
+  });
+  currentLessonKey='all';
+  sel.value='all';
+}
+function onLessonChange(){
+  currentLessonKey=document.getElementById('lessonSelect').value;
+  initUnitGame(true);
+}
+
+function buildWeightedPool(selUnitKeys){
+  const errs=ls.get(SK.errors)||{};
+  let pool=[];
+  selUnitKeys.forEach(uk=>{
+    (wordBank[uk]||[]).forEach(item=>{
+      const key=cKey(uk,item.w);
+      const errCnt=(errs[key]?.count)||0;
+      const copies=1+Math.min(3,errCnt);
+      for(let i=0;i<copies;i++)pool.push({...item,_unit:uk});
+    });
+  });
+  return pool.sort(()=>Math.random()-.5);
+}
+function refillPool(poolKey,selUnitKeys){
+  if(!unitPlayQueue[poolKey]||unitPlayQueue[poolKey].length<5)
+    unitPlayQueue[poolKey]=buildWeightedPool(selUnitKeys);
+}
+// 返回当前应练习的 unitKey 列表（已结合单元勾选 + 课文下拉）
+function getCurrentSelUnits(){
+  const gradeCode=document.getElementById('gradeSelect').value;
+  const allUnitNums=unitsOfGrade(gradeCode);
+  const selUnits=getSelectedUnitNums(gradeCode,allUnitNums);
+  if(currentLessonKey&&currentLessonKey!=='all'){
+    return [currentLessonKey];   // 指定了某一课
+  }
+  // 全部课文：展开选中单元下的所有课文 key
+  let keys=[];
+  selUnits.forEach(un=>{ keys=keys.concat(lessonKeysOf(gradeCode,un)); });
+  return keys;
+}
+function initUnitGame(forceReset=false){
+  const sel=getCurrentSelUnits();
+  const poolKey='pool_'+sel.join('_');
+  if(forceReset||!unitPlayQueue[poolKey]||unitPlayQueue[poolKey].length<5){
+    unitPlayQueue[poolKey]=buildWeightedPool(sel);
+    if(!forceReset)triggerFeedback(true,'🎉 全部完成！二刷开始！');
+  }
+  const n=Math.min(10,unitPlayQueue[poolKey].length);
+  currentSet=unitPlayQueue[poolKey].splice(0,n);
+  currentPoolKey=poolKey;currentWordIndex=0;loadWord();
+}
+function loadWord(){
+  document.getElementById('quizPanel').style.display='none';
+  const mp=document.getElementById('matchPanel');if(mp){mp.classList.remove('show');mp.style.display='none';}
+  const data=currentSet[currentWordIndex];
+  document.getElementById('pinyinHint').innerText=data.py;
+  // Progress bar: show consecutive streak toward next achievement
+  const _nextT=ACH_TIERS.find(a=>consecutiveCorrect<a.target);
+  const _tIdx=_nextT?ACH_TIERS.indexOf(_nextT):ACH_TIERS.length;
+  const _tMax=_nextT?_nextT.target:ACH_TIERS[ACH_TIERS.length-1].target;
+  const _tBase=_tIdx>0?ACH_TIERS[_tIdx-1].target:0;
+  const _pct=_nextT?Math.max(0,Math.min(100,((consecutiveCorrect-_tBase)/(_tMax-_tBase))*100)):100;
+  document.getElementById('progressFill').style.width=_pct+'%';
+  document.getElementById('progressLabel').innerText=_nextT?`连续 ${consecutiveCorrect}/${_tMax} 字 → ${_nextT.name}`:`🏆 已解锁全部成就！连续${consecutiveCorrect}字！`;
+  const layoutMap={'lr':'左右结构','tb':'上下结构','lmr':'左中右结构','tmb':'上中下结构','l-tb':'半包围（右边开口）','semi-bl':'半包围（上方开口）','semi-tl':'半包围（下方开口）','l-tr-br':'左右结构(右边分上下)','l-tmb':'左右结构(右边分上中下)','tb4':'四层上下结构','cut':'看清字形，拼回完整字'};
+  document.getElementById('structHint').innerHTML=`💡 提示：这是一个【${layoutMap[data.layout]||'特殊结构'}】的字`;
+
+  if(data.mode==='cut'){ loadWordCut(data); return; }
+
+  const pool=document.getElementById('pool');
+  pool.innerHTML='<div class="pool-title">请从下方找出正确的偏旁部首，拖入红框中</div>';
+  let poolParts=[...data.parts];
+  const shuffled=[...allGlobalParts].sort(()=>Math.random()-.5);
+  for(const p of shuffled){if(!poolParts.includes(p))poolParts.push(p);if(poolParts.length>=data.parts.length+4)break;}
+  poolParts.sort(()=>Math.random()-.5);
+  poolParts.forEach((pt,i)=>{
+    const piece=document.createElement('div');
+    piece.className='component';piece.innerText=pt;piece.id='piece-'+i;
+    piece.addEventListener('mousedown',dragStart);
+    piece.addEventListener('touchstart',dragStart,{passive:false});
+    pool.appendChild(piece);
+  });
+  const board=document.getElementById('board');
+  board.className=`dynamic-board layout-${data.layout}`;board.innerHTML='';
+  data.parts.forEach((pt,idx)=>{
+    const cell=document.createElement('div');
+    cell.className=`grid-cell cell-${idx}`;
+    cell.dataset.expected=pt;cell.dataset.filled='false';
+    board.appendChild(cell);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  字形切割模式：把真字切成N块，学生拖回拼成完整字
+// ═══════════════════════════════════════════════════════════
+function charSliceSVG(ch, dir, idx, n, boxW, boxH){
+  // 用真实字体渲染整字，按 dir(h横切/v竖切) 取第 idx/n 段
+  const S=200;
+  let vbX,vbY,vbW,vbH;
+  if(dir==='v'){ vbW=S/n; vbH=S; vbX=S/n*idx; vbY=0; }
+  else { vbW=S; vbH=S/n; vbX=0; vbY=S/n*idx; }
+  return `<svg width="${boxW}" height="${boxH}" viewBox="${vbX} ${vbY} ${vbW} ${vbH}" preserveAspectRatio="xMidYMid meet">`+
+    `<text x="${S/2}" y="${S*0.8}" font-size="180" text-anchor="middle" font-family="KaiTi,'楷体',serif" fill="#000">${ch}</text></svg>`;
+}
+function loadWordCut(data){
+  const n=data.cutN, dir=data.cutDir, ch=data.w;
+  const pool=document.getElementById('pool');
+  pool.innerHTML='<div class="pool-title">请把下面的字块，按正确位置拖进红框，拼成完整的字</div>';
+
+  // 字块尺寸（池中）
+  const PW = dir==='v' ? Math.round(120/n) : 92;
+  const PH = dir==='v' ? 92 : Math.round(120/n);
+
+  // 正确块
+  const items=[];
+  for(let idx=0;idx<n;idx++) items.push({ch,idx,n,dir,correct:true});
+  // 干扰块：从别的字里取切片（同方向），数量 = n 个正确块配 2 个干扰
+  const distractorChars=[];
+  for(const uk in wordBank){
+    for(const it of wordBank[uk]){
+      if(it.mode==='cut' && it.w!==ch && it.cutDir===dir){ distractorChars.push(it); }
+    }
+  }
+  const shufD=distractorChars.sort(()=>Math.random()-.5);
+  let added=0;
+  for(const d of shufD){
+    if(added>=2)break;
+    const ri=Math.floor(Math.random()*d.cutN);
+    items.push({ch:d.w,idx:ri,n:d.cutN,dir,correct:false});
+    added++;
+  }
+  // 打乱所有块
+  items.sort(()=>Math.random()-.5);
+  items.forEach((it,i)=>{
+    const piece=document.createElement('div');
+    piece.className='component cut-piece';
+    piece.style.width=PW+'px';piece.style.height=PH+'px';
+    piece.innerHTML=charSliceSVG(it.ch,it.dir,it.idx,it.n,PW,PH);
+    // 只有正确块带 cutIdx 能匹配；干扰块 cutIdx 设为 -1（永不匹配）
+    piece.dataset.cutIdx = it.correct ? it.idx : ('x'+i);
+    piece.id='piece-'+i;
+    piece.addEventListener('mousedown',dragStart);
+    piece.addEventListener('touchstart',dragStart,{passive:false});
+    pool.appendChild(piece);
+  });
+
+  // 字框：n 个格子，按 dir 排列
+  const board=document.getElementById('board');
+  board.className='dynamic-board '+(dir==='v'?'cut-board-v':'cut-board-h');
+  board.innerHTML='';
+  for(let idx=0;idx<n;idx++){
+    const cell=document.createElement('div');
+    cell.className='grid-cell cut-cell';
+    cell.dataset.cutExpect=idx;cell.dataset.filled='false';
+    cell.innerHTML=`<div class="cut-ghost">${charSliceSVG(ch,dir,idx,n,'100%','100%')}</div>`;
+    board.appendChild(cell);
+  }
+}
+function dragStart(e){
+  if(!e.target.classList.contains('component'))return;
+  activePiece=e.target;
+  const ec=e.type.includes('touch')?e.touches[0]:e;
+  activePiece.style.position='fixed';activePiece.style.zIndex=1000;
+  movePiece(ec.clientX,ec.clientY);
+  document.addEventListener('mousemove',dragMove);
+  document.addEventListener('touchmove',dragMove,{passive:false});
+  document.addEventListener('mouseup',dragEnd);
+  document.addEventListener('touchend',dragEnd);
+}
+function dragMove(e){
+  if(!activePiece)return;e.preventDefault();
+  const ec=e.type.includes('touch')?e.touches[0]:e;
+  movePiece(ec.clientX,ec.clientY);
+}
+function movePiece(x,y){activePiece.style.left=(x-22.5)+'px';activePiece.style.top=(y-22.5)+'px';}
+function dragEnd(e){
+  if(!activePiece)return;
+  const ec=e.type.includes('touch')?e.changedTouches[0]:e;
+  activePiece.style.visibility='hidden';
+  const target=document.elementFromPoint(ec.clientX,ec.clientY);
+  activePiece.style.visibility='visible';
+  const cell=target?target.closest('.grid-cell'):null;
+  if(cell&&cell.dataset.filled==='false'){
+    // 切割模式：按 cutIdx 匹配 cutExpect
+    if(activePiece.classList.contains('cut-piece')){
+      if(cell.dataset.cutExpect===activePiece.dataset.cutIdx){
+        cell.innerHTML='';
+        const svg=activePiece.querySelector('svg').cloneNode(true);
+        svg.setAttribute('width','100%');svg.setAttribute('height','100%');
+        cell.appendChild(svg);
+        cell.dataset.filled='true';
+        activePiece.remove();incCombo();
+        spawnParticles(ec.clientX,ec.clientY);
+        checkGridComplete();
+      }else{
+        cell.classList.add('shake');setTimeout(()=>cell.classList.remove('shake'),300);
+        triggerFeedback(false,'位置不对，再试试！');resetPiece(activePiece);
+      }
+      cleanupDrag();return;
+    }
+    // 语义模式（原逻辑）
+    if(cell.dataset.expected===activePiece.innerText){
+      cell.innerText=activePiece.innerText;cell.dataset.filled='true';
+      activePiece.remove();incCombo();
+      spawnParticles(ec.clientX,ec.clientY);
+      checkGridComplete();
+    }else{
+      cell.classList.add('shake');setTimeout(()=>cell.classList.remove('shake'),300);
+      addScore(-1);resetCombo();consecutiveCorrect=0;
+      const uk=currentSet[currentWordIndex]._unit||getCurrentSelUnits()[0];
+      recordWrong(uk,currentSet[currentWordIndex].w,currentSet[currentWordIndex]);
+      triggerFeedback(false,'放错扣1分！');resetPiece(activePiece);
+    }
+  }else{resetPiece(activePiece);}
+  cleanupDrag();
+}
+function resetPiece(p){p.style.position='static';p.style.zIndex='auto';}
+function cleanupDrag(){
+  activePiece=null;
+  document.removeEventListener('mousemove',dragMove);
+  document.removeEventListener('touchmove',dragMove);
+  document.removeEventListener('mouseup',dragEnd);
+  document.removeEventListener('touchend',dragEnd);
+}
+function checkGridComplete(){
+  const cells=Array.from(document.querySelectorAll('.grid-cell'));
+  if(!cells.every(c=>c.dataset.filled==='true'))return;
+  new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA').play().catch(()=>{});
+  document.getElementById('board').classList.add('success');
+  const data=currentSet[currentWordIndex];
+  const uk=data._unit||getCurrentSelUnits()[0];
+  recordCorrect(uk,data.w);addScore(1);
+  // Step 1: 立刻说"帅呆了"并显示左侧文字
+  showFeedbackLeft('帅呆了！');
+  // Step 2: 600ms后说词语，词语读完再显示选择题
+  setTimeout(()=>{
+    window.speechSynthesis.cancel();
+    const utt=new SpeechSynthesisUtterance(data.vocab);
+    utt.lang='zh-CN';
+    let fired=false;
+    const showQ=()=>{if(fired)return;fired=true;showQuiz(data);};
+    utt.onend=showQ;
+    setTimeout(showQ, Math.max(800, data.vocab.length*600));
+    window.speechSynthesis.speak(utt);
+  },600);
+}
+function showQuiz(data){
+  // 若该字有≥2个同字词，进入"同字词配对"环节
+  if(PAIRMAP[data.w] && PAIRMAP[data.w].length>=2){
+    showMatch(data);
+    return;
+  }
+  // 没有释义的字（多为切割字）：不出选择题，直接进下一题
+  if(!data.def || !data.def.trim()){
+    setTimeout(()=>{ advanceAfterQuiz(); },800);
+    return;
+  }
+  document.getElementById('qw').innerText=`【${data.vocab}】`;
+  const panel=document.getElementById('quizPanel');
+  const cont=document.getElementById('optionsContainer');
+  cont.innerHTML='';
+  let opts=[data.def];
+  const dist=allDistractors.filter(d=>d!==data.def).sort(()=>Math.random()-.5);
+  opts.push(dist[0],dist[1],dist[2]);opts.sort(()=>Math.random()-.5);
+  opts.forEach(opt=>{
+    const btn=document.createElement('button');btn.className='quiz-btn';
+    const m=opt.match(/(.*?)\s*\((.*?)\)/);
+    btn.innerHTML=m?`${m[1]} <span style="color:#95a5a6;font-size:12px;">(${m[2]})</span>`:opt;
+    btn.onclick=()=>handleAnswer(btn,opt===data.def);
+    cont.appendChild(btn);
+  });
+  panel.style.display='flex';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  同字词配对：把词语拖到正确的释义上
+// ═══════════════════════════════════════════════════════════
+function splitDef(d){
+  // 把 "原因 (Reason)" 拆成中文/英文
+  const m=d.match(/^(.*?)\s*\((.*?)\)\s*$/);
+  return m?{cn:m[1].trim(),en:m[2].trim()}:{cn:d,en:''};
+}
+function showMatch(data){
+  document.getElementById('quizPanel').style.display='none';
+  const panel=document.getElementById('matchPanel');
+  const area=document.getElementById('matchArea');
+  document.getElementById('matchChar').innerText=data.w;
+  area.innerHTML='';
+
+  const items=PAIRMAP[data.w].slice();         // [{w,d}]
+  // 释义顺序打乱，词语顺序也打乱，避免位置对应
+  const defs=items.slice().sort(()=>Math.random()-.5);
+  const words=items.slice().sort(()=>Math.random()-.5);
+
+  // 左列：词语（可拖）；右列：释义（放置区）。按释义行排布。
+  defs.forEach((it)=>{
+    const row=document.createElement('div');row.className='match-row';
+    // 释义放置区
+    const dz=document.createElement('div');dz.className='match-def';
+    dz.dataset.answer=it.w;       // 这一行正确应放的词
+    const sd=splitDef(it.d);
+    dz.innerHTML=`<div class="drop-slot" data-slot="1">？</div>`+
+      `<div class="match-def-text">${sd.cn}${sd.en?` <span class="match-def-en">(${sd.en})</span>`:''}</div>`;
+    row.appendChild(dz);
+    area.appendChild(row);
+  });
+  // 词语条放在顶部一排（独立容器），从释义行里分离，便于拖动
+  const wordBar=document.createElement('div');
+  wordBar.style.cssText='display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:4px';
+  words.forEach(it=>{
+    const wd=document.createElement('div');wd.className='match-word';
+    wd.innerText=it.w;wd.dataset.word=it.w;
+    attachMatchDrag(wd);
+    wordBar.appendChild(wd);
+  });
+  area.insertBefore(wordBar, area.firstChild);
+
+  matchRemaining=items.length;
+  matchData=data;
+  panel.classList.add('show');panel.style.display='flex';
+}
+
+let matchRemaining=0, matchData=null, mDragEl=null;
+function attachMatchDrag(el){
+  const start=(e)=>{
+    if(el.classList.contains('placed'))return;
+    e.preventDefault();
+    mDragEl=el;el.classList.add('dragging');
+    document.addEventListener('mousemove',mMove);
+    document.addEventListener('touchmove',mMove,{passive:false});
+    document.addEventListener('mouseup',mEnd);
+    document.addEventListener('touchend',mEnd);
+  };
+  el.addEventListener('mousedown',start);
+  el.addEventListener('touchstart',start,{passive:false});
+}
+function mMove(e){
+  if(!mDragEl)return;
+  e.preventDefault();
+  const p=e.touches?e.touches[0]:e;
+  mDragEl.style.position='fixed';mDragEl.style.zIndex=999;
+  mDragEl.style.left=(p.clientX-48)+'px';mDragEl.style.top=(p.clientY-24)+'px';
+  // 高亮悬停的释义区
+  document.querySelectorAll('.match-def').forEach(d=>d.classList.remove('over'));
+  const tgt=dropTargetAt(p.clientX,p.clientY);
+  if(tgt&&!tgt.classList.contains('correct'))tgt.classList.add('over');
+}
+function dropTargetAt(x,y){
+  const els=document.elementsFromPoint(x,y);
+  for(const el of els){const d=el.closest&&el.closest('.match-def');if(d)return d;}
+  return null;
+}
+function mEnd(e){
+  if(!mDragEl)return;
+  const p=e.changedTouches?e.changedTouches[0]:e;
+  const tgt=dropTargetAt(p.clientX,p.clientY);
+  const word=mDragEl.dataset.word;
+  // 复位样式
+  mDragEl.style.position='';mDragEl.style.left='';mDragEl.style.top='';mDragEl.style.zIndex='';
+  mDragEl.classList.remove('dragging');
+  document.querySelectorAll('.match-def').forEach(d=>d.classList.remove('over'));
+  document.removeEventListener('mousemove',mMove);
+  document.removeEventListener('touchmove',mMove);
+  document.removeEventListener('mouseup',mEnd);
+  document.removeEventListener('touchend',mEnd);
+
+  if(tgt && !tgt.classList.contains('correct')){
+    if(tgt.dataset.answer===word){
+      // 正确：词放进slot，锁定
+      const slot=tgt.querySelector('.drop-slot');
+      slot.innerText=word;
+      tgt.classList.add('correct');
+      mDragEl.classList.add('placed');
+      addScore(1);
+      matchRemaining--;
+      if(matchRemaining<=0){
+        showFeedbackRight('全对！太厉害了！');
+        setTimeout(()=>{advanceAfterQuiz();},1200);
+      }
+    }else{
+      // 错误：抖动提示，可重拖
+      tgt.classList.add('wrong-shake');
+      setTimeout(()=>tgt.classList.remove('wrong-shake'),350);
+      triggerFeedback(false,'再想想！');
+    }
+  }
+  mDragEl=null;
+}
+// 配对/选择题结束后，进入下一题（抽取自原 handleAnswer 的推进逻辑）
+function advanceAfterQuiz(){
+  window.speechSynthesis.cancel();
+  document.getElementById('matchPanel').classList.remove('show');
+  document.getElementById('matchPanel').style.display='none';
+  consecutiveCorrect++;checkAchievements();
+  currentWordIndex++;
+  if(currentWordIndex<currentSet.length){loadWord();}
+  else{
+    const sel=getCurrentSelUnits();
+    const poolKey='pool_'+sel.join('_');
+    refillPool(poolKey,sel);
+    const n=Math.min(10,unitPlayQueue[poolKey].length);
+    currentSet=unitPlayQueue[poolKey].splice(0,n);
+    currentPoolKey=poolKey;currentWordIndex=0;loadWord();
+  }
+}
+function handleAnswer(btn,isCorrect){
+  if(btn.classList.contains('correct')||btn.classList.contains('wrong'))return;
+  if(isCorrect){
+    btn.classList.add('correct');addScore(1);
+    consecutiveCorrect++;checkAchievements();
+    showFeedbackRight('帅爆了，再来！');
+    setTimeout(()=>{
+      window.speechSynthesis.cancel();
+      currentWordIndex++;
+      if(currentWordIndex<currentSet.length){loadWord();}
+      else{
+        const sel=getCurrentSelUnits();
+        const poolKey='pool_'+sel.join('_');
+        refillPool(poolKey,sel);
+        const n=Math.min(10,unitPlayQueue[poolKey].length);
+        currentSet=unitPlayQueue[poolKey].splice(0,n);
+        currentPoolKey=poolKey;currentWordIndex=0;loadWord();
+      }
+    },1100);
+  }else{
+    btn.classList.add('wrong');addScore(-1);resetCombo();consecutiveCorrect=0;
+    const uk=currentSet[currentWordIndex]._unit||getCurrentSelUnits()[0];
+    recordWrong(uk,currentSet[currentWordIndex].w,currentSet[currentWordIndex]);
+    triggerFeedback(false,'再试一下！');
+  }
+}
+function triggerFeedback(ok,txt){
+  const fb=document.getElementById('feedbackMsg'),ft=document.getElementById('fbText');
+  ft.innerText=txt;ft.style.color=ok?'var(--green)':'var(--red)';
+  speakText(txt.replace(/[^a-zA-Z一-龥]/g,''));
+  fb.style.display='block';setTimeout(()=>fb.style.display='none',1500);
+}
+function speakText(txt){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.lang='zh-CN';window.speechSynthesis.speak(u);}
+
+// ═══════════════════════════════════════════════════════════
+//  老师管理
+// ═══════════════════════════════════════════════════════════
+function getOrCreateCode(){
+  let code=ls.get('hzld_classcode');
+  if(!code){code=Math.random().toString(36).substr(2,6).toUpperCase();ls.set('hzld_classcode',code);}
+  return code;
+}
+function genNewCode(){
+  const code=Math.random().toString(36).substr(2,6).toUpperCase();
+  ls.set('hzld_classcode',code);
+  document.getElementById('classCode').innerText=code;
+}
+function copyClassCode(){
+  const code=document.getElementById('classCode').innerText;
+  navigator.clipboard.writeText('班级码：'+code).then(()=>{
+    const btn=document.querySelector('.copy-btn');
+    btn.innerText='✅ 已复制！';setTimeout(()=>{btn.innerText='📋 复制班级码';},2000);
+  }).catch(()=>alert('班级码：'+code));
+}
+function renderTeacher(){
+  // 班级码
+  document.getElementById('classCode').innerText=getOrCreateCode();
+  // 错误率最高的字（前6个）
+  const errs=ls.get(SK.errors)||{};
+  const row=document.getElementById('topErrorsRow');
+  const entries=Object.entries(errs).sort((a,b)=>b[1].count-a[1].count).slice(0,6);
+  if(entries.length===0){
+    row.innerHTML='<div style="color:#b2bec3;font-size:13px">暂无数据，请先开始游戏</div>';
+  }else{
+    row.innerHTML=entries.map(([k,v])=>
+      `<div class="top-err-chip"><span>${v.data.w}</span><div><div style="font-size:11px">${v.data.py}</div><div class="top-err-cnt">错${v.count}次</div></div></div>`
+    ).join('');
+  }
+  // 听写清单
+  const sel=getCurrentSelUnits();
+  const words=sel.flatMap(u=>wordBank[u]||[]);
+  const list=document.getElementById('dictationList');
+  list.innerHTML=words.map((item,i)=>
+    `<li class="dictation-item"><span class="dictation-num">${i+1}.</span><span class="dictation-char">${item.w}</span><span class="dictation-py">${item.py}　${item.vocab}</span></li>`
+  ).join('');
+}
+function copyDictation(){
+  const gradeKey=document.getElementById('gradeSelect').value;
+  const grade=gradeKey==='S1'?'中一':'中二';
+  const sel=getCurrentSelUnits();
+  const words=sel.flatMap(u=>wordBank[u]||[]);
+  // 范围名称：若选了具体某课则显示课名，否则按单元
+  let rangeName;
+  if(currentLessonKey&&currentLessonKey!=='all'){
+    const pk=parseUnitKey(currentLessonKey);
+    rangeName='单元'+unitNumLabel(pk.unitNum)+LESSON_NAMES[pk.lessonNum];
+  }else{
+    const unitNums=[...new Set(sel.map(u=>parseUnitKey(u).unitNum))].sort((a,b)=>a-b);
+    rangeName=unitNums.map(n=>'单元'+unitNumLabel(n)).join('、');
+  }
+  const text=`【${grade}${rangeName}听写清单】\n`+words.map((item,i)=>`${i+1}. ${item.w}（${item.py}）— ${item.vocab}`).join('\n');
+  navigator.clipboard.writeText(text).then(()=>alert('✅ 已复制！可直接粘贴到家长群')).catch(()=>alert(text));
+}
+
+// ═══════════════════════════════════════════════════════════
+//  侧边反馈文字
+// ═══════════════════════════════════════════════════════════
+function showFeedbackLeft(txt){
+  const el=document.getElementById('feedbackLeft');
+  el.innerText=txt;
+  el.className='feedback-left-side feedback-side-anim';
+  el.style.display='block';
+  speakText(txt.replace(/[^a-zA-Z\u4e00-\u9fa5]/g,''));
+  setTimeout(()=>{el.style.display='none';el.className='feedback-left-side';},1600);
+}
+function showFeedbackRight(txt){
+  const el=document.getElementById('feedbackRight');
+  el.innerText=txt;
+  el.className='feedback-right-side feedback-side-anim';
+  el.style.display='block';
+  speakText(txt.replace(/[^a-zA-Z\u4e00-\u9fa5]/g,''));
+  spawnParticles(window.innerWidth/2,window.innerHeight*0.45);
+  spawnParticles(window.innerWidth/2-60,window.innerHeight*0.5);
+  spawnParticles(window.innerWidth/2+60,window.innerHeight*0.5);
+  setTimeout(()=>{el.style.display='none';el.className='feedback-right-side';},1900);
+}
+window.onload=()=>{
+  score=ls.get(SK.score)||0;
+  document.getElementById('scoreVal').innerText=score;
+  checkPlayerName();updateUnits();updateErrorBadge();
+};
+</script>
+</body>
+</html>

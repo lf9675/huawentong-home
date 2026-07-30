@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>词语闯关 · 《培养好习惯》</title>
+<style>
+:root {
+  --sky: #6db8e8;
+  --sky-soft: #d6ecf7;
+  --sky-deep: #4a9bd1;
+  --mint: #7dceb4;
+  --mint-soft: #e0f5ee;
+  --mint-deep: #56b094;
+  --orange: #f5a85c;
+  --orange-soft: #fde4ce;
+  --orange-deep: #e88e3a;
+  --coral: #f08080;
+  --coral-soft: #fce0e0;
+  --bg: #fafbf6;
+  --ink: #34495e;
+  --ink-soft: #7a8b9c;
+  --line: #e8ecef;
+  --gold: #ffc857;
+  --shadow: rgba(74, 155, 209, 0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(109, 184, 232, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(125, 206, 180, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(245, 168, 92, 0.04) 0%, transparent 60%);
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 20px 14px;
+  line-height: 1.6;
+}
+
+.container { max-width: 720px; margin: 0 auto; }
+
+/* ==================== Header ==================== */
+.header { text-align: center; padding: 20px 16px 24px; margin-bottom: 20px; }
+
+.title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  padding: 12px 28px;
+  border-radius: 100px;
+  box-shadow: 0 4px 16px var(--shadow);
+}
+
+.title-emoji { font-size: 28px; }
+.title-text { font-size: 22px; font-weight: 700; color: var(--sky-deep); letter-spacing: 2px; }
+.subtitle { font-size: 13px; color: var(--ink-soft); margin-top: 12px; letter-spacing: 1px; }
+
+/* ==================== Stats Bar ==================== */
+.stats-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+
+.stat-card {
+  flex: 1;
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px 14px;
+  text-align: center;
+  box-shadow: 0 2px 8px var(--shadow);
+  border: 2px solid transparent;
+  transition: transform 0.2s;
+}
+.stat-card:hover { transform: translateY(-2px); }
+.stat-emoji { font-size: 22px; margin-bottom: 4px; }
+.stat-num { font-size: 22px; font-weight: 700; color: var(--sky-deep); }
+.stat-label { font-size: 11px; color: var(--ink-soft); letter-spacing: 1px; }
+.stat-card.stars .stat-num { color: var(--orange-deep); }
+.stat-card.words .stat-num { color: var(--mint-deep); }
+
+/* ==================== Progress ==================== */
+.progress-wrap {
+  background: #fff;
+  border-radius: 100px;
+  height: 12px;
+  margin-bottom: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);
+  border: 1px solid var(--line);
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--sky) 0%, var(--mint) 50%, var(--orange) 100%);
+  width: 0%;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border-radius: 100px;
+}
+.progress-text { font-size: 12px; color: var(--ink-soft); text-align: right; margin-bottom: 18px; letter-spacing: 1px; }
+
+/* ==================== Step Indicator ==================== */
+.step-indicator { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+
+.step-dot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  border: 2px solid var(--line);
+  transition: all 0.3s;
+}
+
+.step-dot .step-circle {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.step-dot.active { border-color: var(--sky); color: var(--sky-deep); background: var(--sky-soft); }
+.step-dot.active .step-circle { background: var(--sky); }
+.step-dot.done { border-color: var(--mint); color: var(--mint-deep); background: var(--mint-soft); }
+.step-dot.done .step-circle { background: var(--mint); }
+.step-dot.done .step-circle::before { content: "✓"; }
+.step-dot.done .step-circle .step-num { display: none; }
+
+/* ==================== Card ==================== */
+.card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px 22px;
+  box-shadow: 0 4px 20px var(--shadow);
+  margin-bottom: 16px;
+  animation: cardIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.word-header { text-align: center; margin-bottom: 18px; }
+
+.word-display {
+  display: inline-block;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--ink);
+  background: linear-gradient(135deg, var(--sky-soft) 0%, var(--mint-soft) 100%);
+  padding: 14px 32px;
+  border-radius: 16px;
+  letter-spacing: 4px;
+  margin-bottom: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.word-display:hover { transform: scale(1.03); box-shadow: 0 4px 16px var(--shadow); }
+.word-display:active { transform: scale(0.98); }
+
+.word-display::after {
+  content: "🔊";
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  background: var(--orange);
+  color: #fff;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(245, 168, 92, 0.4);
+}
+
+.word-display .pinyin {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--sky-deep);
+  background: #fff;
+  padding: 2px 12px;
+  border-radius: 100px;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+.step-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--sky-deep);
+  background: var(--sky-soft);
+  padding: 4px 12px;
+  border-radius: 100px;
+  letter-spacing: 1px;
+}
+
+/* ==================== Scene Illustration ==================== */
+.scene-box {
+  background: linear-gradient(135deg, #fffbf2 0%, #f2f9ff 100%);
+  border-radius: 16px;
+  padding: 24px 20px;
+  margin: 18px 0;
+  text-align: center;
+  border: 2px dashed var(--orange-soft);
+  position: relative;
+}
+
+.scene-emojis { font-size: 56px; line-height: 1.2; margin-bottom: 10px; letter-spacing: 4px; }
+.scene-caption { font-size: 15px; color: var(--ink); font-weight: 500; letter-spacing: 1px; margin-top: 6px; }
+
+.scene-caption .speech {
+  display: inline-block;
+  background: #fff;
+  padding: 4px 12px;
+  border-radius: 12px;
+  margin: 0 4px;
+  font-size: 14px;
+  color: var(--coral);
+  box-shadow: 0 2px 6px rgba(240, 128, 128, 0.15);
+}
+
+/* ==================== Question ==================== */
+.q-prompt-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 14px;
+  justify-content: center;
+}
+
+.q-prompt {
+  font-size: 16px;
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.speak-btn {
+  background: var(--sky-soft);
+  border: none;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s;
+  color: var(--sky-deep);
+  flex-shrink: 0;
+}
+.speak-btn:hover { background: var(--sky); color: #fff; transform: scale(1.1); }
+.speak-btn:active { transform: scale(0.95); }
+.speak-btn.speaking { background: var(--orange); color: #fff; animation: pulse 1s ease infinite; }
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.options { display: flex; flex-direction: column; gap: 10px; }
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 14px;
+  background: #fff;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 15px;
+  line-height: 1.6;
+  font-family: inherit;
+  text-align: left;
+  width: 100%;
+  color: var(--ink);
+}
+
+.option:hover:not(.disabled) {
+  background: var(--sky-soft);
+  border-color: var(--sky);
+  transform: translateX(4px);
+}
+.option:active:not(.disabled) { transform: scale(0.98); }
+
+.option-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--sky-soft);
+  color: var(--sky-deep);
+  font-weight: 700;
+  flex-shrink: 0;
+  font-size: 13px;
+}
+
+.option-text { flex: 1; padding-top: 3px; }
+
+.option-text u {
+  color: var(--orange-deep);
+  text-decoration-color: var(--orange);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+.option-speak {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 6px;
+  border-radius: 8px;
+  color: var(--ink-soft);
+  flex-shrink: 0;
+  transition: all 0.2s;
+  margin-top: 2px;
+}
+.option-speak:hover { background: var(--sky-soft); color: var(--sky-deep); }
+.option-speak.speaking { color: var(--orange-deep); animation: pulse 1s ease infinite; }
+
+.option.disabled { cursor: default; }
+.option.disabled:hover { transform: none; }
+
+.option.correct { background: var(--mint-soft); border-color: var(--mint); animation: correctPulse 0.5s ease; }
+.option.correct .option-label { background: var(--mint); color: #fff; }
+
+@keyframes correctPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.option.wrong { background: var(--coral-soft); border-color: var(--coral); animation: shake 0.4s ease; }
+.option.wrong .option-label { background: var(--coral); color: #fff; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+/* ==================== Feedback ==================== */
+.feedback {
+  margin-top: 16px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.7;
+  display: none;
+  animation: fbIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+@keyframes fbIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.feedback.show { display: block; }
+.feedback.correct-fb { background: var(--mint-soft); border-left: 4px solid var(--mint); }
+.feedback.wrong-fb { background: var(--coral-soft); border-left: 4px solid var(--coral); }
+
+.fb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.fb-title { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 6px; }
+.correct-fb .fb-title { color: var(--mint-deep); }
+.wrong-fb .fb-title { color: var(--coral); }
+
+.fb-speak {
+  background: #fff;
+  border: 1.5px solid var(--orange);
+  color: var(--orange-deep);
+  padding: 6px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-weight: 600;
+}
+.fb-speak:hover { background: var(--orange); color: #fff; }
+.fb-speak.speaking { background: var(--orange); color: #fff; animation: pulse 1s ease infinite; }
+
+.fb-row { margin-top: 8px; font-size: 14px; }
+.fb-row strong { color: var(--orange-deep); }
+
+.fb-remember {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.7);
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--ink);
+  border: 1px dashed var(--orange);
+}
+.fb-remember strong { color: var(--orange-deep); }
+
+/* ==================== Buttons ==================== */
+.btn-row { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+
+.btn {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-family: inherit;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all 0.2s;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(74, 155, 209, 0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(74, 155, 209, 0.4); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { background: #c4cdd5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-success {
+  background: linear-gradient(135deg, var(--mint) 0%, var(--mint-deep) 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(86, 176, 148, 0.3);
+}
+.btn-success:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(86, 176, 148, 0.4); }
+
+/* ==================== Star Win ==================== */
+.star-burst {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 80px;
+  pointer-events: none;
+  z-index: 1000;
+  animation: starBurst 1.5s ease-out forwards;
+}
+
+@keyframes starBurst {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(0); }
+  30% { opacity: 1; transform: translate(-50%, -50%) scale(1.4) rotate(20deg); }
+  70% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(-10deg); }
+  100% { opacity: 0; transform: translate(-50%, -150%) scale(0.8) rotate(0); }
+}
+
+/* ==================== Confetti ==================== */
+.confetti-piece {
+  position: fixed;
+  width: 10px; height: 10px;
+  top: -20px;
+  pointer-events: none;
+  z-index: 999;
+  animation: confettiFall 2.5s ease-out forwards;
+}
+
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translateY(0) rotate(0); }
+  100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+}
+
+/* ==================== Word Complete ==================== */
+.word-complete {
+  background: linear-gradient(135deg, var(--orange-soft) 0%, #fff8e7 100%);
+  border-radius: 20px;
+  padding: 30px 24px;
+  text-align: center;
+  border: 3px solid var(--orange);
+  animation: cardIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.word-complete-emoji { font-size: 60px; margin-bottom: 12px; animation: bounce 1s ease infinite; }
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.word-complete-title { font-size: 24px; font-weight: 700; color: var(--orange-deep); margin-bottom: 6px; }
+.word-complete-word { font-size: 28px; color: var(--ink); font-weight: 700; margin: 10px 0; letter-spacing: 4px; }
+.word-complete-stars { font-size: 32px; margin: 10px 0; letter-spacing: 8px; }
+.word-complete-msg { font-size: 14px; color: var(--ink-soft); margin: 12px 0 20px; }
+
+/* ==================== Gallery ==================== */
+.gallery { display: none; }
+.gallery.show { display: block; }
+
+.gallery-header {
+  text-align: center;
+  padding: 30px 16px;
+  background: linear-gradient(135deg, var(--sky-soft) 0%, var(--mint-soft) 50%, var(--orange-soft) 100%);
+  border-radius: 24px;
+  margin-bottom: 24px;
+}
+
+.gallery-emoji { font-size: 56px; margin-bottom: 8px; }
+.gallery-title { font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: 3px; margin-bottom: 6px; }
+.gallery-stats { font-size: 14px; color: var(--ink-soft); letter-spacing: 1px; margin-top: 8px; }
+.gallery-stats strong { color: var(--orange-deep); font-size: 18px; margin: 0 4px; }
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.gallery-item {
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 3px 10px var(--shadow);
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.gallery-item:hover { transform: translateY(-3px); border-color: var(--sky); }
+.gallery-item.perfect { border-color: var(--gold); background: linear-gradient(135deg, #fff 0%, #fffbf0 100%); }
+
+.gallery-word { font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 4px; letter-spacing: 1px; }
+.gallery-stars { font-size: 14px; margin-bottom: 6px; letter-spacing: 2px; }
+.gallery-tip { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+
+.gallery-final-msg {
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink);
+  box-shadow: 0 3px 10px var(--shadow);
+  margin-bottom: 16px;
+}
+
+/* ==================== Voice Status Toast ==================== */
+.voice-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(52, 73, 94, 0.92);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 13px;
+  z-index: 2000;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.voice-toast.show { opacity: 1; }
+
+/* ==================== Mobile ==================== */
+@media (max-width: 480px) {
+  .gallery-grid { grid-template-columns: 1fr; }
+  .word-display { font-size: 28px; padding: 12px 24px; letter-spacing: 2px; }
+  .scene-emojis { font-size: 44px; }
+  .title-text { font-size: 18px; }
+  .step-dot { font-size: 11px; padding: 5px 10px; }
+  .stat-num { font-size: 18px; }
+  .stat-emoji { font-size: 18px; }
+  .option { font-size: 14px; padding: 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="header">
+    <div class="title-row">
+      <span class="title-emoji">📖</span>
+      <span class="title-text">词语闯关</span>
+      <span class="title-emoji">✨</span>
+    </div>
+    <div class="subtitle">《培养好习惯》· 共 16 个词语 · 加油！</div>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat-card words">
+      <div class="stat-emoji">📚</div>
+      <div class="stat-num" id="words-done">0</div>
+      <div class="stat-label">已学词语</div>
+    </div>
+    <div class="stat-card stars">
+      <div class="stat-emoji">⭐</div>
+      <div class="stat-num" id="stars-earned">0</div>
+      <div class="stat-label">收集星星</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-emoji">🎯</div>
+      <div class="stat-num" id="accuracy">--</div>
+      <div class="stat-label">正确率%</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+  <div class="progress-text" id="progress-text">第 1 题</div>
+
+  <div id="game-area"></div>
+  <div class="gallery" id="gallery"></div>
+</div>
+
+<div class="voice-toast" id="voice-toast"></div>
+
+<script>
+// =============================================================
+// 词语题库（V3 · 按教师修订版）
+// =============================================================
+const wordsData = [
+  // ============ 难词 1：一寸光阴一寸金 ============
+  {
+    word: "一寸光阴一寸金",
+    pinyin: "yí cùn guāng yīn yí cùn jīn",
+    difficulty: "hard",
+    meaning: {
+      scene: "⏰ 📚 ⏳",
+      caption: "时间一去不复返",
+      prompt: "「一寸光阴一寸金」最可能是什么意思？",
+      options: ["时间和金子一样宝贵", "时间可以换来金钱", "黄金的体积越小越值钱"],
+      correct: 0,
+      tip: "「光阴」是时间的意思，整句话用「金子」来比喻时间的宝贵。"
+    },
+    usage: {
+      prompt: "下面哪个场合，最适合用「一寸光阴一寸金」？",
+      options: ["劝同学不要浪费时间，要好好读书", "形容做生意要懂得抓住赚钱的机会", "形容黄金价格不断上涨，要趁早买入"],
+      correct: 0,
+      tip: "这个成语只用在劝人「珍惜时间」的场合。"
+    },
+    trap: {
+      prompt: "下面哪一句用得最恰当？",
+      options: [
+        "他打工赚了不少钱，真是<u>一寸光阴一寸金</u>。",
+        "<u>一寸光阴一寸金</u>，我们要好好利用每一分每一秒。",
+        "这块手表又贵又精致，真是<u>一寸光阴一寸金</u>。"
+      ],
+      correct: 1,
+      whyCorrect: "B 句用来劝人珍惜时间，正是这个成语的本意。",
+      whyWrong: "A 句把它用在「赚钱」上，跟时间没有直接关系；C 句把「金」误解成黄金，是望文生义。",
+      remember: "只用在「劝人珍惜时间」的场合，不能形容物品贵重或赚钱。"
+    }
+  },
+
+  // ============ 难词 2：一诺千金 ============
+  {
+    word: "一诺千金",
+    pinyin: "yí nuò qiān jīn",
+    difficulty: "hard",
+    meaning: {
+      scene: "🤝 💰",
+      caption: "「我答应你」",
+      prompt: "「一诺千金」描述的是什么样的人？",
+      options: ["说话算话，承诺一定做到", "出手大方，舍得花钱帮人", "不轻易答应别人请求"],
+      correct: 0,
+      tip: "「诺」是承诺，「千金」形容承诺的分量很重。"
+    },
+    usage: {
+      prompt: "下面哪个场合，最适合用「一诺千金」？",
+      options: ["朋友答应帮忙，但临时有事来不了", "商人答应投资一千万，按时把钱汇到", "妈妈每个月都按时给我零用钱"],
+      correct: 1,
+      tip: "这个成语用在「重要的承诺，并且做到」的场合。"
+    },
+    trap: {
+      prompt: "下面哪一句最自然？",
+      options: [
+        "我答应妈妈洗一次碗就做到了，真是<u>一诺千金</u>。",
+        "他答应了的事一定办到，朋友都说他<u>一诺千金</u>。",
+        "这家银行讲信用，存款利息<u>一诺千金</u>。"
+      ],
+      correct: 1,
+      whyCorrect: "B 句用来形容一个人在重要承诺上说话算话，符合「分量重」的语感。",
+      whyWrong: "A 句把它用在「洗一次碗」这种小事上，「大词小用」显得夸张；C 句的「利息」不是承诺，不能搭配。",
+      remember: "用在「分量重」的承诺上，小事用了反而显得夸张。"
+    }
+  },
+
+  // ============ 难词 3：言出必行 ============
+  {
+    word: "言出必行",
+    pinyin: "yán chū bì xíng",
+    difficulty: "hard",
+    meaning: {
+      scene: "🗣️ ➡️ ✅",
+      caption: "说出来 → 一定做到",
+      prompt: "「言出必行」是什么意思？",
+      options: ["想到什么就说什么，很直爽", "说了就一定要做到", "说话和做事都很果断"],
+      correct: 1,
+      tip: "「言」是说话，「行」是行动，「必」是一定。说了 → 必须 → 做到。"
+    },
+    usage: {
+      prompt: "「言出必行」用来形容什么？",
+      options: ["一个人的品格", "一个人的口才", "一个人办事的速度"],
+      correct: 0,
+      tip: "这个成语专门形容「人的品格」，主语必须是人。"
+    },
+    trap: {
+      prompt: "下面哪一句不通顺？",
+      options: [
+        "做人要<u>言出必行</u>，答应别人的事一定要做到。",
+        "他是个<u>言出必行</u>的人，从不食言。",
+        "这家公司的广告<u>言出必行</u>，说的都能实现。"
+      ],
+      correct: 2,
+      whyCorrect: "C 句不通顺。「言出必行」只能形容人的品格，不能形容公司或广告。",
+      whyWrong: "A、B 两句都形容人的诚信，搭配正确。",
+      remember: "主语必须是「人」，不能用在公司、广告、物品上。"
+    }
+  },
+
+  // ============ 难词 4：起码 ============
+  {
+    word: "起码",
+    pinyin: "qǐ mǎ",
+    difficulty: "hard",
+    meaning: {
+      scene: "📏 ⬇️",
+      caption: "「至少要这么多」",
+      prompt: "「起码」是什么意思？",
+      options: ["大概的数量", "最低的标准", "刚刚好的程度"],
+      correct: 1,
+      tip: "「起码」= 至少 = 最低限度。"
+    },
+    usage: {
+      prompt: "下面哪个场合最适合用「起码」？",
+      options: ["说一个估计的、不太确定的数字", "说一个最低的要求或数量", "说一个不能超过的上限"],
+      correct: 1,
+      tip: "「起码」常用来说「至少要……」「至少有……」。"
+    },
+    trap: {
+      prompt: "哪一句用得最恰当？",
+      options: [
+        "这次考试我<u>起码</u>能考到一百分。",
+        "做人<u>起码</u>要诚实，这是最基本的要求。",
+        "他的身高<u>起码</u>不能超过一米七。"
+      ],
+      correct: 1,
+      whyCorrect: "B 句用「起码」表示「最低限度」，符合词义。",
+      whyWrong: "A 句「起码」表最低值，配「一百分」（最高分）逻辑矛盾；C 句「起码」是下限，不能配「不能超过」（上限）。",
+      remember: "「起码」是下限，后面常接「要……」这种表底线的话。"
+    }
+  },
+
+  // ============ 难词 5：开卷有益 ============
+  {
+    word: "开卷有益",
+    pinyin: "kāi juàn yǒu yì",
+    difficulty: "hard",
+    meaning: {
+      scene: "📖 ➕ ✨",
+      caption: "打开书 → 有好处",
+      prompt: "「开卷有益」是什么意思？",
+      options: ["读书一定要有收获才值得", "读书一定有好处", "多读书才能考好成绩"],
+      correct: 1,
+      tip: "「卷」在古代是「书卷」，整个成语是说「读书本身就有好处」。"
+    },
+    usage: {
+      prompt: "「开卷有益」最适合用在什么场合？",
+      options: ["鼓励别人多读书", "鼓励别人认真做笔记", "鼓励别人多向老师请教"],
+      correct: 0,
+      tip: "这个成语只用来「鼓励读书」。"
+    },
+    trap: {
+      prompt: "下面哪一句意思最准确？",
+      options: [
+        "这本书我读了三遍才懂，真是<u>开卷有益</u>。",
+        "妈妈鼓励我多读课外书，因为<u>开卷有益</u>。",
+        "他看了一部电影，学到很多道理，真是<u>开卷有益</u>。"
+      ],
+      correct: 1,
+      whyCorrect: "B 句用来鼓励读书，正是这个成语的本意。",
+      whyWrong: "A 句强调「读多遍才懂」，跟「开卷有益」的「读书就有好处」不一样；C 句「开卷」特指读书，不能用在看电影上。",
+      remember: "「卷」= 书卷。只用在「读书」的语境，不能用在看电影、看视频上。"
+    }
+  },
+
+  // ============ 难词 6：新颖 ============
+  {
+    word: "新颖",
+    pinyin: "xīn yǐng",
+    difficulty: "hard",
+    meaning: {
+      scene: "💡 ✨ 🌟",
+      caption: "想法很特别",
+      prompt: "「新颖」是什么意思？",
+      options: ["全新的、没用过的", "新的又有独特之处", "最近才出现的、流行的"],
+      correct: 1,
+      tip: "「新颖」不只是「新」，还要「与众不同」。"
+    },
+    usage: {
+      prompt: "下面哪个最适合用「新颖」形容？",
+      options: ["一辆刚出厂的新车", "一个从来没人想过的设计", "一款最近很流行的手机"],
+      correct: 1,
+      tip: "「新颖」要有「独特、不一样」的意思，不只是「新」或「流行」。"
+    },
+    trap: {
+      prompt: "下面哪一句最自然？",
+      options: [
+        "我买了一支<u>新颖</u>的铅笔，是昨天新出的。",
+        "他的设计很<u>新颖</u>，跟别人的都不一样。",
+        "这款手机很<u>新颖</u>，全国都在卖。"
+      ],
+      correct: 1,
+      whyCorrect: "B 句形容「设计与众不同」，搭配自然。",
+      whyWrong: "A 句把「新颖」当成「新」用——「新」只是时间上的新；C 句「全国都在卖」是「流行」，不是「新颖」。",
+      remember: "新 ≠ 新颖。流行 ≠ 新颖。新颖 = 新 + 独特。"
+    }
+  },
+
+  // ============ 难词 7：尴尬 ============
+  {
+    word: "尴尬",
+    pinyin: "gān gà",
+    difficulty: "hard",
+    meaning: {
+      scene: "😅 🙈",
+      caption: "「这下怎么办……」",
+      prompt: "「尴尬」是什么感觉？",
+      options: ["很委屈，想哭", "处境为难，不好处理", "很害羞，脸红"],
+      correct: 1,
+      tip: "尴尬是一种「不知道怎么办、进退两难」的感觉，跟「害羞」不一样。"
+    },
+    usage: {
+      prompt: "下面哪个最容易让人「尴尬」？",
+      options: ["在大家面前喊错了老师的名字", "上台领奖时被同学拍照", "第一次和喜欢的人说话"],
+      correct: 0,
+      tip: "「尴尬」是「进退两难、不知如何收场」，跟「害羞」「紧张」不同。"
+    },
+    trap: {
+      prompt: "下面哪一句最恰当？",
+      options: [
+        "他在大家面前喊错了老师的名字，场面非常<u>尴尬</u>。",
+        "第一次上台演讲，我紧张得很<u>尴尬</u>。",
+        "被老师夸奖时，我害羞地觉得很<u>尴尬</u>。"
+      ],
+      correct: 0,
+      whyCorrect: "A 句的「尴尬」用在「人际场合不好收场」，完全贴合词义。",
+      whyWrong: "B 句应该用「紧张」，紧张不等于尴尬；C 句应该用「害羞」，害羞也不等于尴尬。",
+      remember: "尴尬 ≠ 紧张 ≠ 害羞。尴尬是「进退两难、不知怎么收场」。"
+    }
+  },
+
+  // ============ 难词 8：维护 ============
+  {
+    word: "维护",
+    pinyin: "wéi hù",
+    difficulty: "hard",
+    meaning: {
+      scene: "🛡️ 🏆",
+      caption: "保住荣誉、和平",
+      prompt: "「维护」是什么意思？",
+      options: ["帮某个人挡住伤害", "维持和保护某种状态", "让一件事变得更好"],
+      correct: 1,
+      tip: "「维」是维持，「护」是保护。维护的对象一般是抽象的状态。"
+    },
+    usage: {
+      prompt: "下面哪个最适合用「维护」？",
+      options: ["保护小弟弟不被狗咬到", "保住班级的荣誉", "帮助同学解决数学难题"],
+      correct: 1,
+      tip: "「维护」的对象通常是抽象的：荣誉、秩序、形象、利益。"
+    },
+    trap: {
+      prompt: "下面哪一句搭配最自然？",
+      options: [
+        "哥哥<u>维护</u>弟弟，不让别人欺负他。",
+        "我们要<u>维护</u>班级的荣誉，不能给班级丢脸。",
+        "妈妈每天<u>维护</u>我的健康，给我做营养餐。"
+      ],
+      correct: 1,
+      whyCorrect: "B 句「维护荣誉」是固定搭配，用在抽象事物上最自然。",
+      whyWrong: "A 句应该用「保护」——维护一般不直接接「人」；C 句应该用「照顾」——「维护健康」搭配也奇怪。",
+      remember: "维护 → 抽象（荣誉、和平、权益）。保护人/物用「保护」。照顾人用「照顾」。"
+    }
+  },
+
+  // ============ 难词 9：一帆风顺 ============
+  {
+    word: "一帆风顺",
+    pinyin: "yì fān fēng shùn",
+    difficulty: "hard",
+    meaning: {
+      scene: "⛵ 🌬️ ✨",
+      caption: "船顺风行驶",
+      prompt: "「一帆风顺」是什么意思？",
+      options: ["做事很有运气，能碰上好机会", "事情进行得很顺利", "做事不用花力气就能成功"],
+      correct: 1,
+      tip: "核心是「过程顺利、没遇到阻碍」，不是强调运气或轻松。"
+    },
+    usage: {
+      prompt: "「一帆风顺」用在什么样的结果上？",
+      options: ["经过努力，最后克服了困难", "整个过程都很顺利，没有困难", "一开始很难，后来突然变顺利"],
+      correct: 1,
+      tip: "「一帆风顺」要求「从头到尾都顺」，中间不能有困难或转折。"
+    },
+    trap: {
+      prompt: "下面哪一句不太恰当？",
+      options: [
+        "祝你新的一年<u>一帆风顺</u>，万事如意。",
+        "他的事业<u>一帆风顺</u>，几年就升到了经理。",
+        "我经过千辛万苦，终于<u>一帆风顺</u>地完成了任务。"
+      ],
+      correct: 2,
+      whyCorrect: "C 句前后矛盾——「千辛万苦」是经历困难，「一帆风顺」是过程顺利，两者冲突。",
+      whyWrong: "A 是祝福语，B 是典型顺利描述，都没有问题。",
+      remember: "「一帆风顺」要求从头到尾都顺，不能跟「千辛万苦」「克服困难」一起用。"
+    }
+  },
+
+  // ============ 难词 10：有效 ============
+  {
+    word: "有效",
+    pinyin: "yǒu xiào",
+    difficulty: "hard",
+    meaning: {
+      scene: "💊 ✅",
+      caption: "「这药真管用」",
+      prompt: "「有效」是什么意思？",
+      options: ["做事动作很快，效率高", "能起作用，达到目的", "效果让人很满意"],
+      correct: 1,
+      tip: "「有效」= 有效果 = 起作用。注意：和「高效」不一样。"
+    },
+    usage: {
+      prompt: "下面哪个最适合用「有效」形容？",
+      options: ["一个工作的人", "一种学习方法", "一种漂亮的衣服"],
+      correct: 1,
+      tip: "「有效」用在抽象工具上：方法、措施、策略、药、办法。"
+    },
+    trap: {
+      prompt: "下面哪一句搭配最自然？",
+      options: [
+        "他做事很<u>有效</u>，半小时就做完了。",
+        "这种方法很<u>有效</u>，三天就把问题解决了。",
+        "这个药很<u>有效</u>，吃起来甜甜的。"
+      ],
+      correct: 1,
+      whyCorrect: "B 句「方法有效」是典型搭配——方法管用，问题解决了。",
+      whyWrong: "A 句应该用「高效」——形容人做事快用「高效」；C 句「有效」指起作用，不指口感。",
+      remember: "形容人做事快用「高效」。形容方法、药管用才用「有效」。"
+    }
+  },
+
+  // ============ 难词 11：策略 ============
+  {
+    word: "策略",
+    pinyin: "cè lüè",
+    difficulty: "hard",
+    meaning: {
+      scene: "♟️ 🧠 🎯",
+      caption: "「该怎么打这局棋？」",
+      prompt: "「策略」是什么意思？",
+      options: ["一时想到的好办法", "为达到目标想出来的整体方法", "做事的具体步骤和顺序"],
+      correct: 1,
+      tip: "策略强调「整体规划」，不是临时点子，也不是具体步骤。"
+    },
+    usage: {
+      prompt: "什么时候最需要「策略」？",
+      options: ["临时被老师叫起来回答问题", "面对强大的对手或挑战", "一个人安静地完成作业"],
+      correct: 1,
+      tip: "「策略」用在「竞争、博弈、对抗」的场合，需要整体规划。"
+    },
+    trap: {
+      prompt: "下面哪一句用得最准确？",
+      options: [
+        "他想了一个<u>策略</u>，决定先做数学作业再做华文。",
+        "面对强大的对手，我们要采取灵活的<u>策略</u>。",
+        "弟弟有<u>策略</u>地把玩具一个一个收好。"
+      ],
+      correct: 1,
+      whyCorrect: "B 句用在「面对强大对手」的场合，是策略的典型用法。",
+      whyWrong: "A 句「先做数学再做华文」只是「顺序」，不到「策略」的程度；C 句收玩具不需要策略，用「有顺序」就够了。",
+      remember: "策略 = 应对挑战或对手的整体计划。日常小事用「方法」「顺序」就好。"
+    }
+  },
+
+  // ============ 简单词 1：戏剧 ============
+  {
+    word: "戏剧",
+    pinyin: "xì jù",
+    difficulty: "easy",
+    trap: {
+      prompt: "下面哪一句搭配正确？",
+      options: [
+        "今天发生的事情很<u>戏剧</u>。",
+        "他正在学校的<u>戏剧</u>社学表演。",
+        "那部电影的结局太<u>戏剧</u>了，让人意想不到。"
+      ],
+      correct: 1,
+      whyCorrect: "B 句的「戏剧社」是学习戏剧表演的社团，「戏剧」作名词，搭配正确。",
+      whyWrong: "A、C 两句都把「戏剧」误用作形容词，应该用「戏剧性」。",
+      remember: "「戏剧」是名词。形容「像戏剧一样有起伏」要说「戏剧性」。"
+    }
+  },
+
+  // ============ 简单词 2：工作坊 ============
+  {
+    word: "工作坊",
+    pinyin: "gōng zuò fáng",
+    difficulty: "easy",
+    trap: {
+      prompt: "下面哪一句最贴近现代用法？",
+      options: [
+        "爷爷的<u>工作坊</u>里有很多木工工具，他在那里做家具。",
+        "学校举办了一个写作<u>工作坊</u>，让学生学习写作技巧。",
+        "他每天的<u>工作坊</u>就是去公司开会、写报告。"
+      ],
+      correct: 1,
+      whyCorrect: "B 句的「写作工作坊」指一种短期、互动式的培训活动，是 workshop 的现代用法。",
+      whyWrong: "A 句的「工作坊」是传统义（手工作坊、工匠的小作坊）；C 句完全用错，工作坊不是「日常工作」。",
+      remember: "现代「工作坊」= 短期、互动式的培训活动，不是工厂也不是日常工作。"
+    }
+  },
+
+  // ============ 简单词 3：友谊 ============
+  {
+    word: "友谊",
+    pinyin: "yǒu yì",
+    difficulty: "easy",
+    trap: {
+      prompt: "下面哪一句搭配最自然？",
+      options: [
+        "我和他之间有很深的<u>友谊</u>。",
+        "我和妹妹的<u>友谊</u>已经十几年了。",
+        "我和老师的<u>友谊</u>让我学到很多知识。"
+      ],
+      correct: 0,
+      whyCorrect: "A 句用「友谊」描述朋友间的感情，搭配正确。",
+      whyWrong: "B 句姐妹之间是「亲情」，不是「友谊」；C 句师生之间一般说「师生情谊」，不说「友谊」。",
+      remember: "「友谊」专指「朋友之间的感情」。亲属之间用「亲情」，师生之间用「师生情谊」。"
+    }
+  },
+
+  // ============ 简单词 4：嘉宾 ============
+  {
+    word: "嘉宾",
+    pinyin: "jiā bīn",
+    difficulty: "easy",
+    trap: {
+      prompt: "下面哪一句最自然？",
+      options: [
+        "今晚我们家来了几位<u>嘉宾</u>，一起吃晚饭。",
+        "今天的颁奖典礼，<u>嘉宾</u>是著名的科学家王教授。",
+        "餐厅老板把每一位顾客都当作<u>嘉宾</u>来招待。"
+      ],
+      correct: 1,
+      whyCorrect: "B 句用在「正式场合的受邀贵客」上，完全恰当。",
+      whyWrong: "A 句家庭聚会的客人叫「客人」，不叫「嘉宾」；C 句餐厅的人叫「顾客」，不是嘉宾。",
+      remember: "嘉宾 = 正式、公开场合 + 受邀请 + 身份较高。日常用「客人」「顾客」。"
+    }
+  },
+
+  // ============ 简单词 5：辅导员 ============
+  {
+    word: "辅导员",
+    pinyin: "fǔ dǎo yuán",
+    difficulty: "easy",
+    trap: {
+      prompt: "下面哪一句搭配最恰当？",
+      options: [
+        "哥哥每天放学后当我的数学<u>辅导员</u>，帮我补习。",
+        "夏令营的<u>辅导员</u>带我们做游戏，还教我们生活技能。",
+        "妈妈是我学习上最好的<u>辅导员</u>，每天检查我的作业。"
+      ],
+      correct: 1,
+      whyCorrect: "B 句用在「营队中负责指导的人」上，是辅导员的正式用法。",
+      whyWrong: "A 句应该说「辅导老师」或「家教」，不是「辅导员」；C 句妈妈是「家长」，不是辅导员。",
+      remember: "「辅导员」是正式职务，专指营队、社团、学校宿舍里的指导者。"
+    }
+  }
+];
+
+// =============================================================
+// Web Speech API
+// =============================================================
+let speechSynth = window.speechSynthesis;
+let preferredVoice = null;
+let currentUtterance = null;
+let currentSpeakingBtn = null;
+
+function loadVoices() {
+  const voices = speechSynth.getVoices();
+  // 优先级：zh-CN 女声 > zh-CN 任何 > zh-TW 女声 > zh-TW 任何 > 任何中文
+  const isFemale = v => /female|woman|girl|tingting|ting-ting|huihui|yaoyao|xiaoxiao|xiaoyi|kangkang|hanhan|mei-jia|sin-ji|li-mu/i.test(v.name);
+  const zhCN = voices.filter(v => v.lang === 'zh-CN' || v.lang === 'zh_CN' || v.lang.toLowerCase().startsWith('zh-cn'));
+  const zhTW = voices.filter(v => v.lang === 'zh-TW' || v.lang === 'zh_TW' || v.lang.toLowerCase().startsWith('zh-tw'));
+  const zhAny = voices.filter(v => v.lang.toLowerCase().startsWith('zh'));
+
+  preferredVoice =
+    zhCN.find(isFemale) ||
+    zhCN[0] ||
+    zhTW.find(isFemale) ||
+    zhTW[0] ||
+    zhAny.find(isFemale) ||
+    zhAny[0] ||
+    null;
+}
+
+if (speechSynth) {
+  loadVoices();
+  speechSynth.onvoiceschanged = loadVoices;
+}
+
+function stripHtml(html) {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || div.innerText || '';
+}
+
+function showVoiceToast(msg) {
+  const toast = document.getElementById('voice-toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+function speak(text, btn) {
+  if (!speechSynth) {
+    showVoiceToast('您的浏览器不支持语音功能');
+    return;
+  }
+
+  // Stop any current speech
+  if (speechSynth.speaking) {
+    speechSynth.cancel();
+    if (currentSpeakingBtn) {
+      currentSpeakingBtn.classList.remove('speaking');
+    }
+    // If clicking the same button, just stop
+    if (currentSpeakingBtn === btn) {
+      currentSpeakingBtn = null;
+      return;
+    }
+  }
+
+  const cleanText = stripHtml(text);
+  const utterance = new SpeechSynthesisUtterance(cleanText);
+  utterance.lang = 'zh-CN';
+  utterance.rate = 0.9;
+  utterance.pitch = 1.0;
+  utterance.volume = 1.0;
+
+  if (preferredVoice) {
+    utterance.voice = preferredVoice;
+  }
+
+  if (btn) {
+    btn.classList.add('speaking');
+    currentSpeakingBtn = btn;
+  }
+
+  utterance.onend = () => {
+    if (btn) btn.classList.remove('speaking');
+    currentSpeakingBtn = null;
+  };
+  utterance.onerror = () => {
+    if (btn) btn.classList.remove('speaking');
+    currentSpeakingBtn = null;
+  };
+
+  currentUtterance = utterance;
+  speechSynth.speak(utterance);
+}
+
+// Make speak functions globally accessible
+window.speakWord = function(wordIdx, btn) {
+  const w = wordsData[wordIdx];
+  speak(w.word, btn);
+};
+
+window.speakText = function(text, btn) {
+  speak(text, btn);
+};
+
+window.speakFeedback = function(btn) {
+  const fb = document.getElementById('feedback');
+  if (!fb) return;
+  // Read all .fb-row and .fb-remember content in order
+  const parts = [];
+  fb.querySelectorAll('.fb-title').forEach(el => parts.push(el.textContent.replace(/[🎉🤔✅💭]/g, '').trim()));
+  fb.querySelectorAll('.fb-row').forEach(el => parts.push(el.textContent.trim()));
+  fb.querySelectorAll('.fb-remember').forEach(el => parts.push(el.textContent.replace(/💡/g, '').trim()));
+  speak(parts.join('。'), btn);
+};
+
+// =============================================================
+// State
+// =============================================================
+function calcTotalSteps() {
+  let total = 0;
+  wordsData.forEach(w => total += (w.difficulty === 'hard') ? 3 : 1);
+  return total;
+}
+const TOTAL_STEPS = calcTotalSteps();
+
+let currentWordIdx = 0;
+let currentStep = 0;
+let stepIdx = 0;
+let starsEarned = 0;
+let totalAnswered = 0;
+let totalCorrect = 0;
+let answered = false;
+let wordResults = [];
+let wordStarsTracker = 0;
+
+const gameArea = document.getElementById('game-area');
+const gallery = document.getElementById('gallery');
+
+// =============================================================
+// Helpers
+// =============================================================
+function getCurrentStepData(wordIdx, step) {
+  const w = wordsData[wordIdx];
+  if (w.difficulty === 'easy') return { type: 'trap', data: w.trap };
+  if (step === 0) return { type: 'meaning', data: w.meaning };
+  if (step === 1) return { type: 'usage', data: w.usage };
+  return { type: 'trap', data: w.trap };
+}
+
+function getStepLabel(type) {
+  if (type === 'meaning') return { emoji: '🔍', label: '第 1 关 · 认识词义' };
+  if (type === 'usage') return { emoji: '🎯', label: '第 2 关 · 学会用法' };
+  return { emoji: '⚡', label: '挑战关 · 火眼金睛' };
+}
+
+function getStepCountForWord(wordIdx) {
+  return wordsData[wordIdx].difficulty === 'hard' ? 3 : 1;
+}
+
+function updateStats() {
+  document.getElementById('words-done').textContent = wordResults.length;
+  document.getElementById('stars-earned').textContent = starsEarned;
+  const acc = totalAnswered === 0 ? '--' : Math.round((totalCorrect / totalAnswered) * 100);
+  document.getElementById('accuracy').textContent = acc;
+  document.getElementById('progress-bar').style.width = ((stepIdx / TOTAL_STEPS) * 100) + '%';
+  document.getElementById('progress-text').textContent = `第 ${Math.min(stepIdx + 1, TOTAL_STEPS)} 关 / 共 ${TOTAL_STEPS} 关`;
+}
+
+function renderStepIndicator(wordIdx, currentStep) {
+  const w = wordsData[wordIdx];
+  if (w.difficulty === 'easy') return '';
+  const steps = [{ label: '词义', num: 1 }, { label: '用法', num: 2 }, { label: '挑战', num: 3 }];
+  return `
+    <div class="step-indicator">
+      ${steps.map((s, i) => {
+        let cls = '';
+        if (i < currentStep) cls = 'done';
+        else if (i === currentStep) cls = 'active';
+        return `<div class="step-dot ${cls}"><span class="step-circle"><span class="step-num">${s.num}</span></span><span>${s.label}</span></div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+// =============================================================
+// Render
+// =============================================================
+function render() {
+  // Stop any ongoing speech when switching screens
+  if (speechSynth && speechSynth.speaking) {
+    speechSynth.cancel();
+    if (currentSpeakingBtn) currentSpeakingBtn.classList.remove('speaking');
+    currentSpeakingBtn = null;
+  }
+
+  if (currentWordIdx >= wordsData.length) {
+    showGallery();
+    return;
+  }
+
+  const w = wordsData[currentWordIdx];
+  const stepInfo = getCurrentStepData(currentWordIdx, currentStep);
+  const stepLabel = getStepLabel(stepInfo.type);
+  const data = stepInfo.data;
+  answered = false;
+
+  const showScene = stepInfo.type === 'meaning' && data.scene;
+
+  gameArea.innerHTML = `
+    ${renderStepIndicator(currentWordIdx, currentStep)}
+    <div class="card">
+      <div class="word-header">
+        <div class="word-display" onclick="speakWord(${currentWordIdx}, this)" title="点击听发音">
+          <span class="pinyin">${w.pinyin}</span>
+          ${w.word}
+        </div>
+        <br>
+        <span class="step-label">${stepLabel.emoji} ${stepLabel.label}</span>
+      </div>
+
+      ${showScene ? `
+        <div class="scene-box">
+          <div class="scene-emojis">${data.scene}</div>
+          <div class="scene-caption">${data.caption.includes('「') ? data.caption.replace(/「([^」]+)」/g, '<span class="speech">$1</span>') : data.caption}</div>
+        </div>
+      ` : ''}
+
+      <div class="q-prompt-wrap">
+        <div class="q-prompt">${data.prompt}</div>
+        <button class="speak-btn" onclick="speakText('${data.prompt.replace(/'/g, "\\'")}', this)" title="听题目">🔊</button>
+      </div>
+
+      <div class="options" id="options">
+        ${data.options.map((opt, i) => `
+          <div class="option" data-idx="${i}">
+            <span class="option-label">${String.fromCharCode(65 + i)}</span>
+            <span class="option-text" onclick="selectAnswer(${i})">${opt}</span>
+            <button class="option-speak" onclick="speakText('${stripHtml(opt).replace(/'/g, "\\'")}', this); event.stopPropagation();" title="听选项">🔊</button>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <div class="btn-row" id="btn-row" style="display:none;">
+        <button class="btn btn-primary" onclick="nextStep()">继续 →</button>
+      </div>
+    </div>
+  `;
+
+  updateStats();
+}
+
+// =============================================================
+// Select Answer
+// =============================================================
+window.selectAnswer = function(chosenIdx) {
+  if (answered) return;
+  answered = true;
+
+  const stepInfo = getCurrentStepData(currentWordIdx, currentStep);
+  const data = stepInfo.data;
+  const isCorrect = chosenIdx === data.correct;
+
+  totalAnswered++;
+  if (isCorrect) {
+    totalCorrect++;
+    starsEarned++;
+    wordStarsTracker++;
+    showStarBurst();
+  }
+
+  // Visual feedback on options
+  document.querySelectorAll('.option').forEach((el, i) => {
+    el.classList.add('disabled');
+    // remove option-text click handler effectively by disabling pointer
+    const txt = el.querySelector('.option-text');
+    if (txt) txt.style.pointerEvents = 'none';
+    if (i === data.correct) el.classList.add('correct');
+    else if (i === chosenIdx) el.classList.add('wrong');
+  });
+
+  // Render feedback
+  const fb = document.getElementById('feedback');
+  fb.className = `feedback show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+
+  if (stepInfo.type === 'trap') {
+    fb.innerHTML = `
+      <div class="fb-header">
+        <div class="fb-title">${isCorrect ? '🎉 答对了，真厉害！' : '🤔 再想想看~'}</div>
+        <button class="fb-speak" onclick="speakFeedback(this)" title="听解释">🔊 听讲解</button>
+      </div>
+      <div class="fb-row"><strong>正确答案：</strong>${String.fromCharCode(65 + data.correct)}</div>
+      <div class="fb-row"><strong>为什么对：</strong>${data.whyCorrect}</div>
+      <div class="fb-row"><strong>错在哪里：</strong>${data.whyWrong}</div>
+      <div class="fb-remember">💡 <strong>一句话记住：</strong>${data.remember}</div>
+    `;
+  } else {
+    fb.innerHTML = `
+      <div class="fb-header">
+        <div class="fb-title">${isCorrect ? '✅ 正确！' : '💭 没关系，看看正确答案~'}</div>
+        <button class="fb-speak" onclick="speakFeedback(this)" title="听解释">🔊 听讲解</button>
+      </div>
+      <div class="fb-row"><strong>正确答案：</strong>${String.fromCharCode(65 + data.correct)} · ${data.options[data.correct]}</div>
+      <div class="fb-remember">💡 ${data.tip}</div>
+    `;
+  }
+
+  document.getElementById('btn-row').style.display = 'flex';
+  updateStats();
+};
+
+// =============================================================
+// Next Step
+// =============================================================
+window.nextStep = function() {
+  const totalStepsForWord = getStepCountForWord(currentWordIdx);
+  stepIdx++;
+
+  if (currentStep + 1 < totalStepsForWord) {
+    currentStep++;
+    render();
+  } else {
+    finishWord();
+  }
+};
+
+// =============================================================
+// Finish Word
+// =============================================================
+function finishWord() {
+  const w = wordsData[currentWordIdx];
+  const totalStepsForWord = getStepCountForWord(currentWordIdx);
+  const wordStars = wordStarsTracker;
+
+  wordResults.push({
+    word: w.word,
+    stars: wordStars,
+    maxStars: totalStepsForWord,
+    remember: (w.trap && w.trap.remember) || (w.meaning && w.meaning.tip) || ''
+  });
+  wordStarsTracker = 0;
+
+  showWordComplete(w, wordStars, totalStepsForWord);
+}
+
+function showWordComplete(w, stars, maxStars) {
+  const starsHtml = '⭐'.repeat(stars) + '☆'.repeat(maxStars - stars);
+  let msg = '';
+  if (stars === maxStars) {
+    msg = '太厉害了！完美通关，进入下一个词语~';
+    fireConfetti();
+  } else if (stars >= maxStars / 2) {
+    msg = '不错哦！继续努力，下一个词语你一定可以拿满星！';
+  } else {
+    msg = '没关系，慢慢来，记住「一句话口诀」最重要~';
+  }
+
+  gameArea.innerHTML = `
+    <div class="word-complete">
+      <div class="word-complete-emoji">🎊</div>
+      <div class="word-complete-title">词语通关！</div>
+      <div class="word-complete-word">${w.word}</div>
+      <div class="word-complete-stars">${starsHtml}</div>
+      <div class="word-complete-msg">${msg}</div>
+      <button class="btn btn-success" onclick="goToNextWord()">
+        ${currentWordIdx + 1 >= wordsData.length ? '查看词语图鉴 →' : '下一个词语 →'}
+      </button>
+    </div>
+  `;
+}
+
+window.goToNextWord = function() {
+  currentWordIdx++;
+  currentStep = 0;
+  if (currentWordIdx >= wordsData.length) {
+    showGallery();
+  } else {
+    render();
+  }
+};
+
+// =============================================================
+// Animations
+// =============================================================
+function showStarBurst() {
+  const burst = document.createElement('div');
+  burst.className = 'star-burst';
+  burst.textContent = '⭐';
+  document.body.appendChild(burst);
+  setTimeout(() => burst.remove(), 1500);
+}
+
+function fireConfetti() {
+  const colors = ['#6db8e8', '#7dceb4', '#f5a85c', '#f08080', '#ffc857', '#4a9bd1'];
+  for (let i = 0; i < 50; i++) {
+    setTimeout(() => {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random() * 100 + 'vw';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      piece.style.animationDelay = (Math.random() * 0.3) + 's';
+      piece.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 3500);
+    }, i * 30);
+  }
+}
+
+// =============================================================
+// Gallery
+// =============================================================
+function showGallery() {
+  gameArea.style.display = 'none';
+  document.querySelector('.step-indicator')?.remove();
+
+  const totalMaxStars = wordsData.reduce((sum, w) => sum + (w.difficulty === 'hard' ? 3 : 1), 0);
+  const acc = totalAnswered === 0 ? 0 : Math.round((totalCorrect / totalAnswered) * 100);
+
+  let comment = '';
+  if (acc >= 90) comment = '🏆 词语功夫炉火纯青！连最细微的搭配差异都难不倒你。';
+  else if (acc >= 75) comment = '👍 你已经掌握了大部分词语！偶尔出错的地方，看看「一句话记住」就好。';
+  else if (acc >= 60) comment = '📚 基本功不错，但有些词「意思懂、用法不熟」。可以重新挑战错的词语~';
+  else comment = '💪 词语学习需要慢慢积累。不要灰心，把图鉴里的「口诀」抄下来，下次再来！';
+
+  gallery.innerHTML = `
+    <div class="gallery-header">
+      <div class="gallery-emoji">📖</div>
+      <div class="gallery-title">词语图鉴</div>
+      <div class="gallery-stats">
+        共收集 <strong>${starsEarned}</strong> / <strong>${totalMaxStars}</strong> 颗星 · 正确率 <strong>${acc}</strong>%
+      </div>
+    </div>
+    <div class="gallery-final-msg">${comment}</div>
+    <div class="gallery-grid">
+      ${wordResults.map(r => {
+        const isPerfect = r.stars === r.maxStars;
+        const stars = '⭐'.repeat(r.stars) + '☆'.repeat(r.maxStars - r.stars);
+        return `
+          <div class="gallery-item ${isPerfect ? 'perfect' : ''}">
+            <div class="gallery-word">${r.word}</div>
+            <div class="gallery-stars">${stars}</div>
+            <div class="gallery-tip">💡 ${r.remember}</div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    <div style="text-align:center; margin-top: 20px;">
+      <button class="btn btn-primary" onclick="restart()">🔄 重新挑战</button>
+    </div>
+  `;
+  gallery.classList.add('show');
+  fireConfetti();
+}
+
+window.restart = function() { location.reload(); };
+
+// Stop speech when leaving page
+window.addEventListener('beforeunload', () => {
+  if (speechSynth) speechSynth.cancel();
+});
+
+// Init
+render();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,3312 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作文导师 · AI写作训练</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1208;
+  --ink-light: #3d2e1a;
+  --ink-faint: #7a6a55;
+  --paper: #fdf8f0;
+  --paper-warm: #f5ede0;
+  --paper-border: #e8d8c4;
+  --accent: #8b4513;
+  --accent-light: #c17f4a;
+  --accent-pale: #f0dfc8;
+  --red: #c0392b;
+  --green: #2e7d4f;
+  --blue: #1a5f7a;
+  --purple: #5b3fa0;
+  --shadow: rgba(90,60,20,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(ellipse at 20% 10%,rgba(193,127,74,.08) 0%,transparent 50%),
+  radial-gradient(ellipse at 80% 90%,rgba(139,69,19,.06) 0%,transparent 50%)}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex}
+
+/* ── TOP BAR ── */
+.top-bar{background:var(--paper-warm);border-bottom:1px solid var(--paper-border);
+  padding:14px 28px;display:flex;align-items:center;gap:14px;
+  position:sticky;top:0;z-index:200;flex-shrink:0}
+.top-bar-title{font-family:'Noto Serif SC',serif;font-size:17px;font-weight:600;color:var(--accent)}
+.back-btn{background:none;border:1.5px solid var(--paper-border);border-radius:8px;
+  padding:6px 14px;font-family:'Noto Sans SC',sans-serif;font-size:13px;
+  color:var(--ink-faint);cursor:pointer;transition:all .2s;white-space:nowrap}
+.back-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── HOME ── */
+#homeScreen{align-items:center;justify-content:center;padding:40px 20px}
+.home-inner{max-width:520px;width:100%;text-align:center}
+.logo-mark{width:72px;height:72px;margin:0 auto 24px;border:2px solid var(--accent);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif SC',serif;font-size:28px;color:var(--accent);position:relative}
+.logo-mark::before{content:'';position:absolute;inset:4px;border:1px solid var(--accent-light);
+  border-radius:50%;opacity:.5}
+.home-title{font-family:'Noto Serif SC',serif;font-size:32px;font-weight:700;
+  letter-spacing:4px;margin-bottom:8px}
+.home-subtitle{font-size:14px;color:var(--ink-faint);letter-spacing:2px;margin-bottom:48px}
+.role-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+.role-card{background:var(--paper-warm);border:1.5px solid var(--paper-border);border-radius:12px;
+  padding:24px 16px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.role-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:var(--accent);transform:scaleX(0);transition:transform .25s}
+.role-card:hover{border-color:var(--accent-light);box-shadow:0 8px 24px var(--shadow);transform:translateY(-2px)}
+.role-card:hover::after{transform:scaleX(1)}
+.role-icon{font-size:28px;margin-bottom:10px}
+.role-name{font-family:'Noto Serif SC',serif;font-size:16px;font-weight:600;margin-bottom:4px}
+.role-desc{font-size:12px;color:var(--ink-faint);line-height:1.6}
+.api-hint{font-size:12px;color:var(--ink-faint);padding:12px 16px;background:var(--accent-pale);
+  border-radius:8px;border-left:3px solid var(--accent-light);text-align:left;line-height:1.7}
+
+/* ── TEACHER ── */
+#teacherScreen{}
+.page-body{max-width:760px;margin:0 auto;padding:28px 24px 80px;width:100%}
+.section-label{font-size:11px;letter-spacing:2px;color:var(--ink-faint);
+  text-transform:uppercase;margin-bottom:10px;margin-top:28px}
+.topic-item{background:var(--paper-warm);border:1.5px solid var(--paper-border);
+  border-radius:10px;padding:16px 20px;display:flex;align-items:flex-start;
+  justify-content:space-between;gap:16px;margin-bottom:10px;transition:border-color .2s}
+.topic-item:hover{border-color:var(--accent-light)}
+.topic-item-title{font-family:'Noto Serif SC',serif;font-weight:600;font-size:15px;margin-bottom:4px}
+.topic-item-preview{font-size:13px;color:var(--ink-faint);line-height:1.6}
+.add-form{background:var(--paper-warm);border:1.5px dashed var(--paper-border);
+  border-radius:10px;padding:20px;margin-top:4px}
+.api-settings{background:var(--paper-warm);border:1.5px solid var(--paper-border);
+  border-radius:10px;padding:20px;margin-top:4px}
+input[type=text],input[type=password],.form-ta{width:100%;padding:10px 14px;
+  border:1.5px solid var(--paper-border);border-radius:8px;background:var(--paper-warm);
+  font-family:'Noto Sans SC',sans-serif;font-size:14px;color:var(--ink);outline:none;
+  transition:border-color .2s}
+input[type=text]:focus,input[type=password]:focus,.form-ta:focus{border-color:var(--accent-light)}
+.form-ta{resize:vertical;padding:10px 14px;font-size:14px;line-height:1.7}
+
+/* ── STUDENT LIST ── */
+#studentScreen{}
+.student-body{max-width:680px;margin:0 auto;padding:28px 24px 80px;width:100%}
+.topic-card{background:var(--paper-warm);border:1.5px solid var(--paper-border);
+  border-radius:14px;padding:24px;margin-bottom:16px;cursor:pointer;
+  transition:all .25s;position:relative}
+.topic-card:hover{border-color:var(--accent-light);box-shadow:0 6px 20px var(--shadow);transform:translateY(-2px)}
+.topic-card-num{position:absolute;top:-11px;left:20px;background:var(--accent);color:white;
+  font-size:11px;padding:2px 10px;border-radius:10px;font-family:'Noto Serif SC',serif}
+.topic-card-title{font-family:'Noto Serif SC',serif;font-size:17px;font-weight:600;margin-bottom:8px}
+.topic-card-content{font-size:14px;color:var(--ink-light);line-height:1.9}
+
+/* ── TRAINING LAYOUT ── */
+#trainingScreen{background:var(--paper)}
+.training-wrap{display:grid;grid-template-columns:220px 1fr;flex:1;min-height:0;overflow:hidden}
+.sidebar{background:var(--paper-warm);border-right:1px solid var(--paper-border);
+  padding:20px 0;overflow-y:auto;height:calc(100vh - 57px);position:sticky;top:57px}
+.sidebar-topic-box{padding:0 16px 16px;border-bottom:1px solid var(--paper-border);margin-bottom:12px}
+.sidebar-topic-label{font-size:10px;letter-spacing:1.5px;color:var(--ink-faint);margin-bottom:5px}
+.sidebar-topic-title{font-family:'Noto Serif SC',serif;font-size:13px;font-weight:600;line-height:1.6}
+.phase-group{margin-bottom:4px}
+.phase-header{font-size:10px;letter-spacing:1.5px;color:var(--ink-faint);
+  padding:6px 16px 4px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 12px;
+  border-radius:8px;margin:0 8px 2px;cursor:default;transition:background .15s}
+.nav-item.active{background:var(--accent-pale)}
+.nav-item.done{opacity:.65}
+.nav-num{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--paper-border);
+  display:flex;align-items:center;justify-content:center;font-size:10px;
+  color:var(--ink-faint);flex-shrink:0;transition:all .2s}
+.nav-item.done .nav-num{background:var(--green);border-color:var(--green);color:white}
+.nav-item.active .nav-num{background:var(--accent);border-color:var(--accent);color:white}
+.nav-label{font-size:12px;color:var(--ink-light);line-height:1.4}
+.nav-item.active .nav-label{color:var(--accent);font-weight:500}
+
+/* progress bar */
+.progress-strip{height:3px;background:var(--paper-border);position:fixed;
+  top:57px;left:220px;right:0;z-index:150;transition:left .3s}
+.progress-fill{height:100%;background:var(--accent);transition:width .4s ease}
+
+/* ── MAIN PANEL ── */
+.main-panel{padding:32px 40px 100px;overflow-y:auto;height:calc(100vh - 57px)}
+.phase-badge{display:inline-flex;align-items:center;gap:6px;
+  background:var(--accent-pale);border:1px solid var(--accent-light);
+  border-radius:20px;padding:4px 12px;font-size:11px;color:var(--accent);
+  font-weight:500;letter-spacing:1px;margin-bottom:14px}
+.step-title{font-family:'Noto Serif SC',serif;font-size:24px;font-weight:700;
+  margin-bottom:8px;color:var(--ink)}
+.step-desc{font-size:14px;color:var(--ink-faint);line-height:1.8;margin-bottom:24px}
+
+/* topic display box */
+.topic-display{background:var(--accent-pale);border-left:3px solid var(--accent);
+  border-radius:0 10px 10px 0;padding:16px 20px;font-size:14px;line-height:2;
+  color:var(--ink-light);margin-bottom:20px;position:relative}
+
+/* clickable topic words */
+.topic-word{
+  display:inline;cursor:pointer;border-radius:3px;
+  padding:1px 2px;margin:0 1px;
+  border-bottom:2px solid transparent;
+  transition:all .12s;line-height:2.4
+}
+.topic-word:hover{background:var(--accent-pale);border-bottom-color:var(--accent-light)}
+.topic-word.selected{
+  background:var(--accent);color:white;
+  border-bottom-color:var(--accent);
+  border-radius:4px;padding:1px 5px
+}
+.topic-punct{display:inline;color:var(--ink-light);line-height:2.4}
+
+/* keyword analysis boxes */
+.kw-analysis-grid{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.kw-analysis-item{background:white;border:1.5px solid var(--paper-border);
+  border-radius:10px;padding:14px 16px;border-left:3px solid var(--accent)}
+.kw-analysis-word{font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600;
+  color:var(--accent);margin-bottom:4px}
+.kw-analysis-why{font-size:13px;color:var(--ink-faint);line-height:1.7}
+
+/* thinking section */
+.think-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.think-box{background:var(--paper-warm);border:1.5px solid var(--paper-border);
+  border-radius:10px;padding:16px}
+.think-box-label{font-size:11px;letter-spacing:1.5px;color:var(--ink-faint);
+  margin-bottom:10px;font-weight:500}
+.think-ta{width:100%;background:transparent;border:none;outline:none;
+  font-family:'Noto Sans SC',sans-serif;font-size:13px;color:var(--ink);
+  line-height:1.8;resize:none;min-height:80px}
+
+/* scaffold + sentence boxes */
+.support-panel{margin-bottom:14px}
+.support-tabs{display:flex;gap:0;border-bottom:2px solid var(--paper-border);margin-bottom:0}
+.support-tab{padding:8px 16px;font-size:12px;cursor:pointer;color:var(--ink-faint);
+  border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap}
+.support-tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:500}
+.support-content{background:var(--paper-warm);border:1px solid var(--paper-border);
+  border-top:none;border-radius:0 0 10px 10px;padding:14px}
+.support-pane{display:none}
+.support-pane.active{display:block}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px}
+.scaffold-chip{background:white;border:1px solid #c8e0d4;border-radius:20px;
+  padding:5px 13px;font-size:13px;color:var(--green);cursor:pointer;transition:all .15s;user-select:none}
+.scaffold-chip:hover{background:var(--green);color:white;border-color:var(--green)}
+.sentence-list{display:flex;flex-direction:column;gap:8px}
+.sentence-item{background:white;border:1px solid #c0cfee;border-radius:8px;
+  padding:10px 14px;cursor:pointer;transition:all .15s}
+.sentence-item:hover{background:#3a5a9a;border-color:#3a5a9a}
+.sentence-item:hover .s-label,.sentence-item:hover .s-text{color:white}
+.s-label{font-size:11px;color:#3a5a9a;font-weight:500;letter-spacing:1px;margin-bottom:3px;transition:color .15s}
+.s-text{font-size:13px;color:var(--ink-light);line-height:1.7;font-family:'Noto Serif SC',serif;transition:color .15s}
+
+/* example toggle */
+.example-toggle-btn{width:100%;display:flex;justify-content:space-between;align-items:center;
+  padding:11px 16px;background:var(--paper-warm);border:1.5px solid var(--paper-border);
+  border-radius:10px;cursor:pointer;font-size:13px;color:var(--ink-faint);
+  font-weight:500;transition:all .15s;margin-bottom:14px;text-align:left}
+.example-toggle-btn:hover{border-color:var(--accent-light);color:var(--accent)}
+.example-toggle-btn.open{border-radius:10px 10px 0 0;margin-bottom:0;border-bottom:none}
+.example-cols{display:grid;grid-template-columns:1fr 1fr;
+  border:1.5px solid var(--paper-border);border-top:none;border-radius:0 0 10px 10px;
+  overflow:hidden;margin-bottom:14px}
+.ex-col{padding:16px}
+.ex-col.weak{background:#fff5f5;border-right:1px solid var(--paper-border)}
+.ex-col.strong{background:#f5fff8}
+.ex-col-label{font-size:11px;font-weight:600;letter-spacing:1px;margin-bottom:8px}
+.ex-col.weak .ex-col-label{color:var(--red)}
+.ex-col.strong .ex-col-label{color:var(--green)}
+.ex-col-text{font-family:'Noto Serif SC',serif;font-size:13px;line-height:1.9;
+  color:var(--ink-light);margin-bottom:8px;padding-bottom:8px;
+  border-bottom:1px dashed var(--paper-border);white-space:pre-wrap}
+.ex-col-comment{font-size:12px;line-height:1.7;color:var(--ink-faint);font-style:italic}
+
+/* answer area */
+.answer-wrap{position:relative;margin-bottom:14px}
+.answer-ta{width:100%;padding:14px;border:1.5px solid var(--paper-border);
+  border-radius:10px;background:var(--paper-warm);font-family:'Noto Sans SC',sans-serif;
+  font-size:15px;line-height:1.9;color:var(--ink);resize:vertical;outline:none;
+  transition:border-color .2s;min-height:120px}
+.answer-ta:focus{border-color:var(--accent-light)}
+.char-count{position:absolute;bottom:10px;right:14px;font-size:12px;color:var(--ink-faint)}
+
+/* action row */
+.action-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.btn-primary{background:var(--accent);color:white;border:none;border-radius:8px;
+  padding:10px 22px;font-family:'Noto Sans SC',sans-serif;font-size:14px;font-weight:500;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-primary:hover{background:var(--ink-light);transform:translateY(-1px)}
+.btn-primary:disabled{background:var(--paper-border);color:var(--ink-faint);
+  cursor:not-allowed;transform:none}
+.btn-ghost{background:none;border:1.5px solid var(--paper-border);border-radius:8px;
+  padding:10px 16px;font-family:'Noto Sans SC',sans-serif;font-size:13px;
+  color:var(--ink-faint);cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-ghost:hover{border-color:var(--accent-light);color:var(--accent)}
+.btn-secondary{background:var(--accent-pale);color:var(--accent);border:1.5px solid var(--accent-light);
+  border-radius:8px;padding:10px 18px;font-family:'Noto Sans SC',sans-serif;
+  font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-secondary:hover{background:var(--accent);color:white}
+
+/* AI feedback panel */
+.feedback-panel{border-radius:12px;overflow:hidden;border:1.5px solid var(--paper-border);
+  display:none;animation:slideIn .3s ease}
+.feedback-panel.visible{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.feedback-header{background:var(--ink);color:white;padding:12px 18px;font-size:13px;
+  display:flex;align-items:center;gap:8px;font-family:'Noto Serif SC',serif;letter-spacing:1px}
+.feedback-body{padding:18px 20px;background:var(--paper-warm)}
+.fb-section{margin-bottom:16px}
+.fb-section:last-child{margin-bottom:0}
+.fb-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:4px;
+  margin-bottom:8px;font-weight:500;letter-spacing:1px}
+.fb-tag.problem{background:#fff0e8;color:#c0522b}
+.fb-tag.praise{background:#e8f5e9;color:var(--green)}
+.fb-tag.example{background:#e3f2fd;color:var(--blue)}
+.fb-text{font-size:14px;line-height:1.9;color:var(--ink-light);white-space:pre-wrap}
+.fb-example-text{font-family:'Noto Serif SC',serif;font-size:14px;line-height:1.9;
+  color:var(--blue);background:#f0f8ff;padding:12px 16px;border-radius:8px;
+  border-left:3px solid var(--blue);white-space:pre-wrap}
+
+/* loading */
+.loading-dots{display:flex;gap:6px;align-items:center;padding:6px 0}
+.loading-dots span{width:8px;height:8px;background:var(--accent-light);
+  border-radius:50%;animation:dotPulse 1.2s infinite}
+.loading-dots span:nth-child(2){animation-delay:.2s}
+.loading-dots span:nth-child(3){animation-delay:.4s}
+@keyframes dotPulse{0%,80%,100%{transform:scale(.8);opacity:.5}40%{transform:scale(1.2);opacity:1}}
+.loading-msg{font-size:13px;color:var(--ink-faint);margin-top:6px}
+
+/* summary / draft */
+.draft-section{margin-bottom:20px}
+.draft-section-label{font-size:11px;letter-spacing:2px;color:var(--accent);
+  font-weight:500;margin-bottom:8px;padding-left:4px;border-left:3px solid var(--accent);padding-left:10px}
+.draft-text{font-family:'Noto Serif SC',serif;font-size:14px;line-height:2;
+  color:var(--ink-light);background:var(--paper-warm);border:1px solid var(--paper-border);
+  border-radius:8px;padding:14px 16px;white-space:pre-wrap}
+.draft-text.editable{outline:none;transition:border-color .2s}
+.draft-text.editable:focus{border-color:var(--accent-light)}
+.ai-note{font-size:12px;color:var(--ink-faint);font-style:italic;margin-top:6px;line-height:1.7}
+
+/* completion */
+.celebrate{text-align:center;padding:40px 20px 28px}
+.celebrate-emoji{font-size:44px;margin-bottom:14px}
+.celebrate-title{font-family:'Noto Serif SC',serif;font-size:24px;color:var(--accent);margin-bottom:6px}
+.celebrate-sub{font-size:14px;color:var(--ink-faint)}
+
+/* info box */
+.info-box{background:#f0f7ff;border:1px solid #b8d4f0;border-radius:10px;
+  padding:14px 16px;font-size:13px;color:#1a4a7a;line-height:1.8;margin-bottom:20px}
+.warn-box{background:#fff8e6;border:1px solid #f0d080;border-radius:8px;
+  padding:10px 14px;font-size:12px;color:#7a5f00;line-height:1.7;margin-top:12px}
+
+/* teacher topic editor */
+.topic-item{background:var(--paper-warm);border:1.5px solid var(--paper-border);
+  border-radius:10px;padding:16px 20px;margin-bottom:10px;transition:border-color .2s}
+.topic-item:hover{border-color:var(--accent-light)}
+.topic-item-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}
+.topic-item-title{font-family:'Noto Serif SC',serif;font-weight:600;font-size:15px}
+.topic-item-actions{display:flex;gap:8px;flex-shrink:0}
+.topic-item-preview{font-size:13px;color:var(--ink-faint);line-height:1.7}
+.topic-item-preview .kw-marked{background:#ffe8cc;color:var(--accent);
+  font-weight:600;border-radius:3px;padding:0 3px;border-bottom:2px solid var(--accent-light)}
+.edit-form{background:#fdf6ee;border:1.5px solid var(--accent-light);
+  border-radius:10px;padding:16px;margin-top:10px}
+.edit-form-label{font-size:11px;letter-spacing:1.5px;color:var(--ink-faint);
+  margin-bottom:6px;margin-top:12px}
+.edit-form-label:first-child{margin-top:0}
+.kw-instruction{background:#fff8e6;border:1px solid #f0d080;border-radius:8px;
+  padding:10px 14px;font-size:12px;color:#7a5f00;line-height:1.8;margin-bottom:12px}
+.preview-box{background:white;border:1px solid var(--paper-border);border-radius:8px;
+  padding:12px 16px;font-size:14px;line-height:2.2;margin-top:8px;min-height:48px}
+.preview-kw{background:#ffe8cc;color:var(--accent);font-weight:600;
+  border-radius:3px;padding:1px 5px;border-bottom:2px solid var(--accent-light)}
+
+/* phase 0 — clickable segments */
+.seg-word{
+  display:inline;cursor:pointer;
+  padding:2px 4px;margin:0 1px;border-radius:4px;
+  border-bottom:1.5px solid transparent;
+  transition:all .12s;line-height:3
+}
+.seg-word:hover{
+  background:var(--accent-pale);
+  border-bottom-color:var(--accent-light);
+  color:var(--accent)
+}
+.seg-word.kw-selected{
+  background:var(--accent);color:white;
+  border-bottom-color:var(--accent);
+  font-weight:500
+}
+.seg-punct{display:inline;line-height:3;color:var(--ink-light)}
+
+/* ── speech buttons ── */
+.speak-pair{display:inline-flex;gap:4px;vertical-align:middle;margin-left:6px}
+.speak-btn{background:none;border:1.5px solid var(--paper-border);border-radius:16px;
+  padding:2px 8px;font-size:11px;cursor:pointer;color:var(--ink-faint);
+  transition:all .15s;white-space:nowrap;line-height:1.6}
+.speak-btn:hover{border-color:var(--accent-light);color:var(--accent);background:var(--accent-pale)}
+.speak-btn[data-speaking="1"]{background:var(--accent);color:white;border-color:var(--accent)}
+.speak-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+  margin-bottom:10px;padding:8px 12px;background:var(--accent-pale);
+  border-radius:8px;font-size:12px;color:var(--ink-faint)}
+.genre-badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.5px;
+  padding:2px 9px;border-radius:10px;margin-left:8px}
+.genre-narrative{background:#e8f5e9;color:var(--green)}
+.genre-argumentative{background:#e3f2fd;color:var(--blue)}
+.dlg-thread{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.dlg-done-round{background:var(--paper-warm);border:1px solid var(--paper-border);
+  border-radius:10px;padding:14px 16px}
+.dlg-round-label{display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:600;letter-spacing:1px;padding:3px 10px;
+  border-radius:12px;margin-bottom:8px}
+.dlg-round-label.done{background:#e8f5e9;color:var(--green)}
+.dlg-round-label.active{background:var(--accent-pale);color:var(--accent)}
+.dlg-answer-preview{font-size:13px;color:var(--ink-light);line-height:1.8;
+  padding-left:4px;border-left:2px solid var(--paper-border)}
+.dlg-ai-comment{margin-top:8px;font-size:12px;color:var(--blue);
+  font-style:italic;padding:6px 10px;background:#f0f8ff;border-radius:6px;line-height:1.7}
+.dlg-current-round{background:white;border:1.5px solid var(--accent-light);
+  border-radius:12px;padding:20px 24px}
+.dlg-round-title{font-family:'Noto Serif SC',serif;font-size:19px;font-weight:700;
+  color:var(--ink);margin-bottom:6px}
+.dlg-round-intro{font-size:13px;color:var(--ink-faint);line-height:1.8;
+  margin-bottom:16px;padding:8px 12px;background:var(--accent-pale);border-radius:6px}
+.dlg-questions{display:flex;flex-direction:column;gap:10px;margin-bottom:4px}
+.dlg-q{display:flex;align-items:flex-start;gap:10px}
+.dlg-q-num{width:22px;height:22px;background:var(--accent);color:white;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:11px;
+  flex-shrink:0;margin-top:2px}
+.dlg-q-text{font-size:14px;color:var(--ink-light);line-height:1.8}
+.dlg-ai-box{display:flex;align-items:center;margin-top:12px;padding:10px 14px;
+  background:#f0f8ff;border-radius:8px;border:1px solid #c8ddf0}
+
+/* strategy table */
+.strategy-table{width:100%;border-collapse:collapse;font-size:13px;
+  border:1.5px solid var(--paper-border);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.strategy-table th{background:var(--accent-pale);padding:10px 14px;text-align:left;
+  font-weight:600;color:var(--accent);border:1px solid var(--paper-border);font-size:12px}
+.strategy-table td{padding:10px 14px;border:1px solid var(--paper-border);
+  vertical-align:top;line-height:1.7;background:var(--paper-warm)}
+.strategy-table tr:nth-child(even) td{background:#fdf8f0}
+.level-badge{display:inline-block;background:var(--accent);color:white;font-size:11px;
+  font-weight:600;padding:2px 8px;border-radius:10px;letter-spacing:.5px}
+
+/* graduated hint system */
+.hint-system{margin-bottom:20px}
+.hint-box{border:1.5px solid var(--paper-border);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.hint-box-header{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;
+  background:var(--paper-warm);cursor:default}
+.hint-box-title{font-size:13px;font-weight:500;color:var(--ink)}
+.hint-btn{background:none;border:1.5px solid var(--paper-border);border-radius:6px;
+  padding:5px 12px;font-size:12px;color:var(--ink-faint);cursor:pointer;
+  transition:all .15s;white-space:nowrap}
+.hint-btn:hover{border-color:var(--accent-light);color:var(--accent)}
+.hint-btn.exhausted{opacity:.4;cursor:not-allowed}
+.hint-level{padding:12px 16px;border-top:1px solid var(--paper-border);
+  display:none;animation:fadeIn .2s ease}
+.hint-level.shown{display:block}
+.hint-level-tag{font-size:10px;letter-spacing:1.5px;font-weight:600;
+  padding:2px 7px;border-radius:3px;margin-bottom:6px;display:inline-block}
+.hint-l1 .hint-level-tag{background:#e8f4fd;color:#1a6fa0}
+.hint-l2 .hint-level-tag{background:#e8f5e9;color:var(--green)}
+.hint-l3 .hint-level-tag{background:#fff3e0;color:#c06010}
+.hint-level-text{font-size:13px;color:var(--ink-light);line-height:1.8}
+.hint-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.hint-chip{background:white;border:1px solid var(--paper-border);
+  border-radius:14px;padding:3px 10px;font-size:12px;color:var(--ink-faint)}
+/* annotated example blocks */
+.anno-block{
+  background:#f8fbff;border:1px solid #c8ddf0;border-radius:8px;
+  padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.anno-block.fb-anno{background:#f0f7ff;border-color:#b0ccec}
+.anno-line{display:block;padding-bottom:4px}
+.anno-text{font-family:'Noto Serif SC',serif;font-size:14px;line-height:1.9;
+  color:var(--ink-light);display:block;word-break:normal;overflow-wrap:break-word}
+.anno-tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.5px;
+  background:var(--blue);color:white;border-radius:4px;
+  padding:2px 8px;margin-top:5px;line-height:1.6}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--paper-border);border-radius:3px}
+
+@media(max-width:700px){
+  .training-wrap{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .progress-strip{left:0}
+  .main-panel{padding:20px 16px 80px}
+  .role-cards{grid-template-columns:1fr}
+  .think-row{grid-template-columns:1fr}
+  .example-cols{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HOME ══════════ -->
+<div class="screen active" id="homeScreen">
+  <div class="home-inner">
+    <div class="logo-mark">文</div>
+    <div class="home-title">作文导师</div>
+    <div class="home-subtitle">AI 写作训练 · 新加坡中学华文</div>
+    <div class="role-cards">
+      <div class="role-card" onclick="openTeacher()">
+        <div class="role-icon">📚</div>
+        <div class="role-name">老师入口</div>
+        <div class="role-desc">管理题目<br>设置 API Key</div>
+      </div>
+      <div class="role-card" onclick="goTo('studentScreen')">
+        <div class="role-icon">✏️</div>
+        <div class="role-name">学生入口</div>
+        <div class="role-desc">选择题目<br>开始写作训练</div>
+      </div>
+    </div>
+    <div class="api-hint">💡 本系统接入 Claude AI，提供个性化写作引导与批改。在 claude.ai 内运行无需额外设置；独立部署时老师需填入 API Key。</div>
+  </div>
+</div>
+
+<!-- ══════════ PASSWORD MODAL ══════════ -->
+<div id="pwModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:999;align-items:center;justify-content:center">
+  <div style="background:var(--paper);border-radius:14px;padding:32px 28px;
+    max-width:360px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+    <div style="font-family:'Noto Serif SC',serif;font-size:20px;font-weight:700;
+      margin-bottom:6px">🔒 老师入口</div>
+    <div style="font-size:13px;color:var(--ink-faint);margin-bottom:20px">请输入管理密码</div>
+    <input type="password" id="pwInput" placeholder="输入密码"
+      style="margin-bottom:12px;font-size:15px"
+      onkeydown="if(event.key==='Enter') checkPassword()">
+    <div id="pwError" style="font-size:12px;color:var(--red);margin-bottom:10px;display:none">
+      密码错误，请重试。
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn-primary" onclick="checkPassword()" style="flex:1">确认</button>
+      <button class="btn-ghost" onclick="closePwModal()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TEACHER RESULTS ══════════ -->
+<div class="screen" id="resultsScreen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="goTo('teacherScreen')">← 返回</button>
+    <div class="top-bar-title">📋 学生成果查看</div>
+    <button class="btn-ghost" onclick="clearAllResults()"
+      style="margin-left:auto;font-size:12px;padding:5px 12px;color:var(--red);border-color:var(--red)">
+      清除全部记录
+    </button>
+  </div>
+  <div class="page-body fade-in" id="resultsBody"></div>
+</div>
+<div class="screen" id="teacherScreen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="goTo('homeScreen')">← 返回</button>
+    <div class="top-bar-title">📚 老师管理</div>
+  </div>
+  <div class="page-body fade-in">
+
+    <div class="section-label" style="margin-top:0">作文题目</div>
+    <div id="teacherTopicList"></div>
+
+    <div class="section-label">学生成果</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px">
+      <button class="btn-primary" onclick="goTo('resultsScreen');renderResults()">
+        📋 查看学生提交记录
+      </button>
+      <div id="resultsBadge" style="font-size:13px;color:var(--ink-faint);
+        display:flex;align-items:center"></div>
+    </div>
+
+    <div class="section-label">添加新题目</div>
+    <div class="add-form">
+      <div class="kw-instruction">
+        📌 <b>关键词标注方法：</b>在题目内容中，用<b>【】</b>把关键词括起来。<br>
+        例：你看到一名乘客<b>【大声喧哗】</b>，周围人的<b>【反应各不相同】</b>。<br>
+        学生进入训练时，括号内的词会高亮显示，供学生点击选择。
+      </div>
+      <div class="edit-form-label">文体</div>
+      <div style="display:flex;gap:16px;margin-bottom:12px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer">
+          <input type="radio" name="newGenre" value="narrative" checked> 记叙文
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer">
+          <input type="radio" name="newGenre" value="argumentative"> 议论文（材料）
+        </label>
+      </div>
+      <div class="edit-form-label">标题</div>
+      <input type="text" id="newTitle" placeholder="例：地铁事件" style="margin-bottom:10px">
+      <div class="edit-form-label">题目内容（用【】标注关键词）</div>
+      <textarea class="form-ta" id="newContent" rows="4"
+        placeholder="例：在一次乘坐地铁时，你看到一名乘客【大声喧哗】并影响他人休息。面对这一情况，周围人的【反应各不相同】。请写出事情的经过，并加入场面描写。"
+        oninput="updateAddPreview()"></textarea>
+      <div class="edit-form-label">实时预览（学生看到的效果）</div>
+      <div class="preview-box" id="addPreview" style="color:var(--ink-faint);font-size:13px">输入题目后自动预览……</div>
+      <div style="margin-top:14px">
+        <button class="btn-primary" onclick="addTopic()">＋ 添加题目</button>
+      </div>
+    </div>
+
+    <div class="section-label">API Key 设置</div>
+    <div class="api-settings">
+      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px">
+        <div style="font-size:20px;margin-top:2px">🔑</div>
+        <div>
+          <div style="font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600;margin-bottom:4px">Anthropic API Key</div>
+          <div style="font-size:13px;color:var(--ink-faint);line-height:1.7">独立部署时需要。密钥仅存储在本地浏览器。</div>
+        </div>
+      </div>
+      <div style="position:relative;margin-bottom:12px">
+        <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-…"
+          style="padding-right:48px;font-family:monospace;font-size:13px">
+        <button onclick="toggleKeyVis()" id="eyeBtn"
+          style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+          background:none;border:none;cursor:pointer;font-size:16px;color:var(--ink-faint)">👁</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button class="btn-primary" onclick="saveKey()">💾 保存</button>
+        <button class="btn-ghost" onclick="clearKey()">清除</button>
+        <div id="keyStatus" style="font-size:13px;color:var(--ink-faint)"></div>
+      </div>
+      <div class="warn-box">⚠️ 请勿将 Key 分享给学生。前往
+        <a href="https://console.anthropic.com/settings/keys" target="_blank"
+          style="color:var(--accent)">console.anthropic.com</a> 获取。
+      </div>
+    </div>
+    <div class="section-label">管理密码</div>
+    <div class="api-settings">
+      <div style="font-size:13px;color:var(--ink-faint);line-height:1.7;margin-bottom:12px">
+        修改进入老师入口所需的密码。默认密码：<code style="background:var(--paper-border);
+        padding:1px 6px;border-radius:4px;font-size:12px">teacher123</code>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <input type="password" id="newPwInput" placeholder="输入新密码"
+          style="max-width:200px;margin-bottom:0">
+        <button class="btn-primary" onclick="changePassword()">修改密码</button>
+        <div id="pwChangeStatus" style="font-size:13px;color:var(--ink-faint)"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="screen" id="studentScreen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="goTo('homeScreen')">← 返回</button>
+    <div class="top-bar-title">✏️ 选择题目</div>
+  </div>
+  <div class="student-body fade-in" id="studentTopicList"></div>
+</div>
+
+<!-- ══════════ STUDENT INFO MODAL ══════════ -->
+<div id="studentInfoModal" style="display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center">
+  <div style="background:var(--paper);border-radius:14px;padding:32px 28px;
+    max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+    <div style="font-family:'Noto Serif SC',serif;font-size:20px;font-weight:700;
+      margin-bottom:6px;color:var(--ink)">✏️ 开始前，请填写你的资料</div>
+    <div style="font-size:13px;color:var(--ink-faint);margin-bottom:22px">
+      老师会通过这些资料查阅你的练习成果。
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
+      <div>
+        <div style="font-size:12px;color:var(--ink-faint);letter-spacing:1px;margin-bottom:5px">班级</div>
+        <input type="text" id="siClass" placeholder="例：2E1" style="margin-bottom:0">
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--ink-faint);letter-spacing:1px;margin-bottom:5px">学号</div>
+        <input type="text" id="siNumber" placeholder="例：12" style="margin-bottom:0">
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--ink-faint);letter-spacing:1px;margin-bottom:5px">姓名</div>
+        <input type="text" id="siName" placeholder="你的中文姓名" style="margin-bottom:0">
+      </div>
+    </div>
+    <div id="siError" style="font-size:12px;color:var(--red);margin-bottom:10px;display:none">
+      请填写所有资料再继续。
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn-primary" onclick="confirmStudentInfo()" style="flex:1">确认 · 开始练习 →</button>
+      <button class="btn-ghost" onclick="closeStudentInfoModal()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TRAINING ══════════ -->
+<div class="screen" id="trainingScreen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="confirmBack()">← 返回</button>
+    <div class="top-bar-title" id="trainingTitle"></div>
+    <div style="margin-left:auto;font-size:12px;color:var(--ink-faint)" id="phaseIndicator"></div>
+  </div>
+  <div class="progress-strip"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="training-wrap">
+    <div class="sidebar">
+      <div class="sidebar-topic-box">
+        <div class="sidebar-topic-label">当前题目</div>
+        <div class="sidebar-topic-title" id="sidebarTitle"></div>
+      </div>
+      <div id="sidebarNav"></div>
+    </div>
+    <div class="main-panel" id="mainPanel"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════
+//  STATIC DATA — topics
+// ═══════════════════════════════════════
+let topics = [
+  {
+    title: '地铁事件',
+    genre: 'narrative',
+    content: '在一次乘坐地铁时，你看到一名乘客大声喧哗并影响他人休息。面对这一情况，周围人的反应各不相同。请写出事情的经过，并加入场面描写。'
+  },
+  {
+    title: '雨中的陌生人',
+    genre: 'narrative',
+    content: '放学途中突然下起大雨，你在巴士站避雨，遇到了一位处境困难的陌生人。这次相遇让你有了意外的收获。请写出这件事的经过，并加入对人物的描写。'
+  },
+  {
+    title: '才艺表演的意外',
+    genre: 'narrative',
+    content: '学校举办才艺表演，轮到一位平时沉默寡言的同学上台，他的表现令所有人大感意外。台下同学的反应各不相同。请写出这件事的经过，并加入对人物表演时的描写。'
+  },
+  {
+    title: '培养中学生的阅读习惯',
+    genre: 'argumentative',
+    content: '根据以下材料，写一篇文章，谈谈如何培养中学生的阅读习惯。\n\n【材料】中学生学业忙碌，课余时间也常受电子游戏和短视频的吸引，导致失去阅读兴趣。要培养中学生的阅读习惯，不仅需要中学生自己持之以恒地培养兴趣，还需要学校创造良好的阅读环境，举办各种阅读活动，家庭也要提供支持与配合。'
+  }
+];
+
+// ═══════════════════════════════════════
+//  PHASE DEFINITIONS (navigation labels)
+// ═══════════════════════════════════════
+// Phases are dynamic — detailed writing phases expand based on chosen keywords
+const BASE_PHASES = [
+  { id:'read',       group:'准备',     label:'读题 · 识别关键词' },
+  { id:'think',      group:'准备',     label:'审题思考' },
+  // keyword_N phases inserted dynamically
+  { id:'opening',    group:'写作',     label:'写开头' },
+  { id:'lyrical',    group:'写作',     label:'抒情议论' },
+  { id:'closing',    group:'写作',     label:'写结尾' },
+  { id:'summary',    group:'完成',     label:'全文总结' },
+  { id:'connect',    group:'完成',     label:'衔接润色' },
+];
+
+// ═══════════════════════════════════════
+//  PER-STEP WRITING RESOURCES
+// ═══════════════════════════════════════
+// Keyed by writing focus type (mapped from keyword category returned by AI)
+const WRITE_RESOURCES = {
+  人物描写: {
+    scaffolds: ['动作描写','神态描写','心理描写','语言描写','对比反应'],
+    sentences: [
+      { label:'动作＋神态', text:'他___（动作），___（再一个动作），脸上___（神态），眼神___。' },
+      { label:'心理独白',   text:'我___（动作），心里却像___（比喻），一边想___，一边又___。' },
+      { label:'语言描写',   text:'「___」他___地说，声音___，语气里带着___。' },
+      { label:'四维组合',   text:'他___（动作）；___（神态）；嘴里___（语言）；我心里___（心理）。' },
+    ],
+    weak:    '那个人很吵，说话声音很大，大家都觉得很烦。',
+    weakWhy: '❌ 全是笼统标签，没有任何具体动作、神态或心理，读者感受不到现场。',
+    strong:  '他斜靠在扶手上，手机外放声音震得整节车厢嗡嗡作响。说话时，他仰着头，嘴角挂着一丝漫不经心的笑，浑然不觉周围投来的目光。我攥紧了背包带，嘴唇动了动，话到嘴边，又生生咽了回去——算了，再忍一站。',
+    strongAnnotated:
+`他斜靠在扶手上，手机外放声音震得整节车厢嗡嗡作响。【动作描写】
+说话时，他仰着头，嘴角挂着一丝漫不经心的笑，浑然不觉周围投来的目光。【神态描写】
+我攥紧了背包带，嘴唇动了动，话到嘴边，又生生咽了回去——算了，再忍一站。【心理描写】`,
+    strongWhy:'✓ 动作（斜靠、攥紧）、神态（仰头、漫不经心的笑）、心理（咽回去）三管齐下，人物立刻鲜活。',
+    minChars: 60,
+    placeholder: '用动作、神态、心理、语言描写人物……'
+  },
+  场面描写: {
+    scaffolds: ['安静被打破','人群的漠然','声音的对比','光线与情绪'],
+    sentences: [
+      { label:'声音对比', text:'原本___的车厢里，只有___声，突然，___打破了这份___。' },
+      { label:'群像漠然', text:'有人___，有人___，有人___，整节车厢像一幅凝固的画，没有人___。' },
+      { label:'细节烘托', text:'___（环境细节），像是在___，映衬着此刻___的气氛。' },
+      { label:'前后对比', text:'事情发生前：___。事情发生后：___，空气里弥漫着___。' },
+    ],
+    weak:    '地铁里很吵，大家都不说话，气氛很奇怪。',
+    weakWhy: '❌「很吵」「很奇怪」是感受标签，没有视觉、听觉细节，读者无法感受现场。',
+    strong:  '车厢内的灯光白而冷，窗外隧道的黑暗飞速掠过。喧哗声骤然响起，像一块石头砸入平静的水面——有人抬头看了一眼，又迅速低下；有人把耳机音量拧大；有人皱了皱眉，将视线移向窗外那片漆黑。没有人说话，沉默比噪音更令人窒息。',
+    strongAnnotated:
+`车厢内的灯光白而冷，窗外隧道的黑暗飞速掠过。【感官描写：视觉】
+喧哗声骤然响起，像一块石头砸入平静的水面——【感官描写：听觉＋比喻】
+有人抬头看了一眼，又迅速低下；有人把耳机音量拧大；有人皱了皱眉，将视线移向窗外那片漆黑。【群像动作：前后对比】
+没有人说话，沉默比噪音更令人窒息。【情感升华：由景及情】`,
+    strongWhy:'✓ 视觉（灯光、黑暗）＋听觉（喧哗）＋群像动作，「沉默比噪音更令人窒息」一句将场面升华为主题。',
+    minChars: 50,
+    placeholder: '描写现场的氛围或环境细节……'
+  },
+  事件经过: {
+    scaffolds: ['起因交代','冲突发展','高潮时刻','转折点'],
+    sentences: [
+      { label:'起因交代', text:'那是___（时间）的事。我___（动作），正当___时，突然___。' },
+      { label:'冲突推进', text:'起初___，渐渐地___，到最后，___（高潮）。' },
+      { label:'转折',     text:'就在这时，___（转折事件），让原本___的局面，突然___。' },
+      { label:'细节推进', text:'他先___，然后___，最后___，每一步都让我___。' },
+    ],
+    weak:    '那天地铁里发生了一件事，有人在喧哗，后来有人去制止了。',
+    weakWhy: '❌ 只是事件的骨架，没有细节、过程和情感变化，读者完全感受不到现场。',
+    strong:  '地铁刚驶出站，他的声音便骤然响起——外放的音乐声和大嗓门的通话声交织在一起，几乎压过了列车行进的轰鸣。起初，人们只是抬头看了一眼，又各自低下。五分钟过去，声音非但没小，反而越来越响。坐在角落的阿姨终于放下手中的书，站了起来。',
+    strongAnnotated:
+`地铁刚驶出站，他的声音便骤然响起——外放的音乐声和大嗓门的通话声交织在一起，几乎压过了列车行进的轰鸣。【起因交代：时间锚点＋感官细节】
+起初，人们只是抬头看了一眼，又各自低下。【事件发展：群像反应】
+五分钟过去，声音非但没小，反而越来越响。【冲突推进：时间推进强化张力】
+坐在角落的阿姨终于放下手中的书，站了起来。【转折：高潮动作，「终于」暗示蓄力已久】`,
+    strongWhy:'✓ 有时间推进（刚驶出站→五分钟过去），有声音细节，有人物动作，事件经过层次分明。',
+    minChars: 60,
+    placeholder: '写出事件的来龙去脉，注意层次……'
+  },
+  人物反应: {
+    scaffolds: ['对比反应','制止者','沉默者','附和者','内心挣扎'],
+    sentences: [
+      { label:'对比三人', text:'有人___（反应A），有人___（反应B），也有人___（反应C）。' },
+      { label:'内心挣扎', text:'我___（外在动作），心里却___（内心想法），犹豫了___之后，最终___。' },
+      { label:'勇敢制止', text:'她___（起身动作），走向___，声音___地说：「___」' },
+      { label:'沉默旁观', text:'他___（动作），目光从___移开，仿佛什么都没听见，其实___（内心）。' },
+    ],
+    weak:    '有的人不管，有的人皱眉，有一个人去说了他。',
+    weakWhy: '❌ 反应描写只有一句话，没有细节。「皱眉」「说了他」太笼统，人物形象单薄。',
+    strong:  '大多数人沉默着，把视线藏进手机屏幕或窗外的黑暗里。一个西装革履的男人皱了皱眉，又若无其事地拉紧领带，重新闭上眼睛。只有角落里的阿姨，慢慢地合上书，站了起来，走到他面前，声音不高，却清清楚楚：「请你把声音调小一点，谢谢。」',
+    strongAnnotated:
+`大多数人沉默着，把视线藏进手机屏幕或窗外的黑暗里。【群像反应：动作描写，「藏」字传神】
+一个西装革履的男人皱了皱眉，又若无其事地拉紧领带，重新闭上眼睛。【个体反应：动作细节暗示心理——想管又退缩】
+只有角落里的阿姨，慢慢地合上书，站了起来，走到他面前，【转折对比：「只有」与前两句形成强烈反差】
+声音不高，却清清楚楚：「请你把声音调小一点，谢谢。」【语言描写：低调中有力量】`,
+    strongWhy:'✓ 三种反应形成对比：沉默的大多数、假装没听见的男人、勇敢开口的阿姨，层次分明，人物各有个性。',
+    minChars: 60,
+    placeholder: '写出不同人物面对事件时的反应……'
+  },
+  默认: {
+    scaffolds: ['具体细节','感官描写','情感变化','前后对比'],
+    sentences: [
+      { label:'细节展开', text:'___（概括）——具体来说，___（细节1），___（细节2），___（细节3）。' },
+      { label:'感官描写', text:'我看到___；听到___；心里感到___。' },
+      { label:'情感变化', text:'起初我___（感受），慢慢地，___，最后我明白了___。' },
+      { label:'对比深化', text:'表面上___，实际上___，这让我意识到___。' },
+    ],
+    weak:    '这件事很有意思，让我印象很深刻，我觉得很感动。',
+    weakWhy: '❌ 只有感受标签，没有任何具体内容，读者不知道「有意思」在哪里、「感动」什么。',
+    strong:  '那一刻，我看到她颤抖着双手，却依然开口说出那句话——声音不大，却在整节车厢的沉默中格外清晰。我突然意识到，勇气从来不是不害怕，而是在害怕的时候，仍然选择不沉默。',
+    strongAnnotated:
+`那一刻，我看到她颤抖着双手，却依然开口说出那句话——【细节描写：「颤抖」是具体细节，不是笼统感受】
+声音不大，却在整节车厢的沉默中格外清晰。【感官描写：声音对比，以静衬动】
+我突然意识到，勇气从来不是不害怕，而是在害怕的时候，仍然选择不沉默。【情感升华：由事及理，点题】`,
+    strongWhy:'✓ 用具体细节（颤抖的手、清晰的声音）承载情感，最后一句由事及理，点题有力。',
+    minChars: 50,
+    placeholder: '围绕这个关键词，写出具体、生动的内容……'
+  }
+};
+
+const OPENING_RESOURCES = {
+  scaffolds: ['环境描写开头','悬念法','对比法','直入事件'],
+  sentences: [
+    { label:'环境描写式', text:'___（时间地点），___（环境细节），一切看起来如此___——直到……' },
+    { label:'悬念式',     text:'如果那天我没有___，或许我永远不会明白，___究竟意味着什么。' },
+    { label:'对比式',     text:'人们常说___，可那一天，我却看到了截然不同的一幕——___。' },
+    { label:'直入式',     text:'那是一个___的___（时间），我___，忽然，___（事件发生）。' },
+  ],
+  weak:    '那天我坐地铁，看到了一件事，让我很有感触。',
+  weakWhy: '❌「看到了一件事」「很有感触」过于笼统，读者没有理由继续读下去。',
+  strong:  '傍晚的地铁车厢，灯光昏黄，乘客们各自靠着扶手，闭目养神，连呼吸声都显得格外轻。那是一天里难得的安静时刻——直到那道声音突然划破了一切。',
+  strongAnnotated:
+`傍晚的地铁车厢，灯光昏黄，乘客们各自靠着扶手，闭目养神，连呼吸声都显得格外轻。【环境描写：视觉＋氛围铺垫，营造「安静」基调】
+那是一天里难得的安静时刻——直到那道声音突然划破了一切。【悬念制造：破折号后留悬念，引导读者继续读】`,
+  strongWhy:'✓ 用「安静」铺垫，「突然划破」制造悬念，两句话已成功抓住读者注意力。',
+  minChars: 40,
+  placeholder: '写出能吸引读者的开头……'
+};
+
+const LYRICAL_RESOURCES = {
+  scaffolds: ['由事及理','情感深化','反思升华','对比感悟'],
+  sentences: [
+    { label:'由事及理',   text:'这件事虽小，却让我明白了___。___，原来从来不是___，而是___。' },
+    { label:'对比感悟',   text:'面对同样的情境，有人___，有人___。这让我想到，___。' },
+    { label:'反问深化',   text:'如果每个人都___，这个世界会变成什么样？也许，改变，就从___开始。' },
+    { label:'情感抒发',   text:'那一刻，我心里___（情感），像___（比喻）。我知道，___。' },
+  ],
+  weak:    '这件事让我很感动，我要向她学习，做一个好人。',
+  weakWhy: '❌「很感动」「做好人」是空洞口号，没有针对文章内容的具体感悟，更无深度。',
+  strong:  '那位阿姨开口时，声音并不大，手指却微微颤抖着。我突然明白，勇气从来不是不害怕，而是在害怕的时候，仍然选择不沉默。我们总是把文明挂在嘴边，却在真正需要的时刻，把目光藏进手机屏幕里。',
+  strongAnnotated:
+`那位阿姨开口时，声音并不大，手指却微微颤抖着。【细节触发：具体感官细节，不直接说「感动」】
+我突然明白，勇气从来不是不害怕，而是在害怕的时候，仍然选择不沉默。【由事及理：从细节引发感悟】
+我们总是把文明挂在嘴边，却在真正需要的时刻，把目光藏进手机屏幕里。【对比反思：「总是……却……」句式，批判旁观者惯性】`,
+  strongWhy:'✓ 从具体细节（颤抖的手）引出感悟，「把目光藏进手机屏幕」的比喻精准点出旁观者的问题，深刻有力。',
+  minChars: 40,
+  placeholder: '由这件事引发你的思考和感悟……'
+};
+
+const CLOSING_RESOURCES = {
+  scaffolds: ['点题升华','首尾呼应','反问结尾','展望感悟'],
+  sentences: [
+    { label:'由事及理',   text:'这件事虽小，却让我明白了___。___，原来从来不是___，而是___。' },
+    { label:'首尾呼应',   text:'___重新归于___（呼应开头），但我知道，有些东西，已经悄悄改变了。' },
+    { label:'反问升华',   text:'如果每个人都选择沉默，这个世界会变成什么样？也许，改变，就从___开始。' },
+    { label:'感悟式',     text:'我想起___（开头细节），如今再看，竟有了全然不同的感受——___。' },
+  ],
+  weak:    '这件事让我学到了很多，我以后也要做一个文明的人。',
+  weakWhy: '❌「学到了很多」却没说学到什么，「文明的人」是贴标签，没有情感共鸣，无法与前文呼应。',
+  strong:  '地铁缓缓驶入下一站，车厢重新归于安静。我看着窗玻璃上自己疲惫的倒影，想起阿姨开口时微微颤抖的声音——那一刻，她一定也很害怕，却还是说了。文明，或许就是在害怕的时候，仍然选择不沉默。',
+  strongAnnotated:
+`地铁缓缓驶入下一站，车厢重新归于安静。【首尾呼应：呼应开头的「安静」，形成结构闭环】
+我看着窗玻璃上自己疲惫的倒影，想起阿姨开口时微微颤抖的声音——【细节回忆：串联前文，情感积累】
+那一刻，她一定也很害怕，却还是说了。【心理推测：换位思考，升华人物形象】
+文明，或许就是在害怕的时候，仍然选择不沉默。【点题：简短有力，与中心思想直接呼应】`,
+  strongWhy:'✓ 呼应开头的「安静」，用细节（颤抖的声音）引出主题，最后一句令人回味，首尾呼应完整。',
+  minChars: 30,
+  placeholder: '写出点题、升华的结尾……'
+};
+
+// ═══════════════════════════════════════
+//  SPEECH — 简单可靠版
+//  全局函数，onclick字符串可直接调用
+//  cancel() 后50ms再speak，避免冲突
+// ═══════════════════════════════════════
+var _ttsU = null; // 持久引用防GC
+
+function _ttsSpeak(text, lang){
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  setTimeout(function(){
+    _ttsU = new SpeechSynthesisUtterance(text);
+    _ttsU.lang  = lang;
+    _ttsU.rate  = 0.88;
+    _ttsU.pitch = 1.05;
+    _ttsU.volume = 1;
+    var voices = window.speechSynthesis.getVoices();
+    var v = null;
+    if(lang === 'zh'){
+      // 优先普通话：zh-CN > zh-TW > zh-SG，明确排除粤语 zh-HK
+      v = voices.find(function(x){ return x.lang === 'zh-CN'; })
+       || voices.find(function(x){ return x.lang === 'zh-TW'; })
+       || voices.find(function(x){ return x.lang === 'zh-SG'; })
+       || voices.find(function(x){ return x.lang && x.lang.startsWith('zh') && x.lang !== 'zh-HK'; })
+       || null;
+    } else {
+      // 英文：优先新加坡英语 en-SG > 英式 en-GB > 美式 en-US
+      v = voices.find(function(x){ return x.lang === 'en-SG'; })
+       || voices.find(function(x){ return x.lang === 'en-GB'; })
+       || voices.find(function(x){ return x.lang === 'en-US'; })
+       || voices.find(function(x){ return x.lang && x.lang.startsWith('en'); })
+       || null;
+    }
+    if(v) _ttsU.voice = v;
+    _ttsU.onerror = function(e){ console.warn('TTS error', e.error); };
+    window.speechSynthesis.speak(_ttsU);
+  }, 50);
+}
+
+function _ttsStop(){
+  try{ window.speechSynthesis.cancel(); }catch(e){}
+  _ttsU = null;
+}
+
+// speakBtn 按钮状态管理
+function _ttsBtnSpeak(text, lang, btn){
+  // 如果正在播放则停止
+  if(btn && btn.dataset.speaking === '1'){
+    _ttsStop();
+    document.querySelectorAll('.speak-btn').forEach(function(b){
+      b.dataset.speaking='0'; b.textContent='🔊';
+    });
+    return;
+  }
+  // 停止其他按钮
+  document.querySelectorAll('.speak-btn').forEach(function(b){
+    b.dataset.speaking='0'; b.textContent='🔊';
+  });
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  setTimeout(function(){
+    _ttsU = new SpeechSynthesisUtterance(text);
+    _ttsU.lang  = lang;
+    _ttsU.rate  = 0.88;
+    _ttsU.pitch = 1.05;
+    _ttsU.volume = 1;
+    var voices = window.speechSynthesis.getVoices();
+    var v = null;
+    if(lang === 'zh'){
+      v = voices.find(function(x){ return x.lang === 'zh-CN'; })
+       || voices.find(function(x){ return x.lang === 'zh-TW'; })
+       || voices.find(function(x){ return x.lang === 'zh-SG'; })
+       || voices.find(function(x){ return x.lang && x.lang.startsWith('zh') && x.lang !== 'zh-HK'; })
+       || null;
+    } else {
+      v = voices.find(function(x){ return x.lang === 'en-SG'; })
+       || voices.find(function(x){ return x.lang === 'en-GB'; })
+       || voices.find(function(x){ return x.lang === 'en-US'; })
+       || voices.find(function(x){ return x.lang && x.lang.startsWith('en'); })
+       || null;
+    }
+    if(v) _ttsU.voice = v;
+    if(btn){ btn.dataset.speaking='1'; btn.textContent='⏹'; }
+    _ttsU.onend = function(){
+      if(btn){ btn.dataset.speaking='0'; btn.textContent='🔊'; }
+      _ttsU = null;
+    };
+    _ttsU.onerror = function(){
+      if(btn){ btn.dataset.speaking='0'; btn.textContent='🔊'; }
+      _ttsU = null;
+    };
+    window.speechSynthesis.speak(_ttsU);
+  }, 50);
+}
+
+// 兼容旧调用 Speech.speak(...)
+var Speech = {
+  speak: function(text, lang, btn){ _ttsBtnSpeak(text, lang, btn); },
+  stop:  function(){ _ttsStop(); }
+};
+
+// Global registry for speak button texts — avoids ANY quoting issues in onclick
+var _speakRegistry = {};
+var _speakNextId = 0;
+
+function speakBtn(zhText, enText, extraStyle){
+  extraStyle = extraStyle || '';
+  var idZh = 'sp' + (_speakNextId++);
+  var idEn = 'sp' + (_speakNextId++);
+  _speakRegistry[idZh] = { text: zhText, lang: 'zh' };
+  _speakRegistry[idEn] = { text: enText, lang: 'en' };
+  return '<span class="speak-pair" style="' + extraStyle + '">' +
+    '<button class="speak-btn" data-speaking="0" data-spid="' + idZh + '" ' +
+      'onclick="_ttsFromBtn(this)" title="中文解释">🔊 中</button>' +
+    '<button class="speak-btn" data-speaking="0" data-spid="' + idEn + '" ' +
+      'onclick="_ttsFromBtn(this)" title="English explanation">🔊 EN</button>' +
+    '</span>';
+}
+
+function _ttsFromBtn(btn){
+  var id = btn.getAttribute('data-spid');
+  var entry = _speakRegistry[id];
+  if(!entry) return;
+  Speech.speak(entry.text, entry.lang, btn);
+}
+
+// ── VOICE CONTENT LIBRARY ──────────────────────────────────
+// All zh/en explanations used throughout the system
+const VC = {
+  // ── PHASE 0 ──
+  read_phase: {
+    zh: '读题是写作的第一步。你需要仔细读懂题目的要求，找出最重要的关键词，这些词决定了你必须写什么内容。',
+    en: 'Reading the question carefully is the first step in writing. You need to identify the key words that tell you exactly what the question is asking you to write about.'
+  },
+  keyword: {
+    zh: '关键词是题目里最重要的词语，它告诉你这篇文章必须写哪些内容。选对关键词，你的文章就不会跑题。',
+    en: 'Key words are the most important words in the question. They define the scope and focus of your essay. Identifying them correctly prevents you from going off-topic.'
+  },
+  // ── NARRATIVE PHASE 1 ──
+  observe_round: {
+    zh: '第一轮是观察现象。好的作文从真实的观察开始。你要先想清楚这件事是什么，它影响了谁，为什么值得写。',
+    en: 'Round one is about observation. Good writing begins with careful observation. Think about what happened, who was affected, and why this incident is worth writing about.'
+  },
+  conflict_round: {
+    zh: '第二轮是发现冲突。高分作文的关键是写出冲突——同一件事，不同的人有不同的反应。没有冲突，文章就会变成流水账。',
+    en: 'Round two is about identifying conflict. High-scoring essays need conflict — the same event triggers different reactions from different people. Without conflict, your essay becomes a flat, uneventful narrative.'
+  },
+  depth_round: {
+    zh: '第三轮是深挖人性。为什么有人明明不满却选择沉默？这是区分普通作文和高分作文的关键。心理描写越真实，文章越有深度。',
+    en: 'Round three digs deeper into human nature. Why do people stay silent when they are clearly uncomfortable? This is what separates ordinary essays from outstanding ones. Authentic psychological depth elevates your writing.'
+  },
+  thesis_round: {
+    zh: '第四轮是确立中心思想。中心思想是整篇文章的灵魂。它不是简单的道德口号，而是从这件事里提炼出来的深刻道理。',
+    en: 'Round four establishes your central theme. The central theme is the soul of your essay. It should not be a simple moral slogan, but a meaningful insight drawn from the specific incident you are writing about.'
+  },
+  plan_round: {
+    zh: '第五轮是制定详写计划。很多同学的问题是什么都写，但没有重点。现在你要决定：这篇文章最值得写细的是哪三件事？',
+    en: 'Round five is about planning what to write in detail. Many students try to write about everything, which results in shallow coverage. Now decide: which three things in your essay deserve the most detailed treatment?'
+  },
+  // ── WRITING TECHNIQUES ──
+  action_desc: {
+    zh: '动作描写是用具体的动作来展示人物。不要说他很紧张，要写他攥紧拳头，手心出汗。动作比形容词更有说服力。',
+    en: 'Action description shows character through specific physical movements. Instead of saying he was nervous, write he clenched his fists, his palms sweaty. Actions are far more convincing than adjectives.'
+  },
+  expression_desc: {
+    zh: '神态描写是描写人物的表情和眼神。眼睛是心灵的窗户。通过描写人物的眼神、眉头、嘴角，读者就能感受到人物的内心世界。',
+    en: 'Expression description captures a character facial expressions and gaze. The eyes are windows to the soul. By describing someone eyes, eyebrows and lips, readers can understand their inner emotional state.'
+  },
+  psychology_desc: {
+    zh: '心理描写是写出人物内心的想法和感受。这是高分作文的加分关键。通过心理描写，读者能理解人物为什么做出那个选择。',
+    en: 'Psychological description reveals a character inner thoughts and feelings. This is a key element of high-scoring essays. Through psychological description, readers understand why a character makes certain choices.'
+  },
+  scene_desc: {
+    zh: '场面描写是用文字重现现场的氛围。你需要同时调动视觉、听觉，描写周围的环境，让读者感觉自己就在现场。',
+    en: 'Scene description recreates the atmosphere of the setting through words. You need to engage multiple senses, sight, sound, and describe the surrounding environment so readers feel they are there.'
+  },
+  contrast: {
+    zh: '对比是一种强有力的写作手法。通过把两种截然不同的事物放在一起，可以突出主题，让文章更有冲击力。',
+    en: 'Contrast is a powerful literary technique. By placing two very different things side by side, you can highlight your theme and create greater emotional impact in your writing.'
+  },
+  opening_tech: {
+    zh: '好的开头要在最短的时间内抓住读者的注意力。可以用环境描写制造氛围，或用悬念让读者想继续读下去。',
+    en: 'A strong opening must capture the reader attention immediately. You can use environmental description to create atmosphere, or employ suspense to make readers eager to continue.'
+  },
+  closing_tech: {
+    zh: '好的结尾要点题升华，与开头呼应。最后一句话是读者最后的印象，要让人回味，不能草草收场。',
+    en: 'A strong closing should echo your opening and elevate your central theme. The final sentence is the reader last impression of your essay, make it memorable, not hasty.'
+  },
+  lyrical_tech: {
+    zh: '抒情议论是记叙文里由事及理的部分。通过这几句话，你要把这件具体的事升华成一个普遍的道理，让文章有思想深度。',
+    en: 'Lyrical reflection is where you elevate a specific incident into a universal insight. These few sentences transform your personal narrative into something meaningful for all readers.'
+  },
+  // ── ARGUMENTATIVE PHASE 1 ──
+  arg_read_phase: {
+    zh: '材料议论文的第一步是读懂材料。你要找出两样东西：一是题目的指令词，告诉你要写什么；二是材料里提到的写作角度，告诉你可以从哪些方面写。',
+    en: 'For a material-based argumentative essay, your first task is to analyse the stimulus material. You need to identify two things: the directive word that tells you what to write, and the dimensions mentioned in the material that suggest your essay structure.'
+  },
+  directive_word: {
+    zh: '指令词是题目里告诉你要做什么的词。如何表示要写方法，为何表示要写原因，谈谈表示要发表看法。找对指令词，文章才不会答非所问。',
+    en: 'The directive word is the word in the question that tells you what type of response is required. How signals methods or strategies, why signals reasons or causes, discuss signals an evaluative response. Identifying it correctly prevents you from misreading the question.'
+  },
+  arg_structure: {
+    zh: '议论文的结构要有逻辑层次。如果材料提到了三个群体，就应该分三段来写，每段一个论点。段落之间要有逻辑顺序，比如由内而外或由小到大。',
+    en: 'An argumentative essay requires logical structure. If the material identifies three groups, you should devote one paragraph to each, presenting one argument per paragraph. The paragraphs should follow a logical progression, such as moving from internal to external factors.'
+  },
+  topic_sentence: {
+    zh: '论点句是每一段的第一句话，它告诉读者这一段要证明什么。好的论点句要清晰、具体，能直接回应题目的要求。',
+    en: 'The topic sentence is the first sentence of each body paragraph. It tells the reader what argument that paragraph will prove. A strong topic sentence is clear, specific, and directly addresses the question requirements.'
+  },
+  elaboration: {
+    zh: '阐述是在论点句之后，用自己的话解释这个论点为什么成立。很多同学的问题是只提出论点，但没有解释。阐述让论点从"空洞"变得"有说服力"。',
+    en: 'Elaboration is the explanation that follows your topic sentence. It explains in your own words why your argument is valid. Many students state a point without explaining it. Elaboration transforms a bare claim into a convincing argument.'
+  },
+  example_arg: {
+    zh: '举例是用具体的事例来支持论点。好的例子要具体、真实，最好是从你的学校生活或日常经验里找。空洞的例子会让论证变得苍白无力。',
+    en: 'Examples support your argument with specific evidence. Good examples are concrete and authentic, ideally drawn from your school life or personal experience. Vague examples weaken your argument significantly.'
+  },
+  arg_opening: {
+    zh: '议论文的开头要先描述现象，再引出问题。可以用材料里的背景作为切入点，也可以引用一句名言来增加文采。',
+    en: 'An argumentative essay opening should first describe the relevant phenomenon, then introduce the problem. You can use the background from the stimulus material as your entry point, or begin with a relevant quotation to demonstrate literary flair.'
+  },
+  arg_closing: {
+    zh: '议论文的结尾要总结各段论点，然后发出呼吁或展望。可以用反面论证指出不行动的后果，让结尾更有力量。',
+    en: 'An argumentative essay conclusion should summarise your arguments and end with a call to action or a forward-looking statement. You can use a negative argument — showing the consequences of inaction — to make your conclusion more powerful.'
+  },
+  // ── ARGUMENTATIVE WRITING TECHNIQUES ──
+  peel: {
+    zh: 'PEEL是一种段落写法：P是论点句，E是阐述，E是例子，L是联系回题目。用这个框架写每一段，结构就会清晰、有说服力。',
+    en: 'PEEL is a paragraph framework: P for Point, E for Elaboration, E for Evidence or Example, L for Link back to the question. Using this structure for each body paragraph ensures clarity and logical persuasion.'
+  },
+  coherence: {
+    zh: '文章的连贯性是指各段之间要有顺畅的过渡。用连接词把段落联系起来，让读者感觉文章是一个整体，而不是几段独立的内容。',
+    en: 'Coherence refers to the smooth flow between paragraphs. Using linking words and transition phrases connects your paragraphs so the essay reads as a unified whole rather than a collection of separate sections.'
+  }
+};
+
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+let state = {
+  topicIdx: 0,
+  phases: [],          // built dynamically
+  currentPhaseIdx: 0,
+  keywords: [],        // [{word, category, reason}]
+  selectedKws: [],     // subset chosen by student
+  answers: {},         // phaseId → {text, feedback}
+  thinkAngles: '',     // 详写角度
+  thinkCenter: '',     // 中心思想
+  summaryDraft: '',
+  connectDraft: ''
+};
+
+// ═══════════════════════════════════════
+//  API KEY
+// ═══════════════════════════════════════
+const KEY_STORE = 'zuowen_key';
+function getKey(){ return localStorage.getItem(KEY_STORE)||'' }
+function saveKey(){
+  const v = document.getElementById('apiKeyInput').value.trim();
+  if(!v){ showKS('请先输入密钥','err'); return }
+  if(!v.startsWith('sk-ant-')){ showKS('格式不对，应以 sk-ant- 开头','err'); return }
+  localStorage.setItem(KEY_STORE,v);
+  showKS('✓ 已保存','ok');
+  renderKeyStatus();
+}
+function clearKey(){
+  localStorage.removeItem(KEY_STORE);
+  document.getElementById('apiKeyInput').value='';
+  showKS('已清除','neutral');
+  renderKeyStatus();
+}
+function showKS(msg,type){
+  const el=document.getElementById('keyStatus');
+  if(!el) return;
+  el.textContent=msg;
+  el.style.color=type==='ok'?'var(--green)':type==='err'?'var(--red)':'var(--ink-faint)';
+}
+function maskKey(k){ return k.length<12?k:k.slice(0,12)+'••••••••'+k.slice(-4) }
+function renderKeyStatus(){
+  const k=getKey();
+  const el=document.getElementById('keyStatus');
+  if(!el) return;
+  if(k){ el.textContent='已保存：'+maskKey(k); el.style.color='var(--green)';
+         document.getElementById('apiKeyInput').value='';
+         document.getElementById('apiKeyInput').placeholder=maskKey(k); }
+  else { el.textContent='尚未设置'; el.style.color='var(--ink-faint)';
+         document.getElementById('apiKeyInput').placeholder='sk-ant-api03-…'; }
+}
+function toggleKeyVis(){
+  const i=document.getElementById('apiKeyInput'),b=document.getElementById('eyeBtn');
+  i.type=i.type==='password'?'text':'password';
+  b.textContent=i.type==='password'?'👁':'🙈';
+}
+
+// ═══════════════════════════════════════
+//  CLAUDE API CALL
+// ═══════════════════════════════════════
+async function callClaude(system, userMsg, maxTokens=1200){
+  const k=getKey();
+  const headers={'Content-Type':'application/json'};
+  if(k) headers['x-api-key']=k;
+  const res=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST', headers,
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:maxTokens,
+      system, messages:[{role:'user',content:userMsg}]
+    })
+  });
+  if(!res.ok) throw new Error(`API ${res.status}`);
+  const d=await res.json();
+  return d.content.map(b=>b.text||'').join('');
+}
+
+function parseJSON(raw){
+  return JSON.parse(raw.replace(/```json|```/g,'').trim());
+}
+
+// ═══════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='teacherScreen'){ renderTeacher(); setTimeout(renderKeyStatus,30); updateResultsBadge(); }
+  if(id==='studentScreen') renderStudentList();
+  if(id==='resultsScreen') renderResults();
+  window.scrollTo(0,0);
+}
+
+function updateResultsBadge(){
+  const badge = document.getElementById('resultsBadge');
+  if(!badge) return;
+  const n = getResults().length;
+  badge.textContent = n > 0 ? `共 ${n} 份记录` : '暂无记录';
+}
+function confirmBack(){
+  if(state.currentPhaseIdx>0 && !confirm('返回将丢失当前进度，确定？')) return;
+  goTo('studentScreen');
+}
+
+// ═══════════════════════════════════════
+//  TEACHER
+// ═══════════════════════════════════════
+
+// Render 【】 markup as highlighted preview
+function renderKwMarkup(text){
+  return text.replace(/【([^】]+)】/g,
+    '<span class="preview-kw">$1</span>');
+}
+
+function updateAddPreview(){
+  const c = document.getElementById('newContent')?.value || '';
+  const p = document.getElementById('addPreview');
+  if(!p) return;
+  if(!c.trim()){ p.innerHTML='<span style="color:var(--ink-faint);font-size:13px">输入题目后自动预览……</span>'; return; }
+  p.innerHTML = renderKwMarkup(c);
+}
+
+function renderTeacher(){
+  document.getElementById('teacherTopicList').innerHTML =
+    topics.length === 0
+      ? '<div style="color:var(--ink-faint);font-size:13px;padding:12px 0">暂无题目，请在下方添加。</div>'
+      : topics.map((t,i) => `
+      <div class="topic-item" id="titem_${i}">
+        <div class="topic-item-header">
+          <div class="topic-item-title">${t.title}</div>
+          <div class="topic-item-actions">
+            <button class="btn-ghost" onclick="toggleEditTopic(${i})"
+              style="padding:5px 12px;font-size:12px">编辑</button>
+            <button class="btn-ghost" onclick="deleteTopic(${i})"
+              style="padding:5px 12px;font-size:12px;color:var(--red);border-color:var(--red)">删除</button>
+          </div>
+        </div>
+        <div class="topic-item-preview">${renderKwMarkup(t.content)}</div>
+        <div class="edit-form" id="editForm_${i}" style="display:none">
+          <div class="kw-instruction">
+            📌 用<b>【】</b>标注关键词，例：【大声喧哗】【反应各不相同】
+          </div>
+          <div class="edit-form-label">标题</div>
+          <input type="text" id="editTitle_${i}" value="${escAttr(t.title)}" style="margin-bottom:10px">
+          <div class="edit-form-label">题目内容（用【】标注关键词）</div>
+          <textarea class="form-ta" id="editContent_${i}" rows="4"
+            oninput="updateEditPreview(${i})">${escAttr(t.content)}</textarea>
+          <div class="edit-form-label">实时预览</div>
+          <div class="preview-box" id="editPreview_${i}">${renderKwMarkup(t.content)}</div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="btn-primary" onclick="saveEditTopic(${i})">💾 保存修改</button>
+            <button class="btn-ghost" onclick="toggleEditTopic(${i})">取消</button>
+          </div>
+        </div>
+      </div>`).join('');
+}
+
+function toggleEditTopic(i){
+  const form = document.getElementById(`editForm_${i}`);
+  const open = form.style.display !== 'none';
+  // close all other open editors
+  document.querySelectorAll('.edit-form').forEach(f=>f.style.display='none');
+  if(!open) form.style.display = 'block';
+}
+
+function updateEditPreview(i){
+  const c = document.getElementById(`editContent_${i}`)?.value || '';
+  const p = document.getElementById(`editPreview_${i}`);
+  if(p) p.innerHTML = renderKwMarkup(c);
+}
+
+function saveEditTopic(i){
+  const title = document.getElementById(`editTitle_${i}`).value.trim();
+  const content = document.getElementById(`editContent_${i}`).value.trim();
+  if(!title||!content){ alert('标题和内容不能为空'); return; }
+  topics[i] = { title, content };
+  renderTeacher();
+}
+
+function addTopic(){
+  const t = document.getElementById('newTitle').value.trim();
+  const c = document.getElementById('newContent').value.trim();
+  const g = document.querySelector('input[name="newGenre"]:checked')?.value || 'narrative';
+  if(!t||!c){ alert('请填写标题和内容'); return; }
+  topics.push({ title:t, content:c, genre:g });
+  document.getElementById('newTitle').value = '';
+  document.getElementById('newContent').value = '';
+  updateAddPreview();
+  renderTeacher();
+}
+
+function deleteTopic(i){
+  if(!confirm(`删除「${topics[i].title}」？`)) return;
+  topics.splice(i,1); renderTeacher();
+}
+
+// ═══════════════════════════════════════
+//  STUDENT LIST
+// ═══════════════════════════════════════
+function renderStudentList(){
+  document.getElementById('studentTopicList').innerHTML=
+    topics.map((t,i)=>`
+      <div class="topic-card" onclick="startTraining(${i})">
+        <div class="topic-card-num">题目 ${i+1}</div>
+        <div class="topic-card-title">${t.title}
+          <span class="genre-badge ${t.genre==='argumentative'?'genre-argumentative':'genre-narrative'}">
+            ${t.genre==='argumentative'?'议论文':'记叙文'}
+          </span>
+        </div>
+        <div class="topic-card-content">${t.content.replace(/\n/g,'<br>')}</div>
+        <div style="margin-top:16px;display:flex;justify-content:flex-end">
+          <button class="btn-primary" onclick="event.stopPropagation();startTraining(${i})">开始训练 →</button>
+        </div>
+      </div>`).join('');
+}
+
+// ═══════════════════════════════════════
+//  STUDENT INFO MODAL
+// ═══════════════════════════════════════
+var _pendingTopicIdx = null;
+
+function startTraining(idx){
+  _pendingTopicIdx = idx;
+  // Pre-fill if already have student info from previous session
+  const si = _loadStudentInfo();
+  if(si){
+    document.getElementById('siClass').value  = si.class  || '';
+    document.getElementById('siNumber').value = si.number || '';
+    document.getElementById('siName').value   = si.name   || '';
+  }
+  document.getElementById('siError').style.display = 'none';
+  const modal = document.getElementById('studentInfoModal');
+  modal.style.display = 'flex';
+  setTimeout(()=>document.getElementById('siClass').focus(), 100);
+}
+
+function closeStudentInfoModal(){
+  document.getElementById('studentInfoModal').style.display = 'none';
+  _pendingTopicIdx = null;
+}
+
+function confirmStudentInfo(){
+  const cls    = document.getElementById('siClass').value.trim();
+  const number = document.getElementById('siNumber').value.trim();
+  const name   = document.getElementById('siName').value.trim();
+  if(!cls || !number || !name){
+    document.getElementById('siError').style.display = 'block'; return;
+  }
+  document.getElementById('studentInfoModal').style.display = 'none';
+  // Save for next time
+  try{ localStorage.setItem('zuowen_student_info', JSON.stringify({class:cls, number, name})); }catch(e){}
+  _doStartTraining(_pendingTopicIdx, cls, number, name);
+}
+
+function _loadStudentInfo(){
+  try{ return JSON.parse(localStorage.getItem('zuowen_student_info') || 'null'); }catch(e){ return null; }
+}
+
+// ═══════════════════════════════════════
+//  TRAINING — INIT
+// ═══════════════════════════════════════
+function _doStartTraining(idx, studentClass, studentNumber, studentName){
+  const topic = topics[idx];
+  const isArg = topic.genre === 'argumentative';
+  state = {
+    topicIdx:idx, genre: topic.genre || 'narrative',
+    phases:[], currentPhaseIdx:0,
+    keywords:[], selectedKws:[],
+    answers:{}, thinkAngles:'', thinkCenter:'',
+    thinkAngles_map:{}, dlgAnswers:[],
+    summaryDraft:'', connectDraft:'',
+    studentName: studentName,
+    studentClass: studentClass,
+    studentNumber: studentNumber
+  };
+  if(isArg){
+    state.phases = [
+      {id:'arg_read',    group:'准备', label:'读题 · 审材料'},
+      {id:'arg_think',   group:'准备', label:'审题对话'},
+      {id:'arg_body1',   group:'论证', label:'论点一展开'},
+      {id:'arg_body2',   group:'论证', label:'论点二展开'},
+      {id:'arg_body3',   group:'论证', label:'论点三展开'},
+      {id:'arg_opening', group:'写作', label:'写开头'},
+      {id:'arg_closing', group:'写作', label:'写结尾'},
+      {id:'summary',     group:'完成', label:'全文总结'},
+      {id:'connect',     group:'完成', label:'衔接润色'},
+    ];
+  } else {
+    state.phases = [
+      {id:'read',    group:'准备', label:'读题 · 选关键词'},
+      {id:'think',   group:'准备', label:'审题对话'},
+      {id:'opening', group:'写作', label:'写开头'},
+      {id:'lyrical', group:'写作', label:'抒情议论'},
+      {id:'closing', group:'写作', label:'写结尾'},
+      {id:'summary', group:'完成', label:'全文总结'},
+      {id:'connect', group:'完成', label:'衔接润色'},
+    ];
+  }
+  document.getElementById('trainingTitle').textContent = topic.title;
+  document.getElementById('sidebarTitle').textContent = topic.title;
+  goTo('trainingScreen');
+  renderPhase();
+}
+
+// ═══════════════════════════════════════
+//  TRAINING — SIDEBAR + PROGRESS
+// ═══════════════════════════════════════
+function renderSidebar(){
+  const nav=document.getElementById('sidebarNav');
+  let lastGroup='', html='';
+  state.phases.forEach((p,i)=>{
+    if(p.group!==lastGroup){
+      html+=`<div class="phase-header">${p.group}</div>`;
+      lastGroup=p.group;
+    }
+    const cls = i<state.currentPhaseIdx?'done':i===state.currentPhaseIdx?'active':'';
+    const icon= i<state.currentPhaseIdx?'✓':(i+1);
+    html+=`<div class="nav-item ${cls}">
+      <div class="nav-num">${icon}</div>
+      <div class="nav-label">${p.label}</div>
+    </div>`;
+  });
+  nav.innerHTML=html;
+  // progress
+  const pct=Math.round(state.currentPhaseIdx/state.phases.length*100);
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('phaseIndicator').textContent=
+    `${state.currentPhaseIdx+1} / ${state.phases.length}`;
+}
+
+// ═══════════════════════════════════════
+//  TRAINING — PHASE ROUTER
+// ═══════════════════════════════════════
+function renderPhase(){
+  renderSidebar();
+  const phase = state.phases[state.currentPhaseIdx];
+  const panel = document.getElementById('mainPanel');
+  panel.innerHTML='';
+  panel.classList.add('fade-in');
+  setTimeout(()=>panel.classList.remove('fade-in'),400);
+
+  // Route by phase id
+  if(phase.id==='read')           renderReadPhase();
+  else if(phase.id==='think')     renderThinkPhase();
+  else if(phase.id.startsWith('kw_'))   renderWritePhase(phase);
+  else if(phase.id==='opening')   renderWriteGenericPhase('opening','写开头',
+    '有了正文内容，才知道怎么引入。现在根据你已经构思好的内容，写出能吸引读者的开头。',
+    OPENING_RESOURCES);
+  else if(phase.id==='lyrical')   renderWriteGenericPhase('lyrical','抒情议论',
+    '由事及理：从刚才写的内容出发，写出你的感受和感悟。避免空洞口号，要有具体的情感细节。',
+    LYRICAL_RESOURCES);
+  else if(phase.id==='closing')   renderWriteGenericPhase('closing','写结尾',
+    '结尾要点题、升华，并与开头呼应。让读者读完后有所回味。',
+    CLOSING_RESOURCES);
+  // Argumentative phases
+  else if(phase.id==='arg_read')    renderArgReadPhase();
+  else if(phase.id==='arg_think')   renderArgThinkPhase();
+  else if(phase.id==='arg_body1')   renderArgBodyPhase(0);
+  else if(phase.id==='arg_body2')   renderArgBodyPhase(1);
+  else if(phase.id==='arg_body3')   renderArgBodyPhase(2);
+  else if(phase.id==='arg_opening') renderArgWritePhase('arg_opening','议论文开头',
+    '先描述材料里的现象，再引出问题，最后点明你的写作角度。约50字。',
+    VC.arg_opening, 40);
+  else if(phase.id==='arg_closing') renderArgWritePhase('arg_closing','议论文结尾',
+    '总结各段论点，发出呼吁或展望。可用反面论证指出不行动的后果。约50字。',
+    VC.arg_closing, 30);
+  else if(phase.id==='summary')     renderSummaryPhase();
+  else if(phase.id==='connect')     renderConnectPhase();
+  window.scrollTo(0,0);
+}
+
+function nextPhase(){
+  if(state.currentPhaseIdx<state.phases.length-1){
+    state.currentPhaseIdx++;
+    renderPhase();
+  }
+}
+function prevPhase(){
+  if(state.currentPhaseIdx>0){
+    state.currentPhaseIdx--;
+    renderPhase();
+  }
+}
+
+// ═══════════════════════════════════════
+//  PHASE 0 — READ & CLICK KEYWORDS
+//  全文按标点分段，每段可点击，无任何预标注
+// ═══════════════════════════════════════
+function escAttr(s){ return s.replace(/'/g,'&#39;').replace(/"/g,'&quot;') }
+
+// Split topic into clickable segments at punctuation boundaries.
+// Each segment between punctuation marks becomes one clickable unit.
+// Punctuation chars themselves are non-clickable separators.
+function segmentTopic(text){
+  // Remove any 【】 markup from legacy topics
+  text = text.replace(/【([^】]+)】/g, '$1');
+  // Split keeping punctuation as separators
+  const parts = text.split(/(，|。|；|：|、|！|？|……|—|「|」|\s+)/);
+  let html = '', idx = 0;
+  parts.forEach(part => {
+    if(!part) return;
+    if(/^[，。；：、！？……—「」\s]+$/.test(part)){
+      html += `<span class="seg-punct">${part}</span>`;
+    } else {
+      const id = 'seg_' + (idx++);
+      html += `<span class="seg-word" id="${id}" data-word="${escAttr(part)}"
+        onclick="toggleSeg(this,'${escAttr(part)}')">${part}</span>`;
+    }
+  });
+  return html;
+}
+
+function renderReadPhase(){
+  const topic = topics[state.topicIdx];
+  const panel = document.getElementById('mainPanel');
+
+  panel.innerHTML = `
+    <div class="phase-badge">📖 准备阶段</div>
+    <div class="step-title">读题 · 选出关键词</div>
+    <div class="speak-row">
+      这一步在做什么？${speakBtn(VC.read_phase.zh, VC.read_phase.en)}
+      &nbsp;|&nbsp; 什么是关键词？${speakBtn(VC.keyword.zh, VC.keyword.en)}
+    </div>
+    <div class="step-desc">仔细阅读以下题目，<b>点击你认为重要的词语或短语</b>，选出需要重点展开写的关键词。选好后点击「确认」继续。</div>
+
+    <div class="topic-display" id="topicDisplay"
+      style="font-size:16px;line-height:3;letter-spacing:.3px;cursor:default">
+      ${segmentTopic(topic.content)}
+    </div>
+
+    <div id="kwSelectedBar" style="display:none;margin-top:20px">
+      <div class="info-box" id="kwSelectedInfo"></div>
+      <div class="action-row" style="margin-top:12px">
+        <button class="btn-primary" onclick="confirmKeywords()">确认关键词 · 继续 →</button>
+        <button class="btn-ghost" onclick="clearKwSelection()">重新选择</button>
+      </div>
+    </div>`;
+}
+
+function toggleSeg(el, word){
+  if(state.selectedKws.includes(word)){
+    state.selectedKws = state.selectedKws.filter(w => w !== word);
+    el.classList.remove('kw-selected');
+  } else {
+    state.selectedKws.push(word);
+    el.classList.add('kw-selected');
+  }
+  updateKwBar();
+}
+
+function updateKwBar(){
+  const bar = document.getElementById('kwSelectedBar');
+  const info = document.getElementById('kwSelectedInfo');
+  if(!state.selectedKws.length){ bar.style.display='none'; return; }
+  bar.style.display = 'block';
+  info.innerHTML = `你选择了 <b>${state.selectedKws.length}</b> 个关键词：
+    ${state.selectedKws.map(w =>
+      `<span style="background:var(--accent);color:white;border-radius:4px;
+       padding:2px 10px;margin:0 3px;font-size:13px">${w}</span>`
+    ).join('')}
+    <br><span style="font-size:12px;color:var(--ink-faint)">再次点击可取消。</span>`;
+}
+
+function clearKwSelection(){
+  state.selectedKws = [];
+  document.querySelectorAll('.seg-word.kw-selected').forEach(el=>el.classList.remove('kw-selected'));
+  document.getElementById('kwSelectedBar').style.display = 'none';
+}
+
+function confirmKeywords(){
+  if(!state.selectedKws.length){ alert('请至少点击一个关键词'); return; }
+  state.phases = state.phases.filter(p => !p.id.startsWith('kw_'));
+  const kwPhases = state.selectedKws.map(w => ({
+    id:`kw_${w}`, group:'详写', label:`详写：${w}`,
+    word:w, category:'待分析', aiGuide:null
+  }));
+  const insertAt = state.phases.findIndex(p => p.id === 'opening');
+  state.phases.splice(insertAt, 0, ...kwPhases);
+  nextPhase();
+}
+
+// ═══════════════════════════════════════
+//  PHASE 1 — 引导式对话（苏格拉底提问法）
+//  五轮：看见问题→发现冲突→中心思想→详写策略→写作计划
+// ═══════════════════════════════════════
+
+// dialogue state
+let dlg = {
+  round: 0,       // 0-4
+  answers: [],    // [{q, a}] per round
+  aiComment: ''   // AI one-line response after each round
+};
+
+const DLG_ROUNDS = [
+  {
+    id: 'observe', vc: 'observe_round',
+    badge: '第一轮 · 看见问题',
+    title: '你注意到了什么？',
+    intro: '先不要想怎么写——先像一个观察者，想想这件事本身。',
+    questions: [
+      '你在地铁里最不希望遇到什么样的人？',
+      '有人大声喧哗，会影响到哪些人？怎么影响？',
+      '你觉得这种行为只是「吵」，还是背后有更深的问题？'
+    ],
+    placeholder: '把你的想法写下来，不用写完整，几个词也行……',
+    minLen: 5
+  },
+  {
+    id: 'conflict', vc: 'conflict_round',
+    badge: '第二轮 · 发现冲突',
+    title: '每个人的反应都一样吗？',
+    intro: '作文最怕「流水账」。高分作文的关键，是写出冲突——同一件事，不同的人，不同的选择。',
+    questions: [
+      '如果你在车厢里，你会怎么做？',
+      '你觉得周围其他人会有哪些不同的反应？',
+      '有人选择沉默，有人选择制止——这背后反映了什么不同？'
+    ],
+    placeholder: '想想不同人物的反应，至少想到两三种……',
+    minLen: 10
+  },
+  {
+    id: 'depth', vc: 'depth_round',
+    badge: '第三轮 · 深挖冲突',
+    title: '为什么有人「明明不满，却不说」？',
+    intro: '这是区分普通作文和高分作文的关键问题。',
+    questions: [
+      '你有没有遇过「想说却没说」的时刻？为什么没说？',
+      '你觉得「沉默」也是一种选择吗？',
+      '如果大家都沉默，最后会怎样？'
+    ],
+    placeholder: '写下你的真实想法，越真实越好……',
+    minLen: 10
+  },
+  {
+    id: 'thesis', vc: 'thesis_round',
+    badge: '第四轮 · 逼近中心思想',
+    title: '这篇文章想告诉读者什么？',
+    intro: '不要急着「说答案」——先用这三个问题想清楚。',
+    questions: [
+      '一个文明的社会，应该靠什么来维持——规则，还是人主动守规则？',
+      '公共文明，是「等别人管」，还是「自己负责」？',
+      '你希望读者读完这篇文章之后，记住什么？'
+    ],
+    placeholder: '用一两句话写出你的中心思想……',
+    minLen: 10
+  },
+  {
+    id: 'plan', vc: 'plan_round',
+    badge: '第五轮 · 确定详写重点',
+    title: '这篇文章，你要重点写哪三件事？',
+    intro: '很多同学最大的问题是：什么都写，但没有重点。现在把你的详写计划定下来。',
+    questions: [
+      '写「喧哗者」：他的声音、动作、神态——怎么用反衬（周围越安静，他越显眼）？',
+      '写「周围的人」：谁皱眉？谁看手机假装没听见？谁想说又不敢说？',
+      '写「关键时刻」：谁打破了沉默？他说话时紧张还是坚定？气氛怎么变了？'
+    ],
+    placeholder: '写出你的三个详写重点，每个重点一两句话……',
+    minLen: 15
+  }
+];
+
+function renderThinkPhase(){
+  dlg = { round: 0, answers: [], aiComment: '' };
+  // Restore from state if returning
+  if(state.dlgAnswers){
+    dlg.answers = state.dlgAnswers;
+    dlg.round = Math.min(dlg.answers.length, DLG_ROUNDS.length);
+  }
+  renderDlgRound();
+}
+
+function renderDlgRound(){
+  const panel = document.getElementById('mainPanel');
+  const round = DLG_ROUNDS[dlg.round] || null;
+  const isComplete = dlg.round >= DLG_ROUNDS.length;
+
+  if(isComplete){
+    renderThinkSummary();
+    return;
+  }
+
+  // Build previous answers thread
+  const threadHTML = dlg.answers.map((item, i) => {
+    const r = DLG_ROUNDS[i];
+    return `
+      <div class="dlg-done-round">
+        <div class="dlg-round-label done">✓ ${r.badge}</div>
+        <div class="dlg-answer-preview">${item.a}</div>
+        ${item.comment ? `<div class="dlg-ai-comment">${item.comment}</div>` : ''}
+      </div>`;
+  }).join('');
+
+  panel.innerHTML = `
+    <div class="phase-badge">🧠 引导思考</div>
+    <div class="step-title">审题对话</div>
+    <div class="step-desc">在动笔前，先想清楚这篇文章要写什么、为什么值得写。</div>
+
+    ${threadHTML ? `<div class="dlg-thread">${threadHTML}</div>` : ''}
+
+    <div class="dlg-current-round fade-in">
+      <div class="dlg-round-label active">${round.badge}
+        ${round.vc ? speakBtn(VC[round.vc].zh, VC[round.vc].en) : ''}
+      </div>
+      <div class="dlg-round-title">${round.title}</div>
+      <div class="dlg-round-intro">${round.intro}</div>
+
+      <div class="dlg-questions">
+        ${round.questions.map((q,i) => `
+          <div class="dlg-q">
+            <span class="dlg-q-num">${i+1}</span>
+            <span class="dlg-q-text">${q}</span>
+          </div>`).join('')}
+      </div>
+
+      <div class="answer-wrap" style="margin-top:16px">
+        <textarea class="answer-ta" id="dlgAnswer" rows="4"
+          placeholder="${round.placeholder}"
+          oninput="updateDlgCC()"
+          style="min-height:100px"></textarea>
+        <div class="char-count" id="dlgCC">0 字</div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-primary" id="dlgNextBtn" onclick="submitDlgRound()">
+          ${dlg.round < DLG_ROUNDS.length - 1 ? '提交 · 进入下一轮 →' : '完成思考 · 生成写作计划 →'}
+        </button>
+        ${dlg.round > 0 ? `<button class="btn-ghost" onclick="dlgGoBack()">← 上一轮</button>` : ''}
+        <button class="btn-ghost" onclick="prevPhase()">← 重选关键词</button>
+      </div>
+
+      <div id="dlgAiBox" style="display:none" class="dlg-ai-box">
+        <div class="loading-dots"><span></span><span></span><span></span></div>
+      </div>
+    </div>`;
+}
+
+function updateDlgCC(){
+  const ta = document.getElementById('dlgAnswer');
+  const el = document.getElementById('dlgCC');
+  if(ta && el) el.textContent = ta.value.length + ' 字';
+}
+
+async function submitDlgRound(){
+  const ta = document.getElementById('dlgAnswer');
+  const val = ta?.value.trim() || '';
+  const round = DLG_ROUNDS[dlg.round];
+  if(val.length < round.minLen){
+    alert(`请先写下你的想法（至少 ${round.minLen} 个字）`); return;
+  }
+
+  document.getElementById('dlgNextBtn').disabled = true;
+  const aiBox = document.getElementById('dlgAiBox');
+  aiBox.style.display = 'block';
+  aiBox.innerHTML = `<div class="loading-dots"><span></span><span></span><span></span></div>
+    <span style="font-size:13px;color:var(--ink-faint);margin-left:8px">AI 正在回应……</span>`;
+
+  // Get AI one-line comment
+  let comment = '';
+  try{
+    const topic = topics[state.topicIdx];
+    comment = await callClaude(
+      `你是引导学生思考的华文老师。学生刚完成了写作思考的一个环节，给出一句话的简短回应：
+- 肯定学生思考中有价值的部分（如果有）
+- 给一个让他更进一步思考的追问或提示
+- 语气：平等、鼓励、不说废话
+- 字数：20-40字，只输出这一句话，不加引号或标签`,
+      `作文题：${topic.content}
+当前环节：${round.badge}——${round.title}
+问题：${round.questions.join('；')}
+学生的回答：${val}`
+    , 200);
+    comment = comment.trim();
+  } catch(e){ comment = ''; }
+
+  // Save answer
+  dlg.answers.push({ q: round.title, a: val, comment });
+  state.dlgAnswers = dlg.answers;
+
+  // Advance round
+  dlg.round++;
+
+  if(dlg.round >= DLG_ROUNDS.length){
+    // Extract thesis from round 4 (index 3) answer
+    state.thinkCenter = dlg.answers[3]?.a || '';
+    // Extract angles from round 5 (index 4) answer
+    state.thinkAngles = dlg.answers[4]?.a || '';
+    renderDlgRound(); // will call renderThinkSummary
+  } else {
+    renderDlgRound();
+  }
+}
+
+function dlgGoBack(){
+  if(dlg.round <= 0) return;
+  dlg.round--;
+  dlg.answers.pop();
+  state.dlgAnswers = dlg.answers;
+  renderDlgRound();
+}
+
+// ── THINK SUMMARY (after all 5 rounds) ─────────────────────
+function renderThinkSummary(){
+  const panel = document.getElementById('mainPanel');
+  const topic = topics[state.topicIdx];
+
+  // Map answers to state
+  state.thinkCenter = dlg.answers[3]?.a || '';
+  state.thinkAngles = dlg.answers[4]?.a || '';
+  state.thinkAngles_map = {};
+  state.selectedKws.forEach(w => { state.thinkAngles_map[w] = state.thinkAngles; });
+
+  // Build strategy table (高分三要素)
+  const strategyTable = `
+    <table class="strategy-table">
+      <thead>
+        <tr>
+          <th>高分关键点</th>
+          <th>为什么重要</th>
+          <th>不做到的后果</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b style="color:var(--accent)">有冲突（不同反应）</b></td>
+          <td>才有内容深度</td>
+          <td style="color:var(--red)">变成流水账</td>
+        </tr>
+        <tr>
+          <td><b style="color:var(--accent)">有心理描写</b></td>
+          <td>才有思想深度</td>
+          <td style="color:var(--red)">停留在表面</td>
+        </tr>
+        <tr>
+          <td><b style="color:var(--accent)">有转折（有人行动）</b></td>
+          <td>才有高潮</td>
+          <td style="color:var(--red)">没有记忆点</td>
+        </tr>
+      </tbody>
+    </table>`;
+
+  // Build visible structure ladder
+  const ladderData = [
+    { level:'现象', q:'发生了什么？',     a: dlg.answers[0]?.a || '—' },
+    { level:'冲突', q:'人们反应一样吗？', a: dlg.answers[1]?.a || '—' },
+    { level:'深挖', q:'为什么不同？',     a: dlg.answers[2]?.a || '—' },
+    { level:'立意', q:'这件事说明什么？', a: dlg.answers[3]?.a || '—' },
+    { level:'详写', q:'重点写哪三件事？', a: dlg.answers[4]?.a || '—' },
+  ];
+
+  panel.innerHTML = `
+    <div class="phase-badge">✅ 思考完成</div>
+    <div class="step-title">你的写作计划</div>
+    <div class="step-desc">根据你的思考，AI 整理了以下写作计划。确认后进入详写阶段。</div>
+
+    <!-- 思维层级表 -->
+    <div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:600;
+      color:var(--ink);margin-bottom:10px">📊 你的思考层级</div>
+    <table class="strategy-table" style="margin-bottom:24px">
+      <thead>
+        <tr><th>层级</th><th>思考问题</th><th>你的思考</th></tr>
+      </thead>
+      <tbody>
+        ${ladderData.map(row => `
+          <tr>
+            <td><span class="level-badge">${row.level}</span></td>
+            <td style="color:var(--ink-faint);font-size:13px">${row.q}</td>
+            <td style="font-size:13px;color:var(--ink-light)">${row.a.length > 60 ? row.a.slice(0,60)+'…' : row.a}</td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+
+    <!-- 高分三要素 -->
+    <div style="font-family:'Noto Serif SC',serif;font-size:14px;font-weight:600;
+      color:var(--ink);margin-bottom:10px">🎯 高分三要素（动笔前牢记）</div>
+    ${strategyTable}
+
+    <!-- 中心思想确认 -->
+    <div style="margin-top:24px;background:white;border:1.5px solid var(--accent-light);
+      border-radius:10px;padding:16px 20px">
+      <div style="font-size:11px;letter-spacing:1.5px;color:var(--accent);font-weight:600;margin-bottom:8px">
+        ✦ 你的中心思想（可修改）
+      </div>
+      <textarea class="answer-ta" id="finalCenter" rows="2"
+        style="margin-bottom:0">${state.thinkCenter}</textarea>
+    </div>
+
+    <div class="action-row" style="margin-top:20px">
+      <button class="btn-primary" onclick="confirmThinkAndNext()">确认 · 开始详写 →</button>
+      <button class="btn-ghost" onclick="dlgGoBackToRound(3)">← 修改中心思想</button>
+    </div>`;
+}
+
+function confirmThinkAndNext(){
+  const center = document.getElementById('finalCenter')?.value.trim();
+  if(!center){ alert('请填写文章的中心思想'); return; }
+  state.thinkCenter = center;
+  nextPhase();
+}
+
+function dlgGoBackToRound(roundIdx){
+  dlg.round = roundIdx;
+  dlg.answers = dlg.answers.slice(0, roundIdx);
+  state.dlgAnswers = dlg.answers;
+  renderDlgRound();
+}
+
+// Keep saveThinkAndNext as alias (used by generic phases that call it directly)
+function saveThinkAndNext(){ confirmThinkAndNext(); }
+
+// ═══════════════════════════════════════
+//  ARGUMENTATIVE — PHASE 0: READ MATERIAL
+// ═══════════════════════════════════════
+function renderArgReadPhase(){
+  const topic = topics[state.topicIdx];
+  const panel = document.getElementById('mainPanel');
+  panel.innerHTML = `
+    <div class="phase-badge">📖 准备阶段 · 议论文</div>
+    <div class="step-title">读题 · 审材料</div>
+    <div class="speak-row">
+      这一步在做什么？${speakBtn(VC.arg_read_phase.zh, VC.arg_read_phase.en)}
+      &nbsp;|&nbsp; 什么是指令词？${speakBtn(VC.directive_word.zh, VC.directive_word.en)}
+    </div>
+    <div class="step-desc">仔细阅读题目和材料。先找出<b>指令词</b>，再找出材料里提到的<b>写作角度</b>。</div>
+
+    <div class="topic-display" style="font-size:15px;line-height:2;white-space:pre-wrap">
+      ${topic.content}
+    </div>
+
+    <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div style="background:white;border:1.5px solid var(--accent-light);border-radius:10px;padding:16px">
+        <div style="font-size:11px;letter-spacing:1.5px;color:var(--accent);font-weight:600;margin-bottom:10px">
+          ① 找出指令词${speakBtn(VC.directive_word.zh, VC.directive_word.en)}
+        </div>
+        <div style="font-size:13px;color:var(--ink-faint);margin-bottom:8px">
+          题目里哪个词告诉你要写「方法」还是「原因」还是「看法」？
+        </div>
+        <textarea class="answer-ta" id="argDirective" rows="2"
+          placeholder="例：如何（→要写方法/对策）"
+          style="min-height:60px">${state.argDirective||''}</textarea>
+      </div>
+      <div style="background:white;border:1.5px solid var(--blue);border-radius:10px;padding:16px">
+        <div style="font-size:11px;letter-spacing:1.5px;color:var(--blue);font-weight:600;margin-bottom:10px">
+          ② 材料提到哪些角度？${speakBtn(VC.arg_structure.zh, VC.arg_structure.en)}
+        </div>
+        <div style="font-size:13px;color:var(--ink-faint);margin-bottom:8px">
+          材料里提到了哪些群体或方面？把它们列出来。
+        </div>
+        <textarea class="answer-ta" id="argDimensions" rows="2"
+          placeholder="例：学生自身、学校、家庭"
+          style="min-height:60px">${state.argDimensions||''}</textarea>
+      </div>
+    </div>
+
+    <div class="action-row" style="margin-top:20px">
+      <button class="btn-primary" onclick="saveArgRead()">确认 · 进入审题对话 →</button>
+    </div>`;
+}
+
+function saveArgRead(){
+  const d = document.getElementById('argDirective')?.value.trim();
+  const dims = document.getElementById('argDimensions')?.value.trim();
+  if(!d || !dims){ alert('请填写指令词和写作角度'); return; }
+  state.argDirective = d;
+  state.argDimensions = dims;
+  // Parse dimensions into body phases
+  const dimList = dims.split(/[,，、\n]+/).map(s=>s.trim()).filter(Boolean).slice(0,3);
+  while(dimList.length < 3) dimList.push(`论点${dimList.length+1}`);
+  state.argBodyLabels = dimList;
+  // Update body phase labels
+  state.phases.forEach(p=>{
+    if(p.id==='arg_body1') p.label = `论点一：${dimList[0]}`;
+    if(p.id==='arg_body2') p.label = `论点二：${dimList[1]}`;
+    if(p.id==='arg_body3') p.label = `论点三：${dimList[2]}`;
+  });
+  renderSidebar();
+  nextPhase();
+}
+
+// ═══════════════════════════════════════
+//  ARGUMENTATIVE — PHASE 1: DIALOGUE
+// ═══════════════════════════════════════
+const ARG_DLG_ROUNDS = [
+  {
+    id:'arg_obs', vc:'arg_read_phase',
+    badge:'第一轮 · 审题：搭积木',
+    title:'议论文不是乱写，是搭积木！',
+    intro:'先把文章的结构记清楚，每一段都有固定的位置，写之前心里要有一张地图。',
+    questions:[
+      '题目说「如何培养阅读习惯」——这是要你写「阅读有多重要」，还是写「具体怎么做」？你能分清楚吗？',
+      '文章要写四个角度：个人→家庭→学校→社会。为什么要从「个人」开始，而不是从「政府」开始？（提示：想想谁离你最近）',
+      '每一段的结构是：论点句＋具体做法＋举例＋好处。如果你只写「青少年要多看书」，少了哪几步？'
+    ],
+    placeholder:'用自己的话说说：这篇文章的四个角度是什么，每段要写什么……',
+    minLen: 10
+  },
+  {
+    id:'arg_think', vc:'elaboration',
+    badge:'第二轮 · 想动作：谁做什么？',
+    title:'脑子里马上跳出：我、爸妈、校长、政府',
+    intro:'议论文写得空洞，是因为只写了「要做什么」，没写「怎么做」。现在练习：每个人能做的具体动作是什么？',
+    questions:[
+      '青少年自己：你每天玩手机多久？如果把刷视频的时间拿来读书，哪怕一点点，一周能读多少页？你打算从什么时候开始读？读多久？',
+      '家长：如果你在看书，爸爸在旁边大声打游戏，你读得进去吗？那家长除了「叫你去读书」，自己可以做什么具体的事？周末除了去商场，还可以去哪里？',
+      '学校：你在学校什么时候有机会读书？晨读有没有用？如果你读到一本好书，想告诉同学，学校可以办什么活动？'
+    ],
+    placeholder:'用「谁＋在什么时候＋做什么」写出每个角度的具体动作……',
+    minLen: 20
+  },
+  {
+    id:'arg_depth', vc:'example_arg',
+    badge:'第三轮 · 填好处：这样做有什么用？',
+    title:'每个动作后面，都要说清楚：这样做能帮助我们……',
+    intro:'「只要……就……」「这样做能……」——这几个句式专门用来连接「做法」和「好处」，是让论证有说服力的关键。',
+    questions:[
+      '如果青少年每天睡前读15分钟，坚持一个月，会发生什么变化？（不要说「会变聪明」，说得更具体一些）',
+      '如果家长放下手机，陪孩子一起看书，孩子会有什么感受？这种氛围会带来什么影响？',
+      '如果学校举办读书分享会，同学之间互相介绍好书，比一个人默默读书有什么不同？'
+    ],
+    placeholder:'写出每个做法带来的具体改变，用「这样做能……」或「久而久之……」连接……',
+    minLen: 15
+  },
+  {
+    id:'arg_lang', vc:'coherence',
+    badge:'第四轮 · 好词好句：让文章更有力量',
+    title:'同样的意思，换个说法，印象分高很多',
+    intro:'下面是三个万能句式，学会了可以用在任何一段里。现在把它填好，写进你的文章。',
+    questions:[
+      '「阅读很重要」太平淡——试试填这个句式：「阅读不仅能___（好处一），还能___（好处二）。」你能填什么进去？',
+      '「青少年要多读书」太空洞——试试：「只有这样，青少年才能___，在___中___成长。」你能填什么？',
+      '结尾总结时，试试：「只要个人主动、___、___加上___，青少年就一定能放下手机，重新爱上阅读！」把四个角度都放进去。'
+    ],
+    placeholder:'把上面三个句式填好，写出你打算在文章里用的好词好句……',
+    minLen: 10
+  }
+];
+
+let argDlg = { round:0, answers:[] };
+
+function renderArgThinkPhase(){
+  argDlg = { round:0, answers: state.argDlgAnswers || [] };
+  argDlg.round = argDlg.answers.length;
+  if(argDlg.round >= ARG_DLG_ROUNDS.length){ renderArgThinkSummary(); return; }
+  renderArgDlgRound();
+}
+
+function renderArgDlgRound(){
+  const panel = document.getElementById('mainPanel');
+  if(argDlg.round >= ARG_DLG_ROUNDS.length){ renderArgThinkSummary(); return; }
+  const round = ARG_DLG_ROUNDS[argDlg.round];
+
+  // Replace {directive} placeholder
+  const directive = state.argDirective || '如何';
+  const questions = round.questions.map(q => q.replace('{directive}', directive));
+
+  const threadHTML = argDlg.answers.map((item,i)=>{
+    const r = ARG_DLG_ROUNDS[i];
+    return `<div class="dlg-done-round">
+      <div class="dlg-round-label done">✓ ${r.badge}</div>
+      <div class="dlg-answer-preview">${item.a}</div>
+      ${item.comment?`<div class="dlg-ai-comment">${item.comment}</div>`:''}
+    </div>`;
+  }).join('');
+
+  panel.innerHTML = `
+    <div class="phase-badge">🧠 审题对话 · 议论文</div>
+    <div class="step-title">审题思考</div>
+    <div class="step-desc">通过对话，把写作思路理清楚再动笔。</div>
+    ${threadHTML ? `<div class="dlg-thread">${threadHTML}</div>` : ''}
+    <div class="dlg-current-round fade-in">
+      <div class="dlg-round-label active">${round.badge}
+        ${round.vc ? speakBtn(VC[round.vc].zh, VC[round.vc].en) : ''}
+      </div>
+      <div class="dlg-round-title">${round.title}</div>
+      <div class="dlg-round-intro">${round.intro}</div>
+      <div class="dlg-questions">
+        ${questions.map((q,i)=>`
+          <div class="dlg-q">
+            <span class="dlg-q-num">${i+1}</span>
+            <span class="dlg-q-text">${q}</span>
+          </div>`).join('')}
+      </div>
+      <div class="answer-wrap" style="margin-top:16px">
+        <textarea class="answer-ta" id="argDlgAnswer" rows="4"
+          placeholder="${round.placeholder}" style="min-height:100px"></textarea>
+      </div>
+      <div class="action-row">
+        <button class="btn-primary" id="argDlgBtn" onclick="submitArgDlgRound()">
+          ${argDlg.round < ARG_DLG_ROUNDS.length-1 ? '提交 · 下一轮 →' : '完成思考 · 生成写作计划 →'}
+        </button>
+        ${argDlg.round > 0 ? `<button class="btn-ghost" onclick="argDlgBack()">← 上一轮</button>` : ''}
+        <button class="btn-ghost" onclick="prevPhase()">← 返回读题</button>
+      </div>
+      <div id="argDlgAiBox" style="display:none" class="dlg-ai-box"></div>
+    </div>`;
+}
+
+async function submitArgDlgRound(){
+  const val = document.getElementById('argDlgAnswer')?.value.trim() || '';
+  const round = ARG_DLG_ROUNDS[argDlg.round];
+  if(val.length < round.minLen){ alert(`请至少写 ${round.minLen} 个字`); return; }
+  document.getElementById('argDlgBtn').disabled = true;
+  const aiBox = document.getElementById('argDlgAiBox');
+  aiBox.style.display = 'block';
+  aiBox.innerHTML = `<div class="loading-dots"><span></span><span></span><span></span></div><span style="font-size:13px;color:var(--ink-faint);margin-left:8px">AI 正在回应……</span>`;
+  let comment = '';
+  try{
+    comment = await callClaude(
+      `你是引导学生写议论文的华文老师。给出一句话回应（20-40字）：肯定学生有价值的思考，并给一个追问。语气平等鼓励。只输出这一句话。`,
+      `题目：${topics[state.topicIdx].content}\n环节：${round.badge}\n学生回答：${val}`, 150);
+    comment = comment.trim();
+  } catch(e){}
+  argDlg.answers.push({q:round.title, a:val, comment});
+  state.argDlgAnswers = argDlg.answers;
+  argDlg.round++;
+  if(argDlg.round >= ARG_DLG_ROUNDS.length){
+    state.thinkCenter = argDlg.answers[0]?.a || '';
+    renderArgThinkSummary();
+  } else { renderArgDlgRound(); }
+}
+
+function argDlgBack(){
+  if(argDlg.round <= 0) return;
+  argDlg.round--;
+  argDlg.answers.pop();
+  state.argDlgAnswers = argDlg.answers;
+  renderArgDlgRound();
+}
+
+function renderArgThinkSummary(){
+  const panel = document.getElementById('mainPanel');
+  const dims = state.argBodyLabels || ['学生自身','学校','家庭'];
+  panel.innerHTML = `
+    <div class="phase-badge">✅ 思考完成 · 议论文</div>
+    <div class="step-title">你的写作计划</div>
+    <div class="speak-row">议论文结构说明${speakBtn(VC.arg_structure.zh, VC.arg_structure.en)}</div>
+
+    <table class="strategy-table" style="margin-bottom:20px">
+      <thead><tr><th>段落</th><th>角度</th><th>论点句（第一句话）</th></tr></thead>
+      <tbody>
+        <tr><td><span class="level-badge">开头</span></td>
+          <td>现状+立场</td>
+          <td style="font-size:12px;color:var(--ink-faint)">描述青少年沉迷手机的现状 → 提出必须培养阅读习惯</td></tr>
+        <tr><td><span class="level-badge">过渡</span></td>
+          <td>阅读的重要性</td>
+          <td style="font-size:12px;color:var(--ink-faint)">阅读不仅能___，还能___。那么，如何才能……</td></tr>
+        ${ARG_BODY_DATA.map((d,i)=>`
+          <tr><td><span class="level-badge">论点${i+1}</span></td>
+            <td>${d.key}</td>
+            <td style="font-size:12px;color:var(--ink-light);font-family:'Noto Serif SC',serif">${d.point}</td></tr>`).join('')}
+        <tr><td><span class="level-badge">结尾</span></td>
+          <td>总结+呼吁</td>
+          <td style="font-size:12px;color:var(--ink-faint)">只要个人主动＋家长引导＋学校鼓励＋社会支持，青少年就一定能……</td></tr>
+      </tbody>
+    </table>
+
+    <table class="strategy-table" style="margin-bottom:20px">
+      <thead><tr><th>高分关键</th><th>说明</th><th>不做到的后果</th></tr></thead>
+      <tbody>
+        <tr><td><b style="color:var(--accent)">论点清晰${speakBtn(VC.topic_sentence.zh,VC.topic_sentence.en)}</b></td>
+          <td>每段第一句点明论点</td><td style="color:var(--red)">读者抓不到重点</td></tr>
+        <tr><td><b style="color:var(--accent)">阐述充分${speakBtn(VC.elaboration.zh,VC.elaboration.en)}</b></td>
+          <td>解释论点为什么成立</td><td style="color:var(--red)">论证空洞无力</td></tr>
+        <tr><td><b style="color:var(--accent)">例子具体${speakBtn(VC.example_arg.zh,VC.example_arg.en)}</b></td>
+          <td>用身边真实例子支撑</td><td style="color:var(--red)">说服力不足</td></tr>
+      </tbody>
+    </table>
+
+    <div style="background:white;border:1.5px solid var(--accent-light);border-radius:10px;padding:16px;margin-bottom:20px">
+      <div style="font-size:11px;letter-spacing:1.5px;color:var(--accent);font-weight:600;margin-bottom:8px">✦ 你的写作角度（可修改）</div>
+      <textarea class="answer-ta" id="argFinalCenter" rows="2">${state.argDirective ? `指令词：${state.argDirective}；角度：${state.argDimensions||''}` : ''}</textarea>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-primary" onclick="confirmArgThink()">确认 · 开始写作 →</button>
+      <button class="btn-ghost" onclick="argDlgBack()">← 修改思考</button>
+    </div>`;
+}
+
+function confirmArgThink(){
+  const val = document.getElementById('argFinalCenter')?.value.trim();
+  if(!val){ alert('请确认写作角度'); return; }
+  state.thinkCenter = val;
+  nextPhase();
+}
+
+// ═══════════════════════════════════════
+//  ARGUMENTATIVE — BODY PARAGRAPH PHASE
+//  四步走：苏格拉底提问→句式→好词→范文
+// ═══════════════════════════════════════
+
+// Per-perspective guide data
+const ARG_BODY_DATA = [
+  {
+    key: '个人',
+    point: '首先，青少年自身要主动放下手机，拿起书本阅读。',
+    socratics: [
+      '你每天玩手机多久？如果把刷视频的时间拿来读书，哪怕一点点，会怎样？（试着算一算：每天15分钟，一个月能读多少页？）',
+      '你打算怎么开始？是睡前读，还是等车时读？每次读多久？每个月读几本？',
+      '如果你坚持每天睡前读15分钟，一个学期后，你觉得写作文时会有什么不同？'
+    ],
+    example: '我们可以为自己制定简单的阅读计划。例如，每天睡觉前不要看手机，而是安静地阅读15分钟，或者规定自己每个月读完一本好书。',
+    benefit: '这样做能帮助我们慢慢习惯看文字，并在书中发现阅读的乐趣。',
+    goodPhrases: [
+      '与其沉溺于虚幻的网络世界，不如静下心来领略文字的魅力。',
+      '持之以恒，积少成多。',
+      '只要每天坚持一点点，时间长了，阅读自然成为习惯。',
+      '制定阅读计划，例如每天睡前阅读15分钟或每月读完一本好书。'
+    ],
+    modelWeak: '青少年应该少玩手机，多看书，这样对自己有好处。',
+    modelWeakWhy: '❌ 「有好处」是空洞标签。没有写出「怎么做」，也没有解释「好在哪里」，读者完全不知道该从哪里开始。',
+    modelStrong:
+`首先，青少年自身要主动放下手机，拿起书本阅读。【P·论点句：点明主体和核心行动】
+我们可以为自己制定简单的阅读计划，例如每天睡觉前不要看手机，而是安静地阅读15分钟，或者规定自己每个月读完一本好书。【E·具体做法：「例如」后面跟时间、频率，写得清清楚楚】
+这样做能帮助我们慢慢习惯看文字，并在书中发现阅读的乐趣，久而久之，便能养成持之以恒的阅读习惯。【L·好处：从短期改变说到长期习惯，逻辑清晰】`
+  },
+  {
+    key: '家庭',
+    point: '其次，家长要从小培养孩子的阅读兴趣，并给予正确的引导。',
+    socratics: [
+      '如果你在看书，你爸爸在旁边大声打游戏，你读得进去吗？那家长该怎么做，才能让家里有阅读的氛围？',
+      '家长除了「叫你去读书」，自己能做什么具体的事？周末除了去商场，还能去哪里熏陶一下？',
+      '如果孩子从小看到爸妈放下手机、拿起书本，长大后会有什么影响？这叫什么？（提示：言传身教）'
+    ],
+    example: '家长可以多买一些有趣的好书放在家里。更重要的是，家长要以身作则，例如，到了周末，父母可以带孩子去社区图书馆；在家里，父母也应该放下手机，陪孩子一起看书。',
+    benefit: '在这样的家庭氛围中，孩子自然而然就会爱上阅读。',
+    goodPhrases: [
+      '家长是孩子的第一任老师，其言传身教至关重要。',
+      '在浓厚的书香氛围中，孩子自然会潜移默化地爱上阅读。',
+      '以身作则，言传身教。',
+      '营造书香家庭氛围，让阅读成为家庭日常。'
+    ],
+    modelWeak: '家长要多买书，要以身作则，要带孩子去图书馆，这样孩子就会爱上看书。',
+    modelWeakWhy: '❌ 三个「要」堆在一起，没有重点。「这样就会」没有解释为什么，缺少阐述，说服力弱。',
+    modelStrong:
+`其次，家长要从小培养孩子的阅读兴趣，给予正确的引导。【P·论点句：点明主体（家长）和角色】
+家长可以多买一些有趣的好书放在家里；更重要的是，家长要以身作则——到了周末，父母可以带孩子去社区图书馆；在家里，父母也应该放下手机，陪孩子一起看书。【E·具体做法：「更重要的是」突出重点，破折号后引出两个真实场景】
+在这样的家庭氛围中，孩子自然而然就会爱上阅读，这正是言传身教的力量。【L·好处：用成语点出深层原因，言简意赅】`
+  },
+  {
+    key: '学校',
+    point: '再次，学校要创造良好的阅读环境，为学生提供阅读的机会。',
+    socratics: [
+      '你在学校什么时候有机会读书？晨读有用吗？如果没有晨读，你会主动找时间读书吗？',
+      '如果你读到一本好书，想分享给同学，学校可以办什么活动让你有机会分享？',
+      '当全班同学一起读书的时候，和只有你一个人读，哪种情况更容易坚持下去？为什么？（提示：想想「风气」这个词）'
+    ],
+    example: '学校可以安排固定的阅读时间，例如每天早上的晨读，让大家一起安静地看书。此外，学校也可以举办读书分享会，让同学们互相介绍自己喜欢的故事。',
+    benefit: '这能让学生在学校里接触到更多好书，并在同学之间形成爱看书的好风气。',
+    goodPhrases: [
+      '学校应通过多元化的活动，激发学生的阅读兴趣。',
+      '让校园每一个角落都充满书香，形成良好的学习风气。',
+      '在同学之间形成爱看书的好风气，潜移默化地影响每一个人。',
+      '举办读书分享会或故事演讲比赛，让阅读成为校园文化。'
+    ],
+    modelWeak: '学校应该举办更多阅读活动，这样学生就会喜欢读书了。',
+    modelWeakWhy: '❌ 只写了「办活动」，没说办什么活动、怎么办。「就会喜欢」是假设，不是论证。太简短，没有说服力。',
+    modelStrong:
+`再次，学校要为学生创造良好的阅读环境。【P·论点句：点明主体（学校）和目标】
+学校可以安排固定的阅读时间，例如每天早上的晨读，让大家一起安静地看书；此外，学校也可以举办读书分享会，让同学们互相介绍自己喜欢的故事，形成爱看书的风气。【E+举例：两个具体做法，「例如」引出细节，「此外」连接第二个做法】
+这能让学生在学校里接触到更多好书，并在同学之间形成爱看书的好风气。【L·好处：从个人读书延伸到集体风气，层次更高】`
+  },
+  {
+    key: '社会',
+    point: '最后，政府和社区也要共同努力，推广阅读文化。',
+    socratics: [
+      '如果你家附近没有图书馆，你会跑很远去借书吗？所以政府应该建什么、做什么？',
+      '有没有什么大型活动，能让全家人一起参与阅读？（提示：新加坡有什么全国性的阅读活动？）',
+      '如果整个社会都在推广阅读，书展、图书馆、阅读节到处都有，青少年会不会更容易爱上读书？为什么？'
+    ],
+    example: '政府可以建设更多方便、舒适的社区图书馆。同时，社区也可以多举办一些大型活动，例如「全国阅读节」或书展。',
+    benefit: '这样能从社会层面上鼓励大家多读书，为青少年提供丰富的阅读资源。',
+    goodPhrases: [
+      '政府应加大投入，为民众提供便利的阅读资源。',
+      '在全社会营造「多读书、读好书」的良好氛围。',
+      '让阅读成为全民运动，从社会层面为青少年创造良好的阅读环境。',
+      '举办全国阅读节或书展，让阅读走进千家万户。'
+    ],
+    modelWeak: '政府要建图书馆，社区要办活动，这样大家就会爱上阅读了。',
+    modelWeakWhy: '❌ 做法太简单，没有阐述为什么这样做有效。「就会爱上」没有说明原因，缺少论证链条。',
+    modelStrong:
+`最后，政府和社区也要共同努力，向大众推广阅读文化。【P·论点句：点明主体（政府和社区）和方向】
+政府可以建设更多方便、舒适的社区图书馆，让青少年在家附近就能轻松借到好书；同时，社区也可以多举办大型活动，例如「全国阅读节」或书展，让全家人一起参与阅读。【E+举例：「让……就能」说明好处，「例如」引出具体活动，真实可信】
+这样能从社会层面鼓励大众多读书，为青少年提供丰富的阅读资源，在全社会营造「多读书、读好书」的良好风气。【L·好处：从小处延伸到全社会，格局提升，文采更好】`
+  }
+];
+
+function renderArgBodyPhase(idx){
+  const phase = state.phases[state.currentPhaseIdx];
+  const label = state.argBodyLabels?.[idx] || ['个人','家庭','学校','社会'][idx] || `论点${idx+1}`;
+  const saved = state.answers[phase.id];
+  const panel = document.getElementById('mainPanel');
+
+  // Match data by key or index
+  const data = ARG_BODY_DATA.find(d => label.includes(d.key)) || ARG_BODY_DATA[idx] || ARG_BODY_DATA[0];
+
+  // PEEL sentence templates using actual data
+  const peelSentences = [
+    { label:'P · 论点句', text: data.point },
+    { label:'E · 具体做法', text: data.example },
+    { label:'L · 这样做的好处', text: data.benefit },
+    { label:'万能逻辑句', text:'不仅能___，还能___，久而久之，___。' },
+    { label:'万能举例句', text:'例如，我们可以___，这样做能帮助我们___。' },
+    { label:'万能总结句', text:`由此可见，只要${label}___，青少年就能___。` },
+  ];
+
+  panel.innerHTML = `
+    <div class="phase-badge">✏️ 论证阶段 · 第${idx+1}段</div>
+    <div class="step-title">论点${idx+1}：${label}角度</div>
+    <div class="speak-row">
+      论点句怎么写？${speakBtn(VC.topic_sentence.zh, VC.topic_sentence.en)}
+      &nbsp;|&nbsp; 阐述怎么写？${speakBtn(VC.elaboration.zh, VC.elaboration.en)}
+      &nbsp;|&nbsp; PEEL框架${speakBtn(VC.peel.zh, VC.peel.en)}
+    </div>
+
+    <!-- 三步引导说明 -->
+    <div style="background:var(--accent-pale);border-radius:10px;padding:14px 18px;
+      margin-bottom:18px;font-size:13px;line-height:1.9;color:var(--ink-light)">
+      <b style="color:var(--accent)">这一段的写法：</b>
+      <span style="background:var(--accent);color:white;border-radius:3px;padding:1px 6px;margin:0 4px;font-size:12px">第一句</span>论点句——写清楚<b>谁</b>要做什么
+      <span style="background:#3a5a9a;color:white;border-radius:3px;padding:1px 6px;margin:0 4px;font-size:12px">中间</span>具体做法——用「例如」举出真实例子
+      <span style="background:var(--green);color:white;border-radius:3px;padding:1px 6px;margin:0 4px;font-size:12px">最后</span>好处——说清楚这样做有什么效果
+    </div>
+
+    <!-- 苏格拉底提问 -->
+    <div style="background:white;border:1.5px solid var(--paper-border);border-radius:10px;
+      margin-bottom:16px;overflow:hidden">
+      <div style="background:#f0f4ff;padding:10px 16px;font-size:12px;font-weight:600;
+        letter-spacing:1px;color:#3a5a9a">💬 先想一想——再动笔</div>
+      <div style="padding:14px 16px">
+        ${data.socratics.map((q,i)=>`
+          <div style="display:flex;gap:10px;margin-bottom:${i<data.socratics.length-1?'12px':'0'}">
+            <span style="background:#3a5a9a;color:white;border-radius:50%;width:20px;height:20px;
+              display:flex;align-items:center;justify-content:center;font-size:11px;
+              flex-shrink:0;margin-top:2px">${i+1}</span>
+            <span style="font-size:14px;color:var(--ink-light);line-height:1.8">${q}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- 支援面板：句式 + 好词 -->
+    <div class="support-panel">
+      <div class="support-tabs">
+        <div class="support-tab active" onclick="switchTab(this,'body_sentences_${idx}')">✏️ 可用句式</div>
+        <div class="support-tab" onclick="switchTab(this,'body_phrases_${idx}')">📚 好词好句</div>
+      </div>
+      <div class="support-content">
+        <div class="support-pane active" id="pane_body_sentences_${idx}">
+          <div class="sentence-list">
+            ${peelSentences.map(s=>`
+              <div class="sentence-item" onclick="insertText(${JSON.stringify(s.text).replace(/"/g,'&quot;')})">
+                <div class="s-label">${s.label}</div>
+                <div class="s-text">${s.text}</div>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div class="support-pane" id="pane_body_phrases_${idx}">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            ${data.goodPhrases.map(p=>`
+              <div style="background:white;border:1px solid var(--paper-border);border-radius:8px;
+                padding:10px 14px;cursor:pointer;transition:all .15s;font-family:'Noto Serif SC',serif;
+                font-size:13px;color:var(--ink-light);line-height:1.7"
+                onclick="insertText(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+                ${p}
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 弱→强范例 -->
+    <button class="example-toggle-btn" id="exToggle" onclick="toggleExample()">
+      <span>📖 查看弱→强范例对比（${label}角度）</span><span id="exArrow">▼</span>
+    </button>
+    <div class="example-cols" id="exCols" style="display:none">
+      <div class="ex-col weak">
+        <div class="ex-col-label">❌ 弱文写法</div>
+        <div class="ex-col-text">${data.modelWeak}</div>
+        <div class="ex-col-comment">${data.modelWeakWhy}</div>
+      </div>
+      <div class="ex-col strong">
+        <div class="ex-col-label">✓ 高分写法
+          <span style="font-size:10px;color:var(--green);margin-left:4px">（蓝色标签说明每句的作用）</span>
+        </div>
+        <div class="anno-block">${renderAnnotatedExample(data.modelStrong)}</div>
+      </div>
+    </div>
+
+    <!-- 输入区 -->
+    <div class="answer-wrap" style="margin-top:16px">
+      <textarea class="answer-ta" id="mainAnswer"
+        placeholder="第一句：${data.point}&#10;接着写具体做法，用「例如」举例……&#10;最后写这样做的好处……"
+        oninput="updateCC()" rows="7">${saved?.text||''}</textarea>
+      <div class="char-count" id="charCount">${saved?.text?.length||0} / 80字</div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-primary" id="submitBtn" onclick="submitWriteAnswer('${phase.id}',80)">
+        提交 · 获取 AI 批改 ✦
+      </button>
+      <button class="btn-ghost" onclick="prevPhase()">← 上一步</button>
+    </div>
+
+    <div class="feedback-panel ${saved?.feedback?'visible':''}" id="feedbackPanel">
+      <div class="feedback-header"><span>✦</span> AI 导师批改</div>
+      <div class="feedback-body" id="feedbackBody">
+        ${saved?.feedback ? renderFeedbackHTML(saved.feedback, saved.text) : ''}
+      </div>
+    </div>`;
+  setTimeout(updateCC, 50);
+}
+
+// ═══════════════════════════════════════
+//  ARGUMENTATIVE — OPENING/CLOSING WRITE
+// ═══════════════════════════════════════
+function renderArgWritePhase(phaseId, title, desc, vcContent, minChars){
+  const saved = state.answers[phaseId];
+  const panel = document.getElementById('mainPanel');
+  panel.innerHTML = `
+    <div class="phase-badge">${phaseId.includes('opening')?'🚪 开头':'🔚 结尾'} · 议论文</div>
+    <div class="step-title">${title}</div>
+    <div class="speak-row">
+      这一步怎么写？${speakBtn(vcContent.zh, vcContent.en)}
+    </div>
+    <div class="step-desc">${desc}</div>
+    <div class="info-box" style="margin-bottom:16px">
+      💡 你的写作角度：<i style="color:var(--ink)">${state.thinkCenter||'（未填写）'}</i>
+    </div>
+    <div class="answer-wrap">
+      <textarea class="answer-ta" id="mainAnswer"
+        placeholder="${desc}"
+        oninput="updateCC()" rows="5">${saved?.text||''}</textarea>
+      <div class="char-count" id="charCount">${saved?.text?.length||0} / ${minChars}字</div>
+    </div>
+    <div class="action-row">
+      <button class="btn-primary" id="submitBtn" onclick="submitWriteAnswer('${phaseId}',${minChars})">
+        提交 · 获取 AI 批改 ✦
+      </button>
+      <button class="btn-ghost" onclick="prevPhase()">← 上一步</button>
+    </div>
+    <div class="feedback-panel ${saved?.feedback?'visible':''}" id="feedbackPanel">
+      <div class="feedback-header"><span>✦</span> AI 导师批改</div>
+      <div class="feedback-body" id="feedbackBody">
+        ${saved?.feedback ? renderFeedbackHTML(saved.feedback, saved.text) : ''}
+      </div>
+    </div>`;
+  setTimeout(updateCC, 50);
+}
+
+// ═══════════════════════════════════════
+//  PHASE kw_X — KEYWORD DETAIL WRITE
+//  AI先生成专属引导，学生再写，再批改
+// ═══════════════════════════════════════
+async function renderWritePhase(phase){
+  const panel = document.getElementById('mainPanel');
+
+  // Show loading state immediately
+  panel.innerHTML = `
+    <div class="phase-badge">✏️ 详写阶段</div>
+    <div class="step-title">详写：「${phase.word}」</div>
+    <div class="step-desc">AI 正在根据你选择的关键词和中心思想，生成专属写作引导……</div>
+    <div style="padding:24px 0">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div class="loading-msg">正在分析「${phase.word}」的详写角度……</div>
+    </div>`;
+
+  // If AI guide already generated (returning to this phase), use cached version
+  if(!phase.aiGuide){
+    phase.aiGuide = await generateKwGuide(phase);
+  }
+  renderKwWritePanel(phase);
+}
+
+async function generateKwGuide(phase){
+  const topic = topics[state.topicIdx];
+  try{
+    const raw = await callClaude(
+      `你是新加坡中学华文老师，为学生生成写作引导。
+根据关键词、题目和学生设定的中心思想，生成专属引导内容。
+严格返回JSON，格式如下（所有字段必须填写）：
+{
+  "category": "人物描写/场面描写/事件经过/人物反应（选一个）",
+  "why": "这个词为什么是关键词（1-2句，具体说明它对文章的重要性）",
+  "angles": ["详写角度1（具体）","详写角度2","详写角度3"],
+  "scaffolds": ["脚手架提示1","脚手架提示2","脚手架提示3","脚手架提示4"],
+  "sentences": [
+    {"label":"句式名称","text":"句式模板（用___填空）"},
+    {"label":"句式名称","text":"句式模板"},
+    {"label":"句式名称","text":"句式模板"}
+  ],
+  "weak": "针对这个关键词的弱文示例（2-3句，具体对应此题目）",
+  "weakWhy": "❌ 弱在哪里（具体分析）",
+  "strong": "针对这个关键词的高分示例（4-6句，生动具体，对应此题目）",
+  "strongWhy": "✓ 好在哪里（具体分析）",
+  "minChars": 60,
+  "placeholder": "写作提示语"
+}`,
+      `作文题：${topic.content}
+学生选择的关键词：「${phase.word}」
+学生设定的中心思想：${state.thinkCenter||'未填写'}
+学生的详写角度思考：${state.thinkAngles||'未填写'}`
+    , 1500);
+    return parseJSON(raw);
+  } catch(e){
+    console.error('Guide generation failed:', e);
+    // Fallback to static resources
+    return WRITE_RESOURCES['默认'];
+  }
+}
+
+function renderKwWritePanel(phase){
+  const guide = phase.aiGuide || WRITE_RESOURCES['默认'];
+  const saved = state.answers[phase.id];
+  const panel = document.getElementById('mainPanel');
+
+  panel.innerHTML = `
+    <div class="phase-badge">✏️ 详写阶段</div>
+    <div class="step-title">详写：「${phase.word}」</div>
+    <div class="step-desc">围绕这个关键词，写一段生动、具体的内容。先看 AI 分析和范例，再动笔。</div>
+
+    <!-- AI分析卡 -->
+    <div style="background:white;border:1.5px solid var(--accent-light);border-radius:12px;
+      padding:18px 20px;margin-bottom:18px">
+      <div style="font-size:11px;letter-spacing:1.5px;color:var(--accent);font-weight:600;margin-bottom:10px">
+        ✦ AI 导师分析
+      </div>
+      <div style="font-size:13px;color:var(--ink-faint);margin-bottom:6px">为什么这是关键词？</div>
+      <div style="font-size:14px;color:var(--ink-light);line-height:1.8;margin-bottom:14px">${guide.why||''}</div>
+      <div style="font-size:13px;color:var(--ink-faint);margin-bottom:8px">建议从以下角度展开：</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${(guide.angles||[]).map((a,i)=>`
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <span style="background:var(--accent);color:white;border-radius:50%;
+              width:20px;height:20px;display:flex;align-items:center;justify-content:center;
+              font-size:11px;flex-shrink:0;margin-top:2px">${i+1}</span>
+            <span style="font-size:14px;color:var(--ink-light);line-height:1.7">${a}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- 中心思想提示 -->
+    <div class="info-box" style="margin-bottom:16px">
+      💡 你的中心思想：<i style="color:var(--ink)">${state.thinkCenter||'（未填写）'}</i>
+    </div>
+
+    <!-- 脚手架 + 句式 -->
+    ${buildSupportHTML(guide)}
+
+    <!-- 弱强范例 -->
+    ${buildExampleHTML(guide)}
+
+    <!-- 输入区 -->
+    <div class="answer-wrap">
+      <textarea class="answer-ta" id="mainAnswer"
+        placeholder="${guide.placeholder||'写出具体生动的内容……'}"
+        oninput="updateCC()"
+        rows="6">${saved?.text||''}</textarea>
+      <div class="char-count" id="charCount">${saved?.text?.length||0} / ${guide.minChars||60}字</div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-primary" id="submitBtn"
+        onclick="submitWriteAnswer('${phase.id}',${guide.minChars||60})">
+        提交 · 获取 AI 批改 ✦
+      </button>
+      <button class="btn-ghost" onclick="prevPhase()">← 上一步</button>
+    </div>
+
+    <div class="feedback-panel ${saved?.feedback?'visible':''}" id="feedbackPanel">
+      <div class="feedback-header"><span>✦</span> AI 导师批改</div>
+      <div class="feedback-body" id="feedbackBody">
+        ${saved?.feedback ? renderFeedbackHTML(saved.feedback, saved.text) : ''}
+      </div>
+    </div>
+  `;
+  setTimeout(updateCC, 50);
+}
+
+// ═══════════════════════════════════════
+//  GENERIC WRITE PHASE RENDERER
+// ═══════════════════════════════════════
+function renderWriteGenericPhase(phaseId, title, desc, res, phase){
+  const saved=state.answers[phaseId];
+  const panel=document.getElementById('mainPanel');
+
+  // build support tabs HTML
+  const supportHTML=buildSupportHTML(res);
+  const exampleHTML=buildExampleHTML(res);
+
+  const vcMap = { opening: 'opening_tech', lyrical: 'lyrical_tech', closing: 'closing_tech' };
+  const vcKey = vcMap[phaseId];
+  const voiceRow = vcKey ? `<div class="speak-row">这一步怎么写？${speakBtn(VC[vcKey].zh, VC[vcKey].en)}</div>` : '';
+
+  panel.innerHTML=`
+    <div class="phase-badge">${getPhaseBadge(phaseId)}</div>
+    <div class="step-title">${title}</div>
+    ${voiceRow}
+    <div class="step-desc">${desc}</div>
+
+    ${phaseId.startsWith('kw_')?`
+    <div class="info-box" style="margin-bottom:16px">
+      💡 你的中心思想：<i style="color:var(--ink)">${state.thinkCenter||'（未填写）'}</i>
+    </div>`:''}
+
+    ${supportHTML}
+    ${exampleHTML}
+
+    <div class="answer-wrap">
+      <textarea class="answer-ta" id="mainAnswer"
+        placeholder="${res.placeholder}"
+        oninput="updateCC()"
+        rows="6">${saved?.text||''}</textarea>
+      <div class="char-count" id="charCount">${saved?.text?.length||0} / ${res.minChars}字</div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-primary" id="submitBtn" onclick="submitWriteAnswer('${phaseId}',${res.minChars})">
+        提交 · 获取 AI 批改 ✦
+      </button>
+      <button class="btn-ghost" onclick="prevPhase()">← 上一步</button>
+    </div>
+
+    <div class="feedback-panel ${saved?.feedback?'visible':''}" id="feedbackPanel">
+      <div class="feedback-header"><span>✦</span> AI 导师批改</div>
+      <div class="feedback-body" id="feedbackBody">
+        ${saved?.feedback ? renderFeedbackHTML(saved.feedback, saved.text) : ''}
+      </div>
+    </div>
+  `;
+
+  setTimeout(updateCC,50);
+}
+
+function getPhaseBadge(id){
+  if(id.startsWith('kw_')) return '✏️ 详写阶段';
+  if(id==='opening') return '🚪 开头';
+  if(id==='lyrical') return '💬 抒情议论';
+  if(id==='closing') return '🔚 结尾';
+  return '✏️ 写作';
+}
+
+function buildSupportHTML(res){
+  return `
+  <div class="support-panel">
+    <div class="support-tabs">
+      <div class="support-tab active" onclick="switchTab(this,'scaffolds')">🧱 脚手架</div>
+      <div class="support-tab" onclick="switchTab(this,'sentences')">✏️ 重点句式</div>
+    </div>
+    <div class="support-content">
+      <div class="support-pane active" id="pane_scaffolds">
+        <div class="chip-row">
+          ${res.scaffolds.map(s=>`<div class="scaffold-chip" onclick="insertText('${s.replace(/'/g,"\\'")}')"> ${s}</div>`).join('')}
+        </div>
+      </div>
+      <div class="support-pane" id="pane_sentences">
+        <div class="sentence-list">
+          ${res.sentences.map(s=>`
+            <div class="sentence-item" onclick="insertText(${JSON.stringify(s.text).replace(/"/g,'&quot;')})">
+              <div class="s-label">${s.label}</div>
+              <div class="s-text">${s.text.replace(/\n/g,'<br>')}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// Map technique label text → VC key for voice button
+const TECH_VC_MAP = {
+  '动作描写': 'action_desc', '神态描写': 'expression_desc',
+  '心理描写': 'psychology_desc', '心理独白': 'psychology_desc',
+  '场面': 'scene_desc', '感官': 'scene_desc',
+  '对比': 'contrast', '前后对比': 'contrast', '反衬': 'contrast',
+  '由事及理': 'lyrical_tech', '情感升华': 'lyrical_tech',
+  '首尾呼应': 'closing_tech', '点题': 'closing_tech',
+  '论点句': 'topic_sentence', '阐述': 'elaboration',
+  '举例': 'example_arg', 'PEEL': 'peel',
+};
+
+function vcForTag(tag){
+  for(const [k,v] of Object.entries(TECH_VC_MAP)){
+    if(tag.includes(k)) return v;
+  }
+  return null;
+}
+
+function renderAnnotatedExample(text){
+  if(!text) return '';
+  return text.split('\n').filter(l=>l.trim()).map(line=>{
+    const m = line.match(/^(.*?)【([^】]+)】\s*$/);
+    if(m){
+      const vcKey = vcForTag(m[2]);
+      const voiceBtn = vcKey && VC[vcKey]
+        ? speakBtn(VC[vcKey].zh, VC[vcKey].en)
+        : '';
+      return `<div class="anno-line">
+        <span class="anno-text">${m[1].trim()}</span>
+        <span class="anno-tag">${m[2]}${voiceBtn}</span>
+      </div>`;
+    }
+    return `<div class="anno-line"><span class="anno-text">${line}</span></div>`;
+  }).join('');
+}
+
+function buildExampleHTML(res){
+  return `
+  <button class="example-toggle-btn" id="exToggle" onclick="toggleExample()">
+    <span>📖 查看弱→强范例对比</span><span id="exArrow">▼</span>
+  </button>
+  <div class="example-cols" id="exCols" style="display:none">
+    <div class="ex-col weak">
+      <div class="ex-col-label">❌ 弱文写法</div>
+      <div class="ex-col-text">${res.weak}</div>
+      <div class="ex-col-comment">${res.weakWhy}</div>
+    </div>
+    <div class="ex-col strong">
+      <div class="ex-col-label">✓ 高分写法 <span style="font-size:10px;font-weight:400;color:var(--green);margin-left:6px">（标签说明每句用的手法）</span></div>
+      <div class="anno-block">${renderAnnotatedExample(res.strongAnnotated || res.strong)}</div>
+      <div class="ex-col-comment" style="margin-top:10px">${res.strongWhy}</div>
+    </div>
+  </div>`;
+}
+
+function switchTab(el,pane){
+  el.closest('.support-panel').querySelectorAll('.support-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  el.closest('.support-panel').querySelectorAll('.support-pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pane_'+pane)?.classList.add('active');
+}
+
+function toggleExample(){
+  const cols=document.getElementById('exCols');
+  const arrow=document.getElementById('exArrow');
+  const btn=document.getElementById('exToggle');
+  const open=cols.style.display!=='none';
+  cols.style.display=open?'none':'grid';
+  arrow.style.transform=open?'':'rotate(180deg)';
+  btn.classList.toggle('open',!open);
+}
+
+function insertText(text){
+  const ta=document.getElementById('mainAnswer');
+  if(!ta) return;
+  const cur=ta.value.trim();
+  ta.value=cur?cur+'\n'+text:text;
+  ta.focus(); ta.scrollTop=ta.scrollHeight;
+  updateCC();
+}
+
+function updateCC(){
+  const ta=document.getElementById('mainAnswer');
+  const el=document.getElementById('charCount');
+  if(!ta||!el) return;
+  // get minChars from element text
+  const parts=el.textContent.split('/');
+  const min=parseInt((parts[1]||'').trim())||0;
+  const n=ta.value.length;
+  el.textContent=`${n} / ${min}字`;
+  el.style.color=n>=min?'var(--green)':'var(--ink-faint)';
+}
+
+// ═══════════════════════════════════════
+//  SUBMIT + AI FEEDBACK
+// ═══════════════════════════════════════
+async function submitWriteAnswer(phaseId, minChars){
+  const ta=document.getElementById('mainAnswer');
+  const val=ta.value.trim();
+  if(!val){alert('请先输入内容');return}
+  if(val.length<minChars){alert(`请至少写 ${minChars} 个字（当前 ${val.length} 字）`);return}
+
+  const panel=document.getElementById('feedbackPanel');
+  const body=document.getElementById('feedbackBody');
+  panel.classList.add('visible');
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  body.innerHTML=`<div class="loading-dots"><span></span><span></span><span></span></div>
+    <div class="loading-msg">AI 导师正在批改……</div>`;
+  document.getElementById('submitBtn').disabled=true;
+
+  const topic=topics[state.topicIdx];
+  const phase=state.phases[state.currentPhaseIdx];
+  const res=getResourceForPhase(phase);
+  const benchmark = phase.aiGuide?.strong || res.strong || '';
+
+  try{
+    const raw=await callClaude(
+      `你是新加坡中学华文阅卷老师，批改风格：精准直接，不说废话。
+
+【任务】根据学生所写内容，完成以下三件事：
+1. 找出学生答案中最主要的1-2个问题，引用学生原句，说明为什么弱
+2. 写一个AI参考答案：针对同一题目和步骤，写出高分示范。每句后用【手法标注】注明写法。4-6句，覆盖至少3种手法
+3. 逐句对比解释：对照参考答案，说明学生的答案缺少了什么、可以怎样改进
+
+返回JSON（只返回JSON，不加任何其他文字）：
+{"problems":"主要问题（引用学生原句，说明哪里弱、为什么）","reference":"AI参考答案，每句后跟【手法标注】，句子间用\\n分隔","comparison":"对比解释：参考答案的每个关键手法，对应学生答案哪里没做到，应该怎么改"}`,
+      `作文题：${topic.content}
+当前步骤：${phase.label}
+中心思想（学生设定）：${state.thinkCenter}
+高分范例参考风格：${benchmark}
+学生所写内容：
+${val}`
+    );
+    const fb=parseJSON(raw);
+    state.answers[phaseId]={text:val, feedback:fb};
+    body.innerHTML=renderFeedbackHTML(fb, val);
+  }catch(e){
+    const noKey=!getKey();
+    const fb={
+      problems: noKey?'⚠️ 未设置 API Key，请老师到「老师管理」填入 Anthropic API Key。':'（AI批改暂时无法连接，请检查网络。）',
+      reference: res.strong || '',
+      comparison:'请检查 API Key 设置后重试。'
+    };
+    state.answers[phaseId]={text:val, feedback:fb};
+    body.innerHTML=renderFeedbackHTML(fb, val);
+  }
+}
+
+function getResourceForPhase(phase){
+  if(!phase) return WRITE_RESOURCES['默认'];
+  if(phase.id==='opening') return OPENING_RESOURCES;
+  if(phase.id==='lyrical') return LYRICAL_RESOURCES;
+  if(phase.id==='closing') return CLOSING_RESOURCES;
+  if(phase.id.startsWith('kw_')){
+    return WRITE_RESOURCES[phase.category]||WRITE_RESOURCES['默认'];
+  }
+  return WRITE_RESOURCES['默认'];
+}
+
+function renderFeedbackHTML(fb, studentText){
+  const refAnnotated = renderAnnotatedExample(fb.reference || fb.example || '');
+  const studentDisplay = (studentText || '').replace(/\n/g,'<br>');
+  return `
+    <!-- 主要问题 -->
+    <div class="fb-section">
+      <span class="fb-tag problem">⚠ 主要问题</span>
+      <div class="fb-text">${fb.problems}</div>
+    </div>
+
+    <!-- 对比区：学生答案 vs AI参考答案 -->
+    <div class="fb-section">
+      <span class="fb-tag example" style="margin-bottom:12px;display:inline-block">↕ 对比：你的答案 vs AI参考答案</span>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
+        <div style="background:#fff8f5;border:1.5px solid #e8c8b0;border-radius:8px;padding:14px">
+          <div style="font-size:11px;font-weight:600;color:var(--red);letter-spacing:1px;margin-bottom:8px">你的答案</div>
+          <div style="font-family:'Noto Serif SC',serif;font-size:13px;line-height:1.9;color:var(--ink-light)">${studentDisplay}</div>
+        </div>
+        <div style="background:#f0f7ff;border:1.5px solid #b0ccec;border-radius:8px;padding:14px">
+          <div style="font-size:11px;font-weight:600;color:var(--blue);letter-spacing:1px;margin-bottom:8px">AI 参考答案（每句标注写法）</div>
+          <div class="anno-block fb-anno" style="background:transparent;border:none;padding:0">${refAnnotated}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 对比解释 -->
+    <div class="fb-section">
+      <span class="fb-tag praise">💡 对比说明</span>
+      <div class="fb-text">${fb.comparison || fb.praise || ''}</div>
+    </div>
+
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn-primary" onclick="nextPhase()">
+        ${state.currentPhaseIdx<state.phases.length-1?'下一步 →':'完成 · 查看总结 🎉'}
+      </button>
+      <button class="btn-ghost" onclick="reviseAnswer()">修改我的答案</button>
+    </div>`;
+}
+
+function reviseAnswer(){
+  document.getElementById('feedbackPanel').classList.remove('visible');
+  document.getElementById('submitBtn').disabled=false;
+  document.getElementById('mainAnswer').focus();
+}
+
+// ═══════════════════════════════════════
+//  PHASE — SUMMARY
+// ═══════════════════════════════════════
+async function renderSummaryPhase(){
+  const panel=document.getElementById('mainPanel');
+  panel.innerHTML=`
+    <div class="phase-badge">📋 完成阶段</div>
+    <div class="step-title">全文总结</div>
+    <div class="step-desc">以下是你在各个阶段写的内容，AI 将整理成完整草稿，并标注优缺点。</div>
+
+    <div id="summaryContent">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div class="loading-msg">AI 正在整理你的全文……</div>
+    </div>
+  `;
+
+  // collect all written content
+  const parts=[];
+  if(state.answers['opening']) parts.push({label:'开头', text:state.answers['opening'].text});
+  state.phases.filter(p=>p.id.startsWith('kw_')).forEach(p=>{
+    if(state.answers[p.id]) parts.push({label:`详写·${p.word}`, text:state.answers[p.id].text});
+  });
+  if(state.answers['lyrical']) parts.push({label:'抒情议论', text:state.answers['lyrical'].text});
+  if(state.answers['closing']) parts.push({label:'结尾', text:state.answers['closing'].text});
+
+  if(parts.length===0){
+    document.getElementById('summaryContent').innerHTML=
+      `<div class="info-box">你还没有完成任何写作步骤，请先返回完成写作。</div>
+       <div class="action-row"><button class="btn-ghost" onclick="prevPhase()">← 返回</button></div>`;
+    return;
+  }
+
+  try{
+    const allText=parts.map(p=>`【${p.label}】\n${p.text}`).join('\n\n');
+    const raw=await callClaude(
+      `你是新加坡中学华文老师。学生分段完成了一篇作文的各个部分。
+请：1. 按顺序整理成完整草稿（直接输出文章内容，不加标签）；
+2. 整体点评：指出最突出的1-2个优点（引用原句）和最需要改进的1-2个问题。
+返回JSON：{"draft":"完整草稿（段落间用\\n\\n分隔）","strengths":"优点","weaknesses":"需改进处"}`,
+      `作文题：${topics[state.topicIdx].content}\n中心思想：${state.thinkCenter}\n\n${allText}`,
+      1800
+    );
+    const d=parseJSON(raw);
+    state.summaryDraft=d.draft;
+    document.getElementById('summaryContent').innerHTML=`
+      <div class="draft-section">
+        <div class="draft-section-label">完整草稿</div>
+        <div class="draft-text">${d.draft.replace(/\n/g,'<br>')}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
+        <div style="background:#f5fff8;border:1px solid #c8e0d4;border-radius:10px;padding:14px">
+          <div style="font-size:11px;color:var(--green);font-weight:600;letter-spacing:1px;margin-bottom:8px">✓ 写得好</div>
+          <div style="font-size:13px;color:var(--ink-light);line-height:1.8">${d.strengths}</div>
+        </div>
+        <div style="background:#fff8f5;border:1px solid #e8c8b0;border-radius:10px;padding:14px">
+          <div style="font-size:11px;color:var(--red);font-weight:600;letter-spacing:1px;margin-bottom:8px">↑ 需改进</div>
+          <div style="font-size:13px;color:var(--ink-light);line-height:1.8">${d.weaknesses}</div>
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn-primary" onclick="nextPhase()">下一步 · 衔接润色 →</button>
+      </div>`;
+  }catch(e){
+    const allText=parts.map(p=>`【${p.label}】${p.text}`).join('\n\n');
+    state.summaryDraft=allText;
+    document.getElementById('summaryContent').innerHTML=`
+      ${parts.map(p=>`
+        <div class="draft-section">
+          <div class="draft-section-label">${p.label}</div>
+          <div class="draft-text">${p.text.replace(/\n/g,'<br>')}</div>
+        </div>`).join('')}
+      <div class="warn-box">AI 整理暂时无法连接，以上为你的原始内容。</div>
+      <div class="action-row" style="margin-top:14px">
+        <button class="btn-primary" onclick="nextPhase()">下一步 · 衔接润色 →</button>
+      </div>`;
+  }
+}
+
+// ═══════════════════════════════════════
+//  PHASE — CONNECT
+// ═══════════════════════════════════════
+async function renderConnectPhase(){
+  const panel=document.getElementById('mainPanel');
+  panel.innerHTML=`
+    <div class="phase-badge">🔗 完成阶段</div>
+    <div class="step-title">衔接润色</div>
+    <div class="step-desc">AI 将根据你的草稿，为各段之间生成衔接句建议。你可以直接编辑，修改成自己的风格，完成后即为最终定稿。</div>
+    <div id="connectContent">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div class="loading-msg">AI 正在生成衔接建议……</div>
+    </div>`;
+
+  // collect paragraphs in order
+  const parts=[];
+  if(state.answers['opening'])  parts.push({label:'开头',    text:state.answers['opening'].text});
+  state.phases.filter(p=>p.id.startsWith('kw_')).forEach(p=>{
+    if(state.answers[p.id]) parts.push({label:`详写·${p.word}`, text:state.answers[p.id].text});
+  });
+  if(state.answers['lyrical'])  parts.push({label:'抒情议论', text:state.answers['lyrical'].text});
+  if(state.answers['closing'])  parts.push({label:'结尾',    text:state.answers['closing'].text});
+
+  if(parts.length<2){
+    document.getElementById('connectContent').innerHTML=`
+      <div class="info-box">内容不足，无法生成衔接。请先返回完成各写作步骤。</div>
+      <div class="action-row"><button class="btn-ghost" onclick="prevPhase()">← 返回</button></div>`;
+    return;
+  }
+
+  try{
+    const allText=parts.map((p,i)=>`段${i+1}【${p.label}】：${p.text}`).join('\n\n');
+    const raw=await callClaude(
+      `你是新加坡中学华文老师。学生完成了各段内容，现在需要衔接句把各段自然连接起来。
+请在每两段之间加入1-2句衔接语，使文章流畅。
+返回JSON：{"connected":"完整文章（包含衔接句，段落间用\\n\\n分隔）","tips":"衔接技巧说明（一两句）"}`,
+      `作文题：${topics[state.topicIdx].content}\n\n${allText}`,
+      2000
+    );
+    const d=parseJSON(raw);
+    state.connectDraft=d.connected;
+    renderConnectEditor(d.connected, d.tips);
+  }catch(e){
+    renderConnectEditor(parts.map(p=>p.text).join('\n\n'), '（AI衔接暂时无法连接，以下为你的原始内容，可直接编辑。）');
+  }
+}
+
+function renderConnectEditor(draft, tips){
+  document.getElementById('connectContent').innerHTML=`
+    <div class="info-box" style="margin-bottom:16px">
+      💡 衔接技巧：${tips}
+    </div>
+    <div class="draft-section">
+      <div class="draft-section-label">可编辑的完整定稿（AI 已加入衔接句，你可以直接修改）</div>
+      <div class="draft-text editable" id="finalDraft" contenteditable="true"
+        style="min-height:300px">${draft.replace(/\n\n/g,'</p><p style="margin-top:1em">').replace(/\n/g,'<br>')}</div>
+    </div>
+    <div class="ai-note">以上为 AI 建议的衔接版本，请根据自己的想法自由修改。</div>
+    <div class="action-row" style="margin-top:16px">
+      <button class="btn-primary" onclick="finishTraining()">🎉 完成训练！</button>
+      <button class="btn-ghost" onclick="prevPhase()">← 返回修改</button>
+    </div>`;
+}
+
+function finishTraining(){
+  const panel = document.getElementById('mainPanel');
+  const topic = topics[state.topicIdx];
+
+  // Get final draft from editable div if available
+  const draftEl = document.getElementById('finalDraft');
+  if(draftEl) state.connectDraft = draftEl.innerText || draftEl.textContent || '';
+
+  panel.innerHTML = `
+    <div class="celebrate">
+      <div class="celebrate-emoji">🎉</div>
+      <div class="celebrate-title">训练完成！</div>
+      <div class="celebrate-sub">你完成了「${topic.title}」的完整写作训练，共 ${state.phases.length} 个步骤</div>
+    </div>
+
+    <!-- 学生资料 + 提交 -->
+    <div style="background:white;border:1.5px solid var(--accent-light);
+      border-radius:12px;padding:20px;margin-bottom:20px">
+      <div style="font-size:13px;color:var(--ink-faint);margin-bottom:12px">
+        点击「提交」，老师可以在管理页面查看你的成果。
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+        <div style="background:var(--accent-pale);border-radius:8px;padding:8px 14px;font-size:14px">
+          <span style="color:var(--ink-faint);font-size:12px">班级 </span>
+          <b style="color:var(--accent)">${state.studentClass || '—'}</b>
+        </div>
+        <div style="background:var(--accent-pale);border-radius:8px;padding:8px 14px;font-size:14px">
+          <span style="color:var(--ink-faint);font-size:12px">学号 </span>
+          <b style="color:var(--accent)">${state.studentNumber || '—'}</b>
+        </div>
+        <div style="background:var(--accent-pale);border-radius:8px;padding:8px 14px;font-size:14px">
+          <span style="color:var(--ink-faint);font-size:12px">姓名 </span>
+          <b style="color:var(--accent)">${state.studentName || '—'}</b>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button class="btn-primary" id="submitResultBtn" onclick="submitResult()">
+          📤 提交成果给老师
+        </button>
+        <div id="submitStatus" style="font-size:13px;color:var(--ink-faint)"></div>
+      </div>
+    </div>
+
+    <!-- 成果预览 -->
+    <div style="background:var(--accent-pale);border-radius:12px;padding:20px;margin-bottom:24px">
+      <div style="font-family:'Noto Serif SC',serif;font-weight:600;
+        margin-bottom:12px;color:var(--accent)">📌 你的写作成果</div>
+      <div style="font-size:13px;color:var(--ink-faint);margin-bottom:4px">中心思想</div>
+      <div style="font-size:14px;color:var(--ink-light);line-height:1.8;
+        margin-bottom:16px">${state.thinkCenter || '（未填写）'}</div>
+      <div style="font-size:13px;color:var(--ink-faint);margin-bottom:8px">完成的写作步骤</div>
+      ${state.phases.filter(p => state.answers[p.id]).map(p => `
+        <div style="margin-bottom:10px">
+          <div style="font-size:12px;color:var(--accent);font-weight:500;margin-bottom:4px">
+            ${p.label}
+          </div>
+          <div style="font-size:13px;color:var(--ink-light);line-height:1.8;
+            background:white;padding:10px 14px;border-radius:8px;
+            border:1px solid var(--paper-border);white-space:pre-wrap">
+            ${state.answers[p.id].text}
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <div class="action-row">
+      <button class="btn-primary" onclick="startTraining(${state.topicIdx})">再练一次</button>
+      <button class="btn-ghost" onclick="goTo('studentScreen')">选择其他题目</button>
+    </div>`;
+  renderSidebar();
+}
+
+function submitResult(){
+  const status = document.getElementById('submitStatus');
+  const btn = document.getElementById('submitResultBtn');
+  if(!state.studentName){
+    status.textContent = '学生资料缺失，请重新开始。';
+    status.style.color = 'var(--red)'; return;
+  }
+  saveStudentResult();
+  btn.disabled = true;
+  btn.textContent = '✓ 已提交';
+  status.textContent = '老师可以在管理页面查看你的成果。';
+  status.style.color = 'var(--green)';
+}
+
+// ═══════════════════════════════════════
+//  TEACHER PASSWORD
+// ═══════════════════════════════════════
+const PW_KEY = 'zuowen_teacher_pw';
+function getTeacherPw(){ return localStorage.getItem(PW_KEY) || 'teacher123' }
+
+function openTeacher(){
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwError').style.display = 'none';
+  const modal = document.getElementById('pwModal');
+  modal.style.display = 'flex';
+  setTimeout(()=>document.getElementById('pwInput').focus(), 100);
+}
+
+function closePwModal(){
+  document.getElementById('pwModal').style.display = 'none';
+}
+
+function checkPassword(){
+  const val = document.getElementById('pwInput').value;
+  if(val === getTeacherPw()){
+    closePwModal();
+    goTo('teacherScreen');
+  } else {
+    document.getElementById('pwError').style.display = 'block';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+  }
+}
+
+function changePassword(){
+  const val = document.getElementById('newPwInput').value.trim();
+  const status = document.getElementById('pwChangeStatus');
+  if(!val || val.length < 4){
+    status.textContent = '密码至少 4 位'; status.style.color = 'var(--red)'; return;
+  }
+  localStorage.setItem(PW_KEY, val);
+  document.getElementById('newPwInput').value = '';
+  status.textContent = '✓ 密码已修改'; status.style.color = 'var(--green)';
+  setTimeout(()=>{ status.textContent = '' }, 3000);
+}
+
+// ═══════════════════════════════════════
+//  STUDENT SUBMISSION STORAGE
+// ═══════════════════════════════════════
+const RESULTS_KEY = 'zuowen_results';
+
+function saveStudentResult(){
+  const topic = topics[state.topicIdx];
+  const now = new Date();
+  const record = {
+    id: Date.now(),
+    timestamp: now.toLocaleString('zh-SG'),
+    topicTitle: topic.title,
+    topicContent: topic.content,
+    studentName: state.studentName || '匿名学生',
+    studentClass: state.studentClass || '',
+    studentNumber: state.studentNumber || '',
+    thinkCenter: state.thinkCenter,
+    thinkAngles: state.thinkAngles,
+    dlgAnswers: state.dlgAnswers || [],
+    answers: state.answers,
+    phases: state.phases.map(p=>({ id:p.id, label:p.label, word:p.word||null }))
+  };
+  const existing = JSON.parse(localStorage.getItem(RESULTS_KEY) || '[]');
+  existing.push(record);
+  // Keep last 50 records
+  if(existing.length > 50) existing.splice(0, existing.length - 50);
+  localStorage.setItem(RESULTS_KEY, JSON.stringify(existing));
+  return record;
+}
+
+function getResults(){
+  return JSON.parse(localStorage.getItem(RESULTS_KEY) || '[]');
+}
+
+function clearAllResults(){
+  if(!confirm('确定清除所有学生提交记录？此操作不可撤销。')) return;
+  localStorage.removeItem(RESULTS_KEY);
+  renderResults();
+}
+
+// ═══════════════════════════════════════
+//  RESULTS PAGE
+// ═══════════════════════════════════════
+function renderResults(){
+  const records = getResults();
+  const body = document.getElementById('resultsBody');
+
+  // Update badge on teacher page
+  const badge = document.getElementById('resultsBadge');
+  if(badge) badge.textContent = records.length > 0 ? `共 ${records.length} 份记录` : '暂无记录';
+
+  if(records.length === 0){
+    body.innerHTML = `
+      <div style="text-align:center;padding:60px 20px;color:var(--ink-faint)">
+        <div style="font-size:40px;margin-bottom:16px">📭</div>
+        <div style="font-family:'Noto Serif SC',serif;font-size:18px;margin-bottom:8px">暂无提交记录</div>
+        <div style="font-size:14px">学生完成训练并点击「提交成果」后，记录会出现在这里。</div>
+      </div>`;
+    return;
+  }
+
+  // Sort: newest first by default; allow sort by class+number
+  const sortMode = body.dataset.sortMode || 'time';
+  let sorted;
+  if(sortMode === 'class'){
+    sorted = [...records].sort((a,b)=>{
+      const ca = (a.studentClass||'') + (a.studentNumber||'').padStart(4,'0');
+      const cb = (b.studentClass||'') + (b.studentNumber||'').padStart(4,'0');
+      return ca.localeCompare(cb);
+    });
+  } else {
+    sorted = [...records].reverse();
+  }
+
+  const sortBtnTime  = sortMode==='time'  ? 'btn-primary' : 'btn-ghost';
+  const sortBtnClass = sortMode==='class' ? 'btn-primary' : 'btn-ghost';
+
+  body.innerHTML = `
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+      <span style="font-size:13px;color:var(--ink-faint)">排序：</span>
+      <button class="${sortBtnTime}"  style="padding:6px 14px;font-size:13px"
+        onclick="document.getElementById('resultsBody').dataset.sortMode='time';renderResults()">按时间</button>
+      <button class="${sortBtnClass}" style="padding:6px 14px;font-size:13px"
+        onclick="document.getElementById('resultsBody').dataset.sortMode='class';renderResults()">按班级学号</button>
+    </div>
+  ` + sorted.map((rec, i) => `
+    <div style="background:var(--paper-warm);border:1.5px solid var(--paper-border);
+      border-radius:12px;overflow:hidden;margin-bottom:16px">
+      <!-- record header -->
+      <div style="background:var(--accent-pale);padding:14px 20px;
+        display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600;color:var(--accent)">
+            ${[rec.studentClass, rec.studentNumber, rec.studentName].filter(Boolean).join(' · ')} · ${rec.topicTitle}
+          </div>
+          <div style="font-size:12px;color:var(--ink-faint);margin-top:2px">${rec.timestamp}</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-ghost" onclick="toggleResult('rec_${rec.id}')"
+            style="font-size:12px;padding:5px 12px" id="toggleBtn_${rec.id}">
+            展开查看
+          </button>
+          <button onclick="deleteResult(${rec.id})"
+            style="background:none;border:1px solid var(--red);border-radius:6px;
+            padding:5px 10px;font-size:12px;color:var(--red);cursor:pointer">
+            删除
+          </button>
+        </div>
+      </div>
+
+      <!-- quick summary always visible -->
+      <div style="padding:12px 20px;border-bottom:1px solid var(--paper-border)">
+        <span style="font-size:12px;color:var(--ink-faint)">中心思想：</span>
+        <span style="font-size:13px;color:var(--ink-light)">${rec.thinkCenter || '（未填写）'}</span>
+      </div>
+
+      <!-- expandable detail -->
+      <div id="rec_${rec.id}" style="display:none;padding:16px 20px">
+
+        <!-- dialogue thread -->
+        ${rec.dlgAnswers && rec.dlgAnswers.length > 0 ? `
+        <div style="margin-bottom:20px">
+          <div style="font-size:12px;letter-spacing:1.5px;color:var(--accent);
+            font-weight:600;margin-bottom:10px">审题思考对话</div>
+          ${rec.dlgAnswers.map((item,i)=>`
+            <div style="margin-bottom:10px;padding:10px 14px;background:white;
+              border-radius:8px;border-left:3px solid var(--accent-light)">
+              <div style="font-size:11px;color:var(--ink-faint);margin-bottom:4px">
+                第${i+1}轮</div>
+              <div style="font-size:13px;color:var(--ink-light);line-height:1.8">${item.a}</div>
+            </div>`).join('')}
+        </div>` : ''}
+
+        <!-- writing answers -->
+        ${rec.phases.filter(p => rec.answers[p.id]).map(p => `
+          <div style="margin-bottom:14px">
+            <div style="font-size:11px;letter-spacing:1.5px;color:var(--accent);
+              font-weight:600;margin-bottom:6px">${p.label}</div>
+            <div style="font-family:'Noto Serif SC',serif;font-size:14px;line-height:2;
+              color:var(--ink-light);background:white;padding:12px 16px;
+              border-radius:8px;border:1px solid var(--paper-border);
+              white-space:pre-wrap">${rec.answers[p.id].text}</div>
+            ${rec.answers[p.id].feedback ? `
+              <div style="margin-top:6px;padding:8px 12px;background:#f0f8ff;
+                border-radius:6px;font-size:12px;color:var(--blue);line-height:1.7">
+                <b>⚠ AI批改：</b>${rec.answers[p.id].feedback.problems}
+              </div>` : ''}
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function toggleResult(id){
+  const el = document.getElementById(id);
+  const recId = id.replace('rec_','');
+  const btn = document.getElementById(`toggleBtn_${recId}`);
+  if(!el) return;
+  const open = el.style.display !== 'none';
+  el.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '展开查看' : '收起';
+}
+
+function deleteResult(id){
+  if(!confirm('删除这条记录？')) return;
+  const records = getResults().filter(r => r.id !== id);
+  localStorage.setItem(RESULTS_KEY, JSON.stringify(records));
+  renderResults();
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+renderTeacher();
+renderStudentList();
+</script>
+</body>
+</html>

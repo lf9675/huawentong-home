@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>情境记叙文 · 闯关学堂</title>
+<style>
+:root{
+  --green:#2B5E50; --green-dk:#1E463B; --green-lt:#E8F0EC;
+  --red:#C13B2A; --red-lt:#FBEBE7;
+  --paper:#F7F3EA; --grid:#E4DAC6; --ink:#2A2724; --gray:#6E675C;
+  --gold:#C9972F; --ok:#2E7D46; --ok-lt:#E7F3EA;
+  --card:#FFFFFF; --radius:14px;
+  --shadow:0 2px 10px rgba(42,39,36,.08);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{font-size:17px;}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+  background:var(--paper); color:var(--ink); line-height:1.65;
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px);
+  background-size:100% 2.6rem; background-attachment:fixed;
+}
+.wrap{max-width:940px; margin:0 auto; padding:16px 16px 90px;}
+
+/* ---------- 顶栏 ---------- */
+.topbar{
+  background:var(--green); color:#fff; border-radius:var(--radius);
+  padding:14px 20px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  box-shadow:var(--shadow);
+}
+.topbar h1{font-size:1.35rem; letter-spacing:.06em;}
+.topbar .sub{font-size:.8rem; color:#CFE0D7; letter-spacing:.05em;}
+.badge{
+  margin-left:auto; display:flex; gap:10px; align-items:center;
+}
+.pill{
+  background:rgba(255,255,255,.15); border-radius:999px; padding:4px 14px;
+  font-size:.9rem; font-weight:700;
+}
+.pill.star{background:var(--gold); color:#fff;}
+.pill.lvl{background:#fff; color:var(--green);}
+.btn-quit{background:none;border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:999px;padding:4px 12px;font-size:.8rem;cursor:pointer;}
+.btn-quit:hover{background:rgba(255,255,255,.15);}
+
+/* ---------- 关卡进度条 ---------- */
+.stepper{display:flex; gap:6px; margin:14px 0; flex-wrap:wrap;}
+.step{
+  flex:1 1 90px; min-width:86px; border:none; cursor:pointer;
+  background:#fff; border-radius:10px; padding:7px 4px;
+  font-family:inherit; font-size:.78rem; color:var(--gray);
+  border-bottom:3px solid var(--grid); transition:.15s;
+}
+.step b{display:block; font-size:.95rem; color:var(--ink);}
+.step.cur{background:var(--green); border-bottom-color:var(--green-dk);}
+.step.cur b,.step.cur{color:#fff;}
+.step.done b::after{content:" ✓"; color:var(--ok);}
+.step.cur.done b::after{color:#BFE3C8;}
+.step:focus-visible{outline:3px solid var(--gold);}
+
+/* ---------- 卡片 ---------- */
+.card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px 26px; margin-bottom:16px;}
+.card-tag{
+  display:inline-block; font-size:.8rem; font-weight:700; letter-spacing:.15em;
+  color:#fff; background:var(--green); border-radius:6px; padding:2px 12px; margin-bottom:10px;
+}
+.card-tag.red{background:var(--red);}
+.notes h2{font-size:1.25rem; color:var(--green-dk); margin-bottom:10px;}
+.notes p, .notes li{font-size:1rem; margin-bottom:7px;}
+.notes ul{padding-left:1.3em;}
+.kw{color:var(--red); font-weight:700;}
+.en{color:var(--gray); font-size:.8em; font-weight:400;}
+.notes table{width:100%; border-collapse:collapse; margin:10px 0; font-size:.95rem;}
+.notes th,.notes td{border:1px solid var(--grid); padding:7px 10px; text-align:left; vertical-align:top;}
+.notes th{background:var(--green-lt); color:var(--green-dk); white-space:nowrap;}
+.motto{
+  display:inline-block; background:var(--green-lt); color:var(--green-dk);
+  border:1.5px dashed var(--green); border-radius:8px; padding:2px 12px;
+  font-weight:700; letter-spacing:.2em; margin:2px 4px 2px 0;
+}
+.chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;}
+.chip{background:var(--paper); border:1px solid var(--grid); border-radius:999px; padding:2px 12px; font-size:.85rem;}
+
+/* ---------- 练习 ---------- */
+.quiz .qcount{font-size:.85rem; color:var(--gray); float:right;}
+.qtext{font-size:1.08rem; font-weight:700; margin:6px 0 14px;}
+.qtext .ti{color:var(--green-dk); background:var(--green-lt); border-radius:6px; padding:1px 6px;}
+.opts{display:grid; gap:10px;}
+.opt{
+  text-align:left; font-family:inherit; font-size:1rem; line-height:1.55;
+  background:var(--paper); border:2px solid var(--grid); border-radius:10px;
+  padding:11px 14px 11px 44px; cursor:pointer; position:relative; transition:.15s; color:var(--ink);
+}
+.opt::before{
+  content:attr(data-l); position:absolute; left:12px; top:10px;
+  width:24px; height:24px; border-radius:50%; background:#fff; border:1.5px solid var(--grid);
+  font-weight:700; font-size:.85rem; display:flex; align-items:center; justify-content:center; color:var(--gray);
+}
+.opt:hover:not(:disabled){border-color:var(--green); background:#fff;}
+.opt:focus-visible{outline:3px solid var(--gold);}
+.opt.right{border-color:var(--ok); background:var(--ok-lt);}
+.opt.right::before{background:var(--ok); border-color:var(--ok); color:#fff; content:"✓";}
+.opt.wrong{border-color:var(--red); background:var(--red-lt); animation:shake .3s;}
+.opt.wrong::before{background:var(--red); border-color:var(--red); color:#fff; content:"✗";}
+.opt:disabled{cursor:default; opacity:.92;}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@media (prefers-reduced-motion: reduce){ .opt.wrong{animation:none;} }
+
+.fb{border-radius:10px; padding:12px 16px; margin-top:14px; font-size:.98rem; display:none;}
+.fb.show{display:block;}
+.fb.good{background:var(--ok-lt); border-left:5px solid var(--ok);}
+.fb.bad{background:var(--red-lt); border-left:5px solid var(--red);}
+.fb b.t{display:block; margin-bottom:3px;}
+
+/* ---------- 稿纸圈词 ---------- */
+.paper-line{
+  background:#FDFBF5; border:1px solid var(--grid); border-radius:10px;
+  padding:18px 16px; margin:8px 0 14px; display:flex; flex-wrap:wrap; gap:6px 2px; align-items:center;
+}
+.tok{
+  font-family:"Kaiti SC","KaiTi","STKaiti","DFKai-SB",serif;
+  font-size:1.35rem; letter-spacing:.1em; line-height:1.4;
+  background:none; border:2.5px solid transparent; border-radius:46% 54% 48% 52% / 56% 46% 54% 44%;
+  padding:2px 7px; cursor:pointer; color:var(--ink); transition:.12s; font-family-fallback:serif;
+}
+.tok.punct{cursor:default; padding:2px 1px;}
+.tok:not(.punct):hover{background:var(--green-lt);}
+.tok:focus-visible{outline:3px solid var(--gold);}
+.tok.sel{border-color:var(--red); transform:rotate(-1deg);}
+.tok.hit{border-color:var(--ok); background:var(--ok-lt); transform:none;}
+.tok.miss{border-style:dashed; border-color:var(--red);}
+.tok.extra{border-color:var(--gray); background:#EEE; text-decoration:line-through; text-decoration-color:var(--red);}
+.circle-tip{font-size:.85rem; color:var(--gray); margin-bottom:6px;}
+
+/* ---------- 按钮 ---------- */
+.btnrow{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;}
+.btn{
+  font-family:inherit; font-size:1rem; font-weight:700; cursor:pointer;
+  border:none; border-radius:10px; padding:10px 26px; transition:.15s;
+}
+.btn.primary{background:var(--green); color:#fff;}
+.btn.primary:hover{background:var(--green-dk);}
+.btn.ghost{background:#fff; color:var(--green); border:2px solid var(--green);}
+.btn.ghost:hover{background:var(--green-lt);}
+.btn:focus-visible{outline:3px solid var(--gold);}
+.btn:disabled{opacity:.4; cursor:default;}
+.navrow{display:flex; justify-content:space-between; margin-top:4px;}
+
+/* ---------- 开始/结束 ---------- */
+.hero{
+  text-align:center; padding:52px 20px 44px; background:var(--card);
+  border-radius:var(--radius); box-shadow:var(--shadow); margin-top:18px;
+}
+.hero .kai{
+  font-family:"Kaiti SC","KaiTi","STKaiti",serif; font-size:2.5rem; color:var(--green-dk);
+  letter-spacing:.12em; margin-bottom:6px;
+}
+.hero .kai .r{color:var(--red);}
+.hero p{color:var(--gray); margin-bottom:26px;}
+.lvl-btns{display:flex; gap:18px; justify-content:center; flex-wrap:wrap;}
+.lvl-btn{
+  font-family:inherit; cursor:pointer; width:200px; padding:22px 10px;
+  background:var(--paper); border:2.5px solid var(--green); border-radius:var(--radius);
+  transition:.15s;
+}
+.lvl-btn b{display:block; font-size:1.5rem; color:var(--green-dk); margin-bottom:4px;}
+.lvl-btn span{font-size:.85rem; color:var(--gray);}
+.lvl-btn:hover{background:var(--green); }
+.lvl-btn:hover b,.lvl-btn:hover span{color:#fff;}
+.lvl-btn:focus-visible{outline:3px solid var(--gold);}
+.flow{margin-top:34px; font-size:.85rem; color:var(--gray);}
+.flow .motto{font-size:.82rem; letter-spacing:.1em;}
+
+.result .big{font-size:2rem; color:var(--green-dk); text-align:center; margin:8px 0;}
+.result .stars{text-align:center; font-size:1.5rem; color:var(--gold); margin-bottom:6px;}
+.result .msg{text-align:center; color:var(--gray); margin-bottom:20px;}
+.recap{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin:14px 0;}
+.recap .rc{background:var(--paper); border:1px solid var(--grid); border-radius:10px; padding:10px 14px; font-size:.9rem;}
+.recap .rc b{color:var(--green-dk); letter-spacing:.15em;}
+.check li{margin-bottom:6px; list-style:none;}
+.check li::before{content:"□ "; color:var(--green); font-weight:700;}
+
+.stationdone{text-align:center; padding:30px 10px;}
+.stationdone .em{font-size:2.2rem;}
+.stationdone h3{color:var(--green-dk); margin:8px 0 4px;}
+.stationdone p{color:var(--gray); margin-bottom:16px;}
+
+footer{margin-top:26px; text-align:center; font-size:.75rem; color:var(--gray);}
+@media (max-width:640px){
+  html{font-size:15.5px;}
+  .card{padding:16px;}
+  .tok{font-size:1.15rem;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 顶栏 -->
+  <div class="topbar" id="topbar" style="display:none">
+    <div>
+      <h1>情境记叙文 · 闯关学堂</h1>
+      <div class="sub">先学要点，再做练习 · 一站一站过</div>
+    </div>
+    <div class="badge">
+      <span class="pill lvl" id="lvlPill">中一</span>
+      <span class="pill star">⭐ <span id="starCount">0</span></span>
+      <button class="btn-quit" id="btnQuit">↩ 重选年级</button>
+    </div>
+  </div>
+
+  <!-- 关卡进度 -->
+  <div class="stepper" id="stepper" style="display:none"></div>
+
+  <!-- 开始画面 -->
+  <div class="hero" id="home">
+    <div class="kai">情境记叙文 · <span class="r">闯关学堂</span></div>
+    <p>八个关卡，跟着老师一站一站闯。先看要点，再做挑战！</p>
+    <div class="lvl-btns">
+      <button class="lvl-btn" data-lvl="s1"><b>中一</b><span>Secondary 1 题库 · 21 题挑战</span></button>
+      <button class="lvl-btn" data-lvl="s2"><b>中二</b><span>Secondary 2 题库 · 21 题挑战</span></button>
+    </div>
+    <div class="flow">
+      写作流程：<span class="motto">圈关键词</span>→<span class="motto">找限制</span>→<span class="motto">定中心</span>→<span class="motto">选材</span>→<span class="motto">规划结构</span>
+    </div>
+  </div>
+
+  <!-- 主学习区 -->
+  <div id="main" style="display:none">
+    <div class="card notes" id="notesCard"></div>
+    <div class="card quiz" id="quizCard"></div>
+    <div class="navrow">
+      <button class="btn ghost" id="btnPrev">← 上一站</button>
+      <button class="btn ghost" id="btnNext">下一站 →</button>
+    </div>
+  </div>
+
+  <!-- 结算画面 -->
+  <div id="end" style="display:none"></div>
+
+  <footer>情境记叙文写作笔记 · 课堂互动版</footer>
+</div>
+
+<script>
+/* =====================================================
+   笔记要点（中一中二共用）— 严格按笔记顺序
+===================================================== */
+const NOTES = [
+{ short:"① 认识题型", title:"第一站　认识情境记叙文：先认出题型", html:`
+  <p>情境记叙文：题目给你一个<span class="kw">框架</span> <span class="en">(frame)</span>——时间、人物、事情、道理。你的故事<span class="kw">必须装进框架里</span>。</p>
+  <p>题目给的每一个信息，都是<span class="kw">给分点</span>；漏掉一个，就丢一块分！</p>
+  <table>
+    <tr><th>题型</th><th>题目给了什么</th><th>你要做什么</th></tr>
+    <tr><td><b>A 型</b></td><td>只给<span class="kw">中心</span> <span class="en">(theme)</span></td><td>自己想故事，<span class="kw">选材</span>最关键</td></tr>
+    <tr><td><b>B 型</b></td><td>只给<span class="kw">故事</span></td><td>中心<span class="kw">自己推断</span> <span class="en">(work it out)</span></td></tr>
+    <tr><td><b>C 型</b></td><td>中心＋故事<span class="kw">都给</span></td><td><span class="kw">两样都要扣住！</span>漏一样就封顶</td></tr>
+    <tr><td><b>D 型</b></td><td>还有<span class="kw">特别要求</span>（描写／对比／议论）</td><td><span class="kw">必答题！</span>没写＝直接丢分</td></tr>
+  </table>`},
+{ short:"② 圈关键词", title:"第二站　审题第一件事：圈关键词", html:`
+  <p>像老师批改一样，用红笔<span class="kw">圈出题目里的每个关键词</span> <span class="en">(key words)</span>。</p>
+  <p>每个关键词问三问：<span class="kw">是什么？为什么？怎么样？</span></p>
+  <ul>
+    <li>例：<b>克服恐惧</b> → 怕<b>什么</b>？<b>为什么</b>怕？<b>怎么</b>克服？</li>
+    <li>这些问题要<span class="kw">贯穿全文</span>，不是回答一次就完了！</li>
+    <li>小心：表示<span class="kw">时间</span>（最近）、<span class="kw">地点</span>、<span class="kw">数量</span>（一件事）的词是<b>限制词</b>，也要圈！</li>
+  </ul>`},
+{ short:"③ 限制红线", title:"第三站　审题第二件事：找限制 + 六条红线", html:`
+  <p>限制 <span class="en">(rules)</span> 五项：<span class="kw">时间 · 人物 · 数量 · 结局 · 道理</span>。</p>
+  <p>六条红线，踩中<span class="kw">一条</span>，内容分直接<span class="kw">封顶</span> <span class="en">(score capped)</span>——写得再流畅也没用！</p>
+  <table>
+    <tr><th>红线</th><th>意思</th></tr>
+    <tr><td><b class="kw">我</b></td><td>用“我”写，不能全文只写“小明”</td></tr>
+    <tr><td><b class="kw">一</b></td><td>只写一件事</td></tr>
+    <tr><td><b class="kw">近</b></td><td>写最近的事，不写“十年前”“小学时”</td></tr>
+    <tr><td><b class="kw">全</b></td><td>关键词全命中；特别要求是必答题</td></tr>
+    <tr><td><b class="kw">合</b></td><td>结局要与题目吻合</td></tr>
+    <tr><td><b class="kw">理</b></td><td>题目要道理／启示，就一定要写</td></tr>
+  </table>
+  <p>口诀：<span class="motto">我 一 近 全 合 理</span>　动笔前背一次，交卷前查一次！</p>`},
+{ short:"④ 选材", title:"第四站　审题第三件事：选材", html:`
+  <p>选材 <span class="en">(choosing your story)</span> 三问，口诀：<span class="motto">扣 · 真 · 戏</span></p>
+  <ul>
+    <li><b class="kw">扣</b>：扣关键词——这件事能突出题目的<b>每个</b>关键词吗？</li>
+    <li><b class="kw">真</b>：合乎生活逻辑 <span class="en">(realistic)</span>——问自己：<span class="kw">“现实中真的会这样发生吗？”</span></li>
+    <li><b class="kw">戏</b>：有情节——有起因、经过、结果，写得出起伏</li>
+  </ul>
+  <p>素材库：</p>
+  <div class="chips">
+    <span class="chip">学校：考试、比赛、CCA、表演、义工</span>
+    <span class="chip">家里：生日、度假、冲突与和解</span>
+    <span class="chip">社区：环保、助老、邻里活动</span>
+    <span class="chip">公共场所：帮助陌生人、遗失物品</span>
+  </div>`},
+{ short:"⑤ 中心逻辑", title:"第五站　审题第四件事：定中心 + 故事逻辑", html:`
+  <p><span class="kw">中心思想</span>，简称<span class="kw">中心</span> <span class="en">(theme of the story)</span>，从哪里来？题目<b>给了</b>→直接用；<b>没给</b>→对故事每一步问<span class="kw">“为什么”</span>，自己推断。</p>
+  <p>四种讲法里，<b class="kw">“转变”模式</b>最好写：想放弃 → 有人鼓励／事件触动 → 我转变 → 成功。</p>
+  <p>⚠ 但转变要靠<span class="kw">具体事件推动</span>，不能“听一句话就<span class="kw">瞬间醒悟</span>”！</p>
+  <p><b>删理测试</b> <span class="en">(The Delete Test)</span>：把结尾的道理<span class="kw">删掉</span>，只看故事——读者还能自己看出这个道理吗？<b>能→过关；不能→故事和道理是“两张皮”，重想！</b></p>`},
+{ short:"⑥ 详略起伏", title:"第六站　详略安排 + 一波三折", html:`
+  <p><span class="kw">详写</span> <span class="en">(write in detail)</span>＝扣中心的部分；<span class="kw">略写／不写</span>＝无关的部分。</p>
+  <p>⚠ <span class="kw">头重脚轻</span>是最高频失分：起床、吃早餐、天气写了一大堆，最重要的部分一笔带过！铺垫不超过全文 <b>1/5</b>。</p>
+  <p>经过要<span class="kw">一波三折</span> <span class="en">(three waves)</span>，每一波走四步，口诀：<span class="motto">怕 帮 做 进</span></p>
+  <ul>
+    <li><b class="kw">怕</b>：怕什么？难在哪？　<b class="kw">帮</b>：谁帮我？什么触动我？</li>
+    <li><b class="kw">做</b>：我具体怎么做？　<b class="kw">进</b>：有什么进步？</li>
+  </ul>`},
+{ short:"⑦ 写作四招", title:"第七站　写好每个部分的四招", html:`
+  <table>
+    <tr><th>招式</th><th>用在哪</th><th>怎么用</th></tr>
+    <tr><td><span class="motto">砍砍留</span></td><td>开头</td><td>砍重复、砍无效（天气／早餐），<span class="kw">只留会改变故事走向的词</span></td></tr>
+    <tr><td><span class="motto">形动感</span></td><td>描写</td><td>长什么样 → 在做什么 → 让人觉得怎么样</td></tr>
+    <tr><td><span class="motto">真＋慢</span></td><td>高潮</td><td><span class="kw">心理要真</span>：写具体挣扎，不写“我很紧张”；<span class="kw">行动要慢</span>：动作拆开＋身体感觉</td></tr>
+    <tr><td><span class="motto">事变理</span></td><td>结尾</td><td><span class="kw">事</span>（回扣事件）→ <span class="kw">变</span>（内心变化）→ <span class="kw">理</span>（道理＝中心）＋展望未来</td></tr>
+  </table>`},
+{ short:"⑧ 作文医生", title:"第八站　作文医生：诊断失分作文", html:`
+  <p>三条铁律，也是医生的听诊器：</p>
+  <ul>
+    <li>故事要<span class="kw">合乎生活逻辑</span>（现实中真的会这样发生吗？）</li>
+    <li>故事要<span class="kw">合乎题目逻辑</span>（每个关键词都扣到了吗？）</li>
+    <li>故事要<span class="kw">能推出中心</span>（删理测试过了吗？）</li>
+  </ul>
+  <p>下面是学长学姐写过的真实病例——你来当医生，找出<span class="kw">病在哪里</span>！</p>`},
+];
+
+/* =====================================================
+   题库：每站一组题；mcq = 选择题，circle = 圈关键词
+===================================================== */
+const T = (s)=>`<span class="ti">「${s}」</span>`;
+
+const BANKS = {
+/* ---------------- 中一 ---------------- */
+s1: [
+[ /* 站1 题型 */
+ {t:"mcq", q:`${T("最近发生了一件事，让你明白了制定计划的重要性。")}这是什么题型？`,
+  opts:["A 型：中心给了，故事自己想","B 型：只给故事，中心自己推断","C 型：中心和故事都给了","D 型：有特别要求"], ans:0,
+  why:"题目直接告诉你道理＝“制定计划很重要”，故事要你自己想 → A 型。这种题<b>选材最关键</b>！",
+  hint:"想一想：题目有没有直接告诉你道理？"},
+ {t:"mcq", q:`${T("你在公众场所看到一位陌生人做了一件没有公德心的事，因此你采取行动去阻止。")}这是什么题型？`,
+  opts:["A 型：中心给了","B 型：只给故事，中心自己推断","C 型：中心和故事都给了","D 型：有特别要求"], ans:1,
+  why:"题目只讲了事情（看到 → 阻止），<b>没有</b>说道理。道理要自己推断：我们要有勇气维护公德心 → B 型。",
+  hint:"题目里有没有出现“让你明白……”这样的道理？"},
+ {t:"mcq", q:`${T("最近，你因为沟通不良与父母起了争执。这件事让你了解只有良好的沟通才能避免争吵。")}这是什么题型？`,
+  opts:["A 型：只给中心","B 型：只给故事","C 型：中心和故事都给了，两样都要扣住","D 型：有特别要求"], ans:2,
+  why:"故事（和父母争执）给了，道理（良好沟通才能避免争吵）也给了 → C 型。<b>两样都要扣住</b>，漏一样就封顶！",
+  hint:"数一数：题目给了故事吗？给了道理吗？"},
+ {t:"mcq", q:`笔记例题：${T("……最近发生的一件事，让你彻底改变了对他的看法。试写出事情的经过，并通过人物前后的对比突出文章的中心。")}这是什么题型？`,
+  opts:["A 型","B 型","C 型","D 型：有特别要求，必答题！"], ans:3,
+  why:"“通过前后对比”是<b>特别要求</b>＝必答题！没写出对比，直接丢分 → D 型。",
+  hint:"题目最后是不是多了一个“要求”？"},
+],
+[ /* 站2 圈关键词 */
+ {t:"circle", intro:"下面这道题，请把关键词圈出来（点一下＝圈，再点一下＝取消）：",
+  chunks:["在","家人的鼓励","下，你","克服","了内心的","恐惧","，做了一件你一直以来","不敢尝试","的事。"],
+  keys:[1,3,5,7],
+  why:"<b>家人的鼓励</b>→家人<b>怎么</b>鼓励？（要写具体的话和动作）<br><b>克服</b>→<b>怎么</b>克服？<br><b>恐惧</b>→怕<b>什么</b>？<b>为什么</b>怕？<br><b>不敢尝试</b>→什么事一直不敢做？<br>这四个问题要<b>贯穿全文</b>！"},
+ {t:"circle", intro:"这道题里，除了关键词，还有两个“限制词”也要圈！",
+  chunks:["最近","你经历了","一件事","，了解到了","遇到问题","必须先","冷静思考","，才能","顺利解决","。"],
+  keys:[0,2,4,6,8],
+  why:"<b>最近</b>＝限制词！三个月内的事（红线“近”）<br><b>一件事</b>＝限制词！只能写一件（红线“一”）<br><b>遇到问题</b>→什么问题？<br><b>冷静思考</b>→怎么冷静？怎么思考？<br><b>顺利解决</b>→结局<b>必须</b>解决（红线“合”）！"},
+],
+[ /* 站3 限制红线 */
+ {t:"mcq", q:`${T("你做错事后总不能好好改正。最近发生了一件事……")}这件事必须发生在什么时候？`,
+  opts:["大约三个月内","小学的时候","十年前","随便什么时候都可以"], ans:0,
+  why:"题目说“<b>最近</b>”＝限制词。写小学、十年前＝时间越界，要降级！",
+  hint:"找一找题目里表示时间的词。"},
+ {t:"mcq", q:`${T("班上有一位同学虽然平时沉默寡言，但做事认真、很有责任心。试写一篇文章，记叙这个同学。")}这篇文章主要写谁？`,
+  opts:["我自己","这位同学","老师","我的家人"], ans:1,
+  why:"小心！这道题很特别：题目指定写“<b>这个同学</b>”。审限制条件时一定要看清楚<b>主角是谁</b>——不能想当然！",
+  hint:"再读一遍题目的最后一句。"},
+ {t:"mcq", q:`一位同学写${T("你遇到困难容易放弃……让你明白坚持不懈的重要性")}，全文都在写“小明学游泳不放弃”，从头到尾没有“我”。他踩了哪条红线？`,
+  opts:["我","近","合","理"], ans:0,
+  why:"题目说“<b>你</b>遇到困难”，主角必须是“<b>我</b>”。全文写小明 → 红线“我”，内容分封顶！",
+  hint:"想想口诀“我一近全合理”的第一个字。"},
+],
+[ /* 站4 选材 */
+ {t:"mcq", q:`${T("你遇到困难容易放弃……让你明白坚持不懈的重要性。")}哪个选材最好？`,
+  opts:["我学骑脚踏车，摔了很多次想放弃，后来坚持练习，终于学会了","我每天坚持吃早餐","我坚持看完了一部很长的电影","妈妈坚持每天去上班"], ans:0,
+  why:"用“扣真戏”检查：A <b>扣</b>（有困难＋想放弃＋坚持）、<b>真</b>（中学生真的会做）、<b>戏</b>(有起伏)。吃早餐、看电影没有困难，谈不上“坚持不懈”；最后一个主角不是我。",
+  hint:"哪件事里有真正的“困难”？"},
+ {t:"mcq", q:`${T("你在公众场所看到没有公德心的事，采取行动阻止。")}哪个选材合乎生活逻辑 <span class="en">(realistic)</span>？`,
+  opts:["看到有人在组屋楼下乱丢垃圾，我上前礼貌地劝阻","看到劫匪抢银行，我冲上去打倒了他","看到有人插队，我叫来一百个朋友包围他","看到有人讲话大声，我马上报警抓他"], ans:0,
+  why:"“真”＝中学生做得到、现实中会发生。打倒劫匪太危险也不现实；后两个反应过度，不合逻辑。",
+  hint:"问自己：一个中学生，现实中真的会这样做吗？"},
+],
+[ /* 站5 中心逻辑 */
+ {t:"mcq", q:`B 型题${T("公众场所阻止没有公德心的事")}，推断一下：中心应该是什么？`,
+  opts:["我们要有勇气维护公德心","公众场所人很多很热闹","陌生人都是坏人","多一事不如少一事"], ans:0,
+  why:"对故事问“为什么”：为什么要阻止？因为公德心重要，需要有人<b>勇敢站出来</b>维护 → 这就是中心。",
+  hint:"问：我“为什么”要采取行动？"},
+ {t:"mcq", q:`${T("在家人的鼓励下，你克服了内心的恐惧……写出你从中获得的启示。")}启示应该是什么？`,
+  opts:["面对恐惧要勇敢尝试；家人的支持给我们力量","攀岩很好玩，大家都该去玩","害怕的事情，不做就好了","家人一定要一直陪在身边才行"], ans:0,
+  why:"启示要扣住<b>两个</b>关键词：克服恐惧（勇敢尝试）＋家人的鼓励（支持的力量）。一个都不能漏！",
+  hint:"题目有两个关键点：恐惧、家人。启示要扣住几个？"},
+ {t:"mcq", q:`删理测试！题目要求写“冷静思考才能解决问题”。哪个故事<b>通过</b>测试？`,
+  opts:["考试遇到难题，我很慌 → 深呼吸让自己冷静 → 用老师教的方法一步步分析 → 解出来了","考试遇到难题，我很慌 → 同桌把答案给我看 → 我抄了答案，做完了"], ans:0,
+  why:"删掉道理只看故事：第一个有“慌 → 冷静 → 思考 → 解决”的过程，读者自己能看出道理；第二个是抄答案，推不出“冷静思考” → 故事和道理“两张皮”！",
+  hint:"把道理遮住，只看故事——你能猜出道理吗？"},
+],
+[ /* 站6 详略起伏 */
+ {t:"mcq", q:`写${T("克服恐惧")}（选材：攀岩），哪部分要写得<b>最详细</b>？`,
+  opts:["早上起床、刷牙、吃早餐","坐车去攀岩馆的路上","我如何害怕、家人如何鼓励、我如何一步步往上爬","回家后吃了什么晚餐"], ans:2,
+  why:"详写＝扣关键词的部分（恐惧、鼓励、克服）。前面写一大堆起床吃饭＝<b>头重脚轻</b>，内容分封顶！",
+  hint:"哪部分里有题目的关键词？"},
+ {t:"mcq", q:`哪个“经过”是一波三折？`,
+  opts:["我一开始就成功了，一点困难都没有","我遇到一个困难，就放弃了","我遇到三次困难，每次都是：害怕 → 有人鼓励 → 我努力做 → 有进步"], ans:2,
+  why:"一波三折＝<b>怕帮做进 × 3</b>。一帆风顺没有“戏”；放弃了就扣不到“坚持”。",
+  hint:"想想口诀：怕、帮、做、进。"},
+],
+[ /* 站7 四招 */
+ {t:"mcq", q:`${T("冷静思考")}作文的开头，哪一句是废话，应该砍掉？`,
+  opts:["“今天天气很好，万里无云，我吃了一顿美味的早餐，心情不错。”","“我是一个遇到事情就容易慌张的人。”","“但最近的一件事，让我明白了冷静思考的重要。”"], ans:0,
+  why:"砍无效！天气和早餐<b>不会改变故事走向</b>→砍。第二句是铺垫“我的问题”，第三句引出事件，都有用 → 留！",
+  hint:"哪一句删掉后，故事完全不受影响？"},
+ {t:"mcq", q:`哪一句心理描写最好？`,
+  opts:["我很紧张。","我非常非常非常紧张。","我的心怦怦直跳，手心全是汗：如果解不出这道题，怎么办？"], ans:2,
+  why:"心理要<b>真</b>＝写具体的挣扎＋身体感觉。“很紧张”太笼统；加三个“非常”也没有用！",
+  hint:"哪一句让你真的“看见”了紧张？"},
+ {t:"mcq", q:`${T("坚持不懈")}（学骑脚踏车），哪个结尾“事变理”三层齐全？`,
+  opts:["这件事让我明白坚持很重要。","我终于学会了骑脚踏车，真开心！","这次学骑脚踏车的经历，让我明白：遇到困难不能轻易放弃，坚持才能成功。以后不管遇到什么困难，我都会坚持到底。"], ans:2,
+  why:"第三个＝<b>事</b>（学骑车）＋<b>变、理</b>（坚持才能成功）＋<b>展望</b>（以后我会……）。第一个只有理＝说教；第二个只有事＝没道理。",
+  hint:"数一数每个结尾有几层：事？变？理？"},
+],
+[ /* 站8 医生 */
+ {t:"mcq", q:`病历一：题目${T("改过自新，一定要有行动")}。一位同学写了三件事：上学期迟到被罚、下学期没交作业、最近作弊被抓，最后写“我明白要改过”。病在哪里？`,
+  opts:["写得很丰富，没有病","写了三件事，踩中红线“一”，内容分封顶","不该写作弊，会给老师坏印象","字数太多了"], ans:1,
+  why:"<b>诊断：</b>红线“一”——只能写一件事！<br><b>处方：</b>选最近、最深刻的<b>一件</b>，把“用行动改过”的过程详写。",
+  hint:"数一数他写了几件事。"},
+ {t:"mcq", q:`病历二：题目${T("你一直以为父母不关心你，一件事让你发现他们其实很爱你")}。一位同学写：“妈妈说了一句‘我爱你’，我瞬间明白父母很爱我。”病在哪里？`,
+  opts:["瞬间醒悟！转变没有具体事件推动，太仓促","不该写妈妈，应该写爸爸","“我爱你”三个字太肉麻了","没有病，写得很感人"], ans:0,
+  why:"<b>诊断：</b>瞬间醒悟——“彻底改变看法”需要有分量的事件！<br><b>处方：</b>例如：我生病时父母彻夜照顾我；我无意中发现父母默默为我做的事。用<b>事件</b>推动转变。",
+  hint:"一句话，撑得起“彻底改变”吗？"},
+],
+],
+
+/* ---------------- 中二 ---------------- */
+s2: [
+[ /* 站1 题型 */
+ {t:"mcq", q:`${T("最近发生的一件事，让你明白：站在别人的角度思考，可以更好地解决问题。")}这是什么题型？`,
+  opts:["A 型：中心给了，故事自己想","B 型：只给故事，中心自己推断","C 型：中心和故事都给了","D 型：有特别要求"], ans:0,
+  why:"题目直接告诉你道理＝“站在别人的角度思考”，故事要自己想 → A 型。<b>选材最关键</b>！",
+  hint:"题目有没有直接告诉你道理？"},
+ {t:"mcq", q:`${T("你曾经做过对不起朋友的一件事。后来，你积极地做了补救，终于挽回彼此的关系。")}这是什么题型？`,
+  opts:["A 型：只给中心","B 型：只给故事，中心自己推断","C 型：中心和故事都给了","D 型：有特别要求"], ans:1,
+  why:"题目只给了故事（做错 → 补救 → 挽回），没有说道理。道理自己推断：知错要用<b>行动</b>补救，才能挽回友情 → B 型。",
+  hint:"题目里有没有“让你明白……”这样的道理？"},
+ {t:"mcq", q:`${T("你是一个依赖性很强的人，最近发生的一件事需要你独自完成，你从中学会了独立。")}这是什么题型？`,
+  opts:["A 型：只给中心","B 型：只给故事","C 型：中心和故事都给了，两样都要扣住","D 型：有特别要求"], ans:2,
+  why:"故事框架（独自完成一件事）给了，中心（学会独立）也给了 → C 型。两样都要扣住！",
+  hint:"数一数：故事给了吗？道理给了吗？"},
+ {t:"mcq", q:`笔记例题：${T("你的弟弟以前沉迷电子游戏……试写出事情的经过，并通过人物前后的对比突出文章的中心。")}这是什么题型？`,
+  opts:["A 型","B 型","C 型","D 型：有特别要求，必答题！"], ans:3,
+  why:"“通过前后对比”是<b>特别要求</b>＝必答题！要写出弟弟的“前”和“后” → D 型。",
+  hint:"题目最后是不是多了一个“要求”？"},
+],
+[ /* 站2 圈关键词 */
+ {t:"circle", intro:"下面这道题，请把关键词和限制词圈出来（点一下＝圈）：",
+  chunks:["你一向性格","内向","。一次在","小贩中心","用餐时，你","鼓起勇气","，","帮助","了一位","需要帮助的人","。"],
+  keys:[1,3,5,7,9],
+  why:"<b>内向</b>→铺垫“我的问题”，为鼓起勇气做反差<br><b>小贩中心</b>＝<b>地点限制</b>！故事必须发生在这里<br><b>鼓起勇气</b>→<b>怎么</b>鼓起勇气？（心理描写重点！）<br><b>帮助</b>→怎么帮？<br><b>需要帮助的人</b>→他遇到什么困难？"},
+ {t:"circle", intro:"这道题有一个词，直接连着红线“理”——找出来！",
+  chunks:["你","总爱","随意转发","社交媒体上的讯息给亲朋好友。结果有一次，因为你转发了","错误的讯息","而造成了一些","麻烦","。试写出事情的经过以及你的","启示","。"],
+  keys:[1,2,4,6,8],
+  why:"<b>总爱</b>→长期的坏习惯（铺垫）<br><b>随意转发</b>→不检查就乱发<br><b>错误的讯息</b>→什么假消息？<br><b>麻烦</b>→详写造成了什么麻烦<br><b>启示</b>→红线“理”：结尾<b>必须</b>写道理！"},
+],
+[ /* 站3 限制红线 */
+ {t:"mcq", q:`${T("你一时大意删除了组员的重要资料，后来在大家的共同努力下顺利解决。写出经过和启示。")}这道题有两个变量 <span class="en">(two parts)</span>，是哪两个？`,
+  opts:["我的大意闯祸 ＋ 大家共同努力解决","小组活动 ＋ 电子设备","删除资料 ＋ 吃午餐","只有一个：团队合作"], ans:0,
+  why:"红线“全”：<b>两个变量一个都不能漏</b>！只写“大家合作”，漏掉“自己大意的教训” → 封顶。启示也要扣两个：做事要细心＋合作力量大。",
+  hint:"题目里“大意”和“共同努力”，哪个可以不写？（都不可以！）"},
+ {t:"mcq", q:`${T("依赖性很强……需要你独自完成，你从中学会了独立。")}哪个结局符合题目？`,
+  opts:["我遇到困难，最后打电话叫妈妈来帮我完成","我遇到困难，想办法一步步自己解决，独自完成了任务","我放弃了，任务没有完成","我请同学帮我做完了"], ans:1,
+  why:"红线“合”：结局必须与题目吻合。题目说“<b>独自</b>完成＋学会<b>独立</b>”——叫妈妈、找同学帮忙＝结局不符！",
+  hint:"题目里“独自”两个字是什么意思？"},
+ {t:"mcq", q:`一位同学写${T("助人时也应该量力而为")}，写了两件事：帮同学补习＋扶老人过马路。他踩了哪条红线？`,
+  opts:["一","我","近","理"], ans:0,
+  why:"红线“一”：只能写<b>一件事</b>！选一件能突出“量力而为”的详写。例如：答应帮太多同学补习，结果自己的复习时间全没了。",
+  hint:"数一数他写了几件事。"},
+],
+[ /* 站4 选材 */
+ {t:"mcq", q:`${T("不太热衷社区活动……在一次邻里活动中，感受到了社区的温情。")}哪个选材最好？`,
+  opts:["中秋晚会上，邻居主动教我做灯笼、给我们一家留位子、送来自己做的汤圆","我在家里看电视，觉得很温暖","我一个人去公园散步，风很舒服","邻居送了我一百万元"], ans:0,
+  why:"扣真戏：A <b>扣</b>（邻里活动＋温情细节）、<b>真</b>、<b>戏</b>。看电视、散步没有“邻里活动”；送一百万不合生活逻辑。",
+  hint:"题目要求的地点／场合是什么？"},
+ {t:"mcq", q:`${T("转发错误讯息造成麻烦。")}哪个“麻烦”合乎生活逻辑？`,
+  opts:["我转发了假的“明天停课”消息，几个同学真的没来上课，差点误了测验","我转发了一条讯息，结果引发了世界大战","我转发了讯息，警察马上把我关十年","我转发了讯息，什么事都没有发生"], ans:0,
+  why:"麻烦要<b>真实、有分量、不夸张</b>。世界大战、关十年太夸张；“什么都没发生”就没有麻烦，推不出启示。",
+  hint:"哪个麻烦是中学生活里真的会发生的？"},
+],
+[ /* 站5 中心逻辑 */
+ {t:"mcq", q:`B 型题${T("内向的你在小贩中心鼓起勇气，帮助了一位需要帮助的人。")}推断中心：`,
+  opts:["勇敢踏出一步，就能帮助别人，自己也会收获快乐和自信","小贩中心的食物很好吃","内向的人不应该出门","帮助别人很麻烦，最好不要多管闲事"], ans:0,
+  why:"问“为什么”：为什么这件事值得写？因为内向的我<b>踏出了一步</b>，发现自己也能帮助别人 → 这就是中心。",
+  hint:"“内向”和“鼓起勇气”放在一起，说明什么？"},
+ {t:"mcq", q:`${T("父母经常指出你的不足，你很不满。最近一件事让你改变了对父母的看法。")}推断中心：`,
+  opts:["父母的批评其实是出于关心和爱","父母总是针对我，很烦","心里不满就应该大声说出来","以后不要听父母的话"], ans:0,
+  why:"问“为什么”：父母为什么指出我的不足？因为关心我、希望我进步。“改变看法”＝从不满 → 理解。",
+  hint:"“改变了看法”——从什么，变成什么？"},
+ {t:"mcq", q:`删理测试！${T("对不起朋友 → 补救 → 挽回关系")}，哪个故事<b>通过</b>测试？`,
+  opts:["我弄坏了朋友的模型不敢承认 → 主动道歉 → 用零用钱买了新的 → 写了道歉卡 → 朋友原谅了我","我弄坏了朋友的模型 → 过了几天，朋友自己就不生气了"], ans:0,
+  why:"第一个有具体的<b>补救行动</b>（道歉＋买新的＋写卡），删掉道理也能看出“知错要用行动补救”；第二个没有行动，推不出道理 → 两张皮！",
+  hint:"题目说“积极地做了补救”——哪个故事里有“行动”？"},
+],
+[ /* 站6 详略起伏 */
+ {t:"mcq", q:`写${T("大意删除资料")}这道题，哪部分要写得<b>最详细</b>？`,
+  opts:["小组活动前一晚我吃了什么","发现资料被删那一刻的慌张 ＋ 大家如何分工合作恢复资料","活动结束后回家的路上","我用的电脑是什么牌子"], ans:1,
+  why:"详写＝扣关键词的部分（大意闯祸的慌张＋共同努力解决）。其他都是废话，写多了＝头重脚轻！",
+  hint:"哪部分里有题目的两个变量？"},
+ {t:"mcq", q:`写${T("学会独立")}（选材：独自准备义卖摊位），哪个安排是一波三折？`,
+  opts:["我一次就成功，完全没有遇到困难","遇到三个困难（不会算钱 → 海报做坏了 → 东西卖不出去），每次：慌 → 想办法 → 动手做 → 有进步","遇到一个困难，就打电话叫妈妈来"], ans:1,
+  why:"怕帮做进 × 3！注意：“帮”可以是<b>想起妈妈教过的方法</b>——但动手解决的必须是<b>我自己</b>（结局要“独立”！）",
+  hint:"“独立”这道题，最后动手的人可以是妈妈吗？"},
+],
+[ /* 站7 四招 */
+ {t:"mcq", q:`${T("小贩中心帮助人")}的开头，哪一句是废话，应该砍掉？`,
+  opts:["“那天小贩中心人山人海，我点了一碗叻沙，味道很好，我吃得很开心。”","“我一向性格内向，不敢跟陌生人说话。”","“但那天在小贩中心发生的一件事，让我迈出了勇敢的一步。”"], ans:0,
+  why:"叻沙好不好吃，<b>不会改变故事走向</b> → 砍！第二句铺垫“内向”，第三句引出事件，都有用 → 留。",
+  hint:"哪一句删掉后，故事完全不受影响？"},
+ {t:"mcq", q:`内向的我想开口帮助别人时，哪句心理描写最好？`,
+  opts:["我很害怕。","我心跳加速，双脚像灌了铅：大家会不会笑我？可是老爷爷真的需要帮助……","我一点都不怕，马上冲了上去。"], ans:1,
+  why:"心理要<b>真</b>：身体感觉＋具体挣扎。“很害怕”太笼统；“一点都不怕”——那还叫什么“<b>鼓起</b>勇气”？铺垫全没了！",
+  hint:"题目说“鼓起勇气”，说明心里应该有……？"},
+ {t:"mcq", q:`${T("明白自己也能贡献力量")}，哪个结尾“事变理”三层齐全？`,
+  opts:["这次活动让我明白人人都能贡献力量。","活动结束了，大家都很开心。","这次活动让我看到，原来内向的我也能为大家出一份力。每个人都有自己的价值，只要肯踏出一步。今后，我会更主动地参与，贡献自己的力量。"], ans:2,
+  why:"第三个＝<b>事</b>（这次活动）＋<b>变</b>（内向的我也能）＋<b>理</b>（每个人都有价值）＋<b>展望</b>（今后我会……）。第一个只有理；第二个只有事。",
+  hint:"数一数每个结尾有几层。"},
+],
+[ /* 站8 医生 */
+ {t:"mcq", q:`病历一：题目${T("父母经常指出你的不足……一件事让你改变了对父母的看法")}。一位同学写：“爸爸说了一句‘我是为你好’，我瞬间明白了父母的爱。”病在哪里？`,
+  opts:["瞬间醒悟！一句话撑不起“改变看法”，事件没有分量","不该写爸爸，应该写妈妈","“我是为你好”这句话太老套","没有病，写得很好"], ans:0,
+  why:"<b>诊断：</b>瞬间醒悟——转变要有分量的事件推动！<br><b>处方：</b>例如：我发高烧，一向严厉的爸爸整夜守着我，我还无意中发现他半夜查资料学煮粥。用<b>事件</b>推动转变。",
+  hint:"一句话，撑得起“改变看法”吗？"},
+ {t:"mcq", q:`病历二：题目${T("大意删除资料……写出经过和启示")}。一位同学的结尾只写了“团队合作力量大”，完全没提自己大意的教训。病在哪里？`,
+  opts:["漏了一个变量，踩中红线“全”，内容封顶","团队合作写得很好，没有病","应该写一写电脑的品牌","结尾字数太少"], ans:0,
+  why:"<b>诊断：</b>红线“全”——这道题有<b>两个变量</b>：大意闯祸＋共同解决。启示只扣一个 → 封顶！<br><b>处方：</b>结尾两个都要写：做事要细心谨慎；团队合作力量大。",
+  hint:"回想第三站：这道题有几个变量？"},
+],
+],
+};
+
+/* =====================================================
+   状态与流程
+===================================================== */
+let LVL="s1", ST=0, QI=0;
+let attempted=false;            // 本题是否已答错过
+let stars=0, starSet={};        // starSet["st-qi"]=true
+let doneSet={};                 // 已完成的题
+const $=(id)=>document.getElementById(id);
+
+const stepNames=NOTES.map(n=>n.short);
+
+function startLevel(lvl){
+  LVL=lvl; ST=0; QI=0; stars=0; starSet={}; doneSet={}; attempted=false;
+  $("lvlPill").textContent = lvl==="s1"?"中一":"中二";
+  $("home").style.display="none"; $("end").style.display="none";
+  $("topbar").style.display="flex"; $("stepper").style.display="flex"; $("main").style.display="block";
+  renderStepper(); renderStation();
+  updateStars();
+}
+function updateStars(){ $("starCount").textContent=stars; }
+
+function renderStepper(){
+  const el=$("stepper"); el.innerHTML="";
+  stepNames.forEach((n,i)=>{
+    const b=document.createElement("button");
+    b.className="step"+(i===ST?" cur":"")+(stationDone(i)?" done":"");
+    b.innerHTML=`<b>${n}</b>`;
+    b.onclick=()=>{ ST=i; QI=firstUnfinished(i); attempted=false; renderStepper(); renderStation(); };
+    el.appendChild(b);
+  });
+}
+function bank(){ return BANKS[LVL][ST]; }
+function stationDone(i){ return BANKS[LVL][i].every((_,q)=>doneSet[i+"-"+q]); }
+function firstUnfinished(i){
+  const b=BANKS[LVL][i];
+  for(let q=0;q<b.length;q++) if(!doneSet[i+"-"+q]) return q;
+  return 0;
+}
+function allDone(){ return NOTES.every((_,i)=>stationDone(i)); }
+
+function renderStation(){
+  const n=NOTES[ST];
+  $("notesCard").innerHTML=`<span class="card-tag">📖 学习要点</span><h2>${n.title}</h2>${n.html}`;
+  renderQuestion();
+  $("btnPrev").disabled = ST===0;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function renderQuestion(){
+  const qc=$("quizCard"); const b=bank();
+  if(QI>=b.length){ // 本站完成
+    qc.innerHTML=`<span class="card-tag red">✏️ 练习</span>
+      <div class="stationdone">
+        <div class="em">🎉</div>
+        <h3>本站完成！</h3>
+        <p>已获得 ⭐ ${countStars(ST)} ／ ${b.length}（一次答对才有星哦）</p>
+        <button class="btn primary" id="btnGo">${ST<NOTES.length-1?"前往下一站 →":"查看闯关成绩 🏁"}</button>
+      </div>`;
+    $("btnGo").onclick=()=>{ if(ST<NOTES.length-1){ST++;QI=firstUnfinished(ST);attempted=false;renderStepper();renderStation();} else showEnd(); };
+    renderStepper();
+    return;
+  }
+  const q=b[QI]; attempted=false;
+  const head=`<span class="card-tag red">✏️ 练习</span><span class="qcount">第 ${QI+1} ／ ${b.length} 题</span>`;
+  if(q.t==="mcq") renderMCQ(qc, q, head);
+  else renderCircle(qc, q, head);
+}
+
+function renderMCQ(qc,q,head){
+  const letters=["A","B","C","D"];
+  qc.innerHTML=`${head}<div class="qtext">${q.q}</div>
+    <div class="opts">${q.opts.map((o,i)=>`<button class="opt" data-l="${letters[i]}" data-i="${i}">${o}</button>`).join("")}</div>
+    <div class="fb" id="fb"></div>
+    <div class="btnrow" id="nextRow" style="display:none"><button class="btn primary" id="btnNextQ">下一题 →</button></div>`;
+  qc.querySelectorAll(".opt").forEach(btn=>{
+    btn.onclick=()=>{
+      const i=+btn.dataset.i; const fb=$("fb");
+      if(i===q.ans){
+        qc.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+        btn.classList.add("right");
+        const key=ST+"-"+QI;
+        let starMsg="";
+        if(!attempted && !doneSet[key]){ stars++; starSet[key]=true; starMsg=" ⭐ 一次答对，得一颗星！"; updateStars(); }
+        doneSet[key]=true;
+        fb.className="fb good show";
+        fb.innerHTML=`<b class="t">✅ 答对了！${starMsg}</b>${q.why}`;
+        $("nextRow").style.display="flex";
+        $("btnNextQ").onclick=()=>{ QI++; renderQuestion(); };
+        renderStepper();
+      }else{
+        attempted=true;
+        btn.classList.add("wrong"); btn.disabled=true;
+        fb.className="fb bad show";
+        fb.innerHTML=`<b class="t">❌ 再想想……</b>${q.hint||""}`;
+      }
+    };
+  });
+}
+
+function renderCircle(qc,q,head){
+  const isPunct=(s)=>/^[，。、；：？！“”…—的了在你一位（）]*$/.test(s)===false?false:true;
+  qc.innerHTML=`${head}<div class="qtext">${q.intro}</div>
+    <div class="circle-tip">✍️ 像老师批改一样：点词语，画红圈！</div>
+    <div class="paper-line" id="pl">${q.chunks.map((c,i)=>{
+      const k=q.keys.includes(i);
+      const punct = c.length<=1 && /[，。、；：？！]/.test(c);
+      return `<button class="tok${punct?" punct":""}" data-i="${i}" ${punct?"disabled":""}>${c}</button>`;
+    }).join("")}</div>
+    <div class="fb" id="fb"></div>
+    <div class="btnrow"><button class="btn primary" id="btnCheck">检查 ✔</button>
+    <div class="btnrow" id="nextRow" style="display:none;margin-top:0"><button class="btn primary" id="btnNextQ">下一题 →</button></div></div>`;
+  const sel=new Set();
+  qc.querySelectorAll(".tok:not(.punct)").forEach(t=>{
+    t.onclick=()=>{ const i=+t.dataset.i;
+      if(sel.has(i)){sel.delete(i);t.classList.remove("sel");} else {sel.add(i);t.classList.add("sel");}
+    };
+  });
+  $("btnCheck").onclick=()=>{
+    const fb=$("fb"); const toks=qc.querySelectorAll(".tok");
+    let missed=0, extra=0;
+    toks.forEach(t=>{
+      const i=+t.dataset.i; if(t.classList.contains("punct"))return;
+      const should=q.keys.includes(i), did=sel.has(i);
+      t.classList.remove("sel","hit","miss","extra");
+      if(should&&did) t.classList.add("hit");
+      else if(should&&!did){ t.classList.add("miss"); missed++; }
+      else if(!should&&did){ t.classList.add("extra"); extra++; }
+    });
+    if(missed===0&&extra===0){
+      const key=ST+"-"+QI; let starMsg="";
+      if(!attempted && !doneSet[key]){ stars++; starSet[key]=true; starMsg=" ⭐ 一次全对，得一颗星！"; updateStars(); }
+      doneSet[key]=true;
+      fb.className="fb good show";
+      fb.innerHTML=`<b class="t">✅ 全部圈对了！${starMsg}</b>${q.why}`;
+      toks.forEach(t=>t.disabled=true);
+      $("btnCheck").style.display="none";
+      $("nextRow").style.display="flex";
+      $("btnNextQ").onclick=()=>{ QI++; renderQuestion(); };
+      renderStepper();
+    }else{
+      attempted=true;
+      fb.className="fb bad show";
+      fb.innerHTML=`<b class="t">还差一点！</b>${missed?`虚线圈的是<b>漏圈</b>的（${missed} 个）；`:""}${extra?`划掉的是<b>不用圈</b>的（${extra} 个）；`:""}调整后再按检查。<br><span style="color:var(--gray);font-size:.9em">提示：宁可少圈，不能圈错——但关键词一个都不能漏！</span>`;
+      // 恢复可继续点选状态：hit 保留为 sel
+      toks.forEach(t=>{
+        if(t.classList.contains("hit")){t.classList.remove("hit");t.classList.add("sel");}
+        if(t.classList.contains("extra")){t.classList.remove("extra");} // 取消错误选择
+      });
+      // 同步 sel 集合：移除 extra
+      [...sel].forEach(i=>{ if(!q.keys.includes(i)) sel.delete(i); });
+      qc.querySelectorAll(".tok").forEach(t=>{
+        const i=+t.dataset.i;
+        if(!sel.has(i)) t.classList.remove("sel");
+        t.classList.remove("miss");
+      });
+    }
+  };
+}
+
+function countStars(st){
+  return Object.keys(starSet).filter(k=>k.startsWith(st+"-")).length;
+}
+function totalQ(){ return BANKS[LVL].reduce((a,b)=>a+b.length,0); }
+
+function showEnd(){
+  $("main").style.display="none"; $("stepper").style.display="none";
+  const total=totalQ();
+  let msg;
+  const r=stars/total;
+  if(r>=0.9) msg="太厉害了！你已经掌握了情境记叙文的秘诀，写作文前记得走一遍流程！";
+  else if(r>=0.7) msg="很不错！错过的题目回头再看一次解析，弱点就是你的进步空间。";
+  else if(r>=0.5) msg="有进步！建议把红线卡和口诀再复习一遍，下次再闯一次关。";
+  else msg="别灰心！跟着老师把要点再走一遍，重点记住六条红线，再来挑战！";
+  $("end").style.display="block";
+  $("end").innerHTML=`<div class="card result">
+    <span class="card-tag">🏁 闯关成绩</span>
+    <div class="big">恭喜完成全部八站！</div>
+    <div class="stars">⭐ ${stars} ／ ${total}</div>
+    <div class="msg">${msg}</div>
+    <h2 style="color:var(--green-dk);margin:16px 0 6px">口诀总复习</h2>
+    <div class="recap">
+      <div class="rc"><b>圈 限 心 详</b><br>审题四步（动笔前）</div>
+      <div class="rc"><b>扣 · 真 · 戏</b><br>选材三问</div>
+      <div class="rc"><b>我一近全合理</b><br>六条红线（交卷前查！）</div>
+      <div class="rc"><b>砍 砍 留</b><br>开头删废话</div>
+      <div class="rc"><b>怕 帮 做 进</b><br>一波三折每一波</div>
+      <div class="rc"><b>形 · 动 · 感</b><br>描写三层</div>
+      <div class="rc"><b>事 · 变 · 理</b><br>结尾三层＋展望</div>
+      <div class="rc"><b>删理测试</b><br>删掉道理，故事还能推出它吗？</div>
+    </div>
+    <h2 style="color:var(--green-dk);margin:16px 0 6px">写完作文，十个勾</h2>
+    <ul class="check">
+      <li>红线六字过了吗？（我·一·近·全·合·理）</li>
+      <li>故事合乎生活逻辑吗？</li>
+      <li>经过有一波三折吗？（怕·帮·做·进）</li>
+      <li>最重要的部分写得最详细吗？</li>
+      <li>结尾三层齐了吗？（事·变·理）</li>
+      <li>首尾呼应了吗？</li>
+      <li>有展望未来吗？</li>
+      <li>心理描写具体吗？</li>
+      <li>删理测试过了吗？</li>
+      <li>特别要求（描写／对比／议论）完成了吗？</li>
+    </ul>
+    <div class="btnrow" style="justify-content:center">
+      <button class="btn primary" onclick="startLevel(LVL)">再闯一次 ↻</button>
+      <button class="btn ghost" onclick="location.reload()">换年级</button>
+    </div>
+  </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* 导航 */
+$("btnPrev").onclick=()=>{ if(ST>0){ST--;QI=firstUnfinished(ST);renderStepper();renderStation();} };
+$("btnNext").onclick=()=>{ if(ST<NOTES.length-1){ST++;QI=firstUnfinished(ST);renderStepper();renderStation();} else if(allDone()) showEnd(); else {ST=NOTES.length-1;QI=firstUnfinished(ST);renderStepper();renderStation();} };
+$("btnQuit").onclick=()=>{ location.reload(); };
+document.querySelectorAll(".lvl-btn").forEach(b=>b.onclick=()=>startLevel(b.dataset.lvl));
+</script>
+</body>
+</html>
