@@ -208,8 +208,8 @@ textarea#essay{min-height:220px}
 <div class="mask" id="mask" onclick="if(event.target===this)closeKey()">
   <div class="modal">
     <h3>API Key 设置</h3>
-    <p class="lead">填入你的 Anthropic API key。与「作文导师」共用同一把 key，存过一次两边都能用。只保存在本机浏览器，不会上传。</p>
-    <input type="password" id="keyInput" placeholder="sk-ant-...">
+    <p class="lead">填入你的 DeepSeek API key。与「作文导师」共用同一把 key，存过一次两边都能用。只保存在本机浏览器，不会上传。获取 key：platform.deepseek.com/api_keys</p>
+    <input type="password" id="keyInput" placeholder="sk-...">
     <div class="acts">
       <button class="b2" onclick="clearKey()">清空</button>
       <button class="b1" onclick="saveKey()">保存</button>
@@ -616,35 +616,37 @@ ${method}
 }
 
 /* ══════ API 调用 ══════ */
-async function callClaude(systemPrompt, userMessage) {
+async function callDeepSeek(systemPrompt, userMessage) {
   const key = getKey();
   if (!key) throw new Error("请先设置 API key（点上方「⚙ 设置 key」）");
 
-  const resp = await fetch("https://api.anthropic.com/v1/messages", {
+  const resp = await fetch("https://hwt-ai-proxy.lyqlym2015.workers.dev", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-api-key": key,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true"
+      "x-deepseek-key": key
     },
     body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
+      model: "deepseek-v4-flash",
       max_tokens: 4000,
-      system: systemPrompt,
-      messages: [{ role: "user", content: userMessage }]
+      temperature: 0.2,
+      response_format: { type: "json_object" },
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userMessage }
+      ]
     })
   });
 
   if (!resp.ok) {
     const txt = await resp.text();
-    if (resp.status === 401) throw new Error("API key 无效或已过期，请检查后重新设置");
+    if (resp.status === 401) throw new Error("DeepSeek key 无效或已过期，请检查后重新设置");
     throw new Error("API 错误 " + resp.status + "：" + (txt||"").slice(0,120));
   }
 
   const data = await resp.json();
-  const text = data.content.map(b => b.text || "").join("");
-  return text;
+  const raw = data.choices[0].message.content;
+  return raw;
 }
 
 function parseJSON(raw) {
@@ -673,7 +675,7 @@ async function grade() {
   try {
     const sys = buildSystemPrompt(genre);
     const user = (topic ? "题目：" + topic + "\n\n" : "") + "学生作文：\n\n" + essay;
-    const raw = await callClaude(sys, user);
+    const raw = await callDeepSeek(sys, user);
     const parsed = parseJSON(raw);
 
     // 校验
