@@ -216,7 +216,7 @@ body{font-family:var(--sans);line-height:1.6;background:var(--n900);color:var(--
     <p class="tag">新加坡中学高级华文 · 教学工具</p>
     <div class="gates" id="gates"></div>
     <div class="gate-legend">
-      <span class="lg lg-stu">读 · 写 · 说　学生练习</span>
+      <span class="lg lg-stu">读 · 写　学生练习</span>
       <span class="lg-sep"></span>
       <span class="lg lg-tea">备　教师专用</span>
     </div>
@@ -267,9 +267,9 @@ const LINES={
     groups:[
       {h:"课文",em:"字词 · 随堂 · 闯关 · 课后",tools:[
         {n:"字词游戏",d:"部首、拼音拼字、释义配对",u:"du/jiciyu.html"},
-        {n:"词语闯关",d:"词义关 → 用法关 → 陷阱关",u:"#",ext:1,exam:1},
-        {n:"课堂同步互动",d:"教师投影出题，学生 iPad 同步作答",u:"#",ext:1},
-        {n:"课文学习",d:"课文内容自主学习",u:"du/kewenxuexi.html"},
+        {n:"词语闯关",d:"词义关 → 用法关 → 陷阱关",u:"https://kewenxuexi.streamlit.app",ext:1,exam:1},
+        {n:"课堂同步互动",d:"教师投影出题，学生 iPad 同步作答",wip:"开发中"},
+        {n:"课文学习",d:"课文内容自主学习",wip:"开发中"},
         {n:"课文分析",d:"课文写法与结构分析",u:"du/kewenfenxi.html"},
         {n:"汉字听写",d:"Apple Pencil 手写作答 · Firebase 修复后开放",wip:"修整中"}]},
       {h:"阅读理解",em:"指导 · 技能 · 考前强化",tools:[
@@ -284,7 +284,7 @@ const LINES={
         {n:"作文导师",d:"AI 分步引导，老师可自建题目",u:"xie/zuowenzhidao.html",exam:1}],
        soon:["情境记叙文审题练习","教师 PPT 与学生学习单（待整理）"]},
       {h:"作文批改",em:"学生自己上传，拿到反馈",tools:[
-        {n:"华文通·改 学生端",d:"拍照上传手写作文，逐段反馈",u:"#",ext:1}],
+        {n:"华文通·改 学生端",d:"拍照上传手写作文，逐段反馈",u:"https://gradecomp.streamlit.app/student",ext:1}],
        soon:["教师批全班 / 视频作业 / 等级评定 → 见「备课」"]},
       {h:"写后反思",em:"看了反馈，还要动手改",tools:[],
        soon:["改后订正器（下一个要做的）"]},
@@ -293,18 +293,20 @@ const LINES={
        soon:["开头结尾专项（引析提 · 抒情议论三层）","PEEL 段落专项"]},
       {h:"考前强化",em:"全流程压缩复习",tools:[],
        soon:["审题选材拟纲全流程冲刺"]}]},
+  /* ══ 说 · 口语口试 —— 暂时不给学生用，注释掉 ══
   speak:{ch:"说",name:"口语口试",title:"口语 · 口试",sub:"想得出，也说得出",
     c:"--shuo",cl:"--shuo-l",cp:"--shuo-p",
     groups:[{h:"口试训练",em:"话题回应 · 追问应对",tools:[
       {n:"口语教练",d:"口试话题回应练习",u:"shuo/speaking-coach.html",exam:1}]}]},
+  ══ 说注释结束 */
   prep:{ch:"备",name:"备课出题",title:"备课 · 教师专用",sub:"出题、批改、看数据，都在这里",
     c:"--bei",cl:"--bei-l",cp:"--bei-p",teacher:1,
     groups:[
       {h:"出题",em:"填课文，出题目 · 自备 key",tools:[],
        soon:["生成阅读理解题（从课堂 OS 抽出）","生成词语闯关题（v7 出题流程）","生成课文闯关题"]},
       {h:"批改",em:"批全班 · 判等级",tools:[
-        {n:"华文通·改 教师端",d:"批量上传，队列批改，下载 PDF / Excel / 讲评 PPT",u:"#",ext:1},
-        {n:"等级评定",d:"对照 SEAB 标准判等级",u:"bei/grade-comp.html"}]},
+        {n:"华文通·改 教师端",d:"批量上传，队列批改，下载 PDF / Excel / 讲评 PPT",u:"https://zuowenpigai-teacher.streamlit.app/",ext:1},
+        {n:"等级评定",d:"对照 SEAB 标准判等级",wip:"整修中"}]},
       {h:"我的班级",em:"名册 · 布置 · 仪表盘 · 家长周报",tools:[
         {n:"课堂 OS",d:"需登录 · 学生成绩沉淀（暂缓开放）",u:"#",ext:1,wip:"需登录"}]}]}
 };
