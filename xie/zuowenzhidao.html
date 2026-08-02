@@ -549,12 +549,12 @@ input[type=text]:focus,input[type=password]:focus,.form-ta:focus{border-color:va
       <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px">
         <div style="font-size:20px;margin-top:2px">🔑</div>
         <div>
-          <div style="font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600;margin-bottom:4px">Anthropic API Key</div>
+          <div style="font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600;margin-bottom:4px">DeepSeek API Key</div>
           <div style="font-size:13px;color:var(--ink-faint);line-height:1.7">独立部署时需要。密钥仅存储在本地浏览器。</div>
         </div>
       </div>
       <div style="position:relative;margin-bottom:12px">
-        <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-…"
+        <input type="password" id="apiKeyInput" placeholder="sk-…"
           style="padding-right:48px;font-family:monospace;font-size:13px">
         <button onclick="toggleKeyVis()" id="eyeBtn"
           style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
@@ -566,8 +566,8 @@ input[type=text]:focus,input[type=password]:focus,.form-ta:focus{border-color:va
         <div id="keyStatus" style="font-size:13px;color:var(--ink-faint)"></div>
       </div>
       <div class="warn-box">⚠️ 请勿将 Key 分享给学生。前往
-        <a href="https://console.anthropic.com/settings/keys" target="_blank"
-          style="color:var(--accent)">console.anthropic.com</a> 获取。
+        <a href="https://platform.deepseek.com/api_keys" target="_blank"
+          style="color:var(--accent)">platform.deepseek.com</a> 获取。
       </div>
     </div>
     <div class="section-label">管理密码</div>
@@ -1116,7 +1116,7 @@ function getKey(){ return localStorage.getItem(KEY_STORE)||'' }
 function saveKey(){
   const v = document.getElementById('apiKeyInput').value.trim();
   if(!v){ showKS('请先输入密钥','err'); return }
-  if(!v.startsWith('sk-ant-')){ showKS('格式不对，应以 sk-ant- 开头','err'); return }
+  if(!v.startsWith('sk-')){ showKS('格式不对，应以 sk- 开头','err'); return }
   localStorage.setItem(KEY_STORE,v);
   showKS('✓ 已保存','ok');
   renderKeyStatus();
@@ -1142,7 +1142,7 @@ function renderKeyStatus(){
          document.getElementById('apiKeyInput').value='';
          document.getElementById('apiKeyInput').placeholder=maskKey(k); }
   else { el.textContent='尚未设置'; el.style.color='var(--ink-faint)';
-         document.getElementById('apiKeyInput').placeholder='sk-ant-api03-…'; }
+         document.getElementById('apiKeyInput').placeholder='sk-…'; }
 }
 function toggleKeyVis(){
   const i=document.getElementById('apiKeyInput'),b=document.getElementById('eyeBtn');
@@ -1153,21 +1153,21 @@ function toggleKeyVis(){
 // ═══════════════════════════════════════
 //  CLAUDE API CALL
 // ═══════════════════════════════════════
-async function callClaude(system, userMsg, maxTokens=1200){
+async function callDeepSeek(system, userMsg, maxTokens=1200){
   const k=getKey();
-  const headers={'Content-Type':'application/json'};
-  if(k) headers['x-api-key']=k;
-  const res=await fetch('https://api.anthropic.com/v1/messages',{
+  const headers={'Content-Type':'application/json','x-deepseek-key':k};
+  const res=await fetch('https://hwt-ai-proxy.lyqlym2015.workers.dev',{
     method:'POST', headers,
     body:JSON.stringify({
-      model:'claude-sonnet-4-20250514',
+      model:'deepseek-v4-flash',
       max_tokens:maxTokens,
-      system, messages:[{role:'user',content:userMsg}]
+      temperature:0.3,
+      messages:[{role:'system',content:system},{role:'user',content:userMsg}]
     })
   });
   if(!res.ok) throw new Error(`API ${res.status}`);
   const d=await res.json();
-  return d.content.map(b=>b.text||'').join('');
+  return d.choices[0].message.content;
 }
 
 function parseJSON(raw){
@@ -1753,7 +1753,7 @@ async function submitDlgRound(){
   let comment = '';
   try{
     const topic = topics[state.topicIdx];
-    comment = await callClaude(
+    comment = await callDeepSeek(
       `你是引导学生思考的华文老师。学生刚完成了写作思考的一个环节，给出一句话的简短回应：
 - 肯定学生思考中有价值的部分（如果有）
 - 给一个让他更进一步思考的追问或提示
@@ -2099,7 +2099,7 @@ async function submitArgDlgRound(){
   aiBox.innerHTML = `<div class="loading-dots"><span></span><span></span><span></span></div><span style="font-size:13px;color:var(--ink-faint);margin-left:8px">AI 正在回应……</span>`;
   let comment = '';
   try{
-    comment = await callClaude(
+    comment = await callDeepSeek(
       `你是引导学生写议论文的华文老师。给出一句话回应（20-40字）：肯定学生有价值的思考，并给一个追问。语气平等鼓励。只输出这一句话。`,
       `题目：${topics[state.topicIdx].content}\n环节：${round.badge}\n学生回答：${val}`, 150);
     comment = comment.trim();
@@ -2468,7 +2468,7 @@ async function renderWritePhase(phase){
 async function generateKwGuide(phase){
   const topic = topics[state.topicIdx];
   try{
-    const raw = await callClaude(
+    const raw = await callDeepSeek(
       `你是新加坡中学华文老师，为学生生成写作引导。
 根据关键词、题目和学生设定的中心思想，生成专属引导内容。
 严格返回JSON，格式如下（所有字段必须填写）：
@@ -2776,7 +2776,7 @@ async function submitWriteAnswer(phaseId, minChars){
   const benchmark = phase.aiGuide?.strong || res.strong || '';
 
   try{
-    const raw=await callClaude(
+    const raw=await callDeepSeek(
       `你是新加坡中学华文阅卷老师，批改风格：精准直接，不说废话。
 
 【任务】根据学生所写内容，完成以下三件事：
@@ -2799,7 +2799,7 @@ ${val}`
   }catch(e){
     const noKey=!getKey();
     const fb={
-      problems: noKey?'⚠️ 未设置 API Key，请老师到「老师管理」填入 Anthropic API Key。':'（AI批改暂时无法连接，请检查网络。）',
+      problems: noKey?'⚠️ 未设置 API Key，请老师到「老师管理」填入 DeepSeek API Key。':'（AI批改暂时无法连接，请检查网络。）',
       reference: res.strong || '',
       comparison:'请检查 API Key 设置后重试。'
     };
@@ -2898,7 +2898,7 @@ async function renderSummaryPhase(){
 
   try{
     const allText=parts.map(p=>`【${p.label}】\n${p.text}`).join('\n\n');
-    const raw=await callClaude(
+    const raw=await callDeepSeek(
       `你是新加坡中学华文老师。学生分段完成了一篇作文的各个部分。
 请：1. 按顺序整理成完整草稿（直接输出文章内容，不加标签）；
 2. 整体点评：指出最突出的1-2个优点（引用原句）和最需要改进的1-2个问题。
@@ -2974,7 +2974,7 @@ async function renderConnectPhase(){
 
   try{
     const allText=parts.map((p,i)=>`段${i+1}【${p.label}】：${p.text}`).join('\n\n');
-    const raw=await callClaude(
+    const raw=await callDeepSeek(
       `你是新加坡中学华文老师。学生完成了各段内容，现在需要衔接句把各段自然连接起来。
 请在每两段之间加入1-2句衔接语，使文章流畅。
 返回JSON：{"connected":"完整文章（包含衔接句，段落间用\\n\\n分隔）","tips":"衔接技巧说明（一两句）"}`,

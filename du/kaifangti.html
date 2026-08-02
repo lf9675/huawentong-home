@@ -155,9 +155,9 @@ input[type=password]:focus,input[type=text]:focus{outline:none;border-color:#93c
 
   <div class="t-section">
     <h2>🔑 设置 API Key</h2>
-    <p>AI批改和AI生成题目都需要Anthropic API Key，输入后保存在本地，不会上传到任何服务器。</p>
-    <div class="t-label">Anthropic API Key</div>
-    <input type="password" id="api-key-input" placeholder="sk-ant-..." />
+    <p>AI批改和AI生成题目都需要DeepSeek API Key，输入后保存在本地，不会上传到任何服务器。</p>
+    <div class="t-label">DeepSeek API Key</div>
+    <input type="password" id="api-key-input" placeholder="sk-..." />
     <br>
     <button class="btn-save-key" onclick="saveKey()">保存 Key</button>
     <div class="key-saved" id="key-saved">✅ Key 已保存</div>
@@ -304,7 +304,9 @@ var QBANK = [
 // ═══════════════════════════════════════════
 var curMode = 'student';
 var curQ = 0;
-var apiKey = localStorage.getItem('hcw_api_key') || '';
+var apiKey = localStorage.getItem('zuowen_key') || '';
+// 平滑迁移：旧键名 hcw_api_key → zuowen_key
+if (!apiKey) { var oldKey = localStorage.getItem('hcw_api_key'); if (oldKey) { apiKey = oldKey; localStorage.setItem('zuowen_key', oldKey); } }
 var genResult = null; // 暂存AI生成的题目JSON
 
 // 每道题的练习状态
@@ -504,10 +506,10 @@ function resetQ(qi) {
 function gradeAnswers(qi) {
   var key = apiKey;
   if (!key) {
-    key = prompt('请输入你的 Anthropic API Key（sk-ant-...）：');
+    key = prompt('请输入你的 DeepSeek API Key（sk-...）：');
     if (!key) return;
     apiKey = key;
-    localStorage.setItem('hcw_api_key', key);
+    localStorage.setItem('zuowen_key', key);
   }
 
   var q = QBANK[qi];
@@ -532,24 +534,23 @@ function gradeAnswers(qi) {
 
   var prompt = '你是新加坡中学高级华文老师，请用简单清楚的中文批改以下学生的开放题回答。\n\n题目：' + q.qtext + '\n\n学生答案：\n' + studentAns + '\n范文参考：\n' + modelText + '\n\n请按以下格式给出批改意见：\n1. 【整体评价】：2-3句，直接说优点和不足。\n2. 【语言问题】：指出重复用词、句式不标准、用词不准确等具体问题，如果没有就写「语言表达流畅」。\n3. 【内容问题】：指出哪些得分点答到了，哪些还不足。\n4. 【改进建议】：给出1-2条具体、实用的改进方法。\n\n语气直接，不要夸奖太多，重点帮学生看到问题。';
 
-  fetch('https://api.anthropic.com/v1/messages', {
+  fetch('https://hwt-ai-proxy.lyqlym2015.workers.dev', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
+      'x-deepseek-key': key
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model: 'deepseek-v4-flash',
       max_tokens: 800,
+      temperature: 0.3,
       messages: [{role:'user', content: prompt}]
     })
   })
   .then(function(r){ return r.json(); })
   .then(function(data){
-    if (data.content && data.content[0] && data.content[0].text) {
-      body.innerHTML = data.content[0].text;
+    if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+      body.innerHTML = data.choices[0].message.content;
     } else if (data.error) {
       body.innerHTML = '批改失败：' + data.error.message + '\n\n请检查API Key是否正确。';
     } else {
@@ -570,7 +571,7 @@ function saveKey() {
   var val = document.getElementById('api-key-input').value.trim();
   if (!val) { alert('请输入API Key'); return; }
   apiKey = val;
-  localStorage.setItem('hcw_api_key', val);
+  localStorage.setItem('zuowen_key', val);
   document.getElementById('key-saved').style.display='block';
 }
 
@@ -594,25 +595,27 @@ function genQuestion() {
   var sysPrompt = '你是新加坡中学高级华文老师，专门设计开放题练习材料。';
   var userPrompt = '根据以下内容，设计一道高级华文开放题，分值为' + marks + '。\n\n内容：\n' + input + '\n\n请严格按照以下JSON格式输出，不要输出任何JSON以外的内容：\n{\n  "label": "新题目",\n  "qtext": "题目正文（包含引用的话和提问）",\n  "marks": "共X分（说明X分+例子X分）",\n  "modelAns": [\n    {"label": "立场", "text": "范文答案..."},\n    {"label": "理由", "text": "范文答案..."},\n    {"label": "例子", "text": "范文答案..."}\n  ],\n  "steps": [\n    {"q": "第一步：先表明你的立场。", "sub": "追问内容...", "ph": "填写提示...", "minLen": 4, "fb_good": "正确时的反馈", "fb_warn": "不足时的反馈"},\n    {"q": "第二步：...", "sub": "...", "ph": "...", "minLen": 10, "fb_good": "...", "fb_warn": "..."},\n    {"q": "第三步：...", "sub": "...", "ph": "...", "minLen": 10, "fb_good": "...", "fb_warn": "..."},\n    {"q": "第四步：请举一个生活中的例子。", "sub": "...", "ph": "...", "minLen": 15, "fb_good": "...", "fb_warn": "..."},\n    {"q": "第五步：最后，用一句话总结。", "sub": "...", "ph": "...", "minLen": 6, "fb_good": "...", "fb_warn": "..."}\n  ]\n}\n\n要求：\n- 题目要符合新加坡中学高级华文程度\n- 苏格拉底追问步骤要循序渐进，引导学生思考\n- 范文答案语言简洁，适合程度较弱的学生参考\n- 所有字符串值不能包含英文双引号，可以使用中文引号或单引号\n- 只输出JSON，不要有任何前言或解释';
 
-  fetch('https://api.anthropic.com/v1/messages', {
+  fetch('https://hwt-ai-proxy.lyqlym2015.workers.dev', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
+      'x-deepseek-key': key
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model: 'deepseek-v4-flash',
       max_tokens: 1500,
-      system: sysPrompt,
-      messages: [{role:'user', content: userPrompt}]
+      temperature: 0.3,
+      response_format: { type: 'json_object' },
+      messages: [
+        {role:'system', content: sysPrompt},
+        {role:'user', content: userPrompt}
+      ]
     })
   })
   .then(function(r){ return r.json(); })
   .then(function(data){
-    if (data.content && data.content[0] && data.content[0].text) {
-      var raw = data.content[0].text.trim();
+    if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+      var raw = data.choices[0].message.content.trim();
       // 去掉可能的markdown代码块
       raw = raw.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
       try {
@@ -927,17 +930,18 @@ function speakGrade(qi, lang) {
       return;
     }
     if (btn) { btn.textContent = '⏳ Translating…'; btn.style.background = '#fef3c7'; btn.disabled = true; }
-    fetch('https://api.anthropic.com/v1/messages', {
+    fetch('https://hwt-ai-proxy.lyqlym2015.workers.dev', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'x-deepseek-key': key
+
+
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        model: 'deepseek-v4-flash',
         max_tokens: 600,
+        temperature: 0.3,
         messages: [{
           role: 'user',
           content: 'Translate the following Chinese feedback into clear, natural, professional English suitable for a secondary school student. Keep the structure and numbered points. Output only the translated text, nothing else.\n\n' + text
@@ -948,8 +952,8 @@ function speakGrade(qi, lang) {
     .then(function(data) {
       if (btn) { btn.disabled = false; }
       var enText = '';
-      if (data.content && data.content[0] && data.content[0].text) {
-        enText = data.content[0].text.trim();
+      if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+        enText = data.choices[0].message.content.trim();
       } else {
         if (btn) { btn.textContent = '🔊 English'; btn.style.background = ''; }
         alert('Translation failed. Please check your API Key.');

@@ -5,26 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>汉字听写练习</title>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyCg39rW_fGCF3jSCZc8KwrR_782KgUQ26k",
-    authDomain: "tingxie-a13b5.firebaseapp.com",
-    databaseURL: "https://tingxie-a13b5-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "tingxie-a13b5",
-    storageBucket: "tingxie-a13b5.firebasestorage.app",
-    messagingSenderId: "1070167144871",
-    appId: "1:1070167144871:web:c0e244d0d0c699d270de82"
-  };
-  let fbDB = null;          
-  try {
-    firebase.initializeApp(firebaseConfig);
-    fbDB = firebase.database();
-  } catch (e) {
-    console.warn('Firebase 初始化失败，将仅使用本机存储。');
-  }
-</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap');
   :root { --ink: #1a1a2e; --paper: #fdf6e3; --accent: #c0392b; --gold: #d4a017; --sage: #5a7a5a; --muted: #8b7355; --correct: #1e8449; --wrong: #c0392b; }
