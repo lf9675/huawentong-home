@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+<script src="../config.js"></script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>对不起朋友 · 故事线与详略 · 第二页</title>
+<style>
+:root{
+  --ink:#1C2A21; --ink-soft:#4E6154;
+  --paper:#FFFFFF; --tint:#EEF5EF; --line:#D7E4D9;
+  --story:#D4655F; --story-tint:#FAE8E5; --story-deep:#B23A2F;
+  --logic:#D4A555; --logic-tint:#FBF2E0; --logic-deep:#A67D2F;
+  --write:#6B5B95; --write-tint:#F3EDF7; --write-deep:#3F3554;
+  --blue:#3A6EA5; --blue-tint:#E4EEF7; --blue-deep:#274E77;
+  --good:#2F6B45; --good-tint:#E5F2E8;
+  --miss:#B24338; --miss-tint:#FAEAE8;
+  --red:#C0272D;
+  --r:14px;
+  --shadow:0 2px 4px rgba(28,42,33,.05), 0 12px 28px rgba(28,42,33,.10);
+  --display:"Noto Serif SC","Songti SC","Source Han Serif SC","SimSun",serif;
+  --body:"Noto Sans SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:var(--body); color:var(--ink); line-height:1.75;
+  background:linear-gradient(180deg,#F7EEF1 0%,#F1E5E8 18%,#E6D5DC 32%,
+    #D4C9D1 52%,#B8B3BC 70%,#8A7D96 86%,#3F3554 100%);
+}
+
+.rail{position:fixed; left:24px; top:50%; transform:translateY(-50%); z-index:50}
+.rail-item{display:flex; align-items:center; gap:10px; height:58px; position:relative}
+.rail-item::before{content:""; position:absolute; left:5px; top:50%; width:2px; height:58px; background:rgba(63,53,84,.28)}
+.rail-item:last-child::before{display:none}
+.rail-dot{width:12px; height:12px; border-radius:50%; background:rgba(63,53,84,.32); transition:.35s; flex:none}
+.rail-label{font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:rgba(63,53,84,.62); white-space:nowrap; transition:.35s}
+.rail-item.on .rail-dot{background:var(--story); box-shadow:0 0 0 5px rgba(212,101,95,.18); transform:scale(1.15)}
+.rail-item.on .rail-label{color:var(--story-deep); font-weight:700}
+@media (min-width:1100px){
+  .rail-item:nth-child(n+4) .rail-label{color:rgba(255,255,255,.74)}
+  .rail-item:nth-child(n+4) .rail-dot{background:rgba(255,255,255,.5)}
+  .rail-item:nth-child(n+4)::before{background:rgba(255,255,255,.32)}
+  .rail-item.on:nth-child(n+4) .rail-label{color:#fff}
+}
+
+.wrap{max-width:860px; margin:0 auto; padding:0 22px 90px}
+
+header.hero{padding:58px 0 28px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--story-deep); margin:0 0 12px}
+h1{font-family:var(--display); font-size:clamp(32px,6vw,54px); line-height:1.14; margin:0 0 6px; font-weight:800}
+.sub{font-size:18px; color:var(--story-deep); margin:0 0 24px; font-weight:600}
+.idbox{background:var(--paper); border-radius:var(--r); padding:18px 18px 20px; box-shadow:var(--shadow)}
+.idask{font-size:15px; font-weight:700; color:var(--story-deep); margin:0 0 12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.idloading{font-size:15px; color:var(--ink-soft); margin:0}
+.grid{display:flex; flex-wrap:wrap; gap:8px}
+.grid button{font-family:var(--body); font-size:16px; font-weight:700; cursor:pointer; min-width:64px; min-height:48px; padding:8px 14px; border-radius:10px; border:1px solid var(--line); background:#FBFDFB; color:var(--ink); transition:.15s; line-height:1.25}
+.grid button:hover{border-color:var(--story); background:var(--story-tint)}
+.grid button small{display:block; font-size:11.5px; font-weight:500; color:var(--ink-soft)}
+.mini{font-family:var(--body); font-size:13px; font-weight:600; cursor:pointer; border-radius:8px; padding:6px 12px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft)}
+.mini:hover{border-color:var(--story); color:var(--story-deep)}
+.hi{font-family:var(--display); font-size:22px; font-weight:800; margin:0 0 4px}
+.hi span{color:var(--story)}
+.mates{font-size:14.5px; color:var(--ink-soft); margin:0 0 12px}
+.manualrow{display:flex; flex-wrap:wrap; gap:10px}
+.manualrow label{display:flex; align-items:center; gap:8px; flex:1 1 150px; font-size:14px; color:var(--ink-soft)}
+.manualrow input{flex:1; min-width:0; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-family:var(--body); font-size:15px; background:#FBFDFB; color:var(--ink)}
+.manualrow input:focus{outline:2px solid var(--story); outline-offset:1px}
+
+section.task{background:var(--paper); border-radius:var(--r); padding:30px 30px 34px; margin:26px 0; box-shadow:var(--shadow); scroll-margin-top:20px}
+.tasknum{font-family:var(--mono); font-size:12px; letter-spacing:.16em; color:var(--story); font-weight:700; margin:0 0 6px}
+h2{font-family:var(--display); font-size:26px; line-height:1.3; margin:0 0 8px; font-weight:700}
+h3{font-size:17px; margin:26px 0 12px; color:var(--story-deep); display:flex; align-items:center; gap:9px}
+h3 .n{font-family:var(--mono); font-size:12px; background:var(--story); color:#fff; border-radius:20px; padding:3px 10px; letter-spacing:.06em; flex:none}
+.hint{font-size:15px; color:var(--ink-soft); margin:0 0 20px}
+.hint strong{color:var(--story-deep)}
+.key{color:var(--red); font-weight:700}
+
+.speak{display:inline-flex; align-items:center; gap:5px; font-family:var(--body); font-size:12.5px; font-weight:600; cursor:pointer; border-radius:20px; padding:4px 12px 4px 9px; border:1px solid var(--story); background:var(--paper); color:var(--story-deep); transition:.15s; vertical-align:middle}
+.speak:hover{background:var(--story-tint)}
+.speak.playing{background:var(--story); color:#fff}
+.speak svg{width:14px; height:14px}
+
+.qtip{font-size:13px; color:var(--logic-deep); background:var(--logic-tint); border-radius:8px; padding:8px 11px; margin:0 0 14px; display:flex; align-items:flex-start; gap:7px; line-height:1.6; flex-wrap:wrap}
+.qtip svg{width:15px; height:15px; flex:none; margin-top:2px}
+
+/* 拖动排序 */
+.sorter{margin:12px 0 8px}
+.sortitem{display:flex; align-items:center; gap:12px; background:#FBFDFB; border:1.5px solid var(--line); border-radius:11px; padding:12px 14px; margin-bottom:9px; cursor:pointer; transition:.15s; font-size:15px; line-height:1.5}
+.sortitem:hover{border-color:var(--story); background:var(--story-tint)}
+.sortitem.sel{border-color:var(--story); background:var(--story-tint); box-shadow:0 0 0 3px rgba(212,101,95,.18)}
+.sortitem.locked{cursor:default}
+.sortitem.ok{background:var(--good-tint); border-color:var(--good)}
+.sortitem.no{background:var(--miss-tint); border-color:var(--miss)}
+.sortitem .seq{font-family:var(--mono); font-size:14px; font-weight:700; width:26px; height:26px; border-radius:50%; background:var(--story); color:#fff; display:flex; align-items:center; justify-content:center; flex:none}
+.sortitem.ok .seq{background:var(--good)}
+.sortitem.no .seq{background:var(--miss)}
+.sortitem .txt{flex:1}
+.sortitem .mv{font-size:11px; color:var(--ink-soft); flex:none}
+.sorthelp{font-size:13.5px; margin:8px 0 0; display:flex; align-items:center; gap:6px; flex-wrap:wrap; line-height:1.6}
+
+/* 对比示意图 */
+.contrast{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:12px 0 20px}
+.contrast .col{border-radius:12px; padding:16px 14px}
+.contrast .col.correct{background:var(--good-tint); border:1.5px solid var(--good)}
+.contrast .col.offtrack{background:var(--miss-tint); border:1.5px solid var(--miss)}
+.contrast .col h5{margin:0 0 12px; font-size:14px; display:flex; align-items:center; gap:6px}
+.contrast .col.correct h5{color:#1D5236}
+.contrast .col.offtrack h5{color:#8A2F27}
+.vflow{display:flex; flex-direction:column; gap:0}
+.vflow .vnode{background:var(--paper); border-radius:8px; padding:8px 11px; font-size:13.5px; line-height:1.5; text-align:center}
+.vflow .vnode b{color:var(--story-deep)}
+.vflow .vnode.bad{background:#fff; border:1px dashed var(--miss); color:#8A2F27}
+.vflow .vnode.bad em{font-style:normal; font-weight:700; color:var(--miss)}
+.vflow .varrow{text-align:center; color:var(--ink-soft); font-size:14px; padding:3px 0}
+.contrast .col.correct .vflow .vnode{border:1px solid var(--good)}
+
+/* 详略标注 */
+.detailtask{margin:12px 0 8px}
+.dtrow{display:grid; grid-template-columns:1fr auto; gap:10px 12px; align-items:center; background:#FBFDFB; border:1.5px solid var(--line); border-radius:11px; padding:12px 14px; margin-bottom:9px}
+.dtrow .plot{font-size:14.5px; line-height:1.5}
+.dtrow .plot .seq{font-family:var(--mono); font-size:12px; color:var(--ink-soft); margin-right:8px}
+.dtchoose{display:flex; gap:6px; flex:none}
+.dtchoose button{font-family:var(--body); font-size:13px; font-weight:700; cursor:pointer; border-radius:8px; padding:8px 13px; border:1.5px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s; min-width:56px}
+.dtchoose button:hover{border-color:var(--story)}
+.dtchoose button.pick-detail.on{background:var(--blue); color:#fff; border-color:var(--blue)}
+.dtchoose button.pick-brief.on{background:var(--logic-deep); color:#fff; border-color:var(--logic-deep)}
+.dtchoose button:disabled{cursor:default; opacity:.85}
+.dtrow.ok{border-color:var(--good)}
+.dtrow.no{border-color:var(--miss); background:var(--miss-tint)}
+.dtrow .dtfb{grid-column:1/-1; font-size:13px; line-height:1.6; margin-top:4px; display:none; padding-top:8px; border-top:1px dashed var(--line)}
+.dtrow.ok .dtfb, .dtrow.no .dtfb{display:block}
+.dtrow.ok .dtfb{color:var(--good)}
+.dtrow.no .dtfb{color:var(--miss)}
+.dtlegend{display:flex; gap:16px; margin:0 0 14px; font-size:13px; flex-wrap:wrap}
+.dtlegend span{display:flex; align-items:center; gap:6px}
+.dtlegend .chip{width:16px; height:16px; border-radius:4px; flex:none}
+.dtlegend .chip.d{background:var(--blue)}
+.dtlegend .chip.b{background:var(--logic-deep)}
+
+/* 四诀示意图 */
+.juemap{background:#FBFDFB; border:1px solid var(--line); border-radius:12px; padding:20px 18px; margin:12px 0 22px}
+.juemap .mt{font-size:14px; font-weight:700; color:var(--story-deep); margin:0 0 16px; display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.juesteps{display:flex; flex-wrap:wrap; align-items:stretch; gap:0; justify-content:center}
+.juestep{background:var(--story-tint); border:1.5px solid var(--story); border-radius:11px; padding:12px 14px; text-align:center; flex:1 1 140px; min-width:130px; max-width:180px}
+.juestep .js-n{font-family:var(--mono); font-size:11px; color:var(--story-deep); font-weight:700}
+.juestep .js-t{font-size:15px; font-weight:800; color:var(--story-deep); margin:2px 0 6px}
+.juestep .js-d{font-size:12px; color:var(--ink-soft); line-height:1.5}
+.jue-arrow{display:flex; align-items:center; color:var(--story); font-size:20px; font-weight:700; padding:0 4px}
+.juewhy{background:var(--logic-tint); border-radius:9px; padding:12px 14px; margin-top:16px; font-size:13.5px; line-height:1.7}
+.juewhy b{color:var(--logic-deep)}
+.juewhy .row{display:flex; gap:8px; margin-bottom:5px}
+.juewhy .whyhd{display:flex; align-items:center; gap:8px; margin-bottom:8px}
+.juewhy .row .k{font-weight:700; color:var(--story-deep); white-space:nowrap}
+
+/* 四诀练习 */
+.jue{border:1px solid var(--line); border-radius:12px; padding:18px; margin-bottom:16px; background:#FBFDFB}
+.jue.done{background:var(--good-tint); border-color:var(--good)}
+.juehd{display:flex; align-items:center; gap:9px; margin:0 0 8px}
+.juehd .n{font-family:var(--mono); font-size:12px; background:var(--story); color:#fff; border-radius:20px; padding:3px 10px; letter-spacing:.06em; flex:none}
+.juehd .t{font-size:16px; font-weight:700; color:var(--story-deep)}
+.juetip{font-size:13.5px; color:var(--ink-soft); margin:0 0 4px; line-height:1.6}
+.juetip strong{color:var(--story-deep)}
+.juecount{font-size:12px; color:var(--ink-soft); margin:0 0 10px}
+.jue textarea{width:100%; border:1px solid var(--line); border-radius:9px; padding:12px 13px; font-family:var(--body); font-size:16px; background:var(--paper); color:var(--ink); resize:vertical; min-height:76px; line-height:1.7}
+.jue textarea:focus{outline:2px solid var(--story); outline-offset:1px}
+.juebtn{margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+.btn-submit{font-family:var(--body); font-size:14px; font-weight:700; cursor:pointer; border-radius:9px; padding:10px 20px; border:1px solid var(--story); background:var(--story); color:#fff; transition:.15s}
+.btn-submit:hover{background:var(--story-deep); border-color:var(--story-deep)}
+.btn-submit:disabled{opacity:.55; cursor:not-allowed}
+.juefb{display:none; margin-top:14px}
+.juefb.show{display:block}
+.juefb .verdict{font-size:14.5px; font-weight:700; padding:11px 14px; border-radius:9px; margin-bottom:12px; line-height:1.6}
+.juefb .verdict.ok{background:var(--good-tint); color:#1D5236; border-left:3px solid var(--good)}
+.juefb .verdict.improve{background:var(--miss-tint); color:#8A2F27; border-left:3px solid var(--miss)}
+.refbox{background:var(--write-tint); border-radius:10px; padding:14px; margin-top:10px}
+.refbox .reftitle{font-size:13px; font-weight:700; color:var(--write-deep); margin:0 0 10px; display:flex; align-items:center; gap:7px}
+.refcard{background:var(--paper); border-left:3px solid var(--write); border-radius:7px; padding:10px 13px; margin-bottom:9px; font-size:14px; line-height:1.7}
+.refcard:last-child{margin-bottom:0}
+.refcard .rlab{font-family:var(--mono); font-size:11px; color:var(--write-deep); font-weight:700; background:rgba(107,91,149,.1); padding:2px 8px; border-radius:4px; margin-right:6px}
+
+/* 略写讲解 */
+.brief-intro{background:var(--logic-tint); border:1.5px solid var(--logic); border-radius:12px; padding:18px; margin:12px 0 20px}
+.brief-intro .bi-hd{display:flex; align-items:center; gap:10px; margin:0 0 6px; flex-wrap:wrap}
+.brief-intro h4{margin:0; color:var(--logic-deep); font-family:var(--display); font-size:19px}
+.brief-intro>p{font-size:14px; color:var(--ink-soft); margin:0 0 14px; line-height:1.7}
+.trick{display:grid; grid-template-columns:auto 1fr; gap:10px 14px; background:var(--paper); border-radius:9px; padding:12px 14px; margin-bottom:9px; align-items:start}
+.trick:last-child{margin-bottom:0}
+.trick .tk-name{font-size:13px; font-weight:700; color:var(--logic-deep); background:var(--logic-tint); border-radius:7px; padding:6px 10px; text-align:center; white-space:nowrap}
+.trick .tk-body{font-size:13.5px; line-height:1.6}
+.trick .tk-body .use{color:var(--ink-soft); display:block; margin-bottom:4px}
+.trick .tk-body .eg{background:var(--good-tint); border-radius:6px; padding:6px 10px; font-size:13.5px; color:#1D5236}
+
+/* 略写练习 A */
+.pickbetter{border:1px solid var(--line); border-radius:12px; padding:15px 16px; margin-bottom:11px; background:#FBFDFB}
+.pickbetter .pb-stem{font-size:14.5px; font-weight:600; margin:0 0 10px}
+.pickbetter .pb-opts{display:flex; flex-direction:column; gap:8px}
+.pickbetter .pb-opts button{font-family:var(--body); font-size:14px; line-height:1.6; cursor:pointer; border-radius:9px; padding:11px 14px; border:1.5px solid var(--line); background:var(--paper); color:var(--ink); transition:.15s; text-align:left}
+.pickbetter .pb-opts button:hover{border-color:var(--story)}
+.pickbetter .pb-opts button.picked{border-color:var(--ink)}
+.pickbetter .pb-opts button:disabled{cursor:default}
+.pickbetter.right .pb-opts button.correct{background:var(--good-tint); border-color:var(--good)}
+.pickbetter.wrong .pb-opts button.picked{background:var(--miss-tint); border-color:var(--miss)}
+.pickbetter.wrong .pb-opts button.correct{background:var(--good-tint); border-color:var(--good)}
+.pickbetter .pb-fb{font-size:14px; font-weight:600; margin:11px 0 0; display:none; line-height:1.7}
+.pickbetter.right .pb-fb{display:block; color:var(--good)}
+.pickbetter.wrong .pb-fb{display:block; color:var(--miss)}
+.pickbetter .pb-opts button:disabled:not(.correct):not(.picked){opacity:.5}
+
+/* 略写练习 B：点删 */
+.cutbox{border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:11px; background:#FBFDFB}
+.cutsent{display:inline; padding:3px 4px; border-radius:4px; cursor:pointer; transition:.12s}
+.cutsent:hover{background:var(--miss-tint)}
+.cutsent.cut{text-decoration:line-through; text-decoration-color:var(--miss); text-decoration-thickness:2px; color:#B9B9B9}
+.cutpassage{font-size:15.5px; line-height:2.1; background:var(--paper); border-radius:9px; padding:14px 16px; margin-bottom:12px}
+.cutbtn{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+.cut-fb{font-size:14px; font-weight:600; margin:12px 0 0; display:none; line-height:1.7; padding:11px 14px; border-radius:9px}
+.cut-fb.show{display:block}
+.cut-fb.ok{background:var(--good-tint); color:#1D5236}
+.cut-fb.no{background:var(--miss-tint); color:#8A2F27}
+
+/* 范文 */
+.exbox{background:var(--write-tint); border:1px solid #D4A5A5; border-radius:12px; padding:16px; margin:12px 0 20px}
+.exbox h4{margin:0 0 8px; color:var(--write-deep); font-family:var(--display)}
+.exbox .eg{background:var(--paper); border-left:3px solid var(--write); padding:12px 14px; margin:8px 0; font-size:15px; line-height:1.7}
+.exbox .lab{font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:var(--write-deep); font-weight:700; display:inline-block; background:rgba(107,91,149,.1); padding:2px 8px; border-radius:4px; margin-right:6px; margin-top:4px}
+.exbox .lab small{display:inline; color:var(--ink-soft); font-weight:400}
+
+.input-area{margin:12px 0 20px}
+.input-label{font-size:15px; font-weight:600; display:block; margin:16px 0 6px; color:var(--story-deep)}
+.input-label em{font-style:normal; font-weight:400; color:var(--ink-soft); display:block; font-size:13px; margin-top:3px}
+#q3B{width:100%; border:1px solid var(--line); border-radius:9px; padding:12px 13px; font-family:var(--body); font-size:16px; background:var(--paper); color:var(--ink); resize:vertical; min-height:120px; line-height:1.7}
+#q3B:focus{outline:2px solid var(--story); outline-offset:1px}
+
+.progress{font-size:13px; color:var(--ink-soft); margin:20px 0 0; font-weight:600}
+
+.btn{font-family:var(--body); font-size:15px; font-weight:700; cursor:pointer; border-radius:10px; padding:13px 24px; border:1px solid transparent; transition:.18s}
+.btn-fill{background:var(--story); color:#fff}
+.btn-fill:hover{background:var(--story-deep)}
+.btn-line{background:var(--paper); color:var(--story-deep); border-color:var(--story)}
+.btn-line:hover{background:var(--story-tint)}
+.btn:disabled{opacity:.55; cursor:not-allowed}
+.actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:26px; justify-content:center}
+
+.result{display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(28,42,33,.7); z-index:100; padding:20px; align-items:center; justify-content:center}
+.result.show{display:flex}
+.resultcard{background:var(--paper); border-radius:16px; padding:40px; max-width:500px; max-height:90vh; overflow-y:auto}
+
+@media (max-width:620px){
+  .wrap{padding:0 14px 60px}
+  section.task{padding:22px 18px 26px}
+  .contrast{grid-template-columns:1fr}
+  .juesteps{flex-direction:column}
+  .jue-arrow{transform:rotate(90deg)}
+  .trick{grid-template-columns:1fr}
+  .dtrow{grid-template-columns:1fr}
+  .dtchoose{justify-content:flex-start}
+  .actions{justify-content:stretch}
+}
+@media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} html{scroll-behavior:auto} }
+@media print{ body{background:#fff} .rail,.actions,.speak{display:none} section.task{box-shadow:none; border:1px solid #ccc; break-inside:avoid} }
+
+/* ===== Engaged Learning · 课堂增强层 ===== */
+.classroomBar{position:sticky;top:0;z-index:65;max-width:900px;margin:0 auto;background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.6);border-radius:0 0 12px 12px;padding:9px 13px;display:flex;gap:10px;align-items:center;justify-content:space-between;box-shadow:0 5px 16px rgba(20,20,30,.12);font-size:13px}.classroomBar .left{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.statusPill,.revPill,.modePill{padding:5px 9px;border-radius:999px;font-weight:800}.statusPill{background:var(--blue-tint);color:var(--blue-deep)}.revPill{background:var(--logic-tint);color:var(--logic-deep)}.modePill{background:var(--tint);color:var(--ink-soft)}
+.engLocked{opacity:.42;filter:grayscale(.45);pointer-events:none;position:relative}.checkpoint{display:none;background:linear-gradient(135deg,#FFF9E9,#FBF2E0);border:2px solid var(--logic);border-radius:14px;padding:18px 20px;margin:20px 0;box-shadow:var(--shadow)}.checkpoint.show{display:block}.checkpoint h3{margin:0 0 6px;color:var(--logic-deep)}.oral{background:#fff;border-left:4px solid var(--story);border-radius:9px;padding:10px 12px;margin:10px 0;font-weight:800}.unlockrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.unlockrow input{width:132px;padding:9px;border:1px solid var(--logic);border-radius:8px;font:700 16px var(--mono);letter-spacing:.12em;text-align:center}.unlockmsg{font-size:13px;font-weight:700}.attemptnote{font-size:12px;color:var(--ink-soft);margin-left:8px}.processGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.processBox{background:var(--story-tint);border-radius:10px;padding:10px;text-align:center}.processBox b{display:block;font:800 24px var(--mono);color:var(--story-deep)}.processBox span{font-size:12px;color:var(--ink-soft)}.lockedActions{opacity:.45;pointer-events:none}.refbox details summary{cursor:pointer;font-weight:700;color:var(--write-deep);margin-bottom:8px}
+@media(max-width:650px){.classroomBar .right{display:none}.processGrid{grid-template-columns:1fr 1fr}}
+@media print{.classroomBar,.checkpoint{display:none!important}.engLocked{opacity:1;filter:none}}
+
+</style>
+</head>
+<body>
+<div class="classroomBar"><div class="left"><span class="statusPill" id="statusPill">● 故事线中</span><span class="revPill" id="revPill">修正 0 次</span><span class="modePill" id="modePill">课堂模式</span></div><div class="right">第一次答错不揭答案；老师会随机追问“为什么”。</div></div>
+
+<nav class="rail" aria-label="进度">
+  <div class="rail-item on" data-rail="s1"><span class="rail-dot"></span><span class="rail-label">故事线与详略</span></div>
+  <div class="rail-item" data-rail="s2"><span class="rail-dot"></span><span class="rail-label">详写四诀</span></div>
+  <div class="rail-item" data-rail="s3"><span class="rail-dot"></span><span class="rail-label">略写与模仿</span></div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">中学高级华文 · 情境记叙文第二页</p>
+  <h1>对不起朋友</h1>
+  <p class="sub">从做错事到积极补救的故事线与详略安排</p>
+  <div class="idbox">
+    <p class="idloading" id="idLoading">正在连接班级名单……</p>
+    <div id="idPickCls" style="display:none">
+      <p class="idask">第一步：点你的班级</p>
+      <div class="grid" id="clsGrid"></div>
+    </div>
+    <div id="idPickSid" style="display:none">
+      <p class="idask">第二步：点你的学号 <button class="mini" id="backCls">换班级</button></p>
+      <div class="grid" id="sidGrid"></div>
+    </div>
+    <div id="idCard" style="display:none">
+      <p class="hi" id="hiLine"></p>
+      <p class="mates" id="mateLine"></p>
+      <button class="mini" id="notMe">不是我，重新选</button>
+    </div>
+    <div id="idManual" style="display:none">
+      <p class="idask">暂时连不上班级名单，请自己填写</p>
+      <div class="manualrow">
+        <label>姓名 <input type="text" data-save="name" placeholder="写上你的名字"></label>
+        <label>班级 <input type="text" data-save="class" placeholder="例：201"></label>
+        <label>组别 <input type="text" data-save="group" placeholder="第几组"></label>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 板块一：故事线 + 详略 ============ -->
+<section class="task" id="s1">
+  <p class="tasknum">板块一</p>
+  <h2>先理清故事线，再安排详略</h2>
+
+  <h3><span class="n">A</span>把故事线排整齐</h3>
+  <p class="hint">下面六张卡片打乱了顺序。<strong>先点一张，再点另一张，两张就会交换位置</strong>，把整件事从头到尾排好。</p>
+  <div class="qtip">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    想一想事情发生的先后：先做错事 → 朋友生气 → 我发现错了 → 我去道歉补救 → 和好。
+  </div>
+  <div class="sorter" id="sorter"></div>
+  <div class="juebtn"><button class="btn-submit" id="checkSort">排好了，检查</button></div>
+  <div class="sorthelp" id="sortResult" style="display:none"></div>
+
+  <h3><span class="n">B</span>哪些详写？哪些略写？</h3>
+  <p class="hint">故事线排好了，但不能每一步都写得一样长。<strong>点「详写」或「略写」给每一步贴上标签</strong>——关键词是「对不起」，所以<span class="key">道歉补救</span>要详写，其余略写。</p>
+  <div class="dtlegend">
+    <span><span class="chip d"></span>详写：重点，慢慢写、写具体</span>
+    <span><span class="chip b"></span>略写：交代一下就好，一两句带过</span>
+  </div>
+  <div class="detailtask" id="detailTask"></div>
+  <div class="juebtn"><button class="btn-submit" id="checkDetail">贴好标签，检查</button></div>
+  <div class="sorthelp" id="detailResult" style="display:none"></div>
+
+  <h3><span class="n">C</span>为什么这样安排详略？</h3>
+  <div class="contrast">
+    <div class="col correct">
+      <h5>✅ 详写「道歉补救」= 扣住关键词</h5>
+      <div class="vflow">
+        <div class="vnode">关键词是「<b>对不起</b>」</div>
+        <div class="varrow">↓</div>
+        <div class="vnode">＝ 知错、认错、<b>补救</b></div>
+        <div class="varrow">↓</div>
+        <div class="vnode">所以道歉补救要<b>详写</b></div>
+      </div>
+    </div>
+    <div class="col offtrack">
+      <h5>❌ 详写「做错事的经过」= 头重脚轻</h5>
+      <div class="vflow">
+        <div class="vnode bad"><em>把做错事的经过写一大段</em></div>
+        <div class="varrow">↓</div>
+        <div class="vnode bad"><em>道歉补救反而没篇幅</em></div>
+        <div class="varrow">↓</div>
+        <div class="vnode bad"><em>中心「对不起」立不住</em></div>
+      </div>
+    </div>
+  </div>
+  <div class="qtip">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    黄金法则：<b>关键词是什么，就详写什么。</b>关键词是「对不起」，就详写「道歉补救」。
+    <button class="speak" onclick="speak('黄金法则：关键词是什么，就详写什么。这道题关键词是对不起，所以要详写道歉、补救的过程。做错事的起因只要略写，交代清楚就好。', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>听讲解
+    </button>
+  </div>
+
+  <p class="progress" id="pg1">已完成 0 / 2</p>
+</section>
+<div class="checkpoint" id="cp4"><h3>⏸ 全班停靠点 4 · 故事线与详略</h3><p>先停下来。老师会检查你是不是懂得：为什么“积极补救”必须成为全文重点。</p><div class="oral" id="oral4"></div><div class="unlockrow"><input id="code4" inputmode="numeric" placeholder="教师口令"><button class="btn btn-fill" id="unlock4">进入详写四诀</button><span class="unlockmsg" id="unlockMsg4"></span></div></div>
+<!-- ============ 板块二：详写四诀 ============ -->
+<section class="task engLocked" id="s2">
+  <p class="tasknum">板块二</p>
+  <h2>详写四诀练习</h2>
+  <p class="hint">道歉补救这一段是全文重点，要<strong>详写</strong>。按四诀的顺序，一步步把它写具体。</p>
+
+  <div class="juemap">
+    <p class="mt">🧭 详写补救的四诀（按事情发生的顺序）
+      <button class="speak" onclick="speak('详写补救有四诀，按事情发生的顺序：第一诀发现，写朋友的反应，写你怎么察觉自己伤害了他。第二诀碰钉子，用对话写第一次道歉并没有马上成功。第三诀心理，写被拒绝以后你要不要继续补救的挣扎。第四诀行动，写你不放弃，用第二步、第三步行动弥补，最后才挽回关系。', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>听讲解
+      </button>
+    </p>
+    <div class="juesteps">
+      <div class="juestep"><div class="js-n">第一诀</div><div class="js-t">发现</div><div class="js-d">朋友的言行，我怎么察觉错了</div></div>
+      <div class="jue-arrow">→</div>
+      <div class="juestep"><div class="js-n">第二诀</div><div class="js-t">碰钉子</div><div class="js-d">第一次道歉，对方没有马上接受</div></div>
+      <div class="jue-arrow">→</div>
+      <div class="juestep"><div class="js-n">第三诀</div><div class="js-t">心理</div><div class="js-d">碰钉子后，要不要继续补救</div></div>
+      <div class="jue-arrow">→</div>
+      <div class="juestep"><div class="js-n">第四诀</div><div class="js-t">再行动</div><div class="js-d">不放弃，多一步补救，终于挽回</div></div>
+    </div>
+    <div class="juewhy">
+      <div class="whyhd">
+        <b>💡 为什么这样写，能扣住关键词、突出中心？</b>
+        <button class="speak" onclick="speak('为什么这样写能扣住关键词？因为关键词对不起，就是真诚补救。四诀把怎么发现错、怎么下决心、怎么开口、怎么弥补一步步写出来，对不起才不是一句空话。为什么能突出中心？因为朋友不是一听就原谅你，中间有你的挣扎和对话，是你的真诚一点点打动了她。这样，真诚认错才能修复友谊这个中心，就自然立起来了。', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>听讲解
+        </button>
+      </div>
+      <div class="row"><span class="k">扣关键词：</span><span>四诀把「怎么发现错、怎么开口、怎么弥补」写出来，「对不起」才不空。</span></div>
+      <div class="row"><span class="k">突出中心：</span><span>朋友<b>不是一听就原谅</b>，是被你的真诚一点点打动——中心自然立起来。</span></div>
+    </div>
+  </div>
+
+  <p class="hint">每一诀写完点「提交」。第一次不达标只给提示，修改后再交；第二次仍有问题才开放参考范例。</p>
+  <div id="jueList"></div>
+
+  <p class="progress" id="pg2">已完成 0 / 4</p>
+</section>
+<div class="checkpoint" id="cp5"><h3>⏸ 全班停靠点 5 · “积极＋终于”验收</h3><p>四诀不是四个漂亮句子，而是一条因果链：发现伤害 → 第一次碰钉子 → 不放弃 → 再行动 → 终于挽回。</p><div class="oral" id="oral5"></div><div class="unlockrow"><input id="code5" inputmode="numeric" placeholder="教师口令"><button class="btn btn-fill" id="unlock5">进入略写与模仿</button><span class="unlockmsg" id="unlockMsg5"></span></div></div>
+<!-- ============ 板块三：略写 + 模仿 ============ -->
+<section class="task engLocked" id="s3">
+  <p class="tasknum">板块三</p>
+  <h2>略写功夫 ＋ 模仿写作</h2>
+
+  <h3><span class="n">A</span>不重要的内容，怎么一笔带过？</h3>
+  <div class="brief-intro">
+    <div class="bi-hd">
+      <h4>略写不是「不写」，是「用最少的字交代清楚」</h4>
+      <button class="speak" onclick="speak('略写不是不写，而是用最少的字交代清楚。像做错事的经过、放学的路上这些，不是重点，但完全不写，读者就看不懂前因后果。所以要略写：把必要的事一句交代清楚，赶紧进入道歉补救。记住，略写也要让人看得明白，只是不展开细节。下面三招帮你一笔带过：第一招一句带过，把必要的事写成一两句，不展开。第二招概括时间，用接下来几天这样的词，把一段过程压成一句。第三招只留转折，跳过琐碎，直接写那个关键的转变。', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>听讲解
+      </button>
+    </div>
+    <p>不重要、但不写读者会看不懂的内容（像做错事的经过），要<strong>略写</strong>——把必要的事一句交代清楚，赶紧进入补救。三招帮你一笔带过：</p>
+    <div class="trick">
+      <div class="tk-name">一句带过</div>
+      <div class="tk-body"><span class="use">把必要的事交代清楚，但不展开细节。</span><span class="eg">那天华文课，我们小组玩看字演动作的游戏，轮到小欣，她的动作太滑稽，我没忍住笑了出来，惹得她沉下了脸。</span></div>
+    </div>
+    <div class="trick">
+      <div class="tk-name">概括时间</div>
+      <div class="tk-body"><span class="use">用「接下来几天」把一段过程压成一句。</span><span class="eg">接下来的几天，她见了我就绕道走，我心里越来越不是滋味。</span></div>
+    </div>
+    <div class="trick">
+      <div class="tk-name">只留转折</div>
+      <div class="tk-body"><span class="use">跳过琐碎，直接写那个关键的转变。</span><span class="eg">回家路上我反复回想，才惊觉那一笑有多伤人。</span></div>
+    </div>
+  </div>
+
+  <h3><span class="n">B</span>哪个是好的略写？</h3>
+  <p class="hint">同一段内容，两种写法。<strong>该略写的地方，选交代清楚又不啰嗦的那个。</strong></p>
+  <div id="pickBetter"></div>
+
+  <h3><span class="n">C</span>点掉多余的句子</h3>
+  <p class="hint">下面这段开头太啰嗦。<strong>点一下句子就能划掉它</strong>，删掉纯废话，<strong>留下让读者看懂前因后果的关键</strong>（把它删到只剩三句）。</p>
+  <div id="cutList"></div>
+
+  <h3><span class="n">D</span>范文赏析：详略结合
+    <button class="speak" data-speak="ex" style="margin-left:auto">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>朗读范文
+    </button>
+  </h3>
+  <div class="exbox">
+    <h4>范文片段：前面略写，道歉补救详写</h4>
+    <div class="eg">
+      <span class="lab">略写<small>：起因，一句带过</small></span>
+      那天华文课，我们小组玩看字演动作的游戏。轮到小欣，她的动作实在太滑稽，我一时没忍住笑喷了，她的脸一下子沉了下来。
+    </div>
+    <div class="eg">
+      <span class="lab">略写<small>：过渡，概括时间</small></span>
+      接下来的两天，她见了我就绕道走。我这才发觉，那一笑，被她当成了嘲笑。
+    </div>
+    <div class="eg">
+      <span class="lab">详写·发现</span>
+      放学时，我照常喊她一起回家，她却头也不抬，抓起书包就走。我看着那匆匆的背影，心里咯噔一下。
+    </div>
+    <div class="eg">
+      <span class="lab">详写·碰钉子前的心理</span>
+      要不要去认错呢？我怕她根本不想理我，怕越描越黑。可要是不说，这道裂缝只会越来越深。
+    </div>
+    <div class="eg">
+      <span class="lab">详写·碰钉子（对话）</span>
+      「小欣，那天真的对不起，我不是笑你……」她没抬头：「可全班都在看我。」「是我不好，没顾及你的感受。」她的眼神，动了一下。
+    </div>
+    <div class="eg">
+      <span class="lab">详写·再行动＋和好</span>
+      她仍没有马上答应。我没有走开，而是把写了很久的道歉纸条轻轻递过去，又主动提出第二天陪她一起准备小组任务。她看完纸条，沉默了一会儿，终于叹了口气，把一包薯片往我手里一塞：「下次别这样了。」我悬着的心这才落了地。
+    </div>
+  </div>
+
+  <h3><span class="n">E</span>你的模仿写作</h3>
+  <p class="hint">选一个补救方式，<strong>前面略写（用三招）、道歉补救详写（用四诀）</strong>，写 150–200 字。</p>
+  <div class="input-area">
+    <label class="input-label">选择你的补救方式 <em>（请先选择）</em></label>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin:12px 0">
+      <button class="mini" data-method="approach1">① 主动认错＋解释</button>
+      <button class="mini" data-method="approach2">② 写张纸条＋陪伴弥补</button>
+      <button class="mini" data-method="approach3">③ 坦诚一切＋一起想办法</button>
+    </div>
+  </div>
+  <div class="input-area">
+    <label class="input-label">用「略写开头 ＋ 四诀补救」写一段 <em>（150–200 字）</em></label>
+    <textarea placeholder="开头一两句交代清楚事情（略写），然后按发现→碰钉子→心理→再行动详写积极补救……" id="q3B"></textarea>
+    <div class="juebtn"><button class="btn-submit" id="submit3B">提交，看反馈</button></div>
+  </div>
+  <div class="juefb" id="fb3B"></div>
+
+  <p class="progress" id="pg3">已完成 0 / 1</p>
+</section>
+
+<div class="checkpoint" id="cp6"><h3>⏸ 全班停靠点 6 · 提交前检查</h3><p>准备口头说明：你的片段怎样写出“积极”，又怎样写出“终于”。</p><div class="oral" id="oral6"></div><div class="unlockrow"><input id="code6" inputmode="numeric" placeholder="教师口令"><button class="btn btn-fill" id="unlock6">老师已验收，可以提交</button><span class="unlockmsg" id="unlockMsg6"></span></div></div>
+<div class="actions lockedActions" id="actions">
+  <button class="btn btn-fill" id="submitAll">提交，看我的成绩</button>
+  <button class="btn btn-line" onclick="window.print()">打印 / 存成 PDF</button>
+  <button class="btn btn-line" id="clearAll">清空重做</button>
+</div>
+
+</div>
+
+<div class="result" id="result"></div>
+
+<script>
+const CONFIG = { API: (window.XIEZUO && window.XIEZUO.API) || "", LESSON: "对不起朋友·第二页", SELF:new URLSearchParams(location.search).get("mode")==="self", CODES:{four:"9313",five:"4517",six:"1614"} };
+
+/* ================= 题库 ================= */
+const STORY = [
+  "小组游戏，轮到小欣表演，动作太傻，我笑喷了",
+  "小欣脸色难看，看都不看我一眼",
+  "放学我照常找她回家，她黑着脸不理我",
+  "我这才发现，她以为我在嘲笑她",
+  "我主动去找她，道歉、解释",
+  "她起初仍冷淡，我没有放弃，又用行动弥补，终于挽回关系"
+];
+
+const DETAIL = [
+  ["小组游戏，我笑喷了", "brief", "做错事的起因不是重点，一句交代清楚就好，别铺一大段。"],
+  ["小欣脸色难看，不理我", "brief", "朋友生气的反应略写，两三句交代，赶紧进入道歉补救。"],
+  ["放学她黑脸不理我", "brief", "这是过渡，略写。让故事快点走到「我发现错了」。"],
+  ["我发现她以为我在嘲笑她", "detail", "这是转折点，要写清楚『怎么发现』，是道歉补救的起点。"],
+  ["第一次道歉碰钉子；我不放弃，再用行动弥补，终于和好", "detail", "这是全文最重要的部分：既要写『积极』（不止一步、碰钉子也继续），也要写『终于』（不是马上和好）。"]
+];
+
+const JUE = [
+  {id:"2A",n:"1",title:"第一诀：发现（你怎么察觉自己伤害了朋友？）",tip:"写清楚<strong>朋友异常的言行</strong>，再写你怎样从这些细节发现问题。不要凭空说『我突然明白了』。",count:"约 50–80 字",check(t){const trigger=/看|见|听|低头|没理|不理|沉默|脸色|表情|背影|走开|绕/.test(t);return {good:trigger&&t.length>=40,note:trigger&&t.length>=40?"好！你写出了触发你反思的具体细节。":"少了『触发线索』。先写你看到／听到朋友什么异常反应，再写你如何意识到自己伤害了他。"}},refs:[["看到反常","放学铃响，小欣抓起书包就走，没像平时那样等我。我望着她的背影，心里咯噔一下——这不是普通的不高兴。"],["听到冷淡","第二天我照常跟她打招呼，她只低低地『嗯』了一声，连头也没抬。我这才意识到，昨天那一笑真的伤到她了。"]]},
+  {id:"2B",n:"2",title:"第二诀：碰钉子（第一次道歉没有马上成功）",tip:"用<strong>对话</strong>写第一次道歉。朋友可以冷淡、质疑、沉默；千万不要一听『对不起』就立刻原谅。",count:"约 60–100 字，请用对话",check(t){const dlg=/[「」“”]/.test(t)||/[:：]/.test(t),react=/她|他|朋友|小欣/.test(t)&&/冷|沉默|摇头|没|不|反问|转身|别过|质疑/.test(t),instant=/(马上|立刻|立即|一下子|瞬间).{0,5}(原谅|和好|没事)/.test(t);return {good:dlg&&react&&!instant&&t.length>=45,note:dlg&&react&&!instant&&t.length>=45?"好！第一次补救有阻力，『终于』才有分量。":"要写出『碰钉子』：有对话，也要让朋友有真实的冷淡／质疑反应，不能马上和好。"}},refs:[["先冷淡","「小欣，昨天的事……对不起。」她没抬头：「现在说这些有什么用？」我一时语塞，只能站在桌边。"],["先质疑","「我真不是故意笑你的。」「可全班都在看我。」她别过脸。我这才知道，一句解释根本不够。"]]},
+  {id:"2C",n:"3",title:"第三诀：心理（碰钉子后，你还要不要继续？）",tip:"这一步最能表现『积极』。写被拒绝后的真实挣扎：尴尬、想放弃，却又想到自己的责任，决定继续补救。",count:"约 40–70 字",check(t){const struggle=/会不会|要是|如果|怕|担心|算了|放弃|继续|不能|责任|再试|不想失去|怎么办/.test(t);return {good:struggle&&t.length>=30,note:struggle&&t.length>=30?"很好！你写出了『碰钉子也不放弃』的心理转折。":"不要只写『我很后悔』。写具体：第一次失败后，你有没有想退缩？为什么最后决定再试一次？"}},refs:[["想退缩又不甘","她转身走开时，我恨不得找个地洞钻进去。要不就算了？可一想到是我先伤了她，我又觉得自己没有资格放弃。"],["承担责任","一句道歉没有用，我心里很难受。可这件事是我造成的，就算她暂时不接受，我也应该继续把裂缝补回来。"]]},
+  {id:"2D",n:"4",title:"第四诀：再行动（第二步、第三步补救，终于挽回）",tip:"不要停在嘴上道歉。写你<strong>继续做了什么</strong>：纸条、公开澄清、主动帮助、陪伴、替朋友挽回损失……并写出朋友慢慢松动，最后才和好。",count:"约 70–110 字",check(t){const act=/递|写|澄清|解释|帮|陪|维护|道歉|主动|一起|重新|再次|第二|又|继续/.test(t),final=/终于|慢慢|渐渐|点头|笑|原谅|和好|恢复|愿意/.test(t),instant=/(马上|立刻|一下子).{0,6}(和好|恢复|原谅)/.test(t);return {good:act&&final&&!instant&&t.length>=55,note:act&&final&&!instant&&t.length>=55?"好！有多步行动，也写出了关系逐渐恢复。『积极』和『终于』都立住了。":"还缺『多一步行动＋慢慢恢复』。写你第一次失败后又做了什么，朋友怎样一点点被打动，最后才和好。"}},refs:[["纸条＋持续行动","第二天我把写了很久的纸条放到她桌上，又主动替她整理小组资料。她起初仍没说话，几天后却第一次留下来和我一起做任务。放学时，她终于问：『还一起走吗？』"],["公开弥补","我不仅私下道歉，还当着小组同学的面说明是自己不对，不该让大家跟着笑她。之后我主动和她一组，把该做的工作认真做好。她脸上的冷意渐渐淡了，终于愿意再跟我说笑。"]]}
+];
+
+const PICK_BETTER = [
+  ["交代「做错事的起因」——这是略写的地方，选交代清楚又不啰嗦的：",
+   ["那是一个星期三的下午，天气很好，老师让我们分组做游戏，我和小欣、小华、小红一组，游戏规则是轮流照着学习单上的词表演动作，大家玩得很开心，轮到小欣时她的动作很滑稽，我实在没忍住，笑喷了。",
+    "那天华文课玩看字演动作的游戏，轮到小欣，她的动作太滑稽，我一时没忍住笑喷了。"],
+   1,
+   "第二个才对。它用一句就交代清楚了『什么游戏、发生了什么』，读者看得懂，又不啰嗦。第一个把天气、分了几个人、大家多开心全铺开，该略写的写成一大段，会头重脚轻。注意：游戏是什么要交代一句（不然读者不懂），但不用展开。"],
+  ["交代「她生气后的这几天」——这是过渡，选精简的：",
+   ["接下来的两天，她见了我就绕道走，我心里越来越不是滋味。",
+    "第二天她没理我，第三天我想找她说话她也走开了，第四天我在食堂看到她也不敢过去，第五天……"],
+   0,
+   "第一个才对。用「接下来的两天」把几天压成一句，就是『概括时间』。第二个一天一天流水账地写，啰嗦又拖沓。"]
+];
+
+const CUT = [
+  {
+    sents:[
+      "那是一个阳光明媚的星期三下午。",
+      "第三节是华文课，老师笑眯眯地走进教室。",
+      "那天老师让我们小组玩「看字演动作」的游戏。",
+      "全班一听，都兴奋地叫了起来。",
+      "我和小欣一组，轮到她表演时，动作太滑稽，我没忍住笑喷了。",
+      "小欣的脸，一下子沉了下来。"
+    ],
+    keep:[2,4,5],
+    note:"留下这三句就够了：先一句交代『玩什么游戏』（不然读者不懂前因后果），再写『我笑喷了』和『她沉下脸』这两个会改变故事的关键。天气、第几节课、老师表情、全班多兴奋，都是可删的废话。"
+  }
+];
+
+const MODEL_REFS = {
+  approach1:["主动认错＋解释","那天华文课玩看字演动作的游戏，轮到小欣，她的动作太滑稽，我没忍住笑喷了，她的脸一下沉了下来。接下来两天，她见我就绕道走。放学时我照常喊她，她却头也不抬。要不要去认错呢？我怕越描越黑，可又实在舍不得这个朋友。我追上去：「对不起，我真不是笑你。」她没看我：「可全班都在看我。」我心里直打鼓。她沉默了几秒，终于叹了口气，把一只耳机递给我。那首我们都爱的歌流进耳朵，我悬着的心，慢慢落了地。"],
+  approach2:["写张纸条＋陪伴弥补","那天玩看字演动作的游戏，我没忍住笑了小欣，她冷了脸，接下来几天都不理我。看着她把我送的笔塞进抽屉，我知道一句道歉不够。要不要写点什么呢？我犹豫了一整节课，终于在纸条上写下：那一笑不是嘲笑，是我不懂事。下课我把纸条轻轻放到她手边：「都在上面了。」她展开看着，嘴角一点点扬起来。我怕她还气，只敢站在旁边。她却抬头，眼睛亮亮的：「傻瓜，写这么长。」那天放学，我们又像从前一样并肩走过走廊。"],
+  approach3:["坦诚一切＋一起想办法","看字演动作那天，我笑了小欣的动作，她沉下脸，一连几天不理我。要不要去认错？拉不下脸，可我更怕失去这个朋友。我鼓起勇气拦住她：「我能解释吗？」她冷冷地：「你到底在笑什么？」「笑那个答案，不是笑你——可让你在全班面前难堪，是我错了。」她别过脸，肩膀却慢慢松了。我小声说：「要不，我们跟老师说，下次换个游戏规则？」她终于扑哧一笑：「你呀。」夕阳下，我们一起走向办公室。"]
+};
+
+/* ==================== 状态 ==================== */
+const state = {
+  user:{name:"",class:"",group:"",id:""}, order:[], sortDone:false, sortScore:0, sortTry:0,
+  detail:{}, detailDone:false, detailScore:0, detailTry:0,
+  jue:{}, jueTry:{}, pickBetter:{}, pickTry:{}, pickResolved:{}, cutDone:false, cutTry:0,
+  approach:null, q3B:null, modelTry:0, cpShown:{},
+  stats:{firstTry:0,revised:0,revealed:0}
+};
+let ROSTER=[], userLocked=false, selIdx=null;
+
+const ORAL2={four:['为什么“做错事”不能写得比“补救”更长？','“积极”怎样决定详写重点？','“终于”对故事线提出了什么要求？'],five:['为什么朋友不能听完一句道歉就马上原谅？','哪一诀最能证明“积极”？为什么？','第一次碰钉子后，心理描写应该写什么，而不是只写“后悔”？'],six:['你的片段里有哪两步以上的补救？','哪一个细节表现朋友是“慢慢”被打动的？','删掉结尾道理后，你的故事本身能推出“勇于承担、积极补救”吗？']};
+function setStatus2(s){document.getElementById('statusPill').textContent='● '+s;document.getElementById('revPill').textContent=`修正 ${state.stats.revised} 次`;document.getElementById('modePill').textContent=CONFIG.SELF?'自学模式':'课堂模式'}
+function showCP2(n,k){if(state.cpShown[n])return;state.cpShown[n]=1;const c=document.getElementById('cp'+n);c.classList.add('show');document.getElementById('oral'+n).textContent='准备口头解释：'+ORAL2[k][Math.floor(Math.random()*ORAL2[k].length)];setStatus2('等待老师讲评');if(CONFIG.SELF){document.getElementById('code'+n).style.display='none';document.getElementById('unlock'+n).textContent='自学模式 · 继续'}c.scrollIntoView({behavior:'smooth',block:'center'})}
+function gate2(n,k,nextId){const msg=document.getElementById('unlockMsg'+n);if(!CONFIG.SELF&&document.getElementById('code'+n).value.trim()!==CONFIG.CODES[k]){msg.textContent='口令不对，先听老师讲评。';msg.style.color='var(--miss)';return}msg.textContent='✓ 已解锁';msg.style.color='var(--good)';document.getElementById('cp'+n).classList.remove('show');if(nextId){document.getElementById(nextId).classList.remove('engLocked');document.getElementById(nextId).scrollIntoView({behavior:'smooth',block:'start'})}}
+function maybeCP4(){if(state.sortDone&&state.detailDone)showCP2(4,'four')}
+function maybeCP5(){if(Object.keys(state.jue).length===JUE.length)showCP2(5,'five')}
+function maybeCP6(){if(Object.keys(state.pickResolved).length===PICK_BETTER.length&&state.cutDone&&state.q3B)showCP2(6,'six')}
+
+try{ window.state=state; window.STORY=STORY; window.DETAIL=DETAIL; window.JUE=JUE; window.PICK_BETTER=PICK_BETTER; window.CUT=CUT; }catch(e){}
+
+/* ==================== 语音 ==================== */
+function speak(text, btn){
+  if(!("speechSynthesis" in window)){ alert("你的浏览器不支持语音朗读"); return; }
+  if(btn && btn.classList.contains("playing")){ window.speechSynthesis.cancel(); document.querySelectorAll(".speak.playing").forEach(b=>b.classList.remove("playing")); return; }
+  window.speechSynthesis.cancel();
+  document.querySelectorAll(".speak.playing").forEach(b=>b.classList.remove("playing"));
+  const u=new SpeechSynthesisUtterance(text); u.lang="zh-CN"; u.rate=0.9;
+  if(btn){ btn.classList.add("playing"); u.onend=()=>btn.classList.remove("playing"); u.onerror=()=>btn.classList.remove("playing"); }
+  window.speechSynthesis.speak(u);
+}
+function speakBtn(text,label){
+  const safe=text.replace(/"/g,"&quot;").replace(/<[^>]+>/g,"");
+  return `<button class="speak" onclick="speak(this.getAttribute('data-t'),this)" data-t="${safe}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>${label||"听解释"}</button>`;
+}
+
+/* ==================== 初始化 ==================== */
+document.addEventListener("DOMContentLoaded",()=>{
+  initRoster();
+  renderSorter(); renderDetail(); renderJue(); renderPickBetter(); renderCut();
+  bindApproach(); bindSpeakStatic();
+  document.getElementById("checkSort").addEventListener("click",checkSort);
+  document.getElementById("checkDetail").addEventListener("click",checkDetail);
+  document.getElementById("submit3B").addEventListener("click",submitModel);
+  document.getElementById("submitAll").addEventListener("click",submitAll);
+  document.getElementById("clearAll").addEventListener("click",clearAll);
+  document.getElementById("unlock4").addEventListener("click",()=>{gate2(4,"four","s2");setStatus2("详写四诀中")});
+  document.getElementById("unlock5").addEventListener("click",()=>{gate2(5,"five","s3");setStatus2("略写与模仿中")});
+  document.getElementById("unlock6").addEventListener("click",()=>{gate2(6,"six",null);document.getElementById("actions").classList.remove("lockedActions");setStatus2("可提交成绩")});
+  document.getElementById("backCls").addEventListener("click",backToClass);
+  const notMe=document.getElementById("notMe"); if(notMe) notMe.addEventListener("click",backToClass);
+  window.addEventListener("scroll",updateRail,{passive:true}); setStatus2("故事线中");
+});
+
+/* ==================== 登录 ==================== */
+function initRoster(){
+  if(CONFIG.API){
+    fetch(CONFIG.API+"?action=roster").then(r=>r.json())
+      .then(d=>{ ROSTER=d.roster||[]; ROSTER.length?showClassPicker():fallbackManual(); }).catch(useMockOrManual);
+  } else useMockOrManual();
+}
+function useMockOrManual(){
+  ROSTER=[{class:"201",students:[{id:"01",name:"陈思"},{id:"02",name:"李明"},{id:"03",name:"王芳"}]},
+          {class:"202",students:[{id:"11",name:"张浩"},{id:"12",name:"刘婷"}]}];
+  showClassPicker();
+}
+function fallbackManual(){ document.getElementById("idLoading").style.display="none"; document.getElementById("idManual").style.display="block"; userLocked=true; }
+function showClassPicker(){
+  const g=document.getElementById("clsGrid"); g.innerHTML="";
+  ROSTER.forEach(r=>{ const b=document.createElement("button"); b.innerHTML=`${r.class}班<small>${r.students.length} 人</small>`; b.addEventListener("click",()=>showStudentPicker(r.class)); g.appendChild(b); });
+  document.getElementById("idLoading").style.display="none"; document.getElementById("idPickCls").style.display="block";
+}
+function showStudentPicker(cls){
+  const r=ROSTER.find(x=>x.class===cls); const g=document.getElementById("sidGrid"); g.innerHTML="";
+  r.students.forEach(s=>{ const b=document.createElement("button"); b.innerHTML=`${s.name}<small>${s.id}</small>`; b.addEventListener("click",()=>selectStudent(s,cls)); g.appendChild(b); });
+  document.getElementById("idPickCls").style.display="none"; document.getElementById("idPickSid").style.display="block";
+}
+function selectStudent(s,cls){
+  state.user={name:s.name,class:cls,group:"",id:s.id};
+  document.getElementById("hiLine").innerHTML=`<span>${s.name}</span>`;
+  document.getElementById("mateLine").textContent=`${cls} 班 · 学号 ${s.id}`;
+  document.getElementById("idPickSid").style.display="none"; document.getElementById("idCard").style.display="block";
+  userLocked=true;
+  const stu=ROSTER.find(x=>x.class===cls).students.find(x=>x.id===s.id);
+  if(stu.group){ state.user.group=stu.group; } else { setTimeout(()=>{ const g=prompt(`${s.name}，请输入你的组别（第几组）：`); if(g) state.user.group=g; },300); }
+}
+function backToClass(){ userLocked=false; document.getElementById("idCard").style.display="none"; document.getElementById("idPickSid").style.display="none"; document.getElementById("idPickCls").style.display="block"; }
+
+/* ==================== A. 拖动排序 ==================== */
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function renderSorter(){
+  let idx=[...STORY.keys()];
+  do{ idx=shuffle(idx); }while(idx.every((v,i)=>v===i));
+  state.order=idx; selIdx=null; paintSorter();
+}
+function paintSorter(){
+  const box=document.getElementById("sorter"); box.innerHTML="";
+  state.order.forEach((origIdx,pos)=>{
+    const div=document.createElement("div");
+    div.className="sortitem"+(selIdx===pos?" sel":"")+(state.sortDone?" ok locked":"");
+    div.innerHTML=`<span class="seq">${pos+1}</span><span class="txt">${STORY[origIdx]}</span><span class="mv">${state.sortDone?"":"点选交换"}</span>`;
+    div.addEventListener("click",()=>tapSort(pos));
+    box.appendChild(div);
+  });
+}
+function tapSort(pos){
+  if(state.sortDone) return;
+  if(selIdx===null){ selIdx=pos; paintSorter(); return; }
+  if(selIdx===pos){ selIdx=null; paintSorter(); return; }
+  [state.order[selIdx],state.order[pos]]=[state.order[pos],state.order[selIdx]];
+  selIdx=null; paintSorter();
+}
+function checkSort(){
+  state.sortTry++; const correct=state.order.every((v,i)=>v===i),res=document.getElementById('sortResult');res.style.display='flex';
+  if(correct){state.sortDone=true;state.sortScore=2;state.sortTry===1?state.stats.firstTry++:state.stats.revised++;document.getElementById('sorter').querySelectorAll('.sortitem').forEach(x=>x.classList.add('ok','locked'));document.getElementById('checkSort').disabled=true;res.style.color='var(--good)';res.textContent='✓ 排对了。特别注意：从“发现伤害”到“积极补救”才是文章重心。';setStatus2('故事线完成');updateProgress();maybeCP4();return}
+  if(state.sortTry===1){res.style.color='var(--miss)';res.innerHTML='第一次先不给你标出哪张对、哪张错。提示：先找五个因果节点——<b>做错 → 朋友受伤 → 我察觉 → 第一次补救 → 不放弃继续补救 → 终于和好</b>。调整后再检查。';setStatus2('正在修正故事线');return}
+  state.stats.revealed++;state.sortDone=true;state.sortScore=1;state.order=[...STORY.keys()];selIdx=null;paintSorter();document.getElementById('sorter').querySelectorAll('.sortitem').forEach(x=>x.classList.add('ok','locked'));document.getElementById('checkSort').disabled=true;res.style.color='var(--miss)';res.textContent='第二次仍未排对，已显示正确故事线。请重点看“第一次补救没有马上成功→继续补救→终于和好”这一段。';updateProgress();maybeCP4();
+}
+
+/* ==================== B. 详略标注 ==================== */
+function renderDetail(){
+  const box=document.getElementById("detailTask"); box.innerHTML="";
+  DETAIL.forEach((d,i)=>{
+    const row=document.createElement("div"); row.className="dtrow"; row.id="dt-"+i;
+    row.innerHTML=`<div class="plot"><span class="seq">${i+1}</span>${d[0]}</div>
+      <div class="dtchoose">
+        <button class="pick-detail" data-i="${i}" data-v="detail">详写</button>
+        <button class="pick-brief" data-i="${i}" data-v="brief">略写</button>
+      </div>
+      <div class="dtfb"></div>`;
+    box.appendChild(row);
+  });
+  box.querySelectorAll(".dtchoose button").forEach(b=>{
+    b.addEventListener("click",()=>{
+      if(state.detailDone) return;
+      const i=b.getAttribute("data-i"), v=b.getAttribute("data-v");
+      state.detail[i]=v;
+      const row=document.getElementById("dt-"+i);
+      row.querySelectorAll(".dtchoose button").forEach(x=>x.classList.remove("on"));
+      b.classList.add("on");
+    });
+  });
+}
+function checkDetail(){
+  if(Object.keys(state.detail).length<DETAIL.length){const r=document.getElementById('detailResult');r.style.display='flex';r.style.color='var(--miss)';r.textContent='每一步都要先判断详写或略写。';return}
+  state.detailTry++;const right=DETAIL.filter((d,i)=>state.detail[i]===d[1]).length,res=document.getElementById('detailResult');res.style.display='flex';
+  if(right===DETAIL.length){state.detailDone=true;state.detailScore=3;state.detailTry===1?state.stats.firstTry++:state.stats.revised++;DETAIL.forEach((d,i)=>{const row=document.getElementById('dt-'+i);row.classList.add('ok');row.querySelectorAll('button').forEach(x=>x.disabled=true);row.querySelector('.dtfb').innerHTML='✓ '+d[2]});document.getElementById('checkDetail').disabled=true;res.style.color='var(--good)';res.textContent='✓ 全对。发现伤害＋积极补救要详写；起因和一般过渡要压缩。';setStatus2('详略完成');updateProgress();maybeCP4();return}
+  if(state.detailTry===1){res.style.color='var(--miss)';res.innerHTML=`第一次先不告诉你哪 ${DETAIL.length-right} 处错。提示：问每一步——<b>它是否直接证明“对不起、积极补救、终于挽回”？</b>如果不是，就别抢篇幅。请修改后再检查。`;setStatus2('正在修正详略');return}
+  state.stats.revealed++;state.detailDone=true;state.detailScore=Math.round(right/DETAIL.length*3*10)/10;DETAIL.forEach((d,i)=>{const row=document.getElementById('dt-'+i),ok=state.detail[i]===d[1];row.classList.add(ok?'ok':'no');row.querySelectorAll('button').forEach(x=>{x.disabled=true;x.classList.toggle('on',x.dataset.v===d[1])});row.querySelector('.dtfb').innerHTML=(ok?'✓ ':'答案：'+(d[1]==='detail'?'详写':'略写')+'。')+d[2]});document.getElementById('checkDetail').disabled=true;res.style.color='var(--miss)';res.textContent='第二次仍有错误，已显示正确详略。请重新看：越能证明关键词，越值得详写。';updateProgress();maybeCP4();
+}
+
+/* ==================== 板块二：四诀 ==================== */
+function renderJue(){
+  const list=document.getElementById("jueList"); list.innerHTML="";
+  JUE.forEach(j=>{
+    const div=document.createElement("div"); div.className="jue"; div.id="jue-"+j.id;
+    div.innerHTML=`<div class="juehd"><span class="n">${j.n}</span><span class="t">${j.title}</span></div>
+      <p class="juetip">${j.tip}</p>
+      <p class="juecount">${j.count}</p>
+      <textarea id="ta-${j.id}" placeholder="在这里写你的答案……"></textarea>
+      <div class="juebtn"><button class="btn-submit" data-jue="${j.id}">提交，看反馈</button></div>
+      <div class="juefb" id="jfb-${j.id}"></div>`;
+    list.appendChild(div);
+  });
+  list.querySelectorAll("[data-jue]").forEach(btn=>btn.addEventListener("click",()=>submitJue(btn.getAttribute("data-jue"))));
+}
+function submitJue(id){
+  const j=JUE.find(x=>x.id===id),ta=document.getElementById('ta-'+id),txt=ta.value.trim(),fb=document.getElementById('jfb-'+id);if(!txt){alert('先写一点内容再提交。');return}if(state.jue[id])return;state.jueTry[id]=(state.jueTry[id]||0)+1;const tr=state.jueTry[id],r=j.check(txt);
+  if(!r.good&&tr===1){fb.innerHTML=`<div class="verdict improve">△ 第一次先不给参考答案。${r.note}<br><b>请直接修改原文，再提交一次。</b></div>`;fb.classList.add('show');state.stats.revised++;setStatus2('正在修正四诀');return}
+  let refs='<div class="refbox"><details><summary>需要时再打开参考范例（对照结构，不要照抄）</summary>';j.refs.forEach(x=>refs+=`<div class="refcard"><span class="rlab">${x[0]}</span>${x[1]}${speakBtn(x[1],'朗读')}</div>`);refs+='</details></div>';
+  if(r.good){if(tr===1)state.stats.firstTry++;state.jue[id]={text:txt,good:true};fb.innerHTML=`<div class="verdict ok">✓ ${r.note}</div>${refs}`}
+  else{state.stats.revealed++;state.jue[id]={text:txt,good:false};fb.innerHTML=`<div class="verdict improve">△ 第二次仍需改进。${r.note}<br>现在可以打开参考范例，对照你缺的结构。</div>${refs}`}
+  fb.classList.add('show');document.getElementById('jue-'+id).classList.add('done');ta.disabled=true;document.querySelector(`[data-jue="${id}"]`).disabled=true;updateProgress();maybeCP5();
+}
+
+/* ==================== 板块三 B：略写对照选择 ==================== */
+function renderPickBetter(){
+  const box=document.getElementById('pickBetter');box.innerHTML='';PICK_BETTER.forEach((p,i)=>{const div=document.createElement('div');div.className='pickbetter';div.id='pb-'+i;div.innerHTML=`<p class="pb-stem">${p[0]}</p><div class="pb-opts"><button data-o="0">${p[1][0]}</button><button data-o="1">${p[1][1]}</button></div><div class="pb-fb"></div>`;box.appendChild(div);div.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(state.pickResolved[i])return;const o=+b.dataset.o;state.pickTry[i]=(state.pickTry[i]||0)+1;const tr=state.pickTry[i],ok=o===p[2],fb=div.querySelector('.pb-fb');fb.style.display='block';if(ok){state.pickBetter[i]=o;state.pickResolved[i]=1;tr===1?state.stats.firstTry++:state.stats.revised++;div.classList.add('right');div.querySelectorAll('button').forEach((x,k)=>{x.disabled=true;if(k===o)x.classList.add('correct')});fb.innerHTML='✓ '+p[3];maybeCP6();return}if(tr===1){b.disabled=true;b.classList.add('picked');fb.innerHTML='第一次先不给答案。提示：略写的标准不是“越短越好”，而是<strong>读者看得懂＋不抢重点篇幅</strong>。再选一次。';setStatus2('正在修正略写判断')}else{state.stats.revealed++;state.pickBetter[i]=o;state.pickResolved[i]=1;div.classList.add('wrong');div.querySelectorAll('button').forEach((x,k)=>{x.disabled=true;if(k===o)x.classList.add('picked');if(k===p[2])x.classList.add('correct')});fb.innerHTML='第二次仍未选对。'+p[3];maybeCP6()}})});
+}
+
+/* ==================== 板块三 C：点删多余句 ==================== */
+function renderCut(){
+  const box=document.getElementById("cutList"); box.innerHTML="";
+  CUT.forEach((c,ci)=>{
+    const wrap=document.createElement("div"); wrap.className="cutbox"; wrap.id="cut-"+ci;
+    let passage=`<div class="cutpassage">`;
+    c.sents.forEach((s,si)=>{ passage+=`<span class="cutsent" data-c="${ci}" data-s="${si}">${s}</span>`; });
+    passage+=`</div>`;
+    wrap.innerHTML=passage+`<div class="cutbtn"><button class="btn-submit" data-cut="${ci}">检查</button><span style="font-size:13px;color:var(--ink-soft)">目标：删到只剩 <b>3 句</b></span></div><div class="cut-fb" id="cutfb-${ci}"></div>`;
+    box.appendChild(wrap);
+  });
+  box.querySelectorAll(".cutsent").forEach(sp=>{ sp.addEventListener("click",()=>{ if(sp.dataset.locked) return; sp.classList.toggle("cut"); }); });
+  box.querySelectorAll("[data-cut]").forEach(btn=>btn.addEventListener("click",()=>checkCut(+btn.getAttribute("data-cut"))));
+}
+function checkCut(ci){
+  const c=CUT[ci],wrap=document.getElementById('cut-'+ci),spans=wrap.querySelectorAll('.cutsent'),kept=[];spans.forEach((s,i)=>{if(!s.classList.contains('cut'))kept.push(i)});const correct=kept.length===c.keep.length&&kept.every(k=>c.keep.includes(k)),fb=document.getElementById('cutfb-'+ci);fb.classList.add('show');state.cutTry++;
+  if(correct){state.cutDone=true;state.cutTry===1?state.stats.firstTry++:state.stats.revised++;fb.className='cut-fb show ok';fb.innerHTML='✓ '+c.note;spans.forEach(s=>s.dataset.locked='1');wrap.querySelector('[data-cut]').disabled=true;maybeCP6();return}
+  if(state.cutTry===1){fb.className='cut-fb show no';fb.innerHTML='第一次先不告诉你哪句该留。提示：只留下<strong>让读者看懂起因</strong>和<strong>真正改变故事走向</strong>的句子。修改后再检查。';setStatus2('正在修正删减');return}
+  state.stats.revealed++;state.cutDone=true;spans.forEach((s,i)=>{s.classList.toggle('cut',!c.keep.includes(i));s.dataset.locked='1'});wrap.querySelector('[data-cut]').disabled=true;fb.className='cut-fb show no';fb.innerHTML='第二次仍未删对，已显示应该保留的三句。'+c.note;maybeCP6();
+}
+
+/* ==================== 板块三 E：模仿 ==================== */
+function bindApproach(){
+  document.querySelectorAll("[data-method]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      document.querySelectorAll("[data-method]").forEach(b=>{ b.style.opacity="0.5"; b.style.fontWeight="600"; });
+      btn.style.opacity="1"; btn.style.fontWeight="700"; state.approach=btn.getAttribute("data-method");
+    });
+  });
+}
+function submitModel(){
+  const t=document.getElementById('q3B').value.trim(),fb=document.getElementById('fb3B');if(!t){alert('先写一点内容再提交。');return}if(state.q3B)return;state.modelTry++;const len=t.length,find=/看|见|发现|听|察觉|注意|背影|脸色/.test(t),bump=/[「」“”]/.test(t)&&/不|没|冷|沉默|质疑|转身|别过/.test(t),heart=/会不会|要是|如果|怕|担心|放弃|继续|责任|再试|不想失去/.test(t),act=/又|再次|继续|写|递|帮|陪|澄清|维护|主动|一起/.test(t),final=/终于|慢慢|渐渐|和好|原谅|恢复|愿意/.test(t),features=[find,bump,heart,act,final],miss=['发现线索','第一次碰钉子','碰钉子后的心理','第二步／第三步行动','“终于”恢复关系'].filter((_,i)=>!features[i]),inRange=len>=140&&len<=260,good=features.filter(Boolean).length>=4&&inRange;
+  if(!good&&state.modelTry===1){state.stats.revised++;fb.innerHTML=`<div class="verdict improve">△ 第一次先不给范文。请补：${miss.join('、')||'字数'}。当前 ${len} 字，建议 150–220 字左右。<br><b>直接修改原文，再提交。</b></div>`;fb.classList.add('show');setStatus2('正在修正核心片段');return}
+  const score=Math.min(4,Math.round((features.filter(Boolean).length/5*3+(inRange?1:0))*10)/10);state.q3B={text:t,score};if(good&&state.modelTry===1)state.stats.firstTry++;else if(!good)state.stats.revealed++;
+  let refs='<div class="refbox"><details open><summary>参考范文（只对照结构，不要照抄）</summary>';const keys=state.approach?[state.approach]:Object.keys(MODEL_REFS);keys.forEach(k=>{const m=MODEL_REFS[k];refs+=`<div class="refcard"><span class="rlab">${m[0]}</span>${m[1]}${speakBtn(m[1],'朗读')}</div>`});refs+='</details></div>';fb.innerHTML=`<div class="verdict ${good?'ok':'improve'}">${good?'✓ 结构基本完整：有阻力、有继续补救、有“终于”。':'△ 第二次仍可改进：'+(miss.join('、')||'字数')+'。现在开放范文供你对照。'}</div>${refs}`;fb.classList.add('show');document.getElementById('submit3B').disabled=true;document.getElementById('q3B').disabled=true;updateProgress();maybeCP6();
+}
+
+/* ==================== 静态范文朗读 ==================== */
+function bindSpeakStatic(){
+  const b=document.querySelector('[data-speak="ex"]');
+  if(b){ b.addEventListener("click",()=>{ const txt=Array.from(document.querySelectorAll(".exbox .eg")).map(e=>e.textContent.replace(/略写|详写|一句带过|概括时间|起因|过渡|发现|心理|对话|行动|[:：]/g,"")).join("。"); speak(txt,b); }); }
+}
+
+/* ==================== 进度 & 计分 ==================== */
+function updateProgress(){
+  let b1=0;if(state.sortDone)b1++;if(state.detailDone)b1++;document.getElementById('pg1').textContent=`已完成 ${b1} / 2`;document.getElementById('pg2').textContent=`已完成 ${Object.keys(state.jue).length} / 4`;document.getElementById('pg3').textContent=`已完成 ${state.q3B?1:0} / 1`;document.getElementById('revPill').textContent=`修正 ${state.stats.revised} 次`;
+}
+function updateRail(){
+  const secs=["s1","s2","s3"]; let cur="s1";
+  secs.forEach(id=>{ const el=document.getElementById(id); if(el&&el.getBoundingClientRect().top<window.innerHeight*0.4) cur=id; });
+  document.querySelectorAll(".rail-item").forEach(it=>it.classList.toggle("on",it.getAttribute("data-rail")===cur));
+}
+function submitAll(){
+  if(!userLocked){alert('请先选择你的学号');return}if(document.getElementById('actions').classList.contains('lockedActions')&&!CONFIG.SELF){alert('先完成老师的提交前验收。');return}
+  const b1=(state.sortScore||0)+(state.detailScore||0),b2=JUE.reduce((s,j)=>{const a=state.jue[j.id];return s+(a?(a.good?1:.5):0)},0),pb=PICK_BETTER.reduce((s,p,i)=>s+(state.pickBetter[i]===p[2]?1:0),0),b3=pb+(state.cutDone?1:0)+(state.q3B?state.q3B.score:0),total=Math.round((b1+b2+b3)*10)/10,full=16,pct=Math.round(total/full*100);let level=pct>=90?'杰出':pct>=75?'很好':pct>=60?'不错':'继续练';
+  const html=`<div class="resultcard"><h2 style="text-align:center;color:var(--story-deep);margin-top:0">📊 你的学习结果</h2><div style="background:var(--story-tint);border-radius:12px;padding:20px;text-align:center"><div style="font-size:46px;font-weight:800;color:var(--story-deep)">${total}</div><div>共 ${full} 分 · ${pct}% · <b>${level}</b></div></div><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次达标</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div>${bar('故事线与详略',Math.round(b1*10)/10,5)}${bar('积极补救四诀',Math.round(b2*10)/10,4)}${bar('略写与模仿',Math.round(b3*10)/10,7)}<div style="background:var(--logic-tint);border-radius:12px;padding:14px;margin-top:16px"><b>写这道题时只记一条主线：</b><br>伤害朋友 → 察觉错误 → 第一次道歉碰钉子 → 不放弃继续补救 → 朋友慢慢被打动 → 终于挽回关系。</div><div id="upState" style="font-size:13px;text-align:center;color:var(--ink-soft);margin:14px 0"></div><div style="text-align:center"><button class="mini" onclick="document.getElementById('result').classList.remove('show')">返回</button> <button class="mini" onclick="window.print()">打印成绩单</button></div></div>`;document.getElementById('result').innerHTML=html;document.getElementById('result').classList.add('show');setStatus2('全部完成');if(CONFIG.API)uploadScore({name:state.user.name,class:state.user.class,group:state.user.group,id:state.user.id,block1:Math.round(b1*10)/10,block2:Math.round(b2*10)/10,block3:Math.round(b3*10)/10,total,percent:pct});else document.getElementById('upState').textContent='（未连接后台，成绩仅本机显示，请截图给老师）';
+}
+function bar(label,val,max){
+  return `<div style="margin-bottom:14px"><div style="font-weight:600;margin-bottom:4px">${label}<span style="float:right;color:var(--story)">${val} / ${max}</span></div>
+    <div style="background:#E4E8E3;border-radius:8px;height:7px;overflow:hidden"><div style="background:var(--story);height:100%;width:${(val/max)*100}%"></div></div></div>`;
+}
+function uploadScore(data){
+  const us=document.getElementById("upState"); if(us) us.textContent="正在上传成绩……";
+  fetch(CONFIG.API,{method:"POST",body:JSON.stringify({action:"score",...data})}).then(()=>{ if(us) us.textContent="✓ 成绩已上传"; }).catch(()=>{ if(us) us.textContent="离线：成绩仅本机显示，请截图给老师"; });
+}
+function clearAll(){
+  if(!confirm('确定要清空所有答案，重新做吗？'))return;Object.assign(state,{order:[],sortDone:false,sortScore:0,sortTry:0,detail:{},detailDone:false,detailScore:0,detailTry:0,jue:{},jueTry:{},pickBetter:{},pickTry:{},pickResolved:{},cutDone:false,cutTry:0,approach:null,q3B:null,modelTry:0,cpShown:{},stats:{firstTry:0,revised:0,revealed:0}});selIdx=null;document.getElementById('s2').classList.add('engLocked');document.getElementById('s3').classList.add('engLocked');document.getElementById('actions').classList.add('lockedActions');['cp4','cp5','cp6'].forEach(x=>document.getElementById(x).classList.remove('show'));document.getElementById('checkSort').disabled=false;document.getElementById('checkDetail').disabled=false;renderSorter();renderDetail();renderJue();renderPickBetter();renderCut();document.getElementById('q3B').value='';document.getElementById('q3B').disabled=false;document.getElementById('submit3B').disabled=false;document.getElementById('fb3B').classList.remove('show');document.getElementById('fb3B').innerHTML='';document.getElementById('result').classList.remove('show');updateProgress();setStatus2('故事线中');window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+
+<script>window.XIEZUO_PAGE={id:"duibuqi-pengyou",page:2};</script>
+<script src="../hook.js"></script>
+</body>
+</html>
