@@ -106,6 +106,19 @@ select{padding:6px 8px;border-radius:8px;font-size:14px;border:1.5px solid #ddd;
 .layout-semi-tl.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
 .layout-semi-tl .cell-0{position:absolute;top:0;left:0;width:100%;height:100%;border-left:6px dashed #9b59b6;border-top:6px dashed #9b59b6;border-radius:12px 0 0 0;background:rgba(155,89,182,.05);font-size:42px;display:flex;align-items:flex-start;padding-top:8px;padding-left:8px}
 .layout-semi-tl .cell-1{position:absolute;bottom:5px;right:5px;width:100px;height:78px;border:4px dashed #1abc9c;border-radius:8px;background:rgba(26,188,156,.1);font-size:36px;display:flex;align-items:center;justify-content:center}
+
+/* v2.2: 嵌套结构——左部 + 右部半包围（用于“惬”：忄 + 匚包夹） */
+.layout-l-wrap-r{display:block;position:relative;width:160px;height:160px;background:transparent;border:none;margin-bottom:14px}
+.layout-l-wrap-r.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
+.layout-l-wrap-r .cell-0{position:absolute;left:0;top:0;width:47%;height:100%;border:3px solid var(--green);background:#fff;font-size:42px;display:flex;align-items:center;justify-content:center;z-index:3}
+.layout-l-wrap-r .cell-1{position:absolute;right:0;top:0;width:53%;height:100%;border-top:6px dashed #9b59b6;border-left:6px dashed #9b59b6;border-bottom:6px dashed #9b59b6;border-right:none;background:rgba(155,89,182,.05);font-size:36px;display:flex;align-items:flex-start;justify-content:flex-start;padding:4px;z-index:1}
+.layout-l-wrap-r .cell-2{position:absolute;right:5px;top:32px;width:66px;height:96px;border:4px dashed #1abc9c;border-radius:8px;background:#fff;font-size:36px;display:flex;align-items:center;justify-content:center;z-index:4}
+/* v2.2: 嵌套结构——左部 + 右部左下包围（用于“陋”：阝 + 𠃊包丙） */
+.layout-l-semi-bl-r{display:block;position:relative;width:160px;height:160px;background:transparent;border:none;margin-bottom:14px}
+.layout-l-semi-bl-r.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
+.layout-l-semi-bl-r .cell-0{position:absolute;left:0;top:0;width:47%;height:100%;border:3px solid var(--green);background:#fff;font-size:42px;display:flex;align-items:center;justify-content:center;z-index:3}
+.layout-l-semi-bl-r .cell-1{position:absolute;right:0;top:0;width:53%;height:100%;border-left:6px dashed #9b59b6;border-bottom:6px dashed #9b59b6;border-top:none;border-right:none;background:rgba(155,89,182,.05);font-size:36px;display:flex;align-items:flex-end;justify-content:flex-start;padding:5px;z-index:1}
+.layout-l-semi-bl-r .cell-2{position:absolute;right:5px;top:8px;width:68px;height:102px;border:4px dashed #1abc9c;border-radius:8px;background:#fff;font-size:36px;display:flex;align-items:center;justify-content:center;z-index:4}
 .quiz-panel{width:95%;max-width:500px;background:var(--card);border-radius:14px;padding:16px;box-shadow:var(--sh);display:none;flex-direction:column;gap:9px;margin-bottom:16px;animation:slideUp .3s ease-out}
 @keyframes slideUp{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
 .quiz-title{font-size:14px;color:#34495e;text-align:center}
@@ -346,7 +359,7 @@ S1_U1_L2|扯|chě|lr|扌,止|拉扯||S
 S1_U1_L2|措|cuò|lr|扌,昔|手足无措||S
 S1_U1_L3|案|àn|tb|安,木|审案||S
 S1_U1_L3|律|lǜ|lr|彳,聿|律师||S
-S1_U1_L3|拔|bá|lr|扌,犮|拔刀相助|愿意为朋友吃苦 (Help friends at any cost)|S
+S1_U1_L3|拔|bá|lr|扌,犮|拔刀相助|在别人遇到困难时出手帮助 (Come to someone’s aid)|S
 S1_U1_L3|振|zhèn|lr|扌,辰|振振有词||S
 S1_U1_L3|虚|xū|semi-tl|虍,业|心虚||S
 S1_U1_L3|哑|yǎ|lr|口,亚|哑口无言||S
@@ -387,7 +400,7 @@ S1_U2_L2|诞|dàn|lr|讠,延|圣诞|纪念耶稣诞生的节日 (Christmas)|S
 S1_U2_L2|嫁|jià|lr|女,家|嫁||S
 S1_U2_L2|讯|xùn|lr|讠,卂|视讯||S
 S1_U2_L2|酷|kù|lr|酉,告|酷||S
-S1_U2_L2|诺|nuò|lr|讠,若|承诺|答应的话非常可靠 (Promise)|S
+S1_U2_L2|诺|nuò|lr|讠,若|承诺|答应做某事，并表示会做到 (Promise)|S
 S1_U2_L2|剃|tì|lr|弟,刂|剃||S
 S1_U2_L2|蒸|zhēng|tmb|艹,丞,灬|蒸腾|热气往上升 (Transpire)|S
 S1_U2_L2|肴|yáo|tb|乂,有|佳肴|非常好吃的菜 (Delicacy)|S
@@ -404,10 +417,10 @@ S1_U2_L4|涯|yá|lr|氵,厓|天涯海角|很远的地方 (Ends of the earth)|S
 S1_U2_L4|割|gē|lr|害,刂|分割||S
 S1_U2_L4|嚼|jué|lr|口,爵|嚼|用牙磨碎食物 (Chew)|S
 S1_U2_L4|溢|yì|lr|氵,益|溢|满了流出来 (Overflow)|S
-S1_U2_L4|盏|zhǎn|tb|戋,皿|盏|量词，灯 (Measure word for lamp)|S
+S1_U2_L4|盏|zhǎn|tb|戋,皿|盏|量词，用于灯、茶等 (Measure word)|S
 S1_U3_L1|魅|mèi|semi-bl|鬼,未|魅力|很吸引人的力量 (Charm)|S
 S1_U3_L1|悠|yōu|tb|攸,心|悠久|年代久远 (Long-standing)|S
-S1_U3_L1|遗|yí|semi-bl|辶,贵|遗产|祖先留下来的东西 (Heritage)|S
+S1_U3_L1|遗|yí|semi-bl|辶,贵|遗产|历史上遗留下来的物质或文化财富 (Heritage)|S
 S1_U3_L1|刹|shā|lr|杀,刂|巴刹||S
 S1_U3_L1|饱|bǎo|lr|饣,包|饱经风霜||S
 S1_U3_L1|胞|bāo|lr|月,包|同胞|同一个国家的人 (Compatriot)|S
@@ -418,7 +431,7 @@ S1_U3_L1|堡|bǎo|tb|保,土|城堡||S
 S1_U3_L1|绘|huì|lr|纟,会|彩绘||S
 S1_U3_L1|索|suǒ|tmb|十,冖,糸|探索||S
 S1_U3_L1|娘|niáng|lr|女,良|娘惹||S
-S1_U3_L1|惹|rě|tb|若,心|娘惹|引起麻烦 (Provoke)|S
+S1_U3_L1|惹|rě|tb|若,心|娘惹|土生华人女性的称呼，也指相关文化 (Nyonya)|S
 S1_U3_L1|摄|shè|lr|扌,聂|拍摄||S
 S1_U3_L2|镶|xiāng|lr|钅,襄|镶嵌|嵌入 (Inlay)|S
 S1_U3_L2|嵌|qiàn|t-lr|山,甘,欠|镶嵌|填入 (Embed)|S
@@ -431,14 +444,14 @@ S1_U3_L2|株|zhū|lr|木,朱|株||S
 S1_U3_L2|懈|xiè|lr|忄,解|松懈|不紧张 (Slack)|S
 S1_U3_L2|略|lüè|lr|田,各|领略|了解、欣赏事物的特点或意味 (Appreciate/Experience)|S
 S1_U3_L2|施|shī|l-tr-br|方,𠂉,也|设施||S
-S1_U3_L3|殖|zhí|lr|歹,直|殖民地|被占领的地方 (Colony)|S
+S1_U3_L3|殖|zhí|lr|歹,直|殖民地|受外国政治控制和统治的地区 (Colony)|S
 S1_U3_L3|降|xiáng|lr|阝,夅|投降|认输 (Surrender)|S
 S1_U3_L3|棕|zōng|lr|木,宗|棕色|颜色 (Brown)|S
 S1_U3_L3|氧|yǎng|semi-tr|气,羊|氧化|与氧结合 (Oxidize)|S
 S1_U3_L3|碑|bēi|lr|石,卑|里程碑||S
 S1_U3_L3|掘|jué|lr|扌,屈|发掘|挖出来 (Excavate)|S
 S1_U3_L4|擅|shàn|lr|扌,亶|擅长|很会做某事 (Be good at)|S
-S1_U3_L4|凑|còu|lr|冫,奏|紧凑|密集 (Compact)|S
+S1_U3_L4|凑|còu|lr|冫,奏|紧凑|安排紧密，不松散 (Compact)|S
 S1_U3_L4|府|fǔ|semi-tl|广,付|打道回府|返回原处、回去 (Return)|S
 S1_U3_L4|甩|shuǎi|cut|h:2|甩||C
 S1_U3_L4|薄|báo|t-lr|艹,氵,尃|薄||S
@@ -458,8 +471,8 @@ S1_U4_L1|维|wéi|lr|纟,隹|维护||S
 S1_U4_L1|谊|yì|lr|讠,宜|友谊|友情 (Friendship)|S
 S1_U4_L1|帆|fān|lr|巾,凡|一帆风顺||S
 S1_U4_L1|效|xiào|lr|交,攵|有效||S
-S1_U4_L1|策|cè|tb|⺮,朿|策略|计谋 (Strategy)|S
-S1_U4_L1|略|lüè|lr|田,各|策略|做事的计谋和方法 (Strategy)|S
+S1_U4_L1|策|cè|tb|⺮,朿|策略|为达到目的而采取的方法 (Strategy)|S
+S1_U4_L1|略|lüè|lr|田,各|策略|为达到目的而采取的方法 (Strategy)|S
 S1_U4_L1|嘉|jiā|tb|壴,加|嘉宾|贵客 (Guest)|S
 S1_U4_L1|辅|fǔ|lr|车,甫|辅导员||S
 S1_U4_L2|赖|lài|lr|束,负|赖床||S
@@ -493,7 +506,7 @@ S1_U4_L4|寓|yù|tb|宀,禺|寓言|有道理的故事 (Fable)|S
 S1_U4_L4|篷|péng|tb|⺮,逢|帐篷|临时搭建、供人居住的篷子 (Tent)|S
 S1_U4_L4|徒|tú|lr|彳,走|徒劳无功||S
 S1_U5_L1|剩|shèng|lr|乘,刂|剩||S
-S1_U5_L1|膏|gāo|tb|高,月|牙膏|膏状物 (Paste)|S
+S1_U5_L1|膏|gāo|tb|高,月|牙膏|刷牙时使用的膏状清洁用品 (Toothpaste)|S
 S1_U5_L1|擦|cā|lr|扌,察|橡皮擦||S
 S1_U5_L1|薯|shǔ|tb|艹,署|薯条|薯类食物 (Potato)|S
 S1_U5_L1|茄|jiā|tb|艹,加|番茄酱|用番茄制成的酱料 (Tomato sauce)|S
@@ -505,7 +518,8 @@ S1_U5_L2|拢|lǒng|lr|扌,龙|收拢|聚集在一起 (Gather)|S
 S1_U5_L2|艘|sōu|lr|舟,叟|艘||S
 S1_U5_L2|屁|pì|semi-tl|尸,比|屁股||S
 S1_U5_L2|翘|qiào|semi-bl|尧,羽|翘||S
-S1_U5_L3|拜|bài|lr|手,手|拜访|登门探望 (Pay a visit)|S
+S1_U5_L2|恙|yàng|tb|羊,心|安然无恙|平安无事，没有受到损害 (Safe and sound)|S
+S1_U5_L3|拜|bài|l-tr-br|龵,一,丰|拜访|登门探望或访问 (Pay a visit)|S
 S1_U5_L3|漫|màn|lr|氵,曼|漫步||S
 S1_U5_L3|绞|jiǎo|lr|纟,交|绞尽脑汁|费尽心思 (Rack brains)|S
 S1_U5_L3|侨|qiáo|lr|亻,乔|华侨|海外华人 (Overseas Chinese)|S
@@ -541,8 +555,8 @@ S1_U6_L2|描|miáo|lr|扌,苗|扫描||S
 S1_U6_L2|畅|chàng|cut|v:2|顺畅||C
 S1_U6_L2|赴|fù|semi-bl|走,卜|全力以赴||S
 S1_U6_L2|职|zhí|lr|耳,只|职业||S
-S1_U6_L2|故|gù|lr|古,攵|故障|机器或设备发生问题 (Malfunction)|S
-S1_U6_L2|障|zhàng|lr|阝,章|故障|挡路的东西 (Obstacle)|S
+S1_U6_L2|故|gù|lr|古,攵|故障|机器、设备或系统发生异常，不能正常运作 (Malfunction)|S
+S1_U6_L2|障|zhàng|lr|阝,章|故障|机器、设备或系统发生异常，不能正常运作 (Malfunction)|S
 S1_U6_L2|岗|gǎng|tb|山,冈|岗位||S
 S1_U6_L2|献|xiàn|lr|南,犬|奉献||S
 S1_U6_L3|谣|yáo|lr|讠,䍃|新谣||S
@@ -556,7 +570,7 @@ S1_U6_L4|葬|zàng|tmb|艹,死,廾|埋葬|安葬 (Bury)|S
 S1_U6_L4|炬|jù|lr|火,巨|火炬|火把 (Torch)|S
 S1_U6_L4|贸|mào|tb|卯,贝|贸易||S
 S1_U6_L4|隙|xì|lr|阝,𡭴|间隙|缝隙 (Gap)|S
-S1_U6_L4|撤|chè|lmr|扌,育,攵|撤离|退走 (Withdraw)|S
+S1_U6_L4|撤|chè|lmr|扌,育,攵|撤离|离开原来的地方，通常指撤出危险地区 (Evacuate)|S
 S1_U6_L4|塌|tā|l-tr-br|土,日,羽|倒塌|倒下 (Collapse)|S
 S1_U6_L4|胁|xié|lr|月,办|威胁||S
 S1_U6_L4|镇|zhèn|lr|钅,真|镇静||S
@@ -623,7 +637,7 @@ S2_U1_L4|辉|huī|lr|光,军|光辉|光彩耀眼 (Brilliant)|S
 S2_U2_L1|捐|juān|lr|扌,肙|捐款|把钱捐给有需要的人 (Donate)|S
 S2_U2_L1|拯|zhěng|lr|扌,丞|拯救|救人或动物 (Save)|S
 S2_U2_L1|惠|huì|tb|叀,心|优惠|便宜一点 (Discount)|S
-S2_U2_L1|券|quàn|tb|龹,刀|券|可以当钱用的票 (Voucher)|S
+S2_U2_L1|券|quàn|tb|龹,刀|券|可换取商品、服务或优惠的票据凭证 (Voucher)|S
 S2_U2_L1|肢|zhī|lr|月,支|四肢|两只手和两只脚 (Limbs)|S
 S2_U2_L1|捷|jié|lr|扌,疌|敏捷||S
 S2_U2_L1|梭|suō|lr|木,夋|穿梭|在中间来回穿过 (Shuttle)|S
@@ -644,8 +658,8 @@ S2_U2_L2|畏|wèi|cut|h:3|畏罪潜逃|做错事怕被抓跑掉 (Flee to escape 
 S2_U2_L2|潜|qián|lr|氵,替|畏罪潜逃|因害怕罪责而逃走 (Flee from justice)|S
 S2_U2_L2|喵|miāo|lr|口,苗|喵|猫叫声 (Meow)|S
 S2_U2_L2|衔|xián|lmr|彳,钅,亍|衔|用嘴叼着 (Hold in mouth)|S
-S2_U2_L2|谴|qiǎn|lr|讠,遣|谴责|严厉地骂 (Condemn)|S
-S2_U2_L2|估|gū|lr|亻,古|估计|猜一猜 (Estimate)|S
+S2_U2_L2|谴|qiǎn|lr|讠,遣|谴责|严厉地责备或批评 (Condemn)|S
+S2_U2_L2|估|gū|lr|亻,古|估计|根据情况作大概的推测 (Estimate)|S
 S2_U2_L3|翼|yì|tmb|羽,田,共|小心翼翼|非常小心 (Careful)|S
 S2_U2_L3|褐|hè|lr|衤,曷|褐|像咖啡一样的颜色 (Brown)|S
 S2_U2_L3|旋|xuán|lr|方,疋|盘旋||S
@@ -653,21 +667,21 @@ S2_U2_L3|愣|lèng|l-tr-br|忄,罒,方|愣|发呆 (Stunned)|S
 S2_U2_L3|傻|shǎ|l-tmb|亻,囟,儿,夂|傻|笨笨的 (Silly)|S
 S2_U2_L3|啼|tí|lr|口,帝|啼|叫 (Cry/Sing)|S
 S2_U2_L3|鸣|míng|lr|口,鸟|鸣|鸟叫 (Chirp)|S
-S2_U2_L3|觑|qù|lr|虚,见|面面相觑|不知怎么办 (Look at each other in dismay)|S
+S2_U2_L3|觑|qù|lr|虚,见|面面相觑|你看我、我看你，不知道怎么办 (Look at each other in dismay)|S
 S2_U2_L3|揪|jiū|lr|扌,秋|揪心|心里很难受 (Anxious)|S
 S2_U2_L4|茂|mào|tb|艹,戊|茂盛|植物长得很好 (Lush)|S
 S2_U2_L4|扒|bā|lr|扌,八|扒开|用手拨开 (Push aside)|S
 S2_U2_L4|娇|jiāo|lr|女,乔|娇嫩||S
-S2_U2_L4|嫩|nèn|lmr|女,束,攵|娇嫩|很脆弱，需要保护 (Delicate)|S
+S2_U2_L4|嫩|nèn|lmr|女,束,攵|娇嫩|柔嫩，容易受到损伤 (Delicate)|S
 S2_U2_L4|掀|xiān|lr|扌,欣|掀开|揭开 (Lift open)|S
 S2_U2_L4|啄|zhuó|lr|口,豖|啄|鸟用嘴吃东西 (Peck)|S
 S2_U2_L4|俯|fǔ|lr|亻,府|俯下|弯下身子 (Bend down)|S
 S2_U2_L4|蹦|bèng|lr|⻊,崩|蹦来蹦去|跳跃 (Jump)|S
-S2_U2_L4|涂|tú|lr|氵,余|涂上颜色|抹抹画画 (Apply/Paint)|S
+S2_U2_L4|涂|tú|lr|氵,余|涂上颜色|把颜料等抹在物体表面 (Apply/Paint)|S
 S2_U2_L4|绒|róng|lr|纟,戎|绒毛|细细软软的毛 (Fluff)|S
 S2_U2_L4|唤|huàn|lr|口,奂|呼唤|大声叫 (Call)|S
 S2_U2_L4|肩|jiān|semi-tl|户,月|肩头|身体的部位 (Shoulder)|S
-S2_U3_L1|素|sù|tb|龶,糸|因素|原因 (Factor)|S
+S2_U3_L1|素|sù|tb|龶,糸|因素|构成事物或影响结果的原因、条件 (Factor)|S
 S2_U3_L1|喉|hóu|lr|口,侯|水喉|新加坡常用语，指水管或水龙头 (Water pipe/tap)|S
 S2_U3_L1|艰|jiān|lr|又,艮|艰巨|非常困难 (Arduous)|S
 S2_U3_L1|昂|áng|tb|日,卬|昂贵|很贵 (Expensive)|S
@@ -678,24 +692,24 @@ S2_U3_L1|蓄|xù|tb|艹,畜|蓄水池|装水的大池子 (Reservoir)|S
 S2_U3_L1|澡|zǎo|lr|氵,喿|洗澡|用水洗身子 (Bath)|S
 S2_U3_L1|浴|yù|lr|氵,谷|浴室|洗澡的房间 (Bathroom)|S
 S2_U3_L1|趋|qū|semi-bl|走,刍|趋势|事物发展的方向 (Trend)|S
-S2_U3_L2|媒|méi|lr|女,某|媒体|报纸、电视等新闻机构 (Media)|S
+S2_U3_L2|媒|méi|lr|女,某|媒体|传播信息的工具、平台或机构 (Media)|S
 S2_U3_L2|塑|sù|tb|朔,土|塑料|做袋子或瓶子的材料 (Plastic)|S
 S2_U3_L2|吨|dūn|lr|口,屯|吨|很重的重量单位 (Ton)|S
 S2_U3_L2|廉|lián|semi-tl|广,兼|廉价|很便宜 (Cheap)|S
 S2_U3_L2|靡|mǐ|semi-tl|麻,非|风靡|非常流行 (Popular)|S
-S2_U3_L2|垄|lǒng|tb|龙,土|垄断|全部控制住 (Monopolize)|S
+S2_U3_L2|垄|lǒng|tb|龙,土|垄断|独占并控制某种市场、资源或事业 (Monopolize)|S
 S2_U3_L2|危|wēi|cut|h:2|危害|伤害 (Endanger)|C
 S2_U3_L2|焚|fén|tb|林,火|焚烧|烧掉 (Burn)|S
-S2_U3_L2|尘|chén|tb|小,土|烟尘|细小的泥土 (Dust)|S
+S2_U3_L2|尘|chén|tb|小,土|烟尘|烟雾和灰尘 (Smoke and dust)|S
 S2_U3_L2|壤|rǎng|lr|土,襄|土壤|泥土 (Soil)|S
 S2_U3_L2|遏|è|semi-bl|辶,曷|遏制|阻止 (Contain)|S
 S2_U3_L2|税|shuì|lr|禾,兑|税|交给政府的钱 (Tax)|S
 S2_U3_L2|倡|chàng|lr|亻,昌|倡导|带头提倡 (Advocate)|S
 S2_U3_L2|逐|zhú|semi-bl|辶,豕|逐渐|一点一点地 (Gradually)|S
 S2_U3_L2|斥|chì|cut|h:2|充斥|到处都是 (Full of)|C
-S2_U3_L2|妥|tuǒ|tb|爫,女|妥善|很好地处理 (Properly)|S
+S2_U3_L2|妥|tuǒ|tb|爫,女|妥善|处理得合适、周到 (Properly)|S
 S2_U3_L2|煞|shà|tlr-b|刍,攵,灬|煞费苦心|费了很多心思 (Take great pains)|S
-S2_U3_L3|统|tǒng|lr|纟,充|统计|把数字加起来算 (Statistics)|S
+S2_U3_L3|统|tǒng|lr|纟,充|统计|收集、整理并计算有关数据 (Statistics)|S
 S2_U3_L3|型|xíng|tb|刑,土|大型|规模很大 (Large-scale)|S
 S2_U3_L3|异|yì|tb|巳,廾|日新月异|变化、发展非常快 (Change rapidly)|S
 S2_U3_L3|泛|fàn|lr|氵,乏|泛滥|过多地漫延、到处都是 (Overflow/Spread unchecked)|S
@@ -704,7 +718,7 @@ S2_U3_L3|寿|shòu|semi-tl|丰,寸|寿命|活多长时间 (Lifespan)|S
 S2_U3_L3|途|tú|semi-bl|辶,余|途径|方法、路线 (Way/Channel)|S
 S2_U3_L3|径|jìng|lr|彳,圣|途径||S
 S2_U3_L3|乏|fá|tb|丿,之|缺乏|没有或不够 (Lack)|S
-S2_U3_L3|亿|yì|lr|亻,乙|亿|极大的数字 (Hundred million)|S
+S2_U3_L3|亿|yì|lr|亻,乙|亿|数目单位，一亿等于一万万 (Hundred million)|S
 S2_U3_L3|憾|hàn|lr|忄,感|遗憾|觉得可惜 (Regret)|S
 S2_U3_L3|慎|shèn|lr|忄,真|谨慎|很小心 (Cautious)|S
 S2_U3_L3|渗|shèn|lr|氵,参|渗透|水慢慢渗进去 (Penetrate)|S
@@ -712,21 +726,21 @@ S2_U3_L4|宣|xuān|tb|宀,亘|宣布|告诉大家 (Declare)|S
 S2_U3_L4|狩|shòu|lr|犭,守|狩猎|打猎 (Hunt)|S
 S2_U3_L4|聘|pìn|lr|耳,甹|聘请|请人来工作 (Hire)|S
 S2_U3_L4|啃|kěn|lr|口,肯|啃|用力咬 (Gnaw)|S
-S2_U3_L4|疾|jí|semi-tl|疒,矢|疾病|生病 (Disease)|S
+S2_U3_L4|疾|jí|semi-tl|疒,矢|疾病|身体或精神出现的病症 (Disease)|S
 S2_U3_L4|锐|ruì|lr|钅,兑|锐减|快速减少 (Decrease sharply)|S
 S2_U3_L4|糟|zāo|lr|米,曹|糟蹋|浪费或破坏好东西 (Waste/Ruin)|S
 S2_U3_L4|毁|huǐ|lt-lb-r|臼,工,殳|毁灭|全部破坏掉 (Destroy)|S
 S2_U3_L4|罪|zuì|tb|罒,非|罪魁祸首|造成祸患的主要人物或原因 (Chief culprit)|S
-S2_U3_L4|魁|kuí|semi-bl|鬼,斗|罪魁祸首|做坏事的领头人 (Chief culprit)|S
+S2_U3_L4|魁|kuí|semi-bl|鬼,斗|罪魁祸首|造成祸患的主要人物或原因 (Chief culprit)|S
 S2_U3_L4|睹|dǔ|lr|目,者|目睹|亲眼看到 (Witness)|S
 S2_U3_L4|违|wéi|semi-bl|辶,韦|违背|不遵守 (Violate)|S
 S2_U3_L4|搏|bó|lr|扌,尃|拼搏|非常努力地去争取 (Struggle/Fight)|S
 S2_U4_L1|卑|bēi|cut|h:2|自卑|觉得自己不如别人 (Inferiority)|C
 S2_U4_L1|羡|xiàn|tb|羊,次|羡慕|觉得别人好，自己也想要 (Envy)|S
-S2_U4_L1|诱|yòu|lr|讠,秀|诱惑|吸引人去做坏事的事物 (Temptation)|S
+S2_U4_L1|诱|yòu|lr|讠,秀|诱惑|吸引人，使人产生想得到或去做的欲望 (Temptation)|S
 S2_U4_L1|毅|yì|lr|豙,殳|毅力|不怕困难坚持下去的心 (Perseverance)|S
 S2_U4_L1|茫|máng|t-lr|艹,氵,亡|茫然|不知道该怎么办 (At a loss)|S
-S2_U4_L1|魂|hún|lr|云,鬼|魂不守舍|精神不集中 (Distracted)|S
+S2_U4_L1|魂|hún|lr|云,鬼|魂不守舍|心神不定，精神恍惚 (Distracted)|S
 S2_U4_L1|眠|mián|lr|目,民|睡眠|睡觉 (Sleep)|S
 S2_U4_L1|烁|shuò|lr|火,乐|闪烁其词|说话含糊躲闪，不肯明确说明 (Speak evasively)|S
 S2_U4_L1|嫌|xián|lr|女,兼|嫌|讨厌 (Dislike)|S
@@ -734,11 +748,11 @@ S2_U4_L1|逼|bī|semi-bl|辶,畐|逼|强迫别人做 (Force)|S
 S2_U4_L1|霸|bà|t-lr|雨,革,月|霸道|不讲理，欺负人 (Overbearing)|S
 S2_U4_L1|怄|òu|lr|忄,区|怄气|生闷气 (Sulk)|S
 S2_U4_L1|饪|rèn|lr|饣,壬|烹饪|做饭 (Cooking)|S
-S2_U4_L1|符|fú|tb|⺮,付|符合|要求完全一样 (Match)|S
+S2_U4_L1|符|fú|tb|⺮,付|符合|与标准、条件或事实相一致 (Match)|S
 S2_U4_L2|憋|biē|tb|敝,心|憋|强忍住呼吸 (Hold in)|S
 S2_U4_L2|婉|wǎn|lr|女,宛|委婉|说话很温和，不直接伤人 (Tactful)|S
 S2_U4_L2|吼|hǒu|lr|口,孔|吼|大声喊叫 (Roar)|S
-S2_U4_L2|驳|bó|lr|马,爻|反驳|说别人不对 (Refute)|S
+S2_U4_L2|驳|bó|lr|马,爻|反驳|提出理由否定对方的意见 (Refute)|S
 S2_U4_L2|缝|fèng|lr|纟,逢|缝|裂开的口子 (Seam)|S
 S2_U4_L2|吭|kēng|lr|口,亢|吭声|出声说话 (Utter a word)|S
 S2_U4_L2|掩|yǎn|lr|扌,奄|掩|遮盖、隐藏 (Cover/Hide)|S
@@ -749,7 +763,7 @@ S2_U4_L2|蜷|quán|lr|虫,卷|蜷缩|身体缩成一团 (Curl up)|S
 S2_U4_L2|瑟|sè|tlr-b|王,王,必|瑟瑟|发抖的样子 (Shiver)|S
 S2_U4_L2|怖|bù|lr|忄,布|恐怖|非常害怕 (Terror)|S
 S2_U4_L2|宵|xiāo|tb|宀,肖|通宵|整夜不睡 (All night)|S
-S2_U4_L2|悚|sǒng|lr|忄,束|惊悚|让人害怕的 (Thriller)|S
+S2_U4_L2|悚|sǒng|lr|忄,束|惊悚|使人惊恐、害怕 (Frightening)|S
 S2_U4_L3|脖|bó|lr|月,孛|脖子|头和身体连接的地方 (Neck)|S
 S2_U4_L3|瞥|piē|tb|敝,目|瞥|很快地看一眼 (Glance)|S
 S2_U4_L3|炙|zhì|tb|⺼,火|炙|烤、很热 (Roast/Hot)|S
@@ -761,7 +775,7 @@ S2_U4_L3|局|jú|cut|h:2|局促|很不自然的样子 (Constrained)|C
 S2_U4_L3|沮|jǔ|lr|氵,且|沮丧||S
 S2_U4_L3|睿|ruì|cut|h:2|睿智|非常聪明有智慧 (Wise)|C
 S2_U4_L4|搓|cuō|lr|扌,差|搓澡|洗澡时用力搓身体 (Scrub)|S
-S2_U4_L4|涩|sè|l-tr-br|氵,刃,止|涩涩|不湿润 (Astringent)|S
+S2_U4_L4|涩|sè|l-tr-br|氵,刃,止|涩涩|不光滑、不润泽，带有涩感 (Astringent/Rough)|S
 S2_U4_L4|筹|chóu|tb|⺮,寿|筹划|计划 (Plan)|S
 S2_U4_L4|掇|duō|lr|扌,叕|拾掇|整理、收拾 (Tidy up)|S
 S2_U4_L4|颔|hàn|lr|含,页|颔首|点头 (Nod)|S
@@ -769,17 +783,17 @@ S2_U4_L4|棉|mián|l-tr-br|木,白,巾|棉|一种植物和布料 (Cotton)|S
 S2_U4_L4|掏|tāo|lr|扌,匋|掏|从口袋里拿出来 (Take out)|S
 S2_U4_L4|崭|zhǎn|tb|山,斩|崭新|全新的 (Brand new)|S
 S2_U4_L4|喃|nán|lr|口,南|喃喃|小声说话 (Mutter)|S
-S2_U4_L4|涌|yǒng|lr|氵,甬|涌动|水冲出来 (Gush)|S
+S2_U4_L4|涌|yǒng|lr|氵,甬|涌动|像水一样不断翻动、流动；也可形容感情强烈出现 (Surge)|S
 S2_U4_L4|捅|tǒng|lr|扌,甬|捅|戳 (Poke)|S
-S2_U4_L4|藏|cáng|tb|艹,臧|珍藏|收起来 (Store)|S
-S2_U5_L1|陋|lòu|cut|v:2|简陋|非常简单，条件不好 (Simple)|C
+S2_U4_L4|藏|cáng|tb|艹,臧|珍藏|珍重地收藏和保存 (Treasure/Collect)|S
+S2_U5_L1|陋|lòu|l-semi-bl-r|阝,𠃊,丙|简陋|简单粗陋，条件不完善 (Simple and crude)|S
 S2_U5_L1|辟|pì|lt-lb-r|尸,口,辛|开辟|开发新的地方 (Open up)|S
 S2_U5_L1|贩|fàn|lr|贝,反|小贩|在街上卖东西的人 (Hawker)|S
 S2_U5_L1|宗|zōng|tb|宀,示|宗教|信仰 (Religion)|S
 S2_U5_L1|综|zōng|lr|纟,宗|综合|结合起来 (Comprehensive)|S
-S2_U5_L1|诊|zhěn|l-tr-br|讠,人,彡|诊疗所|看病的小医院 (Clinic)|S
-S2_U5_L1|裕|yù|lr|衤,谷|富裕|很有钱 (Wealthy)|S
-S2_U5_L1|迁|qiān|semi-bl|辶,千|变迁|事物随着时间发生变化 (Change over time)|S
+S2_U5_L1|诊|zhěn|l-tr-br|讠,人,彡|诊疗所|提供诊断和治疗服务的医疗场所 (Clinic)|S
+S2_U5_L1|裕|yù|lr|衤,谷|富裕|财物充足，生活宽裕 (Wealthy)|S
+S2_U5_L1|迁|qiān|semi-bl|辶,千|变迁|事物在发展过程中发生变化、转变 (Change over time)|S
 S2_U5_L1|障|zhàng|lr|阝,章|障碍|阻挡前进的事物 (Obstacle)|S
 S2_U5_L1|驰|chí|lr|马,也|驰名|非常出名 (Famous)|S
 S2_U5_L1|屡|lǚ|semi-tl|尸,娄|屡次|很多次 (Repeatedly)|S
@@ -788,26 +802,26 @@ S2_U5_L2|触|chù|lr|角,虫|接触|碰到或交往 (Contact)|S
 S2_U5_L2|翠|cuì|tb|羽,卒|翠绿|非常绿 (Emerald green)|S
 S2_U5_L2|怡|yí|lr|忄,台|心旷神怡||S
 S2_U5_L2|曝|pù|lr|日,暴|曝晒|在太阳底下晒 (Exposed to the sun)|S
-S2_U5_L2|荫|yīn|tb|艹,阴|林荫大道|树下的阴凉处 (Shade)|S
+S2_U5_L2|荫|yīn|tb|艹,阴|林荫大道|两旁树木成荫的大道 (Tree-lined avenue)|S
 S2_U5_L2|樟|zhāng|lr|木,章|樟宜|新加坡地名“樟宜” (Changi)|S
 S2_U5_L2|耸|sǒng|tb|从,耳|耸立|高高地立着 (Stand tall)|S
 S2_U5_L2|咛|níng|lr|口,宁|叮咛|再三嘱咐 (Urge/Warn)|S
 S2_U5_L2|馨|xīn|tb|殸,香|温馨|温暖舒服的感觉 (Warm)|S
 S2_U5_L2|糙|cāo|lr|米,造|粗糙|摸起来不光滑 (Rough)|S
-S2_U5_L2|婆|pó|tb|波,女|婆娑|盘旋舞动、枝叶摇曳的样子 (Swaying gracefully)|S
+S2_U5_L2|婆|pó|tb|波,女|婆娑|枝叶繁茂并随风摇曳的样子 (Swaying foliage)|S
 S2_U5_L2|娑|suō|tb|沙,女|婆娑||S
 S2_U5_L2|翱|áo|lr|皋,羽|翱翔|在天空中飞 (Soar)|S
 S2_U5_L2|翔|xiáng|lr|羊,羽|翱翔||S
 S2_U5_L2|茁|zhuó|tb|艹,出|茁壮|强壮健康地成长 (Thriving)|S
 S2_U5_L2|纳|nà|lr|纟,内|接纳|接受 (Accept)|S
-S2_U5_L3|妻|qī|tmb|一,肀,女|妻子|老婆 (Wife)|S
+S2_U5_L3|妻|qī|tmb|一,肀,女|妻子|男子的配偶 (Wife)|S
 S2_U5_L3|患|huàn|tb|串,心|患|得病 (Suffer from)|S
-S2_U5_L3|症|zhèng|semi-tl|疒,正|失智症|以记忆、思考等认知能力衰退为特征的病症 (Dementia)|S
+S2_U5_L3|症|zhèng|semi-tl|疒,正|失智症|因脑部功能退化，使记忆和其他认知能力下降并影响日常生活的病症 (Dementia)|S
 S2_U5_L3|逝|shì|semi-bl|辶,折|流逝|时间悄悄走掉 (Pass by)|S
 S2_U5_L3|嘱|zhǔ|lr|口,属|叮嘱|再三地关照别人 (Urge again)|S
 S2_U5_L3|嬉|xī|lr|女,喜|嬉戏|开心地玩耍 (Play)|S
 S2_U5_L3|俏|qiào|lr|亻,肖|俏皮|调皮可爱 (Playful)|S
-S2_U5_L3|惬|qiè|lr|忄,匧|惬意|满意、舒服 (Cozy)|S
+S2_U5_L3|惬|qiè|l-wrap-r|忄,匚,夹|惬意|心情满足而感到舒适、愉快 (Pleasant/Contented)|S
 S2_U5_L3|躁|zào|lr|足,喿|烦躁|心里很烦，不耐烦 (Irritable)|S
 S2_U5_L4|矿|kuàng|lr|石,广|矿泉水||S
 S2_U5_L4|缕|lǚ|lr|纟,娄|缕||S
@@ -826,7 +840,7 @@ S2_U6_L1|绸|chóu|lr|纟,周|丝绸|用蚕丝做的好布料 (Silk)|S
 S2_U6_L1|陆|lù|lr|阝,击|陆地|地球上没有水的地方 (Land)|S
 S2_U6_L1|奢|shē|tb|大,者|奢侈|花很多钱在不需要的东西上 (Luxurious)|S
 S2_U6_L1|侈|chǐ|lr|亻,多|奢侈||S
-S2_U6_L1|瓷|cí|tb|次,瓦|瓷器|用泥土烧出来的漂亮器皿 (Porcelain)|S
+S2_U6_L1|瓷|cí|tb|次,瓦|瓷器|用瓷土等烧制成的器物 (Porcelain)|S
 S2_U6_L1|仪|yí|lr|亻,义|仪式|正式的活动过程 (Ceremony)|S
 S2_U6_L1|秉|bǐng|cut|h:3|秉持|一直坚持某种想法 (Uphold)|C
 S2_U6_L1|枢|shū|lr|木,区|枢纽|非常重要的中心位置 (Hub)|S
@@ -840,8 +854,8 @@ S2_U6_L1|致|zhì|lr|至,攵|致力于|努力专注做某事 (Devote to)|S
 S2_U6_L1|愿|yuàn|semi-tl|原,心|愿景||S
 S2_U6_L1|惠|huì|tb|叀,心|受惠|得到好处、利益 (Benefit)|S
 S2_U6_L2|谓|wèi|lr|讠,胃|可谓|可以说是 (Can be described as)|S
-S2_U6_L2|屿|yǔ|lr|山,与|岛屿|四周都是水的小片陆地 (Island)|S
-S2_U6_L2|峡|xiá|lr|山,夹|海峡|两块陆地中间的海水通道 (Strait)|S
+S2_U6_L2|屿|yǔ|lr|山,与|岛屿|四面被水包围的陆地 (Island)|S
+S2_U6_L2|峡|xiá|lr|山,夹|海峡|两块陆地之间连接两片海域的狭窄水道 (Strait)|S
 S2_U6_L2|币|bì|tb|丿,巾|钱币||S
 S2_U6_L2|域|yù|lr|土,或|区域||S
 S2_U6_L2|赋|fù|lr|贝,武|赋予||S
@@ -853,7 +867,7 @@ S2_U6_L2|煌|huáng|lr|火,皇|辉煌||S
 S2_U6_L2|誉|yù|tb|兴,言|赞誉有加|给予很多称赞 (Praise highly)|S
 S2_U6_L2|纳|nà|lr|纟,内|海纳百川|比喻胸怀宽广，能包容不同事物 (All-embracing)|S
 S2_U6_L2|瞩|zhǔ|lr|目,属|引人瞩目|吸引大家注意 (Eye-catching)|S
-S2_U6_L2|迁|qiān|semi-bl|辶,千|变迁|事物随着时间发生变化 (Change over time)|S
+S2_U6_L2|迁|qiān|semi-bl|辶,千|变迁|事物在发展过程中发生变化、转变 (Change over time)|S
 S2_U6_L3|砍|kǎn|lr|石,欠|砍||S
 S2_U6_L3|弗|fú|cut|h:2|无远弗届||C
 S2_U6_L3|伪|wěi|lr|亻,为|真伪||S
@@ -907,7 +921,7 @@ rawDatabase.trim().split('\n').forEach(line=>{
 // ═══════════════════════════════════════════════════════════
 //  同字词配对数据：字 -> [{w:词, d:释义}, ...]（仅含≥2个同字词的难字）
 // ═══════════════════════════════════════════════════════════
-const PAIRMAP={"惹":[{w:"惹",d:"招来（麻烦等） (Provoke)"},{w:"娘惹",d:"华人与马来人通婚的女性后裔 (Nyonya)"}],
+const PAIRMAP={"惹":[{w:"惹",d:"招来（麻烦等） (Provoke)"},{w:"娘惹",d:"土生华人女性的称呼，也指相关文化 (Nyonya)"}],
 "技":[{w:"科技",d:"科学技术 (Technology)"},{w:"杂技",d:"高难度的表演技艺 (Acrobatics)"}],
 "缘":[{w:"人缘",d:"跟别人的关系好 (Good relations with others)"},{w:"缘故",d:"原因 (Reason)"}],
 "致":[{w:"兴致勃勃",d:"兴趣非常浓厚 (Full of enthusiasm)"},{w:"致力于",d:"努力专注做某事 (Devote oneself to)"}],
@@ -957,11 +971,35 @@ const PAIRMAP={"惹":[{w:"惹",d:"招来（麻烦等） (Provoke)"},{w:"娘惹",
 "瞩":[{w:"高瞻远瞩",d:"看得很远，很有眼光 (Foresight)"},{w:"引人瞩目",d:"吸引大家的注意 (Eye-catching)"}]};
 
 
-// v2.1：同字词配对按当前年级过滤，避免中一/中二词语互相混入
-const PAIR_GRADE={"一哄而散":["S1"],"一诺千金":["S1"],"不乏":["S2"],"人人皆晓":["S1"],"人缘":["S1"],"仓促":["S2"],"优惠":["S2"],"促进":["S2"],"催促":["S1"],"光辉":["S2"],"兴致勃勃":["S1"],"典型":["S2"],"兼容并蓄":["S2"],"凝望":["S2"],"凝聚力":["S2"],"协助":["S1"],"协调":["S1"],"受惠":["S2"],"启齿":["S2"],"哄堂大笑":["S1"],"圣诞":["S1"],"大型":["S2"],"姿势":["S2"],"娘惹":["S1"],"媒体":["S2"],"家喻户晓":["S1"],"尘埃":["S2"],"尘封":["S2"],"局促":["S2"],"崇拜":["S2"],"帐篷":["S1"],"庸俗":["S2"],"延误":["S1"],"引人瞩目":["S2"],"悠久":["S1"],"悠然自得":["S1"],"惹":["S1"],"慢条斯理":["S1"],"手势":["S1"],"打道回府":["S1"],"承诺":["S1"],"抑郁":["S2"],"拜访":["S1"],"接纳":["S2"],"掩":["S2"],"掩饰":["S2"],"搓澡":["S2"],"政府":["S2"],"故障":["S1"],"日新月异":["S2"],"杂技":["S1"],"求同存异":["S2"],"泛滥":["S2"],"泛起":["S1"],"洗澡":["S2"],"浓郁":["S1"],"海纳百川":["S2"],"滋养":["S2"],"滋味":["S1"],"潜水":["S1"],"潜水艇":["S1"],"烟尘":["S2"],"牙齿":["S1"],"畏罪潜逃":["S2"],"破天荒":["S2"],"社交媒体":["S2"],"科技":["S1"],"称赞":["S1"],"策略":["S1"],"繁荣昌盛":["S1"],"缓慢":["S1"],"缘故":["S1"],"缩":["S2"],"缺乏":["S2"],"缺席":["S1"],"罪魁祸首":["S2"],"致力于":["S2"],"荒诞不经":["S2"],"荣誉":["S2"],"蓄水池":["S2"],"蜷缩":["S2"],"诡异":["S2"],"赞不绝口":["S1"],"赞誉有加":["S2"],"趋势":["S2"],"辉煌":["S2"],"遗产":["S1"],"遗憾":["S2"],"错误":["S1"],"陷入":["S1"],"陷阱":["S2"],"障碍":["S2"],"雨篷":["S1"],"领略":["S1"],"风俗":["S1"],"高瞻远瞩":["S2"]};
+// v2.2：同字词配对严格限制在“当前选中的单元/课文”，不跨单元串词
+function getScopeUnitKeysForSupport(){
+  const selected=getCurrentSelUnits();
+  if(!selected.length)return [];
+  // 若指定单课，就只限该课；若选择“全部课文”，则限当前勾选单元
+  if(currentLessonKey&&currentLessonKey!=='all')return selected;
+  return selected;
+}
 function getScopedPairItems(data){
+  const allowedVocabs=new Set();
+  getScopeUnitKeysForSupport().forEach(uk=>{
+    (wordBank[uk]||[]).forEach(it=>allowedVocabs.add(it.vocab));
+  });
+  return (PAIRMAP[data.w]||[]).filter(it=>allowedVocabs.has(it.w));
+}
+function getScopedDistractors(data){
+  const sel=getScopeUnitKeysForSupport();
+  // 选择单课时，为保证有足够干扰项，扩到“同一单元”，但绝不跨单元
   const grade=document.getElementById('gradeSelect').value;
-  return (PAIRMAP[data.w]||[]).filter(it=>(PAIR_GRADE[it.w]||[]).includes(grade));
+  const unitNums=new Set(sel.map(uk=>parseUnitKey(uk)?.unitNum).filter(Boolean));
+  const keys=Object.keys(wordBank).filter(uk=>{
+    const pk=parseUnitKey(uk);
+    return pk&&pk.gradeCode===grade&&unitNums.has(pk.unitNum);
+  });
+  const defs=[];
+  keys.forEach(uk=>(wordBank[uk]||[]).forEach(it=>{
+    if(it.def&&it.def.trim()&&it.def!==data.def&&!defs.includes(it.def))defs.push(it.def);
+  }));
+  return defs;
 }
 // 从 unitKey 解析出 年级码/单元号/课文号。键格式：S1_U1_L1
 function parseUnitKey(uk){
@@ -1321,21 +1359,21 @@ function onLessonChange(){
 }
 
 function buildWeightedPool(selUnitKeys){
-  const errs=ls.get(SK.errors)||{};
-  let pool=[];
+  // v2.2：一轮内“每个目标字只出现一次”。学生当前做错时原题会保留重做，不再按历史错题复制多份。
+  const seenChars=new Set();
+  const pool=[];
   selUnitKeys.forEach(uk=>{
     (wordBank[uk]||[]).forEach(item=>{
-      const key=cKey(uk,item.w);
-      const errCnt=(errs[key]?.count)||0;
-      const copies=1+Math.min(3,errCnt);
-      for(let i=0;i<copies;i++)pool.push({...item,_unit:uk});
+      if(seenChars.has(item.w))return;
+      seenChars.add(item.w);
+      pool.push({...item,_unit:uk});
     });
   });
   return pool.sort(()=>Math.random()-.5);
 }
 function refillPool(poolKey,selUnitKeys){
-  if(!unitPlayQueue[poolKey]||unitPlayQueue[poolKey].length<5)
-    unitPlayQueue[poolKey]=buildWeightedPool(selUnitKeys);
+  // 不自动二刷；本轮完成后由学生主动点击“再练一轮”
+  if(!unitPlayQueue[poolKey])unitPlayQueue[poolKey]=[];
 }
 // 返回当前应练习的 unitKey 列表（已结合单元勾选 + 课文下拉）
 function getCurrentSelUnits(){
@@ -1392,6 +1430,8 @@ function loadWord(){
   'tlr-b':'上部左右＋下部',
   'lmmr':'左中右（中间双部件）',
   'tb4':'四层上下结构',
+  'l-wrap-r':'左右嵌套结构（右部半包围）',
+  'l-semi-bl-r':'左右嵌套结构（右部左下包围）',
   'cut':'看清字形，拼回完整字'
 };
   document.getElementById('structHint').innerHTML=`💡 提示：这是一个【${layoutMap[data.layout]||'特殊结构'}】的字`;
@@ -1587,12 +1627,17 @@ function showQuiz(data){
     setTimeout(()=>{ advanceAfterQuiz(); },800);
     return;
   }
+  // 完成页会临时改写标题；每道新题都先恢复标准题头
+  document.querySelector('.quiz-title').innerHTML='拼写成功！请选出 <span class="quiz-word" id="qw">-</span> 的正确解释：';
   document.getElementById('qw').innerText=`【${data.vocab}】`;
   const panel=document.getElementById('quizPanel');
   const cont=document.getElementById('optionsContainer');
   cont.innerHTML='';
   let opts=[data.def];
-  const dist=allDistractors.filter(d=>d!==data.def).sort(()=>Math.random()-.5);
+  const dist=getScopedDistractors(data).sort(()=>Math.random()-.5);
+  // 同单元通常足够；若不足3个，用中性占位释义补齐，避免从别的单元串词
+  const fillers=['表示一种动作或状态 (Action/State)','表示某种事物或概念 (Thing/Concept)','表示某种特征或情况 (Feature/Condition)'];
+  while(dist.length<3)dist.push(fillers[dist.length]);
   opts.push(dist[0],dist[1],dist[2]);opts.sort(()=>Math.random()-.5);
   opts.forEach(opt=>{
     const btn=document.createElement('button');btn.className='quiz-btn';
@@ -1719,21 +1764,44 @@ function mEnd(e){
   mDragEl=null;
 }
 // 配对/选择题结束后，进入下一题（抽取自原 handleAnswer 的推进逻辑）
+function showRoundComplete(){
+  window.speechSynthesis.cancel();
+  document.getElementById('matchPanel').classList.remove('show');
+  document.getElementById('matchPanel').style.display='none';
+  const panel=document.getElementById('quizPanel');
+  document.getElementById('qw').innerText='【本轮完成】';
+  document.querySelector('.quiz-title').innerHTML='🎉 本轮所有目标字都练完了！';
+  const cont=document.getElementById('optionsContainer');
+  cont.innerHTML='';
+  const btn=document.createElement('button');
+  btn.className='quiz-btn';
+  btn.style.textAlign='center';
+  btn.innerHTML='🔄 再练一轮（重新随机）';
+  btn.onclick=()=>initUnitGame(true);
+  cont.appendChild(btn);
+  panel.style.display='flex';
+  document.getElementById('progressLabel').innerText='本轮完成 · 每个字只出现一次';
+}
+function goNextOrComplete(){
+  currentWordIndex++;
+  if(currentWordIndex<currentSet.length){loadWord();return;}
+  const sel=getCurrentSelUnits();
+  const poolKey='pool_'+sel.join('_');
+  const q=unitPlayQueue[poolKey]||[];
+  if(q.length>0){
+    const n=Math.min(10,q.length);
+    currentSet=q.splice(0,n);
+    currentPoolKey=poolKey;currentWordIndex=0;loadWord();
+  }else{
+    showRoundComplete();
+  }
+}
 function advanceAfterQuiz(){
   window.speechSynthesis.cancel();
   document.getElementById('matchPanel').classList.remove('show');
   document.getElementById('matchPanel').style.display='none';
   consecutiveCorrect++;checkAchievements();
-  currentWordIndex++;
-  if(currentWordIndex<currentSet.length){loadWord();}
-  else{
-    const sel=getCurrentSelUnits();
-    const poolKey='pool_'+sel.join('_');
-    refillPool(poolKey,sel);
-    const n=Math.min(10,unitPlayQueue[poolKey].length);
-    currentSet=unitPlayQueue[poolKey].splice(0,n);
-    currentPoolKey=poolKey;currentWordIndex=0;loadWord();
-  }
+  goNextOrComplete();
 }
 function handleAnswer(btn,isCorrect){
   if(btn.classList.contains('correct')||btn.classList.contains('wrong'))return;
@@ -1743,16 +1811,7 @@ function handleAnswer(btn,isCorrect){
     showFeedbackRight('帅爆了，再来！');
     setTimeout(()=>{
       window.speechSynthesis.cancel();
-      currentWordIndex++;
-      if(currentWordIndex<currentSet.length){loadWord();}
-      else{
-        const sel=getCurrentSelUnits();
-        const poolKey='pool_'+sel.join('_');
-        refillPool(poolKey,sel);
-        const n=Math.min(10,unitPlayQueue[poolKey].length);
-        currentSet=unitPlayQueue[poolKey].splice(0,n);
-        currentPoolKey=poolKey;currentWordIndex=0;loadWord();
-      }
+      goNextOrComplete();
     },1100);
   }else{
     btn.classList.add('wrong');addScore(-1);resetCombo();consecutiveCorrect=0;
