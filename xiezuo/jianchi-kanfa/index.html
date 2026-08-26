@@ -34,6 +34,40 @@
 @media(max-width:650px){.classroomBar{top:53px;border-radius:0;padding:8px 10px}.classroomBar .right{display:none}.artifact .a-row{grid-template-columns:1fr}.processGrid{grid-template-columns:1fr 1fr}}
 @media print{.classroomBar,.checkpoint{display:none!important}}
 
+
+/* ===== 2026 课堂改版：关卡标题放大醒目 + 英文对照 ===== */
+.kicker{
+  font-family:var(--serif),"Noto Serif SC",serif !important;
+  font-size:26px !important;
+  font-weight:900 !important;
+  color:#C0272D !important;
+  letter-spacing:.04em !important;
+  margin:0 0 4px !important;
+  line-height:1.25 !important;
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.kicker::before{
+  content:""; width:6px; height:26px; background:#C0272D;
+  border-radius:3px; flex:none;
+}
+.kicker .en{
+  font-family:var(--sans),system-ui,sans-serif;
+  font-size:14px; font-weight:600; color:#9A5B57;
+  letter-spacing:0;
+}
+/* 英文对照：所有中文解释后面的英文 */
+.en{
+  display:block; font-size:13.5px; line-height:1.55;
+  color:#6B7A86; font-weight:500; margin-top:3px;
+  font-family:var(--sans),system-ui,sans-serif; letter-spacing:0;
+}
+.lead .en, .stem .en, p .en{ color:#6B7A86; }
+h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-top:4px; font-family:var(--sans),system-ui,sans-serif; }
+@media(max-width:620px){
+  .kicker{font-size:22px !important}
+  .kicker::before{height:22px}
+  .en{font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -49,22 +83,22 @@
   <p class="note"><b>今天不是写整篇作文。</b>先完成“审题 → 立意 → 选材”。每一步做对，最后会生成一张可以直接带去列提纲的「审题卡」。</p>
 </header>
 
-<section class="stage" id="start"><p class="kicker">先读题</p><h2>先看懂题目给了什么</h2><p class="lead">这道题已经给了<b>人物原来的问题</b>和<b>最后学到的道理</b>。你要自己设计一件真实、合理、有转折的事，把两者连起来。</p><div class="acts"><button class="btn btn-main" id="startBtn">开始 · 进入第一关</button></div></section>
+<section class="stage" id="start"><p class="kicker">先读题<span class="en">Read the Question First</span></p><h2>先看懂题目给了什么<span class="en">First see what the question gives you</span></h2><p class="lead">这道题已经给了<b>人物原来的问题</b>和<b>最后学到的道理</b>。你要自己设计一件真实、合理、有转折的事，把两者连起来。<span class="en">This question already gives you the person's original problem and the lesson learnt at the end. You must design a believable event with a turning point that links the two.</span></p><div class="acts"><button class="btn btn-main" id="startBtn">开始 · 进入第一关</button></div></section>
 
-<section class="stage locked" id="s1"><p class="kicker">第一关 · 审题</p><h2>圈关键词 + 找限制条件</h2>
-  <div class="substep"><span class="n">A</span>先找限制条件</div><p class="lead">限制条件管住你<b>必须怎么写</b>：谁的事、什么时候、几件事、人物原来的状态。请点出 4 个。</p><div class="tokens" id="restrictTokens"></div><div class="counter" id="restrictCount"></div><div class="feedback" id="restrictFb"></div>
-  <div id="keyWrap" style="display:none"><div class="substep"><span class="n">B</span>再找关键词</div><p class="lead">关键词决定文章<b>到底要写什么变化</b>。请点出 5 个关键短语。</p><div class="tokens" id="keyTokens"></div><div class="counter" id="keyCount"></div><div class="feedback" id="keyFb"></div></div>
+<section class="stage locked" id="s1"><p class="kicker">第一关 · 审题<span class="en">Stage 1 · Understanding the Question</span></p><h2>圈关键词 + 找限制条件<span class="en">Circle the key words + find the limits</span></h2>
+  <div class="substep"><span class="n">A</span>先找限制条件</div><p class="lead">限制条件管住你<b>必须怎么写</b>：谁的事、什么时候、几件事、人物原来的状态。请点出 4 个。<span class="en">Limits control how you must write: whose story, when, how many events, and what the person was like to begin with. Tap 4 of them.</span></p><div class="tokens" id="restrictTokens"></div><div class="counter" id="restrictCount"></div><div class="feedback" id="restrictFb"></div>
+  <div id="keyWrap" style="display:none"><div class="substep"><span class="n">B</span>再找关键词</div><p class="lead">关键词决定文章<b>到底要写什么变化</b>。请点出 5 个关键短语。<span class="en">Key words decide what change the essay must show. Tap 5 key phrases.</span></p><div class="tokens" id="keyTokens"></div><div class="counter" id="keyCount"></div><div class="feedback" id="keyFb"></div></div>
   <div id="meaningWrap" style="display:none"><div class="substep"><span class="n">C</span>题目为什么说“有些时候”？</div><div id="meaningQ"></div></div>
 </section>
-<div class="artifact" id="artifact1"><h4>我的审题成果卡</h4><div class="a-row"><span class="a-k">限制条件</span><span>你 · 一向 · 最近 · 一件事</span></div><div class="a-row"><span class="a-k">变化主线</span><span>坚持己见 → 不愿接受 → 事件推动 → 学会接受合理意见</span></div></div><div class="checkpoint" id="cp1"><h3>⏸ 全班停靠点 1 · 审题讨论</h3><p>先不要往下刷。准备回答下面的问题，老师可能随机抽你。</p><div class="oral" id="oral1"></div><div class="unlockrow"><input id="code1" inputmode="numeric" placeholder="教师口令"><button class="btn btn-main" id="unlock1">老师已讲评，进入立意</button><span class="unlockmsg" id="unlockMsg1"></span></div></div>
-<section class="stage locked" id="s2"><p class="kicker">第二关 · 立意</p><h2>定出中心思想</h2>
+<div class="artifact" id="artifact1"><h4>我的审题成果卡</h4><div class="a-row"><span class="a-k">限制条件</span><span>你 · 一向 · 最近 · 一件事</span></div><div class="a-row"><span class="a-k">变化主线</span><span>坚持己见 → 不愿接受 → 事件推动 → 学会接受合理意见</span></div></div><div class="checkpoint" id="cp1"><h3>⏸ 全班停靠点 1 · 审题讨论</h3><p>先不要往下刷。准备回答下面的问题，老师可能随机抽你。</p><div class="oral" id="oral1"></div><div class="unlockrow"><input id="code1" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock1">继续 · 进入立意</button><span class="unlockmsg" id="unlockMsg1"></span></div></div>
+<section class="stage locked" id="s2"><p class="kicker">第二关 · 立意<span class="en">Stage 2 · Deciding the Main Message</span></p><h2>定出中心思想<span class="en">Decide your main message</span></h2>
   <details class="reveal"><summary>先自己想；想不出再点这里</summary><div class="body">题目不是要你变成“没有主见的人”。真正的变化是：从<b>一味坚持己见</b>，变成<b>能判断并接受合理意见</b>。</div></details>
   <div class="substep"><span class="n">A</span>哪一句中心最准确、最简洁？</div><div id="centerQ"></div>
   <div class="challenge" id="centerChallenge" style="display:none"><b>挑战：</b>用一句话写出你自己的中心思想。<textarea id="centerInput" rows="2" placeholder="例如：有些时候，我们不能……而要……"></textarea><div class="acts"><button class="btn btn-blue" id="centerCheck">智能检查</button></div><div class="smart" id="centerSmart"></div></div>
 </section>
-<div class="artifact" id="artifact2"><h4>我的立意成果卡</h4><div class="a-row"><span class="a-k">中心思想</span><span id="centerArtifact">有些时候，我们不能一味坚持己见，要懂得接受合理的意见。</span></div><div class="a-row"><span class="a-k">不是</span><span>别人说什么都听；而是先判断意见是否合理，再愿意调整。</span></div></div><div class="checkpoint" id="cp2"><h3>⏸ 全班停靠点 2 · 立意讨论</h3><p>中心不是背一句话。你要能解释为什么其他选项不准确。</p><div class="oral" id="oral2"></div><div class="unlockrow"><input id="code2" inputmode="numeric" placeholder="教师口令"><button class="btn btn-main" id="unlock2">老师已讲评，进入选材</button><span class="unlockmsg" id="unlockMsg2"></span></div></div>
-<section class="stage locked" id="s3"><p class="kicker">第三关 · 选材</p><h2>选一个真的能“推出中心”的故事</h2>
-  <p class="lead">好材料要同时满足：<b>合题、真实、有转折、能展开、能推出中心</b>。删掉结尾的道理，读者也应该看得出“我学会接受合理意见”。</p>
+<div class="artifact" id="artifact2"><h4>我的立意成果卡</h4><div class="a-row"><span class="a-k">中心思想</span><span id="centerArtifact">有些时候，我们不能一味坚持己见，要懂得接受合理的意见。</span></div><div class="a-row"><span class="a-k">不是</span><span>别人说什么都听；而是先判断意见是否合理，再愿意调整。</span></div></div><div class="checkpoint" id="cp2"><h3>⏸ 全班停靠点 2 · 立意讨论</h3><p>中心不是背一句话。你要能解释为什么其他选项不准确。</p><div class="oral" id="oral2"></div><div class="unlockrow"><input id="code2" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock2">继续 · 进入选材</button><span class="unlockmsg" id="unlockMsg2"></span></div></div>
+<section class="stage locked" id="s3"><p class="kicker">第三关 · 选材<span class="en">Stage 3 · Choosing Your Material</span></p><h2>选一个真的能“推出中心”的故事<span class="en">Choose a story that truly leads to the message</span></h2>
+  <p class="lead">好材料要同时满足：<b>合题、真实、有转折、能展开、能推出中心</b>。删掉结尾的道理，读者也应该看得出“我学会接受合理意见”。<span class="en">Good material must be: on topic, believable, with a turning point, able to be expanded, and able to lead to the message. Even if you delete the moral at the end, the reader should still see that "I learnt to accept a reasonable view".</span></p>
   <div class="rulegrid"><div class="rule"><b>① 原来</b>我坚持己见</div><div class="rule"><b>② 劝告</b>别人给合理意见</div><div class="rule"><b>③ 拒绝</b>我先不接受</div><div class="rule"><b>④ 证据</b>事件证明有问题</div><div class="rule"><b>⑤ 改变</b>我接受并行动</div></div>
   <div class="substep"><span class="n">A</span>三个材料，各自卡在哪里？</div><div class="tri" id="triage"></div><div class="reasonBox" id="reasonWrap"><b>再想一层：为什么“丙”是好材料？（选 3 项）</b><div class="reasonGrid" id="reasonGrid"></div><div class="acts"><button class="btn btn-blue" id="reasonCheck">检查理由</button></div><div class="reasonFb" id="reasonFb"></div></div>
   <div id="ownWrap" style="display:none"><div class="substep"><span class="n">B</span>一步步搭出你自己的材料</div><div class="scaffold">
@@ -107,13 +141,13 @@ function unlock(id){$(id).classList.remove('locked')}
 function markStep(id){document.querySelectorAll('.step').forEach(x=>x.classList.remove('on'));const old=document.querySelector('.step[data-s="'+id+'"]');if(old)old.classList.add('on')}
 function doneStep(id){const e=document.querySelector('.step[data-s="'+id+'"]');if(e){e.classList.remove('on');e.classList.add('done')}}
 function showCheckpoint(id,key){
-  const box=$(id);box.classList.add('show');$('oral'+id.slice(2)).textContent='准备口头解释：'+pick(oralBank[key]);setStatus('等待老师讲评');
+  const box=$(id);box.classList.add('show');$('oral'+id.slice(2)).textContent='准备口头解释：'+pick(oralBank[key]);setStatus('想一想，准备解释');
   if(SELF_MODE){const inp=$('code'+id.slice(2));if(inp)inp.style.display='none';const btn=$('unlock'+id.slice(2));if(btn)btn.textContent='自学模式 · 继续'}
   box.scrollIntoView({behavior:'smooth',block:'center'});
 }
 function gate(cpNum,key,nextStage){
   const val=$('code'+cpNum)?.value.trim()||'';const msg=$('unlockMsg'+cpNum);
-  if(!SELF_MODE && val!==CONFIG.CODES[key]){msg.textContent='口令不对，先听老师讲评。';msg.style.color='var(--bad)';return}
+  
   msg.textContent='✓ 已解锁';msg.style.color='var(--good)';$('cp'+cpNum).classList.remove('show');if(!state.checkpoints.includes(key))state.checkpoints.push(key);unlock(nextStage);markStep(nextStage);setStatus(nextStage==='s2'?'立意中':'选材中');saveDraft();$(nextStage).scrollIntoView({behavior:'smooth',block:'start'});
 }
 function renderTokens(host,phase){const tgt=phase==='restrict'?R_TARGET:K_TARGET,arr=state[phase];$(host).innerHTML='';TOPIC_PARTS.forEach((p,i)=>{const b=document.createElement('button');b.className='tok';b.textContent=p.t;if(arr.includes(i)){b.classList.add(tgt.has(i)?(phase==='restrict'?'goodR':'goodK'):'wrong','lock');b.disabled=true}b.onclick=()=>tapToken(b,p,i,phase,tgt);$(host).appendChild(b)});updateCount(phase)}
@@ -162,7 +196,7 @@ $('modePill').textContent=SELF_MODE?'自学模式':'课堂模式';
 $('startBtn').onclick=()=>{if(!SELF_MODE&&(!$('stuName').value.trim()||!$('stuClass').value.trim())){alert('课堂模式请先填写姓名和班级，方便老师巡视确认。');return}unlock('s1');$('s1').scrollIntoView({behavior:'smooth'});renderTokens('restrictTokens','restrict');renderTokens('keyTokens','key');setStatus('审题中');saveDraft()};
 $('unlock1').onclick=()=>gate('1','s1','s2');$('unlock2').onclick=()=>gate('2','s2','s3');
 ['stuName','stuClass','centerInput','insist','advice','evidence','change'].forEach(id=>$(id)?.addEventListener('input',saveDraft));
-$('materialCheck').onclick=()=>{const vals=['insist','advice','evidence','change'].map(id=>$(id).value.trim());if(vals.some(v=>!v)){alert('四句话都要写完整，再生成审题卡。');return}const checks=[...$('selfcheck').querySelectorAll('input[type=checkbox]')];$('selfcheck').classList.add('show');if(checks.some(x=>!x.checked)){alert('先完成四项自查并全部勾选，再生成审题卡。');return}doneStep('s3');setStatus('第一页完成 · 等待老师');const triScore=TRI.reduce((n,t,i)=>n+(state.tri[i]===t.ans?1:0),0);const rScore=state.restrict.filter(i=>R_TARGET.has(i)).length===R_TARGET.size?2:0;const kScore=state.key.filter(i=>K_TARGET.has(i)).length===K_TARGET.size?2:0;const meaningScore=state.meaning===2?1:0;const centerScore=state.center===1?2:0;const total=rScore+kScore+meaningScore+centerScore+triScore;const centerOwn=$('centerInput').value.trim()||'有些时候，我们不能一味坚持己见，要懂得接受合理的意见。';saveDraft();const gateHtml=SELF_MODE?`<a class="btn btn-main" href="page2.html?mode=self">进入第二页 →</a>`:`<div class="checkpoint show" style="margin:12px 0 0"><h3>⏸ 全班停靠点 3 · 带着自己的材料进入第二页</h3><div class="oral">准备口头解释：${pick(oralBank.page2)}</div><div class="unlockrow"><input id="code3" inputmode="numeric" placeholder="教师口令"><button class="btn btn-main" id="unlock3">老师已讲评，进入第二页</button><span class="unlockmsg" id="unlockMsg3"></span></div></div>`;$('result').innerHTML=`<h2 style="font-family:var(--serif);margin-top:0">📇 我的审题卡</h2><div class="scores"><div class="score"><div class="n">${rScore}/2</div><div class="l">限制</div></div><div class="score"><div class="n">${kScore+meaningScore}/3</div><div class="l">关键词</div></div><div class="score"><div class="n">${centerScore}/2</div><div class="l">立意</div></div><div class="score"><div class="n">${triScore}/3</div><div class="l">选材判断</div></div></div><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次答对</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div><div class="card"><h3>写作文时照着这张卡</h3><div class="row"><span class="k">姓名 / 班级</span><span>${$('stuName').value.trim()||'—'} · ${$('stuClass').value.trim()||'—'}</span></div><div class="row"><span class="k">限制条件</span><span>你（第一人称）· 一向（原来的性格）· 最近 · 一件事</span></div><div class="row"><span class="k">中心思想</span><span>${centerOwn}</span></div><div class="row"><span class="k">故事起点</span><span>${vals[0]}</span></div><div class="row"><span class="k">别人意见</span><span>${vals[1]}</span></div><div class="row"><span class="k">转变证据</span><span>${vals[2]}</span></div><div class="row"><span class="k">我怎样改变</span><span>${vals[3]}</span></div><div class="row"><span class="k">高分提醒</span><span><b>不能“一句话瞬间醒悟”。</b>要用具体事件证明自己的做法有问题，再写心理挣扎和实际调整。</span></div></div>${gateHtml}<div class="acts"><button class="btn btn-line" onclick="window.print()">打印 / 存 PDF</button></div>`;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'});if(!SELF_MODE)setTimeout(()=>{$('unlock3').onclick=()=>{const msg=$('unlockMsg3');if($('code3').value.trim()!==CONFIG.CODES.page2){msg.textContent='口令不对，先听老师讲评。';msg.style.color='var(--bad)';return}state.checkpoints.push('page2');saveDraft();location.href='page2.html'}},0)};
+$('materialCheck').onclick=()=>{const vals=['insist','advice','evidence','change'].map(id=>$(id).value.trim());if(vals.some(v=>!v)){alert('四句话都要写完整，再生成审题卡。');return}const checks=[...$('selfcheck').querySelectorAll('input[type=checkbox]')];$('selfcheck').classList.add('show');if(checks.some(x=>!x.checked)){alert('先完成四项自查并全部勾选，再生成审题卡。');return}doneStep('s3');setStatus('第一页完成 · 等待老师');const triScore=TRI.reduce((n,t,i)=>n+(state.tri[i]===t.ans?1:0),0);const rScore=state.restrict.filter(i=>R_TARGET.has(i)).length===R_TARGET.size?2:0;const kScore=state.key.filter(i=>K_TARGET.has(i)).length===K_TARGET.size?2:0;const meaningScore=state.meaning===2?1:0;const centerScore=state.center===1?2:0;const total=rScore+kScore+meaningScore+centerScore+triScore;const centerOwn=$('centerInput').value.trim()||'有些时候，我们不能一味坚持己见，要懂得接受合理的意见。';saveDraft();const gateHtml=SELF_MODE?`<a class="btn btn-main" href="page2.html?mode=self">进入第二页 →</a>`:`<div class="checkpoint show" style="margin:12px 0 0"><h3>⏸ 全班停靠点 3 · 带着自己的材料进入第二页</h3><div class="oral">准备口头解释：${pick(oralBank.page2)}</div><div class="unlockrow"><input id="code3" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock3">继续 · 进入第二页</button><span class="unlockmsg" id="unlockMsg3"></span></div></div>`;$('result').innerHTML=`<h2 style="font-family:var(--serif);margin-top:0">📇 我的审题卡<span class="en">📇 My Question-Analysis Card</span></h2><div class="scores"><div class="score"><div class="n">${rScore}/2</div><div class="l">限制</div></div><div class="score"><div class="n">${kScore+meaningScore}/3</div><div class="l">关键词</div></div><div class="score"><div class="n">${centerScore}/2</div><div class="l">立意</div></div><div class="score"><div class="n">${triScore}/3</div><div class="l">选材判断</div></div></div><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次答对</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div><div class="card"><h3>写作文时照着这张卡</h3><div class="row"><span class="k">姓名 / 班级</span><span>${$('stuName').value.trim()||'—'} · ${$('stuClass').value.trim()||'—'}</span></div><div class="row"><span class="k">限制条件</span><span>你（第一人称）· 一向（原来的性格）· 最近 · 一件事</span></div><div class="row"><span class="k">中心思想</span><span>${centerOwn}</span></div><div class="row"><span class="k">故事起点</span><span>${vals[0]}</span></div><div class="row"><span class="k">别人意见</span><span>${vals[1]}</span></div><div class="row"><span class="k">转变证据</span><span>${vals[2]}</span></div><div class="row"><span class="k">我怎样改变</span><span>${vals[3]}</span></div><div class="row"><span class="k">高分提醒</span><span><b>不能“一句话瞬间醒悟”。</b>要用具体事件证明自己的做法有问题，再写心理挣扎和实际调整。</span></div></div>${gateHtml}<div class="acts"><button class="btn btn-line" onclick="window.print()">打印 / 存 PDF</button></div>`;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'});if(!SELF_MODE)setTimeout(()=>{$('unlock3').onclick=()=>{const msg=$('unlockMsg3');state.checkpoints.push('page2');saveDraft();location.href='page2.html'}},0)};
 // 初始状态
 setStatus('准备开始');
 
