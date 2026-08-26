@@ -68,6 +68,50 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
   .kicker::before{height:22px}
   .en{font-size:13px}
 }
+
+/* ===== 第二页入口 / 返回链接 ===== */
+.nextpage{
+  margin:22px 0 6px; padding:20px 22px; border-radius:14px;
+  background:linear-gradient(135deg,#FFF6E8,#FDECD9);
+  border:2px solid #D6AE59; text-align:center;
+}
+.np-txt{font-size:15.5px; font-weight:700; color:#7A570D; margin-bottom:14px; line-height:1.6}
+.np-txt .en{font-weight:500; color:#96755F; margin-top:2px}
+.np-btn{
+  display:inline-block !important; font-size:19px !important; font-weight:900 !important;
+  padding:16px 34px !important; border-radius:12px !important;
+  text-decoration:none !important; line-height:1.3 !important;
+  box-shadow:0 6px 18px rgba(122,87,13,.28);
+}
+.np-btn .en{font-size:13px; font-weight:600; opacity:.9; margin-top:3px; color:#fff}
+.backlink{
+  display:inline-flex; align-items:center; gap:6px; margin:0 0 4px;
+  font-size:14px; font-weight:700; color:#8A6A3B; text-decoration:none;
+  background:#FBF2E0; border:1px solid #D6AE59; border-radius:20px; padding:7px 16px;
+}
+.backlink:hover{background:#F6E6C4}
+.backlink .en{display:inline; font-size:12px; font-weight:500; color:#9C8158; margin:0 0 0 4px}
+@media(max-width:620px){ .np-btn{font-size:17px !important; padding:15px 22px !important; width:100%} }
+
+/* ===== 按钮内英文换行排版 ===== */
+button .en, .btn .en, .opts button .en, .tri-opts button .en,
+.dtchoose button .en, .choiceMenu button .en, .eventMenu button .en, .tabs button .en{
+  display:block; font-size:11.5px; font-weight:500; line-height:1.35;
+  margin-top:2px; opacity:.82; letter-spacing:0;
+}
+button, .btn{ line-height:1.35; height:auto }
+.opts button, .tri-opts button, .compare button{ line-height:1.5 }
+/* 深色按钮上的英文用浅色 */
+.opts button.picked .en, .btn-main .en, .btn-brush .en, .btn-fill .en,
+.dtchoose button.on .en, .tri-opts button.chosen .en{ color:#fff; opacity:.85 }
+/* substep 里的英文另起一行 */
+.substep{ align-items:flex-start; flex-wrap:wrap }
+.substep .en{ display:block; width:100%; font-size:12.5px; font-weight:500;
+  color:#7C8A94; margin-top:2px; letter-spacing:0 }
+</style>
+
+<style id="green-analysis-bilingual-style">
+.en-analysis{display:block;margin-top:4px;font-size:12.5px;font-weight:500;line-height:1.45;color:inherit;opacity:.82;font-style:normal}
 </style>
 </head>
 <body>
@@ -75,7 +119,7 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
 <nav class="stepper"><div class="stepper-inner"><div class="step on" data-s="s1"><span class="dot">审</span><span class="nm">审题</span></div><span class="bar"></span><div class="step" data-s="s2"><span class="dot">立</span><span class="nm">立意</span></div><span class="bar"></span><div class="step" data-s="s3"><span class="dot">选</span><span class="nm">选材</span></div></div></nav>
 <div class="wrap">
 <header class="hero">
-  <div class="eyebrow">SITUATIONAL NARRATIVE · 中二高级华文</div>
+  <div class="eyebrow">情境记叙文 · 中二高级华文</div>
   <h1>先把题目想清楚，再开始写</h1>
   <p class="sub">训练重点：关键词贯穿全文 · 转变要有事件推动 · 不能“一句话瞬间醒悟”</p>
   <div class="topic">你一向坚持自己的看法，不太愿意接受别人的意见。最近发生了一件事，让你学会了有些时候要懂得接受别人的劝告或意见。</div>
@@ -83,22 +127,22 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
   <p class="note"><b>今天不是写整篇作文。</b>先完成“审题 → 立意 → 选材”。每一步做对，最后会生成一张可以直接带去列提纲的「审题卡」。</p>
 </header>
 
-<section class="stage" id="start"><p class="kicker">先读题<span class="en">Read the Question First</span></p><h2>先看懂题目给了什么<span class="en">First see what the question gives you</span></h2><p class="lead">这道题已经给了<b>人物原来的问题</b>和<b>最后学到的道理</b>。你要自己设计一件真实、合理、有转折的事，把两者连起来。<span class="en">This question already gives you the person's original problem and the lesson learnt at the end. You must design a believable event with a turning point that links the two.</span></p><div class="acts"><button class="btn btn-main" id="startBtn">开始 · 进入第一关</button></div></section>
+<section class="stage" id="start"><p class="kicker">先读题</p><h2>先看懂题目给了什么</h2><p class="lead">这道题已经给了<b>人物原来的问题</b>和<b>最后学到的道理</b>。你要自己设计一件真实、合理、有转折的事，把两者连起来。</p><div class="acts"><button class="btn btn-main" id="startBtn">开始 · 进入第一关</button></div></section>
 
-<section class="stage locked" id="s1"><p class="kicker">第一关 · 审题<span class="en">Stage 1 · Understanding the Question</span></p><h2>圈关键词 + 找限制条件<span class="en">Circle the key words + find the limits</span></h2>
-  <div class="substep"><span class="n">A</span>先找限制条件</div><p class="lead">限制条件管住你<b>必须怎么写</b>：谁的事、什么时候、几件事、人物原来的状态。请点出 4 个。<span class="en">Limits control how you must write: whose story, when, how many events, and what the person was like to begin with. Tap 4 of them.</span></p><div class="tokens" id="restrictTokens"></div><div class="counter" id="restrictCount"></div><div class="feedback" id="restrictFb"></div>
-  <div id="keyWrap" style="display:none"><div class="substep"><span class="n">B</span>再找关键词</div><p class="lead">关键词决定文章<b>到底要写什么变化</b>。请点出 5 个关键短语。<span class="en">Key words decide what change the essay must show. Tap 5 key phrases.</span></p><div class="tokens" id="keyTokens"></div><div class="counter" id="keyCount"></div><div class="feedback" id="keyFb"></div></div>
+<section class="stage locked" id="s1"><p class="kicker">第一关 · 审题</p><h2>圈关键词 + 找限制条件</h2>
+  <div class="substep"><span class="n">A</span>先找限制条件</div><p class="lead">限制条件管住你<b>必须怎么写</b>：谁的事、什么时候、几件事、人物原来的状态。请点出 4 个。</p><div class="tokens" id="restrictTokens"></div><div class="counter" id="restrictCount"></div><div class="feedback" id="restrictFb"></div>
+  <div id="keyWrap" style="display:none"><div class="substep"><span class="n">B</span>再找关键词</div><p class="lead">关键词决定文章<b>到底要写什么变化</b>。请点出 5 个关键短语。</p><div class="tokens" id="keyTokens"></div><div class="counter" id="keyCount"></div><div class="feedback" id="keyFb"></div></div>
   <div id="meaningWrap" style="display:none"><div class="substep"><span class="n">C</span>题目为什么说“有些时候”？</div><div id="meaningQ"></div></div>
 </section>
 <div class="artifact" id="artifact1"><h4>我的审题成果卡</h4><div class="a-row"><span class="a-k">限制条件</span><span>你 · 一向 · 最近 · 一件事</span></div><div class="a-row"><span class="a-k">变化主线</span><span>坚持己见 → 不愿接受 → 事件推动 → 学会接受合理意见</span></div></div><div class="checkpoint" id="cp1"><h3>⏸ 全班停靠点 1 · 审题讨论</h3><p>先不要往下刷。准备回答下面的问题，老师可能随机抽你。</p><div class="oral" id="oral1"></div><div class="unlockrow"><input id="code1" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock1">继续 · 进入立意</button><span class="unlockmsg" id="unlockMsg1"></span></div></div>
-<section class="stage locked" id="s2"><p class="kicker">第二关 · 立意<span class="en">Stage 2 · Deciding the Main Message</span></p><h2>定出中心思想<span class="en">Decide your main message</span></h2>
+<section class="stage locked" id="s2"><p class="kicker">第二关 · 立意</p><h2>定出中心思想</h2>
   <details class="reveal"><summary>先自己想；想不出再点这里</summary><div class="body">题目不是要你变成“没有主见的人”。真正的变化是：从<b>一味坚持己见</b>，变成<b>能判断并接受合理意见</b>。</div></details>
   <div class="substep"><span class="n">A</span>哪一句中心最准确、最简洁？</div><div id="centerQ"></div>
   <div class="challenge" id="centerChallenge" style="display:none"><b>挑战：</b>用一句话写出你自己的中心思想。<textarea id="centerInput" rows="2" placeholder="例如：有些时候，我们不能……而要……"></textarea><div class="acts"><button class="btn btn-blue" id="centerCheck">智能检查</button></div><div class="smart" id="centerSmart"></div></div>
 </section>
 <div class="artifact" id="artifact2"><h4>我的立意成果卡</h4><div class="a-row"><span class="a-k">中心思想</span><span id="centerArtifact">有些时候，我们不能一味坚持己见，要懂得接受合理的意见。</span></div><div class="a-row"><span class="a-k">不是</span><span>别人说什么都听；而是先判断意见是否合理，再愿意调整。</span></div></div><div class="checkpoint" id="cp2"><h3>⏸ 全班停靠点 2 · 立意讨论</h3><p>中心不是背一句话。你要能解释为什么其他选项不准确。</p><div class="oral" id="oral2"></div><div class="unlockrow"><input id="code2" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock2">继续 · 进入选材</button><span class="unlockmsg" id="unlockMsg2"></span></div></div>
-<section class="stage locked" id="s3"><p class="kicker">第三关 · 选材<span class="en">Stage 3 · Choosing Your Material</span></p><h2>选一个真的能“推出中心”的故事<span class="en">Choose a story that truly leads to the message</span></h2>
-  <p class="lead">好材料要同时满足：<b>合题、真实、有转折、能展开、能推出中心</b>。删掉结尾的道理，读者也应该看得出“我学会接受合理意见”。<span class="en">Good material must be: on topic, believable, with a turning point, able to be expanded, and able to lead to the message. Even if you delete the moral at the end, the reader should still see that "I learnt to accept a reasonable view".</span></p>
+<section class="stage locked" id="s3"><p class="kicker">第三关 · 选材</p><h2>选一个真的能“推出中心”的故事</h2>
+  <p class="lead">好材料要同时满足：<b>合题、真实、有转折、能展开、能推出中心</b>。删掉结尾的道理，读者也应该看得出“我学会接受合理意见”。</p>
   <div class="rulegrid"><div class="rule"><b>① 原来</b>我坚持己见</div><div class="rule"><b>② 劝告</b>别人给合理意见</div><div class="rule"><b>③ 拒绝</b>我先不接受</div><div class="rule"><b>④ 证据</b>事件证明有问题</div><div class="rule"><b>⑤ 改变</b>我接受并行动</div></div>
   <div class="substep"><span class="n">A</span>三个材料，各自卡在哪里？</div><div class="tri" id="triage"></div><div class="reasonBox" id="reasonWrap"><b>再想一层：为什么“丙”是好材料？（选 3 项）</b><div class="reasonGrid" id="reasonGrid"></div><div class="acts"><button class="btn btn-blue" id="reasonCheck">检查理由</button></div><div class="reasonFb" id="reasonFb"></div></div>
   <div id="ownWrap" style="display:none"><div class="substep"><span class="n">B</span>一步步搭出你自己的材料</div><div class="scaffold">
@@ -185,8 +229,8 @@ REASONS.forEach((r,i)=>{const lab=document.createElement('label');lab.innerHTML=
 $('reasonCheck').onclick=()=>{const picked=[...document.querySelectorAll('#reasonGrid input')].map((x,i)=>x.checked?i:-1).filter(i=>i>=0);const ok=picked.length===3&&[0,1,2].every(i=>picked.includes(i))&&!picked.includes(3);state.reasonTry++;if(ok){state.reasonDone=true;if(state.reasonTry===1)state.stats.firstTry++;else state.stats.revised++;$('reasonFb').innerHTML='✓ 对。好材料不是“结果成功”就够了，而是要有<b>分歧 → 证据 → 反思 → 行动</b>，故事本身能推出中心。';$('reasonFb').style.color='var(--good)';$('reasonGrid').querySelectorAll('input').forEach(x=>x.disabled=true);$('reasonCheck').disabled=true;$('ownWrap').style.display='block';setStatus('搭建自己的材料');saveDraft()}else if(state.reasonTry===1){state.stats.wrongClicks++;$('reasonFb').textContent='△ 提示：不要把“结果成功”当作选材好坏的核心标准。再想：这个故事为什么能让“转变”自然发生？';$('reasonFb').style.color='var(--bad)';setStatus('发现错误，正在修正')}else{state.stats.revealed++;$('reasonFb').innerHTML='正确理由是前 3 项。第 4 项不成立：成功结局本身不能保证材料有深度。';$('reasonFb').style.color='var(--bad)';document.querySelectorAll('#reasonGrid input').forEach((x,i)=>{x.checked=i<3;x.disabled=true});$('reasonCheck').disabled=true;state.reasonDone=true;$('ownWrap').style.display='block';saveDraft()}};
 const SCENES=[
  {k:'school',name:'🏫 课堂 / 小组作业',events:['小组展示：我坚持自己的版面和内容，不肯删减','科学实验：我坚持自己的步骤，不听同伴提醒','班级活动：我坚持自己的安排，不愿调整分工']},
- {k:'cca',name:'🏃 CCA / 比赛',events:['球赛训练：我坚持单打独斗，不听队友战术建议','表演排练：我坚持自己的节奏，不肯配合团队','比赛准备：我坚持旧方法，不接受教练的调整意见']},
- {k:'home',name:'🏠 家里 / 生活',events:['旅行准备：我坚持自己的行程，不听家人提醒','做大件物品 / DIY：我坚持自己的方法，不听安全建议','家庭活动：我坚持自己的安排，忽略家人的实际需要']}
+ {k:'cca',name:'🏃 课外活动 / 比赛',events:['球赛训练：我坚持单打独斗，不听队友战术建议','表演排练：我坚持自己的节奏，不肯配合团队','比赛准备：我坚持旧方法，不接受教练的调整意见']},
+ {k:'home',name:'🏠 家里 / 生活',events:['旅行准备：我坚持自己的行程，不听家人提醒','做大件物品 / 动手制作：我坚持自己的方法，不听安全建议','家庭活动：我坚持自己的安排，忽略家人的实际需要']}
 ];
 const ADVICES=['删掉不必要的内容，先把重点讲清楚','先试一次 / 排练一次，用实际结果检查方法','分工合作，不要一个人决定全部','根据规则、安全或时间限制调整做法'];
 function renderScaffold(){SCENES.forEach(s=>{const b=document.createElement('button');b.textContent=s.name;b.onclick=()=>{state.scene=s.k;document.querySelectorAll('#sceneTabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderEvents(s)};$('sceneTabs').appendChild(b)});ADVICES.forEach((a,i)=>{const b=document.createElement('button');b.textContent=a;b.onclick=()=>{state.adviceChoice=i;document.querySelectorAll('#adviceMenu button').forEach(x=>x.classList.remove('on'));b.classList.add('on');$('fillLayer').style.display='block';if(!$('advice').value)$('advice').value=a;saveDraft()};$('adviceMenu').appendChild(b)})}
@@ -196,12 +240,87 @@ $('modePill').textContent=SELF_MODE?'自学模式':'课堂模式';
 $('startBtn').onclick=()=>{if(!SELF_MODE&&(!$('stuName').value.trim()||!$('stuClass').value.trim())){alert('课堂模式请先填写姓名和班级，方便老师巡视确认。');return}unlock('s1');$('s1').scrollIntoView({behavior:'smooth'});renderTokens('restrictTokens','restrict');renderTokens('keyTokens','key');setStatus('审题中');saveDraft()};
 $('unlock1').onclick=()=>gate('1','s1','s2');$('unlock2').onclick=()=>gate('2','s2','s3');
 ['stuName','stuClass','centerInput','insist','advice','evidence','change'].forEach(id=>$(id)?.addEventListener('input',saveDraft));
-$('materialCheck').onclick=()=>{const vals=['insist','advice','evidence','change'].map(id=>$(id).value.trim());if(vals.some(v=>!v)){alert('四句话都要写完整，再生成审题卡。');return}const checks=[...$('selfcheck').querySelectorAll('input[type=checkbox]')];$('selfcheck').classList.add('show');if(checks.some(x=>!x.checked)){alert('先完成四项自查并全部勾选，再生成审题卡。');return}doneStep('s3');setStatus('第一页完成 · 等待老师');const triScore=TRI.reduce((n,t,i)=>n+(state.tri[i]===t.ans?1:0),0);const rScore=state.restrict.filter(i=>R_TARGET.has(i)).length===R_TARGET.size?2:0;const kScore=state.key.filter(i=>K_TARGET.has(i)).length===K_TARGET.size?2:0;const meaningScore=state.meaning===2?1:0;const centerScore=state.center===1?2:0;const total=rScore+kScore+meaningScore+centerScore+triScore;const centerOwn=$('centerInput').value.trim()||'有些时候，我们不能一味坚持己见，要懂得接受合理的意见。';saveDraft();const gateHtml=SELF_MODE?`<a class="btn btn-main" href="page2.html?mode=self">进入第二页 →</a>`:`<div class="checkpoint show" style="margin:12px 0 0"><h3>⏸ 全班停靠点 3 · 带着自己的材料进入第二页</h3><div class="oral">准备口头解释：${pick(oralBank.page2)}</div><div class="unlockrow"><input id="code3" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock3">继续 · 进入第二页</button><span class="unlockmsg" id="unlockMsg3"></span></div></div>`;$('result').innerHTML=`<h2 style="font-family:var(--serif);margin-top:0">📇 我的审题卡<span class="en">📇 My Question-Analysis Card</span></h2><div class="scores"><div class="score"><div class="n">${rScore}/2</div><div class="l">限制</div></div><div class="score"><div class="n">${kScore+meaningScore}/3</div><div class="l">关键词</div></div><div class="score"><div class="n">${centerScore}/2</div><div class="l">立意</div></div><div class="score"><div class="n">${triScore}/3</div><div class="l">选材判断</div></div></div><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次答对</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div><div class="card"><h3>写作文时照着这张卡</h3><div class="row"><span class="k">姓名 / 班级</span><span>${$('stuName').value.trim()||'—'} · ${$('stuClass').value.trim()||'—'}</span></div><div class="row"><span class="k">限制条件</span><span>你（第一人称）· 一向（原来的性格）· 最近 · 一件事</span></div><div class="row"><span class="k">中心思想</span><span>${centerOwn}</span></div><div class="row"><span class="k">故事起点</span><span>${vals[0]}</span></div><div class="row"><span class="k">别人意见</span><span>${vals[1]}</span></div><div class="row"><span class="k">转变证据</span><span>${vals[2]}</span></div><div class="row"><span class="k">我怎样改变</span><span>${vals[3]}</span></div><div class="row"><span class="k">高分提醒</span><span><b>不能“一句话瞬间醒悟”。</b>要用具体事件证明自己的做法有问题，再写心理挣扎和实际调整。</span></div></div>${gateHtml}<div class="acts"><button class="btn btn-line" onclick="window.print()">打印 / 存 PDF</button></div>`;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'});if(!SELF_MODE)setTimeout(()=>{$('unlock3').onclick=()=>{const msg=$('unlockMsg3');state.checkpoints.push('page2');saveDraft();location.href='page2.html'}},0)};
+$('materialCheck').onclick=()=>{const vals=['insist','advice','evidence','change'].map(id=>$(id).value.trim());if(vals.some(v=>!v)){alert('四句话都要写完整，再生成审题卡。');return}const checks=[...$('selfcheck').querySelectorAll('input[type=checkbox]')];$('selfcheck').classList.add('show');if(checks.some(x=>!x.checked)){alert('先完成四项自查并全部勾选，再生成审题卡。');return}doneStep('s3');setStatus('第一页完成 · 等待老师');const triScore=TRI.reduce((n,t,i)=>n+(state.tri[i]===t.ans?1:0),0);const rScore=state.restrict.filter(i=>R_TARGET.has(i)).length===R_TARGET.size?2:0;const kScore=state.key.filter(i=>K_TARGET.has(i)).length===K_TARGET.size?2:0;const meaningScore=state.meaning===2?1:0;const centerScore=state.center===1?2:0;const total=rScore+kScore+meaningScore+centerScore+triScore;const centerOwn=$('centerInput').value.trim()||'有些时候，我们不能一味坚持己见，要懂得接受合理的意见。';saveDraft();const gateHtml=SELF_MODE?`<a class="btn btn-brush np-btn" href="page2.html?mode=self">进入第二页 · 开始写故事 →</a>`:`<div class="checkpoint show" style="margin:12px 0 0"><h3>⏸ 全班停靠点 3 · 带着自己的材料进入第二页</h3><div class="oral">准备口头解释：${pick(oralBank.page2)}</div><div class="unlockrow"><input id="code3" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-brush np-btn" id="unlock3">进入第二页 · 开始写故事 →</button><span class="unlockmsg" id="unlockMsg3"></span></div></div>`;$('result').innerHTML=`<h2 style="font-family:var(--serif);margin-top:0">📇 我的审题卡</h2><div class="scores"><div class="score"><div class="n">${rScore}/2</div><div class="l">限制</div></div><div class="score"><div class="n">${kScore+meaningScore}/3</div><div class="l">关键词</div></div><div class="score"><div class="n">${centerScore}/2</div><div class="l">立意</div></div><div class="score"><div class="n">${triScore}/3</div><div class="l">选材判断</div></div></div><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次答对</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div><div class="card"><h3>写作文时照着这张卡</h3><div class="row"><span class="k">姓名 / 班级</span><span>${$('stuName').value.trim()||'—'} · ${$('stuClass').value.trim()||'—'}</span></div><div class="row"><span class="k">限制条件</span><span>你（第一人称）· 一向（原来的性格）· 最近 · 一件事</span></div><div class="row"><span class="k">中心思想</span><span>${centerOwn}</span></div><div class="row"><span class="k">故事起点</span><span>${vals[0]}</span></div><div class="row"><span class="k">别人意见</span><span>${vals[1]}</span></div><div class="row"><span class="k">转变证据</span><span>${vals[2]}</span></div><div class="row"><span class="k">我怎样改变</span><span>${vals[3]}</span></div><div class="row"><span class="k">高分提醒</span><span><b>不能“一句话瞬间醒悟”。</b>要用具体事件证明自己的做法有问题，再写心理挣扎和实际调整。</span></div></div>${gateHtml}<div class="acts"><button class="btn btn-line" onclick="window.print()">打印 / 保存</button></div>`;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'});if(!SELF_MODE)setTimeout(()=>{$('unlock3').onclick=()=>{const msg=$('unlockMsg3');state.checkpoints.push('page2');saveDraft();location.href='page2.html'}},0)};
 // 初始状态
 setStatus('准备开始');
 
 </script>
 
+
+<!-- 第一页 → 第二页：统一底部入口 -->
+<style id="page-nav-style">
+.page-nav-footer{max-width:980px;margin:34px auto 70px;padding:0 22px;text-align:center}
+.page-nav-next{width:min(100%,760px);min-height:72px;padding:18px 26px;border:0;border-radius:18px;background:#2F6B45;color:#fff;font-family:inherit;font-size:clamp(20px,2.4vw,28px);font-weight:800;letter-spacing:.02em;cursor:pointer;box-shadow:0 10px 24px rgba(47,107,69,.22);transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+.page-nav-next:hover{background:#285D3C;transform:translateY(-1px);box-shadow:0 12px 28px rgba(47,107,69,.28)}
+.page-nav-next:active{transform:translateY(0)}
+.page-nav-next:focus-visible{outline:4px solid rgba(47,107,69,.24);outline-offset:3px}
+.page-nav-hint{margin-top:10px;font-size:14px;color:#607064}
+.page-nav-hint.warn{color:#A33A32;font-weight:700}
+@media(max-width:640px){.page-nav-footer{padding:0 14px;margin-top:26px}.page-nav-next{min-height:64px;font-size:20px;padding:15px 18px;border-radius:14px}}
+</style>
+<div class="page-nav-footer" aria-label="页面导航">
+  <button class="page-nav-next" id="pageNavNext" type="button">进入第二页：继续写作训练 →</button>
+  <div class="page-nav-hint" id="pageNavHint">完成第一页后，从这里进入第二页。</div>
+</div>
+<script id="page-nav-bridge">
+(function(){
+  const nextBtn=document.getElementById('pageNavNext');
+  const hint=document.getElementById('pageNavHint');
+  if(!nextBtn) return;
+  function visible(el){
+    if(!el) return false;
+    const s=getComputedStyle(el), r=el.getBoundingClientRect();
+    return s.display!=='none' && s.visibility!=='hidden' && r.width>0 && r.height>0 && !el.disabled;
+  }
+  function findRealEntry(){
+    const all=[...document.querySelectorAll('a[href*="page2.html"], button.np-btn, #goPage2, #unlock3')];
+    const candidates=all.filter(el=>el!==nextBtn && !el.closest('.page-nav-footer') && visible(el));
+    return candidates[candidates.length-1]||null;
+  }
+  nextBtn.addEventListener('click',function(){
+    const target=findRealEntry();
+    if(target){
+      hint.classList.remove('warn');
+      if(target.tagName==='A') location.href=target.href;
+      else target.click();
+      return;
+    }
+    hint.textContent='请先完成第一页的全部练习，再进入第二页。';
+    hint.classList.add('warn');
+  });
+})();
+</script>
+
 <script>window.XIEZUO_PAGE={id:"jianchi-kanfa",page:1};</script>
 <script src="../hook.js"></script>
+
+<script id="green-analysis-bilingual">
+(function(){
+  const GREEN_EN={"限制锁定：“你”是主角，“一向”要交代原来的性格，“最近”限定时间，“一件事”限定数量。": "Focus: you, your old habit, a recent time, and one event.", "关键词锁定：文章必须写出“坚持己见 → 不愿接受 → 事件推动 → 学会在有些时候接受合理意见”的变化。": "Show change: insist → reject advice → accept good advice when needed.", "“接受意见”不等于“没有主见”，而是会判断，也愿意修正自己。": "Accepting advice means thinking first, then changing when needed.", "这句话简洁扣住“有些时候”“坚持己见”“接受合理意见”。": "This shows: sometimes insist, sometimes accept good advice.", "扣得很准：有“原来的问题”，也有“接受合理意见”的变化，而且没有写成绝对服从。": "It shows change without saying you must always obey.", "甲能合题，但太浅。故事只有“提醒—不听—淋雨”，转变空间很小。": "A fits, but the change is too simple.", "乙不合题。故事支持的是“不要轻易放弃自己的决定”，与题目方向相反。": "B is off topic: it supports keeping your own decision.", "丙很适合：生活真实、冲突合理、有事件推动转变，也能把“接受意见后怎样改”写具体。": "C is best: real conflict leads to a clear change.", "对。好材料不是“结果成功”就够了，而是要有分歧 → 证据 → 反思 → 行动，故事本身能推出中心。": "Good material: disagreement → evidence → think again → action."};
+  const norm=(s)=>s.replace(/\s+/g,' ').trim().replace(/^✓\s*/,'').replace(/^修正成功。/,'');
+  function zhOnly(el){
+    const c=el.cloneNode(true);
+    c.querySelectorAll('.en-analysis').forEach(n=>n.remove());
+    return norm(c.textContent||'');
+  }
+  function decorate(){
+    document.querySelectorAll('.feedback.good,.tokfb.good,.q.right .fb,.tri-card.good .tri-fb,.smart.ok,#reasonFb,.reasonFb').forEach(el=>{
+      const key=zhOnly(el);
+      const en=GREEN_EN[key];
+      const old=el.querySelector(':scope > .en-analysis');
+      if(!en){ if(old) old.remove(); el.removeAttribute('data-en-key'); return; }
+      if(old && el.dataset.enKey===key) return;
+      if(old) old.remove();
+      const span=document.createElement('span');
+      span.className='en-analysis';
+      span.lang='en';
+      span.textContent=en;
+      el.appendChild(span);
+      el.dataset.enKey=key;
+    });
+  }
+  const obs=new MutationObserver(decorate);
+  if(document.body){obs.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class','style']});decorate();}
+})();
+</script>
 </body></html>
