@@ -268,6 +268,50 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
   .kicker::before{height:22px}
   .en{font-size:13px}
 }
+
+/* ===== 第二页入口 / 返回链接 ===== */
+.nextpage{
+  margin:22px 0 6px; padding:20px 22px; border-radius:14px;
+  background:linear-gradient(135deg,#FFF6E8,#FDECD9);
+  border:2px solid #D6AE59; text-align:center;
+}
+.np-txt{font-size:15.5px; font-weight:700; color:#7A570D; margin-bottom:14px; line-height:1.6}
+.np-txt .en{font-weight:500; color:#96755F; margin-top:2px}
+.np-btn{
+  display:inline-block !important; font-size:19px !important; font-weight:900 !important;
+  padding:16px 34px !important; border-radius:12px !important;
+  text-decoration:none !important; line-height:1.3 !important;
+  box-shadow:0 6px 18px rgba(122,87,13,.28);
+}
+.np-btn .en{font-size:13px; font-weight:600; opacity:.9; margin-top:3px; color:#fff}
+.backlink{
+  display:inline-flex; align-items:center; gap:6px; margin:0 0 4px;
+  font-size:14px; font-weight:700; color:#8A6A3B; text-decoration:none;
+  background:#FBF2E0; border:1px solid #D6AE59; border-radius:20px; padding:7px 16px;
+}
+.backlink:hover{background:#F6E6C4}
+.backlink .en{display:inline; font-size:12px; font-weight:500; color:#9C8158; margin:0 0 0 4px}
+@media(max-width:620px){ .np-btn{font-size:17px !important; padding:15px 22px !important; width:100%} }
+
+/* ===== 按钮内英文换行排版 ===== */
+button .en, .btn .en, .opts button .en, .tri-opts button .en,
+.dtchoose button .en, .choiceMenu button .en, .eventMenu button .en, .tabs button .en{
+  display:block; font-size:11.5px; font-weight:500; line-height:1.35;
+  margin-top:2px; opacity:.82; letter-spacing:0;
+}
+button, .btn{ line-height:1.35; height:auto }
+.opts button, .tri-opts button, .compare button{ line-height:1.5 }
+/* 深色按钮上的英文用浅色 */
+.opts button.picked .en, .btn-main .en, .btn-brush .en, .btn-fill .en,
+.dtchoose button.on .en, .tri-opts button.chosen .en{ color:#fff; opacity:.85 }
+/* substep 里的英文另起一行 */
+.substep{ align-items:flex-start; flex-wrap:wrap }
+.substep .en{ display:block; width:100%; font-size:12.5px; font-weight:500;
+  color:#7C8A94; margin-top:2px; letter-spacing:0 }
+</style>
+
+<style id="green-analysis-bilingual-style">
+.en-analysis{display:block;margin-top:4px;font-size:12.5px;font-weight:500;line-height:1.45;color:inherit;opacity:.82;font-style:normal}
 </style>
 </head>
 <body>
@@ -304,27 +348,27 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
 
 <!-- 读题 -->
 <div class="stage" id="s0">
-  <p class="kicker">先读题<span class="en">Read the Question First</span></p>
-  <h2>今天练这道题<span class="en">Today's question</span></h2>
+  <p class="kicker">先读题</p>
+  <h2>今天练这道题</h2>
   <div class="topicbox"><p class="t" id="topicPlain"></p></div>
-  <p class="lead">先读两遍。等一下你要在这道题上一步步想清楚：<b>写什么、扣什么中心、选什么材料</b>。这三步想通了，作文就成功了一半。<span class="en">Read it twice. You will work through three steps: what to write, what message to keep to, and what material to choose. Get these three right and half the essay is done.</span></p>
+  <p class="lead">先读两遍。等一下你要在这道题上一步步想清楚：<b>写什么、扣什么中心、选什么材料</b>。这三步想通了，作文就成功了一半。</p>
   <button class="btn btn-brush" id="startBtn">开始 · 进入审题</button>
 </div>
 
 <!-- 关一 审题 -->
 <div class="stage locked" id="s1">
-  <p class="kicker">第一关 · 审题<span class="en">Stage 1 · Understanding the Question</span></p>
-  <h2>看清楚题目要你写什么<span class="en">See clearly what the question asks you to write</span></h2>
+  <p class="kicker">第一关 · 审题</p>
+  <h2>看清楚题目要你写什么</h2>
 
-  <div class="substep"><span class="n">A</span>先点出「限制词」<span class="en">restricting words</span> <button class="spk" data-zh="限制词，就是规定你必须怎么写的词，比如时间、顺序、人称。" data-en="Restricting words tell you how you must write.">🔊</button></div>
-  <p class="lead">限制词规定你<b>必须怎么写</b>——什么时候的事、先做什么后做什么、要不要写感受。<b>点出你认为是限制词的词</b>（这题有 3 个）。<span class="en">Limit words control how you must write — when it happened, what comes first and next, and whether you must write your feelings. Tap the words you think are limit words (there are 3).</span></p>
+  <div class="substep"><span class="n">A</span>先点出「限制词」 <button class="spk" data-zh="限制词，就是规定你必须怎么写的词，比如时间、顺序、人称。">🔊</button></div>
+  <p class="lead">限制词规定你<b>必须怎么写</b>——什么时候的事、先做什么后做什么、要不要写感受。<b>点出你认为是限制词的词</b>（这题有 3 个）。</p>
   <div class="tokens" id="tokRestrict"></div>
   <p class="tokfb" id="fbRestrict"></p>
   <p class="counter" id="cntRestrict"></p>
 
   <div id="s1bWrap" style="display:none">
-    <div class="substep"><span class="n">B</span>再点出「关键词」<span class="en">key words</span> <button class="spk" data-zh="关键词，是决定这篇文章到底写什么、扣什么中心的核心词。" data-en="Key words decide what the essay is really about.">🔊</button></div>
-    <p class="lead">关键词决定这篇文章<b>到底写什么、扣什么中心</b>。少写一个，文章就跑偏。<b>点出你认为是关键词的词</b>（这题有 5 个）。<span class="en">Key words decide what the essay is about and what message to keep to. Miss one and the essay goes off track. Tap the words you think are key words (there are 5).</span></p>
+    <div class="substep"><span class="n">B</span>再点出「关键词」 <button class="spk" data-zh="关键词，是决定这篇文章到底写什么、扣什么中心的核心词。">🔊</button></div>
+    <p class="lead">关键词决定这篇文章<b>到底写什么、扣什么中心</b>。少写一个，文章就跑偏。<b>点出你认为是关键词的词</b>（这题有 5 个）。</p>
     <div class="tokens" id="tokKey"></div>
     <p class="tokfb" id="fbKey"></p>
     <p class="counter" id="cntKey"></p>
@@ -335,11 +379,11 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
     <div id="qJiji"></div>
   </div>
 </div>
-<div class="artifact" id="artifact1"><h4>我的审题成果卡</h4><div class="a-row"><span class="a-k">限制词</span><span>曾经 · 后来 · 感受</span></div><div class="a-row"><span class="a-k">关键词</span><span>对不起 · 朋友 · 积极 · 补救 · 挽回</span></div><div class="a-row"><span class="a-k">故事方向</span><span>先伤害朋友 → 后来主动、多步补救 → 终于挽回关系</span></div></div><div class="checkpoint" id="cp1"><h3>⏸ 全班停靠点 1 · 审题讨论</h3><p>先想一想再往下。老师可能随机抽问，请准备好解释你的判断。<br><span class="en">Think before moving on. Be ready to explain your reasoning — your teacher may call on you.</span></p><div class="oral" id="oral1"></div><div class="unlockrow"><input id="code1" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-brush" id="unlock1">继续 · 进入立意</button><span class="unlockmsg" id="unlockMsg1"></span></div></div>
+<div class="artifact" id="artifact1"><h4>我的审题成果卡</h4><div class="a-row"><span class="a-k">限制词</span><span>曾经 · 后来 · 感受</span></div><div class="a-row"><span class="a-k">关键词</span><span>对不起 · 朋友 · 积极 · 补救 · 挽回</span></div><div class="a-row"><span class="a-k">故事方向</span><span>先伤害朋友 → 后来主动、多步补救 → 终于挽回关系</span></div></div><div class="checkpoint" id="cp1"><h3>⏸ 全班停靠点 1 · 审题讨论</h3><p>先想一想再往下。老师可能随机抽问，请准备好解释你的判断。<br></p><div class="oral" id="oral1"></div><div class="unlockrow"><input id="code1" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-brush" id="unlock1">继续 · 进入立意</button><span class="unlockmsg" id="unlockMsg1"></span></div></div>
 <!-- 关二 立意 -->
 <div class="stage locked" id="s2">
-  <p class="kicker">第二关 · 立意<span class="en">Stage 2 · Deciding the Main Message</span></p>
-  <h2>定出这篇文章的中心思想<span class="en">Decide the main message of this essay</span></h2>
+  <p class="kicker">第二关 · 立意</p>
+  <h2>定出这篇文章的中心思想</h2>
 
   <details class="reveal">
     <summary>先自己想一句中心思想，想不出点这里</summary>
@@ -354,10 +398,10 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
   <div id="qCenter"></div>
 
   <div class="challenge" id="challengeBox" style="display:none">
-    <p class="h">挑战：自己写一句中心思想 <small>· 敢写的才点开，写完 AI 帮你看</small></p>
+    <p class="h">挑战：自己写一句中心思想 <small>· 敢写的才点开，写完后用智能检查</small></p>
     <textarea id="centerInput" rows="2" placeholder="这篇文章我想告诉读者的道理是……"></textarea>
     <div class="acts" style="margin-top:10px">
-      <button class="btn btn-blue" id="centerSubmit">让 AI 看看</button>
+      <button class="btn btn-blue" id="centerSubmit">智能检查</button>
     </div>
     <div class="aibox" id="centerAI" style="display:none"></div>
   </div>
@@ -365,11 +409,11 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
 <div class="artifact" id="artifact2"><h4>我的立意成果卡</h4><div class="a-row"><span class="a-k">中心思想</span><span>犯错后要勇于承担责任，真诚补救，才能挽回友情。</span></div><div class="a-row"><span class="a-k">不能写成</span><span>“珍惜友情”或“及时道歉”——都没有扣住“积极补救”。</span></div></div><div class="checkpoint" id="cp2"><h3>⏸ 全班停靠点 2 · 立意讨论</h3><p>中心不是背一句话。你要能解释为什么另外两个选项不够准确。</p><div class="oral" id="oral2"></div><div class="unlockrow"><input id="code2" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-brush" id="unlock2">继续 · 进入选材</button><span class="unlockmsg" id="unlockMsg2"></span></div></div>
 <!-- 关三 选材 -->
 <div class="stage locked" id="s3">
-  <p class="kicker">第三关 · 选材<span class="en">Stage 3 · Choosing Your Material</span></p>
-  <h2>选一个写得深、写得出「积极」的材料<span class="en">Choose material you can write deeply — showing real effort</span></h2>
+  <p class="kicker">第三关 · 选材</p>
+  <h2>选一个写得深、写得出「积极」的材料</h2>
 
-  <div class="substep"><span class="n">A</span>下面三个材料，各自卡在哪里？ <button class="spk" data-zh="判断每个材料：是太浅不好写，还是根本不合题，还是正好可以写。" data-en="Judge each: too shallow, off-topic, or just right.">🔊</button></div>
-  <p class="lead">选材第一步：先看这个材料<b>能不能用</b>。有的太浅、有的根本不合题——都要能一眼看出来。<span class="en">Step one in choosing material: check whether it can be used at all. Some are too shallow, some are simply off topic — you should be able to spot both at a glance.</span></p>
+  <div class="substep"><span class="n">A</span>下面三个材料，各自卡在哪里？ <button class="spk" data-zh="判断每个材料：是太浅不好写，还是根本不合题，还是正好可以写。">🔊</button></div>
+  <p class="lead">选材第一步：先看这个材料<b>能不能用</b>。有的太浅、有的根本不合题——都要能一眼看出来。</p>
   <div id="qTriage"></div><div class="reasonBox" id="reasonWrap"><b>再想一层：为什么“丙”是更好的材料？（选出 3 项）</b><div class="reasonGrid" id="reasonGrid"></div><div class="acts"><button class="btn btn-blue" id="reasonCheck">检查理由</button></div><div class="reasonFb" id="reasonFb"></div></div>
 
   <div id="s3bWrap" style="display:none">
@@ -379,18 +423,18 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
 
   <div id="s3cWrap" style="display:none">
     <div class="substep"><span class="n">C</span>轮到你——一步步想出自己的材料</div>
-    <p class="lead">想不到写什么？<b>别急着填空</b>。先跟着下面三步走，材料自己就出来了。<span class="en">Can't think of anything? Don't rush to fill in the blanks. Follow the three steps below and the material will come to you.</span></p>
+    <p class="lead">想不到写什么？<b>别急着填空</b>。先跟着下面三步走，材料自己就出来了。</p>
 
     <div class="scaffold" id="scaffold">
       <!-- 第一层 选场景 -->
       <div class="layer" id="layer1">
-        <p class="ltitle"><span class="ln">1</span>这件事，最可能发生在哪里？<button class="spk" data-zh="先想这件事发生在哪里，从三个地方里挑一个。" data-en="First, where did it happen? Pick one place.">🔊</button></p>
+        <p class="ltitle"><span class="ln">1</span>这件事，最可能发生在哪里？<button class="spk" data-zh="先想这件事发生在哪里，从三个地方里挑一个。">🔊</button></p>
         <div class="scene-tabs" id="sceneTabs"></div>
         <div class="event-menu" id="eventMenu"></div>
       </div>
       <!-- 第二层 想补救 -->
       <div class="layer" id="layer2" style="display:none">
-        <p class="ltitle"><span class="ln">2</span>你打算怎么补救？<small>勾出你要写的（可多选）——这就是「积极」</small><button class="spk" data-zh="想想怎么补救。积极的补救，往往不止一步，也不怕碰钉子。" data-en="How will you make up for it? Being active means more than one step.">🔊</button></p>
+        <p class="ltitle"><span class="ln">2</span>你打算怎么补救？<small>勾出你要写的（可多选）——这就是「积极」</small><button class="spk" data-zh="想想怎么补救。积极的补救，往往不止一步，也不怕碰钉子。">🔊</button></p>
         <div class="fix-menu" id="fixMenu"></div>
       </div>
       <!-- 第三层 填空 -->
@@ -423,11 +467,11 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
 <div class="artifact" id="artifact3"><h4>我的选材成果卡</h4><div class="a-row"><span class="a-k">我做错的事</span><span id="artWhat">—</span></div><div class="a-row"><span class="a-k">我的补救</span><span id="artFix">—</span></div><div class="a-row"><span class="a-k">为什么合题</span><span id="artWhy">—</span></div></div><div class="checkpoint" id="cp3"><h3>⏸ 全班停靠点 3 · 选材口头验收</h3><p>你的材料只有通过“为什么”检验，才算真正准备好。</p><div class="oral" id="oral3"></div><div class="unlockrow"><input id="code3" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-brush" id="unlock3">继续 · 生成审题卡</button><span class="unlockmsg" id="unlockMsg3"></span></div></div>
 <!-- 提交 -->
 <div class="stage" id="submitStage" style="display:none">
-  <h2 style="font-family:var(--serif)">三关都走完了<span class="en">You've finished all three stages</span></h2>
-  <p class="lead">交上去，看你的成绩和一张「审题卡」——写作文的时候照着它写。<span class="en">Submit to see your score and a "Question-Analysis Card" — follow it when you write your essay.</span></p>
+  <h2 style="font-family:var(--serif)">三关都走完了</h2>
+  <p class="lead">交上去，看你的成绩和一张「审题卡」——写作文的时候照着它写。</p>
   <div class="acts">
     <button class="btn btn-brush" id="finishBtn">提交，看审题卡</button>
-    <button class="btn btn-line" onclick="window.print()">打印 / 存 PDF</button>
+    <button class="btn btn-line" onclick="window.print()">打印 / 保存</button>
   </div>
 </div>
 
@@ -528,12 +572,12 @@ const Q_MATERIAL = [
    "✗ 有补救，但『默默对他好』太单薄、太模糊。缺少『一次次、不怕碰钉子』的具体行动，写不出『积极』的层次。"],
   ["为了合群，我跟着别人孤立了老朋友；后悔后，我先私下道歉、又主动跟他一组、还在他被取笑时替他说话，他才慢慢原谅我。",
    ["能用","不能用"], 0,
-   "✓ 就选这种。冲突真实（合群 vs 旧友情）、补救有好几步、有难度，把『积极』写透了，也扣住了中心。"]
+   "✓ 就选这种。冲突真实（合群与旧友情）、补救有好几步、有难度，把『积极』写透了，也扣住了中心。"]
 ];
 
 /* ===== 选材支架菜单（内容经老师审定，可换） ===== */
 const SCENES = [
-  {key:"school", tab:"🏫 学校 / CCA", events:[
+  {key:"school", tab:"🏫 学校 / 课外活动", events:[
     "我答应帮朋友值日／做小组作业，却放了他鸽子",
     "比赛或表演分角色时，我为了自己，抢了本该属于他的机会",
     "我把朋友的糗事讲给全班听，让他很难堪" ]},
@@ -779,16 +823,16 @@ $("materialSubmit").addEventListener("click", async ()=>{
   const box=$("materialAI");
   if(!CONFIG.AI_PROXY){
     box.style.display="block"; box.className="aibox off";
-    box.innerHTML=`<span class="lb">AI 点评</span>暂时没有连上 AI，先按上面的三个问题自己检查。等老师接通后，这里会给你个性化的点评。`;
+    box.innerHTML=`<span class="lb">智能点评</span>暂时没有连上智能检查服务，先按上面的三个问题自己检查。等老师接通后，这里会给你个性化的点评。`;
     return;
   }
   box.style.display="block"; box.className="aibox wait";
-  box.innerHTML=`<span class="lb">AI 点评</span><span class="spin"></span>正在请老师的 AI 帮你看这个材料……`;
+  box.innerHTML=`<span class="lb">智能点评</span><span class="spin"></span>正在进行智能检查……`;
   const sys="你是新加坡中学高级华文老师，正在指导中二学生为作文《你曾经做过对不起朋友的一件事，后来你积极地做了补救，终于挽回彼此的关系》选材。评判标准：①材料要能体现『积极补救』——补救必须是主动、多步的行动，不能只是道一次歉或只在心里后悔；②冲突要真实、合乎中二学生生活逻辑，不能太浅（如弄坏东西赔钱就了事）也不能离奇；③要能扣住中心『犯错后勇于承担、用行动补救、挽回友情』。请先明确说『这个材料可以／还不够』，再用2-3句具体指出好在哪或缺什么，最后给一句改进建议。语气亲切鼓励但要诚实，用简体中文，100字以内。";
   const usr=`学生选的材料：\n我做的错事：${what}\n补救行动：${store.m_fix||"（没写）"}\n为什么能扣住中心：${store.m_why||"（没写）"}`;
   const res=await callAI(sys, usr);
-  if(res.ok){ box.className="aibox done"; box.innerHTML=`<span class="lb">AI 点评</span>${res.text.replace(/\n/g,"<br>")}`; }
-  else{ box.className="aibox off"; box.innerHTML=`<span class="lb">AI 点评</span>AI 暂时没回应（${res.err}）。没关系，先按上面三个问题自己检查，或举手问老师。`; }
+  if(res.ok){ box.className="aibox done"; box.innerHTML=`<span class="lb">智能点评</span>${res.text.replace(/\n/g,"<br>")}`; }
+  else{ box.className="aibox off"; box.innerHTML=`<span class="lb">智能点评</span>智能检查暂时没有回应（${res.err}）。没关系，先按上面三个问题自己检查，或举手问老师。`; }
 });
 
 /* —— 关二挑战：AI 批中心 —— */
@@ -799,15 +843,15 @@ $("centerSubmit").addEventListener("click", async ()=>{
   const box=$("centerAI");
   if(!CONFIG.AI_PROXY){
     box.style.display="block"; box.className="aibox off";
-    box.innerHTML=`<span class="lb">示范</span>暂时没连上 AI。参考中心：<b>犯错后要勇于承担、用行动补救，才能挽回友情。</b>对照看看你写的有没有扣住『补救』和『行动』。`;
+    box.innerHTML=`<span class="lb">示范</span>暂时没连上智能检查服务。参考中心：<b>犯错后要勇于承担、用行动补救，才能挽回友情。</b>对照看看你写的有没有扣住『补救』和『行动』。`;
     return;
   }
   box.style.display="block"; box.className="aibox wait";
-  box.innerHTML=`<span class="lb">AI 批改</span><span class="spin"></span>正在看你写的中心思想……`;
+  box.innerHTML=`<span class="lb">智能检查</span><span class="spin"></span>正在看你写的中心思想……`;
   const sys="你是新加坡中学高级华文老师。作文题：《你曾经做过对不起朋友的一件事，后来你积极地做了补救，终于挽回彼此的关系》。正确的中心思想是『犯错后要勇于承担、用行动补救，才能挽回友情』。学生常见的三种错误：①跑题（写成互相帮助、珍惜友情等，没扣补救）；②只扣一半（只写道歉、没写积极行动）；③太空泛（放之四海皆可的大道理）。请先明确判断学生写的中心『扣住了／没扣住』，再指出属于哪种情况或好在哪，最后给一句修改方向。必须先判断对错再说理由，不要一味夸奖。简体中文，80字以内。";
   const res=await callAI(sys, "学生写的中心思想："+v);
-  if(res.ok){ box.className="aibox done"; box.innerHTML=`<span class="lb">AI 批改</span>${res.text.replace(/\n/g,"<br>")}`; }
-  else{ box.className="aibox off"; box.innerHTML=`<span class="lb">AI 批改</span>AI 暂时没回应。参考中心：<b>犯错后要勇于承担、用行动补救，才能挽回友情。</b>`; }
+  if(res.ok){ box.className="aibox done"; box.innerHTML=`<span class="lb">智能检查</span>${res.text.replace(/\n/g,"<br>")}`; }
+  else{ box.className="aibox off"; box.innerHTML=`<span class="lb">智能检查</span>智能检查暂时没有回应。参考中心：<b>犯错后要勇于承担、用行动补救，才能挽回友情。</b>`; }
 });
 
 /* —— AI 调用（走作文专用 proxy）—— */
@@ -911,11 +955,11 @@ $("finishBtn").addEventListener("click", async ()=>{
       <div class="row"><span class="k">要写出「积极」</span><span class="v">补救不能只有一步——先……再……然后……，写出主动、不放弃的过程。</span></div>
     </div>
     <div class="uploadbox wait" id="upBox">正在把成绩交给老师……</div>
-    <div class="acts">
+    <div class="nextpage"><div class="np-txt">第一页完成了。下一步：把你选的材料写成故事。</div><a class="btn btn-brush np-btn" id="goPage2" href="page2.html">进入第二页 · 开始写故事 →</a></div><div class="acts">
       <button class="btn btn-line" onclick="window.print()">打印审题卡</button>
       <button class="btn btn-line" id="retryUp" style="display:none">重新上传</button>
     </div>`;
-  box.classList.add("show"); box.scrollIntoView({behavior:"smooth",block:"start"});
+  const _q=new URLSearchParams(); if(store.name)_q.set("name",store.name); if(store.class)_q.set("cls",store.class); const _g2=box.querySelector("#goPage2"); if(_g2) _g2.href="page2.html"+(_q.toString()?"?"+_q.toString():""); box.classList.add("show"); box.scrollIntoView({behavior:"smooth",block:"start"});
   store.finalScore=got+"/"+max; save();
   doUpload(sT, got, max);
 });
@@ -989,5 +1033,35 @@ $('reasonCheck').onclick=checkReason;
 
 <script>window.XIEZUO_PAGE={id:"duibuqi-pengyou",page:1};</script>
 <script src="../hook.js"></script>
+
+<script id="green-analysis-bilingual">
+(function(){
+  const GREEN_EN={"三个限制词锁定了你的写法：曾经（已经发生的事，不能写将来）、后来（先犯错、后补救的顺序）、感受（要写出你的内心）。": "Past event: mistake first, then actions to fix it and feelings.", "四个关键词是这篇文章的灵魂。少写一个就跑偏——尤其是 积极，最多人漏。": "Key ideas: hurt a friend, actively fix it, repair the friendship.", "对。积极＝主动、反复地行动，不怕碰钉子。这决定了你后面写的补救不能只有一次、不能只是嘴上说说。": "“Active” means keep trying, not just say sorry once.", "对。这句话同时扣住了『犯错』『补救』『挽回』，是这篇文章真正的中心。": "This shows the mistake, efforts to fix it, and repaired friendship.", "判对了。甲是『对不起朋友』，但太浅——弄坏、赔钱、原谅，三步就没了，补救没有难度，写不出『积极』。这是最多人写、也最扣不住题的材料。": "A fits, but fixing it is too easy to show active effort.", "判对了。乙根本不合题——骗人说『我没复习』并没有真正伤害到朋友，谈不上『对不起』，也没有『我该补救』的责任。选材第一步：先确认这件事真的对不起了朋友。": "B is off topic: the friend is not really hurt.", "判对了。丙才对——真的伤害了朋友（背弃旧友情），补救有难度（要顶住新朋友的眼光），正好能把『积极』的一次次努力写出来，也扣得住中心。": "C is best: real hurt, difficult repair and repeated effort.", "✗ 太浅。弄坏东西、赔钱、原谅——补救没有难度，写不出『积极』。这正是最多人写、也最扣不住题的材料。": "Too easy: pay, get forgiven. It does not show active effort.", "✗ 漏了『积极补救』。道一次歉、对方就原谅，太轻。题目要的是主动、一次次地弥补。": "One apology is not enough. Keep trying to fix the harm.", "✗ 有补救，但『默默对他好』太单薄、太模糊。缺少『一次次、不怕碰钉子』的具体行动，写不出『积极』的层次。": "“Being nice” is too vague. Show clear, repeated actions.", "就选这种。冲突真实（合群与旧友情）、补救有好几步、有难度，把『积极』写透了，也扣住了中心。": "Best choice: real conflict, difficult repair and repeated effort.", "对。好材料不仅“合题”，还要让关键词有过程可写：真正伤害 → 多步补救 → 经历阻力 → 终于挽回。": "Good material: real harm → repeated efforts → difficulty → repaired friendship."};
+  const norm=(s)=>s.replace(/\s+/g,' ').trim().replace(/^✓\s*/,'').replace(/^修正成功。/,'');
+  function zhOnly(el){
+    const c=el.cloneNode(true);
+    c.querySelectorAll('.en-analysis').forEach(n=>n.remove());
+    return norm(c.textContent||'');
+  }
+  function decorate(){
+    document.querySelectorAll('.feedback.good,.tokfb.good,.q.right .fb,.tri-card.good .tri-fb,.smart.ok,#reasonFb,.reasonFb').forEach(el=>{
+      const key=zhOnly(el);
+      const en=GREEN_EN[key];
+      const old=el.querySelector(':scope > .en-analysis');
+      if(!en){ if(old) old.remove(); el.removeAttribute('data-en-key'); return; }
+      if(old && el.dataset.enKey===key) return;
+      if(old) old.remove();
+      const span=document.createElement('span');
+      span.className='en-analysis';
+      span.lang='en';
+      span.textContent=en;
+      el.appendChild(span);
+      el.dataset.enKey=key;
+    });
+  }
+  const obs=new MutationObserver(decorate);
+  if(document.body){obs.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class','style']});decorate();}
+})();
+</script>
 </body>
 </html>
