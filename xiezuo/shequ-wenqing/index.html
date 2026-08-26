@@ -178,6 +178,8 @@ h3{font-size:17px;margin:16px 0 6px}
   #cardStage:after{display:none}
 }
 </style>
+<script src="../config.js"></script>
+<script>window.XIEZUO_PAGE={id:"shequ-wenqing",page:1};</script>
 </head>
 <body>
 
@@ -207,17 +209,17 @@ h3{font-size:17px;margin:16px 0 6px}
 <section class="stage lock" id="s1">
   <span class="tag">第一关</span>
   <h2>关键词是哪几个？</h2>
-  <p class="sub">关键词＝文章的写作重点，跟中心有关。不是把题目里的词全圈一遍。<br>
-     </p>
+  <p class="sub">关键词＝这篇作文<b>要写的重点</b>，不是把题目里的词全圈一遍。<br>
+     <span class="en">Key words = what you must write about.</span></p>
 
-  <div class="hint"><b>怎么分？</b>把词一个一个删掉试试看——删掉以后，你就不知道要写什么了，那是<span class="key">中心</span>；它管的是「<span class="key">不可以怎样</span>」，不是「要写什么」，那是<span class="key">题目的规定</span>。 <button class="spk" onclick="say('删掉以后，你就不知道要写什么了，那是中心。它管的是不可以怎样，不是要写什么，那是题目的规定。')">🔊</button></div>
+  <div class="hint"><b>怎么分？</b>把词删掉试试看：<br>题目就<span class="key">不知道要写什么</span> → 中心／关键词；题目还在，只是<span class="key">不可以那样写</span> → 题目的规定。<button class="spk" onclick="say('把词删掉试试看。题目就不知道要写什么，那是中心和关键词。题目还在，只是不可以那样写，那是题目的规定。')">🔊</button></div>
 
   <p style="font-weight:800;margin-bottom:6px">① 先点一个词，② 再点它该进哪一圈。</p>
   <div class="pool" id="pool"></div>
 
   <div class="target">
-    <div class="ring r3" data-b="3"><span class="rlab">最外圈 · 题目的规定（它管的是「不可以怎样」，不是「要写什么」）</span>
-      <div class="ring r2" data-b="2"><span class="rlab">中圈 · 关键词（写作重点，要详写）</span>
+    <div class="ring r3" data-b="3"><span class="rlab">最外圈 · 题目的规定（不可以怎样）</span>
+      <div class="ring r2" data-b="2"><span class="rlab">中圈 · 关键词（要写最多的）</span>
         <div class="ring r1" data-b="1"><span class="rlab">靶心 · 中心（全文围绕它）</span>
           <div class="dz" id="dz1"></div>
         </div>
@@ -230,15 +232,15 @@ h3{font-size:17px;margin:16px 0 6px}
 
   <div id="q1wrap" class="hidden">
     <h3>再问自己三个问题</h3>
-    <div class="q" id="q1a"><div class="stem">1. 把「社区的温情」删掉，题目还成立吗？</div>
+    <div class="q" id="q1a"><div class="stem">1. 把「社区的温情」删掉，这个题目还写得下去吗？</div>
       <div class="opts">
-        <button data-v="1">不成立了，因为不知道要写什么</button>
-        <button data-v="0">还成立，只是短了一点</button>
+        <button data-v="1">不行了，因为不知道要写什么</button>
+        <button data-v="0">还可以，只是短了一点</button>
       </div><div class="fb" id="f1a"></div></div>
 
     <div class="q" id="q1b"><div class="stem">2. 那把「一次」删掉呢？</div>
       <div class="opts">
-        <button data-v="0">题目就不成立了</button>
+        <button data-v="0">题目就写不下去了</button>
         <button data-v="1">题目还在，但写两件事就拿不到高分</button>
       </div><div class="fb" id="f1b"></div></div>
 
@@ -250,7 +252,6 @@ h3{font-size:17px;margin:16px 0 6px}
   </div>
 
   <div class="hint hidden" id="sum1"><b>记住：</b><span class="key">中心是「社区温情」，所以全文最长的一段，必须写「温情」是怎么发生的。</span><br>
-    
     <button class="spk" onclick="say('中心是社区温情，所以全文最长的一段，必须写温情是怎么发生的。')">🔊</button></div>
 
   <div class="acts"><button class="btn main hidden" id="n1">下一关 · 选材 →</button></div>
@@ -260,30 +261,28 @@ h3{font-size:17px;margin:16px 0 6px}
 <section class="stage lock" id="s2">
   <span class="tag">第二关</span>
   <h2>哪些材料能写？哪些写了就低分？</h2>
-  <p class="sub">每张材料给一个判断：❌ 不能用 ／ △ 能用但普通 ／ ✅ 好材料。<br>
-     </p>
+  <p class="sub">每张材料给一个判断：❌ 不能用 ／ △ 能用但普通 ／ ✅ 好材料。<br></p>
   <div class="mats" id="mats"></div>
   <div class="fb" id="fb2"></div>
 
   <div id="tblWrap" class="hidden">
-    <h3>八个材料的高下（做完才看得到）</h3>
-    <p class="sub">先看高下，再点🔊听理由。</p>
+    <h3>八个材料，哪个好哪个差</h3>
+    <p class="sub">三样都要有 ✓，少一样就差一级。想知道为什么，点 🔊。<br><span class="en">Three tests: people? me? change?</span></p>
     <div class="scroll"><table class="tbl" id="rankTbl"></table></div>
     <div class="hint"><b>一句话：</b><span class="key">温情来自「人」，不是来自奖品、食物、节目。</span>
-      
       <button class="spk" onclick="say('温情来自人，不是来自奖品、食物、节目。')">🔊</button></div>
   </div>
 
   <div id="mapWrap" class="hidden">
-    <h3>换四个问题去找生活</h3>
-    <div class="hint">先看图，再找生活。 <button class="spk" onclick="say('哪里会有人需要帮助？哪里会有人合作？哪一刻我从旁观变成参与？谁接纳了我？')">🔊 四个问题</button></div>
-    <div class="scroll" style="margin:10px 0"><table class="tbl"><tr><th>找生活</th><th>想一想</th></tr><tr><td>有人需要帮助</td><td>谁需要帮忙？</td></tr><tr><td>有人一起合作</td><td>谁在帮谁？</td></tr><tr><td>我加入了</td><td>我做了什么？</td></tr><tr><td>我被接纳了</td><td>谁关心了我？</td></tr></table></div><div class="map" id="map"></div>
+    <h3>想不到可以写什么？去这些地方找</h3>
+    <div class="hint">① 谁需要帮忙？② 谁在合作？③ 我什么时候加入？④ 谁对我好？<button class="spk" onclick="say('谁需要帮忙？谁在合作？我什么时候加入？谁对我好？')">🔊</button></div>
+    <div class="map" id="map"></div>
     <p class="sub" style="margin-top:8px">选一个你要写的场景（点一下就好）。</p>
     <div class="fb" id="fb2b"></div>
   </div>
 
   <div id="pickMat" class="hidden">
-    <h3>最后：选定一件事</h3>
+    <h3>最后：选定你要写的那一件事</h3>
     <p class="sub">只能选一件（题目说了「一次」）。</p>
     <div class="mats" id="goodMats"></div>
     <div class="fb" id="fb2c"></div>
@@ -296,8 +295,7 @@ h3{font-size:17px;margin:16px 0 6px}
 <section class="stage lock" id="s3">
   <span class="tag">第三关</span>
   <h2>哪一段要慢下来写？</h2>
-  <p class="sub">① 点一张内容卡，② 再点它该进哪个框。<br>
-     </p>
+  <p class="sub">① 点一张内容卡，② 再点它该进哪个框。<br></p>
   <div class="boxes">
     <div class="box slow" data-k="slow"><span class="bl">🐢 慢镜头 · 详写</span><div id="bslow"></div></div>
     <div class="box fast" data-k="fast"><span class="bl">🐇 快镜头 · 略写</span><div id="bfast"></div></div>
@@ -309,7 +307,7 @@ h3{font-size:17px;margin:16px 0 6px}
     <h3>篇幅长这样才对</h3>
     <div id="svgRatio"></div>
     <div class="hint"><b>口诀：</b><span class="key">关键词在哪里发生，镜头就停在哪里。</span>
-      
+      <span class="en">The camera stops where the key word happens.</span>
       <button class="spk" onclick="say('关键词在哪里发生，镜头就停在哪里。')">🔊</button></div>
     <div class="q" id="q3"><div class="stem">一段内容要不要详写，看什么？</div>
       <div class="opts">
@@ -328,20 +326,21 @@ h3{font-size:17px;margin:16px 0 6px}
   <h2>详写＝把一句话拉成一个场面</h2>
   <p class="sub">用<span class="key">核心情节详写四诀</span>：发现要细 · 分歧要响 · 心理要真 · 行动要慢</p>
 
-  <p class="sub">One sentence only: build a real scene, not a slogan.</p>
-  <div class="scroll"><table class="tbl">
-    <tr><th style="width:110px">核心情节详写四诀</th><th>一句口诀</th></tr>
-    <tr><td><b>发现要细</b></td><td>看见什么？ <button class="spk" onclick="say('发现要细，就是写清楚你看见了什么。')">🔊</button></td></tr>
-    <tr><td><b>分歧要响</b></td><td>谁说了话？ <button class="spk" onclick="say('分歧要响，就是用对话写出不同的想法。')">🔊</button></td></tr>
-    <tr><td><b>心理要真</b></td><td>心里怎么想？ <button class="spk" onclick="say('心理要真，就是写出心里真的在想什么。')">🔊</button></td></tr>
-    <tr><td><b>行动要慢</b></td><td>动作分几步？ <button class="spk" onclick="say('行动要慢，就是把动作拆成几步来写。')">🔊</button></td></tr>
-  </table></div>
+  <p class="en" style="margin:0 0 6px">Four questions: see / say / think / do.
+    <button class="spk" onclick="say('发现要细，我看见什么。分歧要响，谁说了什么。心理要真，我心里怎么想。行动要慢，我做了哪几步。')">🔊</button></p>
+  <table class="tbl">
+    <tr><th style="width:96px">四诀</th><th>就问自己一句</th></tr>
+    <tr><td><b>发现要细</b></td><td>我看见什么？</td></tr>
+    <tr><td><b>分歧要响</b></td><td>谁说了什么？</td></tr>
+    <tr><td><b>心理要真</b></td><td>我心里怎么想？</td></tr>
+    <tr><td><b>行动要慢</b></td><td>我做了哪几步？</td></tr>
+  </table>
 
   <h3>我做：同一件事，两种写法</h3>
   <div class="cmp">
     <div class="bad"><b style="color:var(--zhu)">✗ 一句话</b>
       <p style="margin:8px 0 0">大家互相帮助，我很感动。</p>
-      </div>
+      <p class="sub" style="margin-top:8px;font-size:14.5px">读者什么也看不见。</p></div>
     <div><b style="color:var(--green)">✓ 一个场面</b>
       <p style="margin:8px 0 0;line-height:2.1" id="demoPara"></p></div>
   </div>
@@ -357,8 +356,8 @@ h3{font-size:17px;margin:16px 0 6px}
   <div id="writeWrap" class="hidden">
     <h3>你做：写两句最难的</h3>
     <div class="write">
-      <b>① 心理要真</b>　
-      <p class="sub" style="margin:4px 0 0;font-size:14.5px">我心里怎么想？ <button class="spk" onclick="say('当时我要不要走过去帮忙？我心里在想什么？不要只写我很感动。')">🔊</button></p>
+      <b>① 心理要真</b>
+      <p class="sub" style="margin:4px 0 0;font-size:14.5px">我要不要走过去帮忙？心里在想什么？</p>
       <textarea id="w1" placeholder="例：我站在两米外，脚像被黏住……"></textarea>
       <div id="w1warn" class="fb"></div>
       <label class="chk"><input type="checkbox"> 我写出了具体的想法或疑问，不只是「我很紧张」</label>
@@ -367,8 +366,8 @@ h3{font-size:17px;margin:16px 0 6px}
       <div class="demo hidden" id="d1"></div>
     </div>
     <div class="write">
-      <b>② 行动要慢</b>　
-      <p class="sub" style="margin:4px 0 0;font-size:14.5px">我最后怎么做？ <button class="spk" onclick="say('我最后怎么做的？把动作拆成至少三步。')">🔊</button></p>
+      <b>② 行动要慢</b>
+      <p class="sub" style="margin:4px 0 0;font-size:14.5px">我最后怎么做的？拆成至少三步。</p>
       <textarea id="w2" placeholder="例：我把书包甩到背后，弯下腰……"></textarea>
       <div id="w2warn" class="fb"></div>
       <label class="chk"><input type="checkbox"> 我把动作拆成了至少三步</label>
@@ -387,11 +386,11 @@ h3{font-size:17px;margin:16px 0 6px}
 <section class="stage lock" id="s5">
   <span class="tag">第五关</span>
   <h2>结尾：抒情议论三层结构</h2>
-  <p class="sub">回扣事件 → 内心变化 → 价值升华（＝讲出一个道理，说说以后怎么做）。</p>
+  <p class="sub">提那件事 → 我变了 → 讲道理。点一下，把三句话配到对的一层。<br><span class="en">Recall it → I changed → What it taught me.</span></p>
   <div id="endWrap"></div>
   <div class="fb" id="fb5"></div>
 
-  <div class="q hidden" id="q5"><div class="stem">试试看：把道理那句删掉，读者还看得出中心吗？</div>
+  <div class="q hidden" id="q5"><div class="stem">试试看：把结尾「我感受到了社区的温情」这句删掉，读者还看得出中心吗？</div>
     <div class="opts">
       <button data-v="1">看得出，因为故事里已经有互助、我的参与和别人的回应</button>
       <button data-v="0">看不出，所以要在结尾多写三次「很温暖」</button>
@@ -412,8 +411,8 @@ h3{font-size:17px;margin:16px 0 6px}
   <div class="finalcard">
     <div class="row"><span class="k">姓名班级</span><span id="cName">—</span></div>
     <div class="row"><span class="k">中心</span><span>社区的温情——人与人之间真实的关心、互助、接纳</span></div>
-    <div class="row"><span class="k">关键词</span><span>不太热衷（前）→ 感受到（我亲身参与）→ 社区温情（中心）</span></div>
-    <div class="row"><span class="k">题目的规定</span><span>只写一件事 · 发生在邻里活动 · 用「我」来写 · 结局要写到我感受到温情</span></div>
+    <div class="row"><span class="k">关键词</span><span>不太热衷（以前的我）→ 感受到（我自己参与）→ 社区温情（中心）</span></div>
+    <div class="row"><span class="k">题目的规定</span><span>只写一件事 · 发生在邻里活动 · 用「我」来写 · 最后一定要感受到温情</span></div>
     <div class="row"><span class="k">我的场景</span><span id="cScene">—</span></div>
     <div class="row"><span class="k">我的材料</span><span id="cMat">—</span></div>
     <div class="row"><span class="k">详写</span><span>邻居互助的场面 · 我心里的挣扎 · 别人对我的回应</span></div>
@@ -424,7 +423,7 @@ h3{font-size:17px;margin:16px 0 6px}
     <div class="row"><span class="k">动笔前自检</span><span>
       <ol class="ck" style="margin:4px 0 0;padding-left:20px">
         <li>只写了一件事吗？</li>
-        <li>全文用「我」来写吗？</li>
+        <li>全文用「我」吗？</li>
         <li>我自己参与了吗，不只是在旁边看？</li>
         <li>最长的一段是「温情发生的地方」吗？</li>
         <li>删掉「温暖、感动」，读者还感觉得到吗？</li>
@@ -439,7 +438,7 @@ h3{font-size:17px;margin:16px 0 6px}
 <script>
 "use strict";
 var $=function(id){return document.getElementById(id)};
-var SC={k1:0,k2:0,k3:0,k4:0,k5:0};
+var SC={k1:0,k2:0,k3:0,k4:0,k5:0};var LOG=[],LOGOK={};var BN={1:'中心',2:'关键词',3:'题目的规定'};var QMAP={'q1a':['一B1','审题追问'],'q1b':['一B2','审题追问'],'q1c':['一B3','审题追问'],'q3':['三B1','详略判断'],'q5':['五B1','因果检验']};function log(q,tag,ok,pick,right){if(q in LOGOK)return LOGOK[q];LOGOK[q]=ok?1:0;LOG.push({q:q,tag:tag,ok:ok?1:0,pick:String(pick||'').slice(0,40),right:String(right||'').slice(0,40)});return LOGOK[q]}window.XZ_LOG=LOG;
 var TOTAL=42, doneStage=0;
 var myScene='', myMat='';
 
@@ -463,9 +462,12 @@ function finish(n,next){doneStage=Math.max(doneStage,n);progress();if(next)unloc
 /* 通用单选：correct 为正确项的 data-v 值（用 1 表示对） */
 function mcq(box,fbEl,okMsg,noMsg,after){
   var btns=box.querySelectorAll('.opts button'); var tries=0;
+  var right=''; btns.forEach(function(x){if(x.dataset.v==='1')right=x.textContent});
   btns.forEach(function(b){
     b.onclick=function(){
       if(b.disabled)return; tries++;
+      var qq=QMAP[box.id]||[box.id,'选择题'];
+      log(qq[0],qq[1],b.dataset.v==='1',b.textContent,right);
       if(b.dataset.v==='1'){
         b.classList.add('good');
         btns.forEach(function(x){x.disabled=true});
@@ -488,12 +490,12 @@ $('start').onclick=function(){
 
 /* ==================== 第一关 ==================== */
 var KW=[
- {t:'社区的温情',b:1,w:'这是中心。删掉它，题目就不知道要写什么了。'},
- {t:'不太热衷',b:2,w:'这是原来的态度，要跟后面的变化形成前后差别。'},
+ {t:'社区的温情',b:1,w:'这是中心。删掉它，就不知道要写什么了。'},
+ {t:'不太热衷',b:2,w:'这是「以前的我」，要跟后来的改变有差别。'},
  {t:'感受到',b:2,w:'必须我自己经历过，只在旁边看不算。'},
- {t:'一次',b:3,w:'只能写一件事，写两件事，就拿不到高分。'},
- {t:'邻里活动',b:3,w:'故事必须发生在邻里活动里，不能改成学校。'},
- {t:'用「我」来写',b:3,w:'全文要用「我」来写，写成「小明」，就拿不到高分。'}
+ {t:'一次',b:3,w:'只能写一件事，写两件就拿不到高分。'},
+ {t:'邻里活动',b:3,w:'故事要发生在邻里活动里，不能改成学校。'},
+ {t:'用「我」来写',b:3,w:'全文用「我」，写成「小明」就拿不到高分。'}
 ];
 var sel1=null, placed1=0;
 (function(){
@@ -501,6 +503,7 @@ var sel1=null, placed1=0;
   arr.forEach(function(k){
     var b=document.createElement('button');
     b.className='chip'; b.textContent=k.t; b.dataset.b=k.b; b.dataset.w=k.w;
+    b.dataset.n=String(KW.indexOf(k)+1);
     b.onclick=function(){
       if(b.classList.contains('set'))return;
       document.querySelectorAll('#pool .chip').forEach(function(x){x.classList.remove('on')});
@@ -514,47 +517,48 @@ var sel1=null, placed1=0;
   ring.addEventListener('click',function(e){
     e.stopPropagation();
     if(!sel1)return;
+    var _k=log('一A'+(sel1.dataset.n||'?'),'关键词分类｜'+sel1.textContent,sel1.dataset.b===p[1],BN[+p[1]],BN[+sel1.dataset.b]);
     if(sel1.dataset.b===p[1]){
       sel1.classList.remove('on'); sel1.classList.add('set');
       $('dz'+p[1]).appendChild(sel1);
       $('fb1').className='fb show ok'; $('fb1').innerHTML='✓ '+sel1.dataset.w;
-      if(sel1.dataset.err!=='1')SC.k1++;
+      if(_k)SC.k1++;
       sel1=null; placed1++;
       if(placed1===6){$('q1wrap').classList.remove('hidden');
-        $('fb1').innerHTML='✓ 六个词都归位了。<b>只有中圈和靶心里的词，才是你要详写的重点。</b>';}
+        $('fb1').innerHTML='✓ 六个词都归位了。<b>只有中圈和靶心里的词，才是你要详写的东西。</b>';}
     }else{
       sel1.classList.add('shake'); sel1.dataset.err='1';
       var s=sel1; setTimeout(function(){s.classList.remove('shake')},320);
       $('fb1').className='fb show no';
-      $('fb1').innerHTML='△ 再试一次。把这个词删掉，题目还成立吗？成立 → 是题目的规定；不成立 → 是中心。';
+      $('fb1').innerHTML='△ 再试一次。把这个词删掉：题目还知道要写什么 → 题目的规定；不知道要写什么 → 中心／关键词。';
     }
   });
 });
 var q1n=0;
 function q1done(){q1n++;if(q1n===3){$('sum1').classList.remove('hidden');$('n1').classList.remove('hidden')}}
-mcq($('q1a'),$('f1a'),'删掉就不成立 ⇒ 它是<b>中心</b>，全文围绕它写。','再想：没有「社区的温情」，你知道要写什么吗？',function(t){if(t===1)SC.k1++;q1done()});
-mcq($('q1b'),$('f1b'),'题目还在 ⇒ 它是<b>题目的规定</b>，它管的是「不可以怎样」，不是「要写什么」。','「一次」拿掉，题目照样看得懂，所以它不是中心。',function(t){if(t===1)SC.k1++;q1done()});
+mcq($('q1a'),$('f1a'),'删掉就不知道要写什么 ⇒ 它是<b>中心</b>，全文围绕它写。','再想：没有「社区的温情」，你知道要写什么吗？',function(t){if(t===1)SC.k1++;q1done()});
+mcq($('q1b'),$('f1b'),'题目还在 ⇒ 它管的是「<b>不可以怎样</b>」，不是「<b>要写什么</b>」。','「一次」拿掉，题目照样看得懂，所以它不是中心。',function(t){if(t===1)SC.k1++;q1done()});
 mcq($('q1c'),$('f1c'),'「感受到」＝我要<b>亲身参与</b>，还要被别人关心过。','只在旁边看，写不出「我感受到」，这是最常见的失分。',function(t){if(t===1)SC.k1++;q1done()});
 $('n1').onclick=function(){finish(1,'s2')};
 
 /* ==================== 第二关 ==================== */
 var MAT=[
- {id:1,short:'中奖',t:'社区嘉年华，我玩游戏中了奖，还吃了很多东西，觉得很开心。',lv:0,
-  a:'✗',b:'✗',c:'✗',tag:'快乐来自奖品',why:'开心来自奖品和食物，把邻居换成陌生工作人员，故事一样成立。',rank:7},
- {id:2,short:'看节目',t:'舞台节目很精彩，大家一起鼓掌，我拍了很多照片。',lv:0,
-  a:'✗',b:'✗',c:'✗',tag:'只有热闹',why:'这是看表演，没有人和人之间的关心。',rank:8},
- {id:3,short:'帮拿东西',t:'我在楼下看见一位老人拿重物，就帮他拿了一下，他说了谢谢。',lv:1,
-  a:'✓',b:'✓',c:'✗',tag:'事情太小',why:'有互助，但事情太小，改变不了我。',rank:5},
- {id:4,short:'派水',t:'邻里节我负责派水，派完就回家了。',lv:1,
-  a:'✗',b:'✓',c:'✗',tag:'只是完成任务',why:'我只是完成任务，没有和邻居真正互动。',rank:6},
- {id:5,short:'大雨互助',t:'邻里活动突然下大雨，邻居们分工照顾陈奶奶，我也跑去帮忙；忙完阿姨递毛巾给我，招呼我一起坐。',lv:2,
-  a:'✓',b:'✓',c:'✓',tag:'三样全齐',why:'有真实的需要、有分工互助、我参与了，最后还被接纳。',rank:1},
- {id:6,short:'清洁日',t:'社区清洁日，我本来嫌脏不想去；看到年长居民和小孩互相递工具、替对方分担，我也加入，最后被邀请一起吃早餐。',lv:2,
-  a:'✓',b:'✓',c:'✓',tag:'前后差别大',why:'前后差别最大：从嫌脏到一起吃早餐，看法真的变了。',rank:2},
- {id:7,short:'电梯坏了',t:'组屋电梯坏了，我和邻居一起帮住高楼的陈奶奶提东西上楼；后来邻居也常常帮我家收衣服。',lv:2,
-  a:'✓',b:'✓',c:'✓',tag:'读者会相信',why:'互助是双向的，温情有来有往，读者会相信。',rank:3},
- {id:8,short:'陪伴长者',t:'关怀长者活动，我本来只想拿服务时数；后来发现邻居一直记得老人的口味和吃药时间，我第一次真正陪老人聊天。',lv:2,
-  a:'✓',b:'✓',c:'✓',tag:'变化很清楚',why:'写出了别人长期的关心，我的动机也从拿时数变成真心。',rank:4}
+ {id:1,short:'中奖玩游戏',flag:'快乐来自奖品',t:'社区嘉年华，我玩游戏中了奖，还吃了很多东西，觉得很开心。',lv:0,
+  a:'✗',b:'✗',c:'✗',why:'开心来自奖品和食物。把邻居换成陌生工作人员，故事一样成立。',rank:7},
+ {id:2,short:'看节目拍照',flag:'只是看表演',t:'舞台节目很精彩，大家一起鼓掌，我拍了很多照片。',lv:0,
+  a:'✗',b:'✗',c:'✗',why:'这是看表演，没有人和人之间的关心。',rank:8},
+ {id:3,short:'帮拿东西',flag:'事情太小',t:'我在楼下看见一位老人拿重物，就帮他拿了一下，他说了谢谢。',lv:1,
+  a:'✓',b:'✓',c:'✗',why:'有互助，但事情太小，改变不了我。',rank:5},
+ {id:4,short:'派水就回家',flag:'没有真互动',t:'邻里节我负责派水，派完就回家了。',lv:1,
+  a:'✗',b:'✓',c:'✗',why:'我只是做完自己的事，没有跟邻居真正来往。',rank:6},
+ {id:5,short:'大雨互助',flag:'三样全齐',t:'邻里活动突然下大雨，邻居们分工照顾陈奶奶，我也跑去帮忙；忙完阿姨递毛巾给我，招呼我一起坐。',lv:2,
+  a:'✓',b:'✓',c:'✓',why:'真的有人需要帮忙，我也去帮了，最后邻居还把我当自己人。',rank:1},
+ {id:6,short:'清洁日',flag:'前后差别大',t:'社区清洁日，我本来嫌脏不想去；看到年长居民和小孩互相递工具、替对方分担，我也加入，最后被邀请一起吃早餐。',lv:2,
+  a:'✓',b:'✓',c:'✓',why:'前后差别最大：从「嫌脏」到「一起吃早餐」，看法真的变了。',rank:2},
+ {id:7,short:'电梯坏了',flag:'互相帮忙',t:'组屋电梯坏了，我和邻居一起帮住高楼的陈奶奶提东西上楼；后来邻居也常常帮我家收衣服。',lv:2,
+  a:'✓',b:'✓',c:'✓',why:'我帮他、他也帮我，有来有往，读者会相信。',rank:3},
+ {id:8,short:'陪伴长者',flag:'从任务变真心',t:'关怀长者活动，我本来只想拿服务时数；后来发现邻居一直记得老人的口味和吃药时间，我第一次真正陪老人聊天。',lv:2,
+  a:'✓',b:'✓',c:'✓',why:'别人一直记挂着老人，我也从「拿时数」变成真心去陪他。',rank:4}
 ];
 var LVN=['❌ 不能用','△ 能用但普通','✅ 好材料'];
 var judged=0;
@@ -576,23 +580,26 @@ MAT.forEach(function(m){
         if(+x.dataset.v===m.lv)x.classList.add('pick');
       });
       line.classList.remove('hidden');
-      if(+b.dataset.v===m.lv){SC.k2++;line.className='mline g';line.innerHTML='✓ 对，是「'+LVN[m.lv]+'」。'+m.why;}
-      else{line.className='mline b';line.innerHTML='△ 正确是「'+LVN[m.lv]+'」。'+m.why;}
+      var spk=' <button class="spk" onclick="sayWhy('+m.id+')">🔊</button>';
+      log('二'+m.id,'选材判断｜'+m.short,+b.dataset.v===m.lv,LVN[+b.dataset.v],LVN[m.lv]);
+      if(+b.dataset.v===m.lv){SC.k2++;line.className='mline g';line.innerHTML='✓ 对，是「'+LVN[m.lv]+'」。'+m.why+spk;}
+      else{line.className='mline b';line.innerHTML='△ 正确是「'+LVN[m.lv]+'」。'+m.why+spk;}
       judged++;
       if(judged===8){buildTable();$('tblWrap').classList.remove('hidden');$('mapWrap').classList.remove('hidden');
-        $('fb2').className='fb show ok';$('fb2').innerHTML='八个都判断完了，下面这张表把它们排出高下。';}
+        $('fb2').className='fb show ok';$('fb2').innerHTML='八个都判断完了。下面这张表，把它们从好到差排出来。';}
     };
   });
   $('mats').appendChild(d);
 });
+function sayWhy(i){var m=MAT.filter(function(x){return x.id===i})[0];if(m)say(m.why)}
 function buildTable(){
   var s=MAT.slice().sort(function(x,y){return x.rank-y.rank});
-  var h='<tr><th style="width:38px">名次</th><th>材料</th><th style="width:64px">有人关心我？</th><th style="width:60px">我做了事？</th><th style="width:66px">我变了？</th><th>判定</th></tr>';
+  var h='<tr><th style="width:34px">名次</th><th style="width:88px">材料</th><th style="width:56px">有人关心我？</th><th style="width:52px">我做了事？</th><th style="width:52px">我变了？</th><th>判定</th></tr>';
   s.forEach(function(m){
     var cls=m.lv===2?'hi':(m.lv===0?'lo':'');
-    h+='<tr class="'+cls+'"><td class="c"><b>'+m.rank+'</b></td><td>'+m.short+'</td>'+
+    h+='<tr class="'+cls+'"><td class="c"><b>'+m.rank+'</b></td><td>'+m.id+'. '+m.short+'</td>'+
        '<td class="c">'+m.a+'</td><td class="c">'+m.b+'</td><td class="c">'+m.c+'</td>'+
-       '<td>'+m.tag+' <button class="spk" onclick="say('+JSON.stringify(m.why)+')">🔊</button></td></tr>';
+       '<td>'+m.flag+' <button class="spk" onclick="sayWhy('+m.id+')">🔊</button></td></tr>';
   });
   $('rankTbl').innerHTML=h;
 }
@@ -611,7 +618,7 @@ SPOTS.forEach(function(s){
     document.querySelectorAll('#map .spot').forEach(function(x){x.classList.remove('on')});
     d.classList.add('on'); myScene=s[0];
     $('fb2b').className='fb show ok';
-    $('fb2b').innerHTML='✓ 你的场景是「'+s[0]+'」。想一想：谁需要帮忙？谁帮了谁？我做了什么？';
+    $('fb2b').innerHTML='✓ 你的场景是「'+s[0]+'」。接下来问自己：这里会出现什么<b>真实的需要</b>？谁会帮谁？我在哪一刻加入？';
     $('pickMat').classList.remove('hidden');
   };
   $('map').appendChild(d);
@@ -643,7 +650,7 @@ var PARTS=[
 var sel3=null, placed3=0;
 PARTS.slice().sort(function(){return Math.random()-0.5}).forEach(function(p){
   var c=document.createElement('div'); c.className='card'; c.textContent=p.t;
-  c.dataset.k=p.k; c.dataset.w=p.w;
+  c.dataset.k=p.k; c.dataset.w=p.w; c.dataset.n=String(PARTS.indexOf(p)+1);
   c.onclick=function(){
     if(c.classList.contains('set'))return;
     document.querySelectorAll('#cardpool .card').forEach(function(x){x.classList.remove('on')});
@@ -654,11 +661,12 @@ PARTS.slice().sort(function(){return Math.random()-0.5}).forEach(function(p){
 document.querySelectorAll('.box').forEach(function(box){
   box.onclick=function(){
     if(!sel3)return;
+    var _d=log('三A'+(sel3.dataset.n||'?'),'详略安排｜'+sel3.textContent,sel3.dataset.k===box.dataset.k,box.dataset.k==='slow'?'详写':'略写',sel3.dataset.k==='slow'?'详写':'略写');
     if(sel3.dataset.k===box.dataset.k){
       sel3.classList.remove('on'); sel3.classList.add('set');
       box.querySelector('div').appendChild(sel3);
       $('fb3').className='fb show ok'; $('fb3').innerHTML='✓ '+sel3.dataset.w;
-      if(sel3.dataset.err!=='1')SC.k3++;
+      if(_d)SC.k3++;
       sel3=null; placed3++;
       if(placed3===6){drawRatio();$('ratioWrap').classList.remove('hidden');}
     }else{
@@ -686,7 +694,7 @@ function drawRatio(){
   '<text x="8" y="128" font-size="13" fill="#20211f">背景 15%</text>'+
   '<text x="103" y="128" font-size="13" fill="#a5372b" font-weight="700">互助场面＋我加入＋别人回应 65%</text>'+
   '<text x="504" y="128" font-size="13" fill="#2f6f55">结尾 20%</text>'+
-  '<text x="0" y="172" font-size="13.5" fill="#6e716b">开头短一点，重点写温情。</text>'+
+  '<text x="0" y="172" font-size="13.5" fill="#6e716b">开头不要超过全文的五分之一。</text>'+
   '</svg>';
 }
 mcq($('q3'),$('f3q'),'详略由<b>中心</b>决定，不是由「好不好写」决定。','再想：这一段删掉，读者还感觉得到温情吗？删掉也没差 → 不必详写。',
@@ -707,6 +715,7 @@ var DEMO=[
 function sayDemo(){say(DEMO.map(function(d){return d[0]}).join(''))}
 
 var JUE=[['m1','发现要细'],['m2','分歧要响'],['m3','心理要真'],['m4','行动要慢']];
+var JUEN={m1:'发现要细',m2:'分歧要响',m3:'心理要真',m4:'行动要慢'};
 var SENTS=[
  ['雨点砸在铁棚上，噼里啪啦，陈奶奶的纸箱已经湿了一角。','m1','写的是眼睛看见的画面和声音。'],
  ['「先扶奶奶进去！」「不行，东西会淋坏！」两个人同时喊。','m2','两个立场用对话吵出来，冲突就响了。'],
@@ -726,9 +735,10 @@ SENTS.slice().sort(function(){return Math.random()-0.5}).forEach(function(s){
   btns.forEach(function(b){
     b.onclick=function(){
       if(b.disabled)return;
+      var _f=log('四A'+(SENTS.indexOf(s)+1),'详写四诀',b.dataset.v===s[1],b.textContent,JUEN[s[1]]);
       if(b.dataset.v===s[1]){
         btns.forEach(function(x){x.disabled=true});
-        b.classList.add('pick'); if(!bad)SC.k4++;
+        b.classList.add('pick'); if(_f)SC.k4++;
         line.classList.remove('hidden'); line.className='mline g'; line.innerHTML='✓ '+s[2];
         s4n++;
         if(s4n===6){$('writeWrap').classList.remove('hidden');
@@ -736,7 +746,7 @@ SENTS.slice().sort(function(){return Math.random()-0.5}).forEach(function(s){
       }else{
         b.disabled=true; bad=true;
         line.classList.remove('hidden'); line.className='mline b';
-        line.innerHTML='△ 再看一次这句话：它写的是<b>看见的画面</b>、<b>说出口的话</b>、<b>心里的想法</b>，还是<b>做出来的动作</b>？';
+        line.innerHTML='△ 再读一次：这句写的是<b>看见的</b>、<b>说出口的</b>、<b>心里想的</b>，还是<b>做出来的</b>？';
       }
     };
   });
@@ -764,7 +774,7 @@ $('chkWrite').onclick=function(){
   $('d2').classList.remove('hidden');
   $('d2').innerHTML='<b>示范：</b>我把书包甩到背后，深吸一口气，弯下腰，双手托住纸箱的底部，先挪半步，再一步一步往屋檐下走，湿透的纸箱在手里越来越软。';
   $('fbW').className='fb show ok';
-  $('fbW').innerHTML='✓ 收到。拿你写的和示范比一比：<b>示范里每一个动作都看得见、每一个想法都说得出理由。</b>';
+  $('fbW').innerHTML='✓ 收到。跟示范比一比：<b>示范里每个动作都看得见，每个想法都说得出原因。</b>';
   $('chkWrite').disabled=true;
   $('n4').classList.remove('hidden');
 };
@@ -772,11 +782,11 @@ $('n4').onclick=function(){finish(4,'s5')};
 
 /* ==================== 第五关 ==================== */
 var ENDS=[
- ['那天的雨很大，可是我一点也没觉得冷。','L1','回扣事件'],
- ['我从前觉得邻居只是住在同一栋楼的陌生人，那天以后，我才明白他们一直都在。','L2','内心变化'],
- ['原来社区的温情不在热闹的活动里，而在有人愿意为你多走一步的时候。以后我会主动参加，也做那个多走一步的人。','L3','价值升华（＝讲出一个道理，说说以后怎么做）']
+ ['那天的雨很大，可是我一点也没觉得冷。','L1','回扣事件（提那件事）'],
+ ['我从前觉得邻居只是住在同一栋楼的陌生人，那天以后，我才明白他们一直都在。','L2','内心变化（我变了）'],
+ ['原来社区的温情不在热闹的活动里，而在有人愿意为你多走一步的时候。以后我会主动参加，也做那个多走一步的人。','L3','价值升华（讲道理）']
 ];
-var LAYERS=[['L1','第一层 回扣事件'],['L2','第二层 内心变化'],['L3','第三层 价值升华（＝讲出一个道理，说说以后怎么做）']];
+var LAYERS=[['L1','第一层 提那件事'],['L2','第二层 我变了'],['L3','第三层 讲道理']];
 var s5n=0;
 ENDS.slice().sort(function(){return Math.random()-0.5}).forEach(function(s){
   var d=document.createElement('div'); d.className='sent';
@@ -788,14 +798,15 @@ ENDS.slice().sort(function(){return Math.random()-0.5}).forEach(function(s){
   btns.forEach(function(b){
     b.onclick=function(){
       if(b.disabled)return;
+      var _n=log('五A'+(ENDS.indexOf(s)+1),'抒情议论三层',b.dataset.v===s[1],b.textContent,s[2]);
       if(b.dataset.v===s[1]){
-        btns.forEach(function(x){x.disabled=true}); b.classList.add('pick'); if(!bad5)SC.k5++;
+        btns.forEach(function(x){x.disabled=true}); b.classList.add('pick'); if(_n)SC.k5++;
         line.classList.remove('hidden'); line.className='mline g';
         line.innerHTML='✓ 这是<b>'+s[2]+'</b>。';
         s5n++;
         if(s5n===3){$('q5').classList.remove('hidden');
           $('fb5').className='fb show ok';
-          $('fb5').innerHTML='三层齐了。<b>最常被漏掉的是第二层</b>——学生写完事情就直接讲道理，中间少了「我变了」。';}
+          $('fb5').innerHTML='三层齐了。<b>最容易漏掉第二层</b>：写完事情就直接讲道理，中间少了「我变了」。';}
       }else{
         b.disabled=true; bad5=true; line.classList.remove('hidden'); line.className='mline b';
         line.innerHTML='△ 第一层提<b>那件事</b>，第二层说<b>我怎么变</b>，第三层讲<b>道理和以后</b>。';
@@ -804,7 +815,7 @@ ENDS.slice().sort(function(){return Math.random()-0.5}).forEach(function(s){
   });
   $('endWrap').appendChild(d);
 });
-mcq($('q5'),$('f5q'),'这就是在试：<b>把道理那句删掉</b>。删掉以后，读者还是看得出中心，文章才算合格。','多写几次「很温暖」不会加分。要靠故事里的<b>证据</b>。',
+mcq($('q5'),$('f5q'),'这一招叫<b>因果检验</b>：把道理删掉，故事本身还看得出中心，文章才合格。','多写几次「很温暖」不会加分。要靠故事里的<b>证据</b>。',
   function(t){if(t===1)SC.k5+=2;$('n5').classList.remove('hidden')});
 
 $('n5').onclick=function(){
@@ -824,9 +835,9 @@ $('n5').onclick=function(){
     var r=SC[k]/full[k]; if(r<min){min=r;weak=k}
   });
   var tips={
-    k1:'你最弱的是<b>审题</b>。动笔前先问：删掉哪个词题目就垮了？那个就是中心，也是你要写最长的一段。',
+    k1:'你最弱的是<b>审题</b>。动笔前先问：删掉哪个词，题目就不知道要写什么了？那个就是中心，也是你要写最长的一段。',
     k2:'你最弱的是<b>选材</b>。记住三个标准：温情来自人吗？我参与了吗？我的看法变了吗？三个都要「是」。',
-    k3:'你最弱的是<b>详略</b>。开头铺垫不超过全文五分之一，最长的一段必须是温情发生的地方。',
+    k3:'你最弱的是<b>详略</b>。开头不要超过全文五分之一，最长的一段一定是温情发生的地方。',
     k4:'你最弱的是<b>详写</b>。写不出来时按四诀问：我看见什么？谁说了什么？我心里在想什么？我做了哪几步？',
     k5:'你最弱的是<b>结尾</b>。三层缺一不可，尤其别漏掉中间那层「我从前怎么想、现在怎么想」。'
   };
@@ -835,5 +846,6 @@ $('n5').onclick=function(){
 
 progress();
 </script>
+<script src="../hook.js"></script>
 </body>
 </html>
