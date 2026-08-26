@@ -268,6 +268,40 @@ h3 .n{font-family:var(--mono); font-size:12px; background:var(--story); color:#f
 @media(max-width:650px){.classroomBar .right{display:none}.processGrid{grid-template-columns:1fr 1fr}}
 @media print{.classroomBar,.checkpoint{display:none!important}.engLocked{opacity:1;filter:none}}
 
+
+/* ===== 2026 课堂改版：关卡标题放大醒目 + 英文对照 ===== */
+.kicker{
+  font-family:var(--serif),"Noto Serif SC",serif !important;
+  font-size:26px !important;
+  font-weight:900 !important;
+  color:#C0272D !important;
+  letter-spacing:.04em !important;
+  margin:0 0 4px !important;
+  line-height:1.25 !important;
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.kicker::before{
+  content:""; width:6px; height:26px; background:#C0272D;
+  border-radius:3px; flex:none;
+}
+.kicker .en{
+  font-family:var(--sans),system-ui,sans-serif;
+  font-size:14px; font-weight:600; color:#9A5B57;
+  letter-spacing:0;
+}
+/* 英文对照：所有中文解释后面的英文 */
+.en{
+  display:block; font-size:13.5px; line-height:1.55;
+  color:#6B7A86; font-weight:500; margin-top:3px;
+  font-family:var(--sans),system-ui,sans-serif; letter-spacing:0;
+}
+.lead .en, .stem .en, p .en{ color:#6B7A86; }
+h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-top:4px; font-family:var(--sans),system-ui,sans-serif; }
+@media(max-width:620px){
+  .kicker{font-size:22px !important}
+  .kicker::before{height:22px}
+  .en{font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -313,11 +347,11 @@ h3 .n{font-family:var(--mono); font-size:12px; background:var(--story); color:#f
 
 <!-- ============ 板块一：故事线 + 详略 ============ -->
 <section class="task" id="s1">
-  <p class="tasknum">板块一</p>
-  <h2>先理清故事线，再安排详略</h2>
+  <p class="kicker">第四关 · 故事线与详略<span class="en">Stage 4 · Story Line & What to Expand</span></p>
+  <h2>先理清故事线，再安排详略<span class="en">First sort out the story line, then decide what to expand</span></h2>
 
   <h3><span class="n">A</span>把故事线排整齐</h3>
-  <p class="hint">下面六张卡片打乱了顺序。<strong>先点一张，再点另一张，两张就会交换位置</strong>，把整件事从头到尾排好。</p>
+  <p class="hint">下面六张卡片打乱了顺序。<strong>先点一张，再点另一张，两张就会交换位置</strong>，把整件事从头到尾排好。<span class="en">The six cards below are out of order. Tap one card, then tap another to swap them, until the whole event is in order from start to finish.</span></p>
   <div class="qtip">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
     想一想事情发生的先后：先做错事 → 朋友生气 → 我发现错了 → 我去道歉补救 → 和好。
@@ -327,7 +361,7 @@ h3 .n{font-family:var(--mono); font-size:12px; background:var(--story); color:#f
   <div class="sorthelp" id="sortResult" style="display:none"></div>
 
   <h3><span class="n">B</span>哪些详写？哪些略写？</h3>
-  <p class="hint">故事线排好了，但不能每一步都写得一样长。<strong>点「详写」或「略写」给每一步贴上标签</strong>——关键词是「对不起」，所以<span class="key">道歉补救</span>要详写，其余略写。</p>
+  <p class="hint">故事线排好了，但不能每一步都写得一样长。<strong>点「详写」或「略写」给每一步贴上标签</strong>——关键词是「对不起」，所以<span class="key">道歉补救</span>要详写，其余略写。<span class="en">The story line is sorted, but not every step should be the same length. Tap "Expand" or "Keep brief" to label each step. The key word is "sorry", so the apology and making amends must be expanded; keep the rest brief.</span></p>
   <div class="dtlegend">
     <span><span class="chip d"></span>详写：重点，慢慢写、写具体</span>
     <span><span class="chip b"></span>略写：交代一下就好，一两句带过</span>
@@ -369,12 +403,12 @@ h3 .n{font-family:var(--mono); font-size:12px; background:var(--story); color:#f
 
   <p class="progress" id="pg1">已完成 0 / 2</p>
 </section>
-<div class="checkpoint" id="cp4"><h3>⏸ 全班停靠点 4 · 故事线与详略</h3><p>先停下来。老师会检查你是不是懂得：为什么“积极补救”必须成为全文重点。</p><div class="oral" id="oral4"></div><div class="unlockrow"><input id="code4" inputmode="numeric" placeholder="教师口令"><button class="btn btn-fill" id="unlock4">进入详写四诀</button><span class="unlockmsg" id="unlockMsg4"></span></div></div>
+<div class="checkpoint" id="cp4"><h3>⏸ 全班停靠点 4 · 故事线与详略</h3><p>先停下来。老师会检查你是不是懂得：为什么“积极补救”必须成为全文重点。</p><div class="oral" id="oral4"></div><div class="unlockrow"><input id="code4" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-fill" id="unlock4">进入详写四诀</button><span class="unlockmsg" id="unlockMsg4"></span></div></div>
 <!-- ============ 板块二：详写四诀 ============ -->
 <section class="task engLocked" id="s2">
-  <p class="tasknum">板块二</p>
-  <h2>详写四诀练习</h2>
-  <p class="hint">道歉补救这一段是全文重点，要<strong>详写</strong>。按四诀的顺序，一步步把它写具体。</p>
+  <p class="kicker">第五关 · 补救四诀<span class="en">Stage 5 · Four Steps to Make Amends</span></p>
+  <h2>详写四诀练习<span class="en">Practice: four steps for expanding</span></h2>
+  <p class="hint">道歉补救这一段是全文重点，要<strong>详写</strong>。按四诀的顺序，一步步把它写具体。<span class="en">Apologising and making amends is the heart of the essay, so it must be expanded. Follow the four steps in order and make it specific.</span></p>
 
   <div class="juemap">
     <p class="mt">🧭 详写补救的四诀（按事情发生的顺序）
@@ -403,16 +437,16 @@ h3 .n{font-family:var(--mono); font-size:12px; background:var(--story); color:#f
     </div>
   </div>
 
-  <p class="hint">每一诀写完点「提交」。第一次不达标只给提示，修改后再交；第二次仍有问题才开放参考范例。</p>
+  <p class="hint">每一诀写完点「提交」。第一次不达标只给提示，修改后再交；第二次仍有问题才开放参考范例。<span class="en">Finish each step, then tap Submit. The first time, you only get a hint — revise and submit again. Sample answers open only if there are still problems the second time.</span></p>
   <div id="jueList"></div>
 
   <p class="progress" id="pg2">已完成 0 / 4</p>
 </section>
-<div class="checkpoint" id="cp5"><h3>⏸ 全班停靠点 5 · “积极＋终于”验收</h3><p>四诀不是四个漂亮句子，而是一条因果链：发现伤害 → 第一次碰钉子 → 不放弃 → 再行动 → 终于挽回。</p><div class="oral" id="oral5"></div><div class="unlockrow"><input id="code5" inputmode="numeric" placeholder="教师口令"><button class="btn btn-fill" id="unlock5">进入略写与模仿</button><span class="unlockmsg" id="unlockMsg5"></span></div></div>
+<div class="checkpoint" id="cp5"><h3>⏸ 全班停靠点 5 · “积极＋终于”验收</h3><p>四诀不是四个漂亮句子，而是一条因果链：发现伤害 → 第一次碰钉子 → 不放弃 → 再行动 → 终于挽回。</p><div class="oral" id="oral5"></div><div class="unlockrow"><input id="code5" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-fill" id="unlock5">进入略写与模仿</button><span class="unlockmsg" id="unlockMsg5"></span></div></div>
 <!-- ============ 板块三：略写 + 模仿 ============ -->
 <section class="task engLocked" id="s3">
-  <p class="tasknum">板块三</p>
-  <h2>略写功夫 ＋ 模仿写作</h2>
+  <p class="kicker">第六关 · 略写与迁移<span class="en">Stage 6 · Summarising & Applying</span></p>
+  <h2>略写功夫 ＋ 模仿写作<span class="en">Summarising skills + Write your own</span></h2>
 
   <h3><span class="n">A</span>不重要的内容，怎么一笔带过？</h3>
   <div class="brief-intro">
@@ -438,11 +472,11 @@ h3 .n{font-family:var(--mono); font-size:12px; background:var(--story); color:#f
   </div>
 
   <h3><span class="n">B</span>哪个是好的略写？</h3>
-  <p class="hint">同一段内容，两种写法。<strong>该略写的地方，选交代清楚又不啰嗦的那个。</strong></p>
+  <p class="hint">同一段内容，两种写法。<strong>该略写的地方，选交代清楚又不啰嗦的那个。</strong><span class="en">The same content, written two ways. Where it should be brief, choose the version that explains clearly without rambling.</span></p>
   <div id="pickBetter"></div>
 
   <h3><span class="n">C</span>点掉多余的句子</h3>
-  <p class="hint">下面这段开头太啰嗦。<strong>点一下句子就能划掉它</strong>，删掉纯废话，<strong>留下让读者看懂前因后果的关键</strong>（把它删到只剩三句）。</p>
+  <p class="hint">下面这段开头太啰嗦。<strong>点一下句子就能划掉它</strong>，删掉纯废话，<strong>留下让读者看懂前因后果的关键</strong>（把它删到只剩三句）。<span class="en">The opening below is too wordy. Tap a sentence to cross it out. Delete the padding but keep what the reader needs to follow cause and effect — cut it down to three sentences.</span></p>
   <div id="cutList"></div>
 
   <h3><span class="n">D</span>范文赏析：详略结合
@@ -479,7 +513,7 @@ h3 .n{font-family:var(--mono); font-size:12px; background:var(--story); color:#f
   </div>
 
   <h3><span class="n">E</span>你的模仿写作</h3>
-  <p class="hint">选一个补救方式，<strong>前面略写（用三招）、道歉补救详写（用四诀）</strong>，写 150–200 字。</p>
+  <p class="hint">选一个补救方式，<strong>前面略写（用三招）、道歉补救详写（用四诀）</strong>，写 150–200 字。<span class="en">Choose one way of making amends. Keep the opening brief (use the three tricks) and expand the apology and amends (use the four steps). Write 150–200 characters.</span></p>
   <div class="input-area">
     <label class="input-label">选择你的补救方式 <em>（请先选择）</em></label>
     <div style="display:flex; gap:10px; flex-wrap:wrap; margin:12px 0">
@@ -498,7 +532,7 @@ h3 .n{font-family:var(--mono); font-size:12px; background:var(--story); color:#f
   <p class="progress" id="pg3">已完成 0 / 1</p>
 </section>
 
-<div class="checkpoint" id="cp6"><h3>⏸ 全班停靠点 6 · 提交前检查</h3><p>准备口头说明：你的片段怎样写出“积极”，又怎样写出“终于”。</p><div class="oral" id="oral6"></div><div class="unlockrow"><input id="code6" inputmode="numeric" placeholder="教师口令"><button class="btn btn-fill" id="unlock6">老师已验收，可以提交</button><span class="unlockmsg" id="unlockMsg6"></span></div></div>
+<div class="checkpoint" id="cp6"><h3>⏸ 全班停靠点 6 · 提交前检查</h3><p>准备口头说明：你的片段怎样写出“积极”，又怎样写出“终于”。</p><div class="oral" id="oral6"></div><div class="unlockrow"><input id="code6" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-fill" id="unlock6">继续 · 可以提交</button><span class="unlockmsg" id="unlockMsg6"></span></div></div>
 <div class="actions lockedActions" id="actions">
   <button class="btn btn-fill" id="submitAll">提交，看我的成绩</button>
   <button class="btn btn-line" onclick="window.print()">打印 / 存成 PDF</button>
@@ -583,8 +617,8 @@ let ROSTER=[], userLocked=false, selIdx=null;
 
 const ORAL2={four:['为什么“做错事”不能写得比“补救”更长？','“积极”怎样决定详写重点？','“终于”对故事线提出了什么要求？'],five:['为什么朋友不能听完一句道歉就马上原谅？','哪一诀最能证明“积极”？为什么？','第一次碰钉子后，心理描写应该写什么，而不是只写“后悔”？'],six:['你的片段里有哪两步以上的补救？','哪一个细节表现朋友是“慢慢”被打动的？','删掉结尾道理后，你的故事本身能推出“勇于承担、积极补救”吗？']};
 function setStatus2(s){document.getElementById('statusPill').textContent='● '+s;document.getElementById('revPill').textContent=`修正 ${state.stats.revised} 次`;document.getElementById('modePill').textContent=CONFIG.SELF?'自学模式':'课堂模式'}
-function showCP2(n,k){if(state.cpShown[n])return;state.cpShown[n]=1;const c=document.getElementById('cp'+n);c.classList.add('show');document.getElementById('oral'+n).textContent='准备口头解释：'+ORAL2[k][Math.floor(Math.random()*ORAL2[k].length)];setStatus2('等待老师讲评');if(CONFIG.SELF){document.getElementById('code'+n).style.display='none';document.getElementById('unlock'+n).textContent='自学模式 · 继续'}c.scrollIntoView({behavior:'smooth',block:'center'})}
-function gate2(n,k,nextId){const msg=document.getElementById('unlockMsg'+n);if(!CONFIG.SELF&&document.getElementById('code'+n).value.trim()!==CONFIG.CODES[k]){msg.textContent='口令不对，先听老师讲评。';msg.style.color='var(--miss)';return}msg.textContent='✓ 已解锁';msg.style.color='var(--good)';document.getElementById('cp'+n).classList.remove('show');if(nextId){document.getElementById(nextId).classList.remove('engLocked');document.getElementById(nextId).scrollIntoView({behavior:'smooth',block:'start'})}}
+function showCP2(n,k){if(state.cpShown[n])return;state.cpShown[n]=1;const c=document.getElementById('cp'+n);c.classList.add('show');document.getElementById('oral'+n).textContent='准备口头解释：'+ORAL2[k][Math.floor(Math.random()*ORAL2[k].length)];setStatus2('想一想，准备解释');if(CONFIG.SELF){document.getElementById('code'+n).style.display='none';document.getElementById('unlock'+n).textContent='自学模式 · 继续'}c.scrollIntoView({behavior:'smooth',block:'center'})}
+function gate2(n,k,nextId){const msg=document.getElementById('unlockMsg'+n);msg.textContent='✓ 已解锁';msg.style.color='var(--good)';document.getElementById('cp'+n).classList.remove('show');if(nextId){document.getElementById(nextId).classList.remove('engLocked');document.getElementById(nextId).scrollIntoView({behavior:'smooth',block:'start'})}}
 function maybeCP4(){if(state.sortDone&&state.detailDone)showCP2(4,'four')}
 function maybeCP5(){if(Object.keys(state.jue).length===JUE.length)showCP2(5,'five')}
 function maybeCP6(){if(Object.keys(state.pickResolved).length===PICK_BETTER.length&&state.cutDone&&state.q3B)showCP2(6,'six')}
@@ -805,7 +839,7 @@ function updateRail(){
 function submitAll(){
   if(!userLocked){alert('请先选择你的学号');return}if(document.getElementById('actions').classList.contains('lockedActions')&&!CONFIG.SELF){alert('先完成老师的提交前验收。');return}
   const b1=(state.sortScore||0)+(state.detailScore||0),b2=JUE.reduce((s,j)=>{const a=state.jue[j.id];return s+(a?(a.good?1:.5):0)},0),pb=PICK_BETTER.reduce((s,p,i)=>s+(state.pickBetter[i]===p[2]?1:0),0),b3=pb+(state.cutDone?1:0)+(state.q3B?state.q3B.score:0),total=Math.round((b1+b2+b3)*10)/10,full=16,pct=Math.round(total/full*100);let level=pct>=90?'杰出':pct>=75?'很好':pct>=60?'不错':'继续练';
-  const html=`<div class="resultcard"><h2 style="text-align:center;color:var(--story-deep);margin-top:0">📊 你的学习结果</h2><div style="background:var(--story-tint);border-radius:12px;padding:20px;text-align:center"><div style="font-size:46px;font-weight:800;color:var(--story-deep)">${total}</div><div>共 ${full} 分 · ${pct}% · <b>${level}</b></div></div><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次达标</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div>${bar('故事线与详略',Math.round(b1*10)/10,5)}${bar('积极补救四诀',Math.round(b2*10)/10,4)}${bar('略写与模仿',Math.round(b3*10)/10,7)}<div style="background:var(--logic-tint);border-radius:12px;padding:14px;margin-top:16px"><b>写这道题时只记一条主线：</b><br>伤害朋友 → 察觉错误 → 第一次道歉碰钉子 → 不放弃继续补救 → 朋友慢慢被打动 → 终于挽回关系。</div><div id="upState" style="font-size:13px;text-align:center;color:var(--ink-soft);margin:14px 0"></div><div style="text-align:center"><button class="mini" onclick="document.getElementById('result').classList.remove('show')">返回</button> <button class="mini" onclick="window.print()">打印成绩单</button></div></div>`;document.getElementById('result').innerHTML=html;document.getElementById('result').classList.add('show');setStatus2('全部完成');if(CONFIG.API)uploadScore({name:state.user.name,class:state.user.class,group:state.user.group,id:state.user.id,block1:Math.round(b1*10)/10,block2:Math.round(b2*10)/10,block3:Math.round(b3*10)/10,total,percent:pct});else document.getElementById('upState').textContent='（未连接后台，成绩仅本机显示，请截图给老师）';
+  const html=`<div class="resultcard"><h2 style="text-align:center;color:var(--story-deep);margin-top:0">📊 你的学习结果<span class="en">📊 Your Results</span></h2><div style="background:var(--story-tint);border-radius:12px;padding:20px;text-align:center"><div style="font-size:46px;font-weight:800;color:var(--story-deep)">${total}</div><div>共 ${full} 分 · ${pct}% · <b>${level}</b></div></div><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次达标</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div>${bar('故事线与详略',Math.round(b1*10)/10,5)}${bar('积极补救四诀',Math.round(b2*10)/10,4)}${bar('略写与模仿',Math.round(b3*10)/10,7)}<div style="background:var(--logic-tint);border-radius:12px;padding:14px;margin-top:16px"><b>写这道题时只记一条主线：</b><br>伤害朋友 → 察觉错误 → 第一次道歉碰钉子 → 不放弃继续补救 → 朋友慢慢被打动 → 终于挽回关系。</div><div id="upState" style="font-size:13px;text-align:center;color:var(--ink-soft);margin:14px 0"></div><div style="text-align:center"><button class="mini" onclick="document.getElementById('result').classList.remove('show')">返回</button> <button class="mini" onclick="window.print()">打印成绩单</button></div></div>`;document.getElementById('result').innerHTML=html;document.getElementById('result').classList.add('show');setStatus2('全部完成');if(CONFIG.API)uploadScore({name:state.user.name,class:state.user.class,group:state.user.group,id:state.user.id,block1:Math.round(b1*10)/10,block2:Math.round(b2*10)/10,block3:Math.round(b3*10)/10,total,percent:pct});else document.getElementById('upState').textContent='（未连接后台，成绩仅本机显示，请截图给老师）';
 }
 function bar(label,val,max){
   return `<div style="margin-bottom:14px"><div style="font-weight:600;margin-bottom:4px">${label}<span style="float:right;color:var(--story)">${val} / ${max}</span></div>
