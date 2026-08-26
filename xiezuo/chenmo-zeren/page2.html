@@ -110,10 +110,15 @@ button, .btn{ line-height:1.35; height:auto }
 .substep{ align-items:flex-start; flex-wrap:wrap }
 .substep .en{ display:block; width:100%; font-size:12.5px; font-weight:500;
   color:#7C8A94; margin-top:2px; letter-spacing:0 }
-</style></head><body>
+</style>
+<style id="page-backlink-strong">
+.backlink{display:inline-flex!important;align-items:center;gap:6px;margin:18px 0 12px!important;padding:10px 14px!important;border:1px solid rgba(63,53,84,.18)!important;border-radius:999px!important;background:rgba(255,255,255,.92)!important;color:#3F3554!important;font-weight:800!important;text-decoration:none!important;box-shadow:0 4px 12px rgba(28,42,33,.08)!important}
+.backlink:hover{background:#fff!important;transform:translateY(-1px)}
+</style>
+</head><body>
 <nav class="stepper"><div class="stepper-inner"><div class="step on" data-step="s4"><span class="dot">线</span><span class="nm">故事线</span></div><span class="bar"></span><div class="step" data-step="s5"><span class="dot">刻</span><span class="nm">人物刻画</span></div><span class="bar"></span><div class="step" data-step="s6"><span class="dot">写</span><span class="nm">迁移写作</span></div></div></nav>
 <div class="classroomBar"><span>课堂状态：<span class="status" id="status">故事线中</span></span><span class="modePill" id="modePill">课堂模式</span></div>
-<div class="wrap"><a class="backlink" href="index.html">← 回第一页看我的审题卡</a><header class="hero"><div class="eyebrow">第二页 · 用证据刻画人物</div><h1>别告诉读者“他很负责”，让读者自己看见</h1><p class="sub">故事线与详略 → 人物刻画四证法 → 核心片段迁移</p></header><div class="topic">班上有一位同学虽然平时沉默寡言，但做事认真、很有责任心。试写一篇文章，记叙这个同学。</div><div class="artifact show"><b>你第一页的材料：</b><div id="draftCard"></div></div>
+<div class="wrap"><a class="backlink" href="index.html" aria-label="返回第一页审题训练">← 返回第一页：审题训练</a><header class="hero"><div class="eyebrow">第二页 · 用证据刻画人物</div><h1>别告诉读者“他很负责”，让读者自己看见</h1><p class="sub">故事线与详略 → 人物刻画四证法 → 核心片段迁移</p></header><div class="topic">班上有一位同学虽然平时沉默寡言，但做事认真、很有责任心。试写一篇文章，记叙这个同学。</div><div class="artifact show"><b>你第一页的材料：</b><div id="draftCard"></div></div>
 
 <section class="stage" id="s4"><p class="kicker">第四关 · 故事线与详略</p><h2>一个主事件，怎样越写越能证明人物？</h2>
 <div class="substep"><span class="n">A</span>把示范故事线排整齐</div><p class="lead">先点一张，再点另一张交换。注意：这不是“人物成长故事”，而是<b>一步步增加人物证据</b>。</p><div class="sorter" id="sorter"></div><div class="acts"><button class="btn btn-blue" id="checkSort">排好了，检查</button></div><div class="feedback" id="sortFb"></div>

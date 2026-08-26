@@ -183,6 +183,51 @@ PRESS.forEach(p=>{const b=document.createElement('button');b.textContent=p;b.onc
 $('modePill').textContent=SELF_MODE?'自学模式':'课堂模式';loadDraft();$('startBtn').onclick=()=>{if(!SELF_MODE&&(!$('stuName').value.trim()||!$('stuClass').value.trim())){alert('课堂模式请先填写姓名和班级。');return}unlock('s1');$('s1').scrollIntoView({behavior:'smooth'});renderTokens('restrictTokens','restrict');setStatus('审题中')};$('unlock1').onclick=()=>gate('1','s1','s2','unlockMsg1','code1');$('unlock2').onclick=()=>gate('2','s2','s3','unlockMsg2','code2');['stuName','stuClass','centerInput','quiet','task','pressure','actions','resultLine'].forEach(id=>$(id)?.addEventListener('input',saveDraft));
 $('materialCheck').onclick=()=>{const vals=[$('quiet').value.trim(),$('task').value.trim(),$('pressure').value.trim(),$('actions').value.trim(),$('resultLine').value.trim()];$('selfcheck').classList.add('show');if(vals.some(v=>!v)){alert('先把五句话写完整。');return}const checks=[...$('selfcheck').querySelectorAll('input')];if(checks.some(x=>!x.checked)){alert('请先完成四项自查并全部勾选。');return}doneStep('s3');setStatus('第一页完成 · 等待老师');saveDraft();const center=$('centerInput').value.trim()||CENTER;const params=new URLSearchParams({name:$('stuName').value.trim(),cls:$('stuClass').value.trim(),center,quiet:vals[0],task:vals[1],pressure:vals[2],actions:vals[3],result:vals[4]});if(SELF_MODE)params.set('mode','self');const next='page2.html?'+params.toString();const gateHtml=SELF_MODE?`<a class="btn btn-brush np-btn" href="${next}">进入第二页 · 开始写故事 →</a>`:`<div class="checkpoint show"><h3>⏸ 全班停靠点 3 · 带着材料进入第二页</h3><div class="oral">${pick(oralBank.page2)}</div><div class="unlockrow"><input id="code3" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-brush np-btn" id="unlock3">进入第二页 · 开始写故事 →</button><span class="unlockmsg" id="unlockMsg3"></span></div></div>`;$('result').innerHTML=`<h2 style="font-family:var(--serif);margin-top:0">📇 我的人物写作卡</h2><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次答对</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div><div class="card"><h3>写作文时照着这张卡</h3><div class="row"><span class="k">人物中心</span><span>${center}</span></div><div class="row"><span class="k">少言证据</span><span>${vals[0]}</span></div><div class="row"><span class="k">主要任务</span><span>${vals[1]}</span></div><div class="row"><span class="k">责任考验</span><span>${vals[2]}</span></div><div class="row"><span class="k">认真负责的行动</span><span>${vals[3]}</span></div><div class="row"><span class="k">结果 / 反应</span><span>${vals[4]}</span></div><div class="row"><span class="k">高分提醒</span><span><b>“认真、有责任心”必须由行动证明。</b>不要只靠旁白反复说他“很好”。</span></div></div>${gateHtml}<div class="acts"><button class="btn btn-line" onclick="window.print()">打印 / 保存</button></div>`;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'});if(!SELF_MODE)setTimeout(()=>{$('unlock3').onclick=()=>{const msg=$('unlockMsg3');location.href=next}},0)};
 </script>
+
+<!-- 第一页 → 第二页：统一底部入口 -->
+<style id="page-nav-style">
+.page-nav-footer{max-width:980px;margin:34px auto 70px;padding:0 22px;text-align:center}
+.page-nav-next{width:min(100%,760px);min-height:72px;padding:18px 26px;border:0;border-radius:18px;background:#2F6B45;color:#fff;font-family:inherit;font-size:clamp(20px,2.4vw,28px);font-weight:800;letter-spacing:.02em;cursor:pointer;box-shadow:0 10px 24px rgba(47,107,69,.22);transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+.page-nav-next:hover{background:#285D3C;transform:translateY(-1px);box-shadow:0 12px 28px rgba(47,107,69,.28)}
+.page-nav-next:active{transform:translateY(0)}
+.page-nav-next:focus-visible{outline:4px solid rgba(47,107,69,.24);outline-offset:3px}
+.page-nav-hint{margin-top:10px;font-size:14px;color:#607064}
+.page-nav-hint.warn{color:#A33A32;font-weight:700}
+@media(max-width:640px){.page-nav-footer{padding:0 14px;margin-top:26px}.page-nav-next{min-height:64px;font-size:20px;padding:15px 18px;border-radius:14px}}
+</style>
+<div class="page-nav-footer" aria-label="页面导航">
+  <button class="page-nav-next" id="pageNavNext" type="button">进入第二页：继续写作训练 →</button>
+  <div class="page-nav-hint" id="pageNavHint">完成第一页后，从这里进入第二页。</div>
+</div>
+<script id="page-nav-bridge">
+(function(){
+  const nextBtn=document.getElementById('pageNavNext');
+  const hint=document.getElementById('pageNavHint');
+  if(!nextBtn) return;
+  function visible(el){
+    if(!el) return false;
+    const s=getComputedStyle(el), r=el.getBoundingClientRect();
+    return s.display!=='none' && s.visibility!=='hidden' && r.width>0 && r.height>0 && !el.disabled;
+  }
+  function findRealEntry(){
+    const all=[...document.querySelectorAll('a[href*="page2.html"], button.np-btn, #goPage2, #unlock3')];
+    const candidates=all.filter(el=>el!==nextBtn && !el.closest('.page-nav-footer') && visible(el));
+    return candidates[candidates.length-1]||null;
+  }
+  nextBtn.addEventListener('click',function(){
+    const target=findRealEntry();
+    if(target){
+      hint.classList.remove('warn');
+      if(target.tagName==='A') location.href=target.href;
+      else target.click();
+      return;
+    }
+    hint.textContent='请先完成第一页的全部练习，再进入第二页。';
+    hint.classList.add('warn');
+  });
+})();
+</script>
+
 <script>window.XIEZUO_PAGE={id:"chenmo-zeren",page:1};</script>
 <script src="../hook.js"></script>
 
