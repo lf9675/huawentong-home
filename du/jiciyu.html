@@ -6,7 +6,7 @@
 <title>汉字结构大乱斗 v2.1（词库校正版）</title>
 <style>
 :root{--red:#e74c3c;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--gold:#f39c12;--bg:#fdf6e3;--text:#2c3e50;--card:#fff;--sh:0 2px 12px rgba(0,0,0,.1)}
-*{box-sizing:border-box;touch-action:none;margin:0;padding:0}
+*{box-sizing:border-box;touch-action:manipulation;margin:0;padding:0}
 body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);display:flex;flex-direction:column;align-items:center;min-height:100vh;overflow-y:auto;touch-action:auto;padding-bottom:72px;padding-top:57px}
 .header{width:100%;background:var(--card);padding:8px 12px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--sh);position:fixed;top:0;left:0;right:0;z-index:50}
 .select-group{display:flex;gap:6px}
@@ -17,8 +17,8 @@ select{padding:6px 8px;border-radius:8px;font-size:14px;border:1.5px solid #ddd;
 .combo-display{font-size:11px;font-weight:bold;min-height:14px;color:var(--orange)}
 .progress-wrap{width:100%;height:5px;background:#ecf0f1;position:fixed;top:52px;left:0;right:0;z-index:49}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--green),#2ecc71);transition:width .5s cubic-bezier(.4,0,.2,1);width:0%}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;display:flex;align-items:center;justify-content:center}
-.modal{background:var(--card);border-radius:20px;padding:32px 24px;width:88%;max-width:360px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 12px 90px}
+.modal{background:var(--card);border-radius:20px;padding:32px 24px;width:88%;max-width:360px;margin:auto;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
 @keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
 .modal-emoji{font-size:52px;margin-bottom:12px}
 .modal-title{font-size:22px;font-weight:bold;color:var(--text);margin-bottom:6px}
@@ -31,7 +31,7 @@ select{padding:6px 8px;border-radius:8px;font-size:14px;border:1.5px solid #ddd;
 @keyframes toastIn{from{transform:translateX(-50%) translateY(-20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
 .pool-container{width:95%;max-width:500px;min-height:108px;background:rgba(255,255,255,.85);border:2px dashed #b2bec3;border-radius:14px;margin:12px 0 6px;padding:12px 14px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px}
 .pool-title{width:100%;text-align:center;font-size:11px;color:#95a5a6;margin:-4px 0}
-.component{width:46px;height:46px;background:var(--card);border:2px solid #2c3e50;border-radius:9px;font-size:24px;font-family:"KaiTi","楷体",serif;display:flex;align-items:center;justify-content:center;cursor:grab;user-select:none;box-shadow:2px 2px 0 #2c3e50;transition:transform .1s}
+.component{touch-action:none;width:46px;height:46px;background:var(--card);border:2px solid #2c3e50;border-radius:9px;font-size:24px;font-family:"KaiTi","楷体",serif;display:flex;align-items:center;justify-content:center;cursor:grab;user-select:none;box-shadow:2px 2px 0 #2c3e50;transition:transform .1s}
 .component:active{cursor:grabbing;transform:scale(1.12)}
 .target-info{font-size:14px;color:var(--text);font-weight:bold;text-align:center;margin-bottom:4px}
 .pinyin-display{font-size:36px;color:var(--green);font-family:Arial,sans-serif;letter-spacing:3px;display:block;margin-top:2px;font-weight:bold}
@@ -226,7 +226,7 @@ select{padding:6px 8px;border-radius:8px;font-size:14px;border:1.5px solid #ddd;
 .top-err-cnt{font-size:10px;color:var(--red);font-weight:bold}
 
 .unit-picker-btn{padding:5px 9px;border-radius:8px;font-size:12px;border:1.5px solid #ddd;font-weight:bold;background:#f8f9fa;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:3px;font-family:inherit;max-width:230px;overflow:hidden;white-space:nowrap}
-.unit-picker-panel{position:fixed;top:58px;left:8px;right:8px;max-width:520px;max-height:72vh;overflow-y:auto;background:var(--card);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.22);z-index:200;padding:12px 14px;display:none}
+.unit-picker-panel{position:fixed;top:58px;left:8px;right:8px;max-width:520px;max-height:calc(100vh - 70px);max-height:calc(100dvh - 70px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:var(--card);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.22);z-index:200;padding:12px 14px 80px;display:none}
 .unit-picker-panel.open{display:block}
 .unit-check-item{display:flex;align-items:center;gap:8px;padding:6px 4px;border-radius:7px;cursor:pointer;font-size:14px}
 .unit-check-item input{width:16px;height:16px;cursor:pointer;accent-color:var(--green)}
@@ -240,7 +240,7 @@ select{padding:6px 8px;border-radius:8px;font-size:14px;border:1.5px solid #ddd;
 
 /* ===== v3 新增：登录点选 / 课文多选 / 结算卡 / 老师页 ===== */
 .login-hint{font-size:15px;font-weight:700;color:#2d3436;margin:10px 0 8px}
-.pick-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-height:46vh;overflow-y:auto;padding:4px}
+.pick-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:4px}
 .pick-btn{min-width:88px;padding:12px 14px;border:2px solid #dfe6e9;border-radius:12px;background:#fff;font-size:16px;font-weight:700;color:#2d3436;cursor:pointer;line-height:1.3}
 .pick-btn:active{transform:scale(.96)}
 .pick-btn .sid-num{display:block;font-size:20px;color:#0984e3}
