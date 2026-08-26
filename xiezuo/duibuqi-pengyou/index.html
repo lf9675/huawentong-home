@@ -1031,6 +1031,51 @@ $('reasonCheck').onclick=checkReason;
 })();
 </script>
 
+
+<!-- 第一页 → 第二页：统一底部入口 -->
+<style id="page-nav-style">
+.page-nav-footer{max-width:980px;margin:34px auto 70px;padding:0 22px;text-align:center}
+.page-nav-next{width:min(100%,760px);min-height:72px;padding:18px 26px;border:0;border-radius:18px;background:#2F6B45;color:#fff;font-family:inherit;font-size:clamp(20px,2.4vw,28px);font-weight:800;letter-spacing:.02em;cursor:pointer;box-shadow:0 10px 24px rgba(47,107,69,.22);transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+.page-nav-next:hover{background:#285D3C;transform:translateY(-1px);box-shadow:0 12px 28px rgba(47,107,69,.28)}
+.page-nav-next:active{transform:translateY(0)}
+.page-nav-next:focus-visible{outline:4px solid rgba(47,107,69,.24);outline-offset:3px}
+.page-nav-hint{margin-top:10px;font-size:14px;color:#607064}
+.page-nav-hint.warn{color:#A33A32;font-weight:700}
+@media(max-width:640px){.page-nav-footer{padding:0 14px;margin-top:26px}.page-nav-next{min-height:64px;font-size:20px;padding:15px 18px;border-radius:14px}}
+</style>
+<div class="page-nav-footer" aria-label="页面导航">
+  <button class="page-nav-next" id="pageNavNext" type="button">进入第二页：继续写作训练 →</button>
+  <div class="page-nav-hint" id="pageNavHint">完成第一页后，从这里进入第二页。</div>
+</div>
+<script id="page-nav-bridge">
+(function(){
+  const nextBtn=document.getElementById('pageNavNext');
+  const hint=document.getElementById('pageNavHint');
+  if(!nextBtn) return;
+  function visible(el){
+    if(!el) return false;
+    const s=getComputedStyle(el), r=el.getBoundingClientRect();
+    return s.display!=='none' && s.visibility!=='hidden' && r.width>0 && r.height>0 && !el.disabled;
+  }
+  function findRealEntry(){
+    const all=[...document.querySelectorAll('a[href*="page2.html"], button.np-btn, #goPage2, #unlock3')];
+    const candidates=all.filter(el=>el!==nextBtn && !el.closest('.page-nav-footer') && visible(el));
+    return candidates[candidates.length-1]||null;
+  }
+  nextBtn.addEventListener('click',function(){
+    const target=findRealEntry();
+    if(target){
+      hint.classList.remove('warn');
+      if(target.tagName==='A') location.href=target.href;
+      else target.click();
+      return;
+    }
+    hint.textContent='请先完成第一页的全部练习，再进入第二页。';
+    hint.classList.add('warn');
+  });
+})();
+</script>
+
 <script>window.XIEZUO_PAGE={id:"duibuqi-pengyou",page:1};</script>
 <script src="../hook.js"></script>
 
