@@ -71,33 +71,77 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
   .kicker::before{height:22px}
   .en{font-size:13px}
 }
-</style></head><body>
+
+/* ===== 第二页入口 / 返回链接 ===== */
+.nextpage{
+  margin:22px 0 6px; padding:20px 22px; border-radius:14px;
+  background:linear-gradient(135deg,#FFF6E8,#FDECD9);
+  border:2px solid #D6AE59; text-align:center;
+}
+.np-txt{font-size:15.5px; font-weight:700; color:#7A570D; margin-bottom:14px; line-height:1.6}
+.np-txt .en{font-weight:500; color:#96755F; margin-top:2px}
+.np-btn{
+  display:inline-block !important; font-size:19px !important; font-weight:900 !important;
+  padding:16px 34px !important; border-radius:12px !important;
+  text-decoration:none !important; line-height:1.3 !important;
+  box-shadow:0 6px 18px rgba(122,87,13,.28);
+}
+.np-btn .en{font-size:13px; font-weight:600; opacity:.9; margin-top:3px; color:#fff}
+.backlink{
+  display:inline-flex; align-items:center; gap:6px; margin:0 0 4px;
+  font-size:14px; font-weight:700; color:#8A6A3B; text-decoration:none;
+  background:#FBF2E0; border:1px solid #D6AE59; border-radius:20px; padding:7px 16px;
+}
+.backlink:hover{background:#F6E6C4}
+.backlink .en{display:inline; font-size:12px; font-weight:500; color:#9C8158; margin:0 0 0 4px}
+@media(max-width:620px){ .np-btn{font-size:17px !important; padding:15px 22px !important; width:100%} }
+
+/* ===== 按钮内英文换行排版 ===== */
+button .en, .btn .en, .opts button .en, .tri-opts button .en,
+.dtchoose button .en, .choiceMenu button .en, .eventMenu button .en, .tabs button .en{
+  display:block; font-size:11.5px; font-weight:500; line-height:1.35;
+  margin-top:2px; opacity:.82; letter-spacing:0;
+}
+button, .btn{ line-height:1.35; height:auto }
+.opts button, .tri-opts button, .compare button{ line-height:1.5 }
+/* 深色按钮上的英文用浅色 */
+.opts button.picked .en, .btn-main .en, .btn-brush .en, .btn-fill .en,
+.dtchoose button.on .en, .tri-opts button.chosen .en{ color:#fff; opacity:.85 }
+/* substep 里的英文另起一行 */
+.substep{ align-items:flex-start; flex-wrap:wrap }
+.substep .en{ display:block; width:100%; font-size:12.5px; font-weight:500;
+  color:#7C8A94; margin-top:2px; letter-spacing:0 }
+</style>
+<style id="green-analysis-bilingual-style">
+.en-analysis{display:block;margin-top:4px;font-size:12.5px;font-weight:500;line-height:1.45;color:inherit;opacity:.82;font-style:normal}
+</style>
+</head><body>
 <nav class="stepper"><div class="stepper-inner"><div class="step on" data-step="s1"><span class="dot">审</span><span class="nm">审题</span></div><span class="bar"></span><div class="step" data-step="s2"><span class="dot">立</span><span class="nm">立意</span></div><span class="bar"></span><div class="step" data-step="s3"><span class="dot">选</span><span class="nm">选材</span></div></div></nav>
 <div class="classroomBar"><span>课堂状态：<span class="status" id="status">准备开始</span></span><span class="modePill" id="modePill">课堂模式</span></div>
-<div class="wrap"><header class="hero"><div class="eyebrow">ENGAGED LEARNING · 人物记叙文</div><h1>沉默寡言，也可以很有担当</h1><p class="sub">审题 → 立意 → 选材：先学会“用行动证明人物品质”</p></header>
+<div class="wrap"><header class="hero"><div class="eyebrow">人物记叙文 · 互动学习</div><h1>沉默寡言，也可以很有担当</h1><p class="sub">审题 → 立意 → 选材：先学会“用行动证明人物品质”</p></header>
 <div class="topic">班上有一位同学虽然平时沉默寡言，但做事认真、很有责任心。试写一篇文章，记叙这个同学。</div>
 <div class="meta"><input id="stuName" placeholder="姓名"><input id="stuClass" placeholder="班级"></div>
 <div class="note"><b>这题与前面的“人物转变型”作文不同：</b>主角是“班上的一位同学”，重点不是写“我学会了什么”，而是用具体事件把他的性格和品质写出来。</div>
 <div class="acts"><button class="btn btn-main" id="startBtn">开始 · 进入审题</button></div>
 
-<section class="stage locked" id="s1"><p class="kicker">第一关 · 审题<span class="en">Stage 1 · Understanding the Question</span></p><h2>看懂“虽然……但……”真正要突出什么<span class="en">What "although… but…" is really highlighting</span></h2>
-<div class="substep"><span class="n">A</span>点出限制词 / 范围词</div><p class="lead">这些词规定你<b>写谁、写什么范围</b>。点出 3 个。<span class="en">These words set who you write about and how wide your scope is. Tap 3 of them.</span></p><div class="tokens" id="restrictTokens"></div><div class="feedback" id="restrictFb"></div><div class="counter" id="restrictCnt"></div>
-<div id="keyWrap" style="display:none"><div class="substep"><span class="n">B</span>再点出人物关键词</div><p class="lead">关键词决定你必须让读者<b>看见哪些人物特点</b>。点出 3 个。<span class="en">Key words decide which qualities the reader must see. Tap 3 of them.</span></p><div class="tokens" id="keyTokens"></div><div class="feedback" id="keyFb"></div><div class="counter" id="keyCnt"></div></div>
+<section class="stage locked" id="s1"><p class="kicker">第一关 · 审题</p><h2>看懂“虽然……但……”真正要突出什么</h2>
+<div class="substep"><span class="n">A</span>点出限制词 / 范围词</div><p class="lead">这些词规定你<b>写谁、写什么范围</b>。点出 3 个。</p><div class="tokens" id="restrictTokens"></div><div class="feedback" id="restrictFb"></div><div class="counter" id="restrictCnt"></div>
+<div id="keyWrap" style="display:none"><div class="substep"><span class="n">B</span>再点出人物关键词</div><p class="lead">关键词决定你必须让读者<b>看见哪些人物特点</b>。点出 3 个。</p><div class="tokens" id="keyTokens"></div><div class="feedback" id="keyFb"></div><div class="counter" id="keyCnt"></div></div>
 <div id="relationWrap" style="display:none"><div class="substep"><span class="n">C</span>“虽然……但……”告诉你详略怎么安排？</div><div id="relationQ"></div></div>
 <div class="artifact" id="artifact1"><b>我的审题成果：</b><span id="artifact1Text"></span></div>
 <div class="checkpoint" id="cp1"><h3>⏸ 全班停靠点 1 · 先解释，再继续</h3><div class="oral" id="oral1"></div><div class="unlockrow"><input id="code1" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock1">老师讲评后解锁立意</button><span class="unlockmsg" id="unlockMsg1"></span></div></div></section>
 
-<section class="stage locked" id="s2"><p class="kicker">第二关 · 立意<span class="en">Stage 2 · Deciding the Main Message</span></p><h2>把“人物中心”定准<span class="en">Get the message about this person exactly right</span></h2>
+<section class="stage locked" id="s2"><p class="kicker">第二关 · 立意</p><h2>把“人物中心”定准</h2>
 <details class="reveal"><summary>先自己想：这篇文章到底要赞扬他什么？</summary><div class="body">不要把“沉默寡言”写成缺点，也不要只写“他成绩好”。题目真正要你证明的是：<b>他虽然话少，但认真负责的行动很值得肯定。</b></div></details>
 <div class="substep"><span class="n">A</span>哪一句最贴题？</div><div id="centerQ"></div>
 <div class="challenge" id="centerChallenge" style="display:none"><b>挑战：自己用一句简洁的话写中心</b><textarea id="centerInput" rows="2" placeholder="例如：赞扬这位同学虽然……却……"></textarea><div class="acts"><button class="btn btn-blue" id="centerCheck">检查是否扣题</button></div><div class="smart" id="centerSmart"></div></div>
 <div class="artifact" id="artifact2"><b>我的立意成果：</b><span id="centerArtifact">赞扬这位同学虽然沉默寡言，却做事认真、很有责任心。</span></div>
 <div class="checkpoint" id="cp2"><h3>⏸ 全班停靠点 2 · 随机抽问</h3><div class="oral" id="oral2"></div><div class="unlockrow"><input id="code2" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock2">老师讲评后解锁选材</button><span class="unlockmsg" id="unlockMsg2"></span></div></div></section>
 
-<section class="stage locked" id="s3"><p class="kicker">第三关 · 选材<span class="en">Stage 3 · Choosing Your Material</span></p><h2>选一个“行动能证明品质”的材料<span class="en">Choose material where actions prove the quality</span></h2>
-<div class="substep"><span class="n">A</span>三个材料，哪个最能写出“认真 + 责任心”？</div><p class="lead">第一次答错只给提示。<b>不要看“事情大不大”，要看人物品质有没有证据。</b><span class="en">A first wrong answer only gives you a hint. Don't judge by how big the event is — judge by whether there is evidence of the person's qualities.</span></p><div class="tri" id="triage"></div>
+<section class="stage locked" id="s3"><p class="kicker">第三关 · 选材</p><h2>选一个“行动能证明品质”的材料</h2>
+<div class="substep"><span class="n">A</span>三个材料，哪个最能写出“认真 + 责任心”？</div><p class="lead">第一次答错只给提示。<b>不要看“事情大不大”，要看人物品质有没有证据。</b></p><div class="tri" id="triage"></div>
 <div id="reasonWrap" style="display:none"><div class="substep"><span class="n">B</span>好材料为什么好？（可多选）</div><div class="reasonGrid" id="reasonGrid"></div><div class="acts"><button class="btn btn-blue" id="reasonCheck">检查理由</button></div><div id="reasonFb" class="qnote"></div></div>
-<div id="ownWrap" style="display:none"><div class="substep"><span class="n">C</span>搭建你自己的材料</div><p class="lead">推荐用<b>一个主事件</b>写深；如果需要，可加一个很短的日常细节做铺垫，不要列流水账。<span class="en">Best to write one main event deeply. If needed, add one short everyday detail as background — don't list events like a diary.</span></p><div class="scaffold">
+<div id="ownWrap" style="display:none"><div class="substep"><span class="n">C</span>搭建你自己的材料</div><p class="lead">推荐用<b>一个主事件</b>写深；如果需要，可加一个很短的日常细节做铺垫，不要列流水账。</p><div class="scaffold">
 <div class="layer"><p class="ltitle">1. 先选一个适合中学生的场景</p><div class="tabs" id="sceneTabs"></div><div class="eventMenu" id="eventMenu"></div></div>
 <div class="layer" id="pressureLayer" style="display:none"><p class="ltitle">2. 给事件加一个“责任考验”</p><div class="choiceMenu" id="pressureMenu"></div></div>
 <div class="layer fill" id="fillLayer" style="display:none"><p class="ltitle">3. 用五句话把材料锁定</p>
@@ -132,13 +176,43 @@ function renderTriage(){TRI.forEach((t,i)=>{const d=document.createElement('div'
 function afterTriage(){if(Object.keys(state.triResolved).length===TRI.length){$('reasonWrap').style.display='block';$('reasonWrap').scrollIntoView({behavior:'smooth',block:'center'})}}renderTriage();
 const RS=[['有一个明确任务，让读者知道他“对什么负责”。',true],['中途出现问题或压力，能看出他是否会推卸责任。',true],['用“核对、修改、联系、确认”等动作表现认真，而不是只贴标签。',true],['只要最后老师表扬他，前面的过程可以简单带过。',false],['他的沉默寡言用少量可见细节表现，形成“少说多做”的反差。',true]];
 RS.forEach((r,i)=>{const l=document.createElement('label');l.innerHTML=`<input type="checkbox"><span>${r[0]}</span>`;$('reasonGrid').appendChild(l)});$('reasonCheck').onclick=()=>{const xs=[...$('reasonGrid').querySelectorAll('input')],picked=xs.map((x,i)=>x.checked?i:-1).filter(i=>i>=0);state.reasonTry++;const ok=picked.length===4&&[0,1,2,4].every(i=>picked.includes(i))&&!picked.includes(3);if(ok){if(state.reasonTry===1)state.stats.firstTry++;else state.stats.revised++;$('reasonFb').innerHTML='✓ 对。好材料的证据链是：<b>平时少言 → 承担任务 → 遇到责任考验 → 认真处理 → 坚持到底 → 结果/他人反应</b>。';$('reasonFb').style.color='var(--good)';xs.forEach(x=>x.disabled=true);$('reasonCheck').disabled=true;$('ownWrap').style.display='block';setStatus('搭建自己的材料')}else if(state.reasonTry===1){state.stats.wrongClicks++;$('reasonFb').textContent='△ 提示：结尾表扬只能辅助，人物品质主要靠“遇到问题时怎么做”来证明。再选一次。';$('reasonFb').style.color='var(--bad)'}else{state.stats.revealed++;$('reasonFb').innerHTML='正确是第 1、2、3、5 项。第 4 项不成立：没有具体过程，人物会变成“老师说他好，所以他就好”。';$('reasonFb').style.color='var(--bad)';xs.forEach((x,i)=>{x.checked=[0,1,2,4].includes(i);x.disabled=true});$('reasonCheck').disabled=true;$('ownWrap').style.display='block'}};
-const SCENES=[{k:'project',name:'📚 小组专题作业',events:['他负责资料整理和最终检查','他负责把各人的部分合并成完整作品','他负责记录进度并提醒大家截止时间']},{k:'class',name:'🎪 班级活动 / 义卖',events:['他负责物资清点和收尾','他负责记录订单 / 款项 / 物资数量','他负责布置后再检查安全和整洁']},{k:'duty',name:'🧹 值日 / 公共任务',events:['他是值日组长，负责确认大家完成任务','班级搬迁或整理课室，他负责清点公共物品','活动后大家急着走，他负责最后检查和归还物品']},{k:'cca',name:'🎭 CCA / 团队合作',events:['他负责器材和出席记录','比赛 / 表演前负责最后核对物资','队友临时缺席，他把自己负责的部分做完后又补上缺口']}];
+const SCENES=[{k:'project',name:'📚 小组专题作业',events:['他负责资料整理和最终检查','他负责把各人的部分合并成完整作品','他负责记录进度并提醒大家截止时间']},{k:'class',name:'🎪 班级活动 / 义卖',events:['他负责物资清点和收尾','他负责记录订单 / 款项 / 物资数量','他负责布置后再检查安全和整洁']},{k:'duty',name:'🧹 值日 / 公共任务',events:['他是值日组长，负责确认大家完成任务','班级搬迁或整理课室，他负责清点公共物品','活动后大家急着走，他负责最后检查和归还物品']},{k:'cca',name:'🎭 课外活动 / 团队合作',events:['他负责器材和出席记录','比赛 / 表演前负责最后核对物资','队友临时缺席，他把自己负责的部分做完后又补上缺口']}];
 const PRESS=['有人漏做 / 做错了一部分，大家想先交了再说','时间已经很晚，其他人开始不耐烦、想赶快离开','出了问题，没人愿意承认或接手处理','任务很琐碎，没有人提醒也没人检查，但他仍坚持做到最后'];
 SCENES.forEach(s=>{const b=document.createElement('button');b.textContent=s.name;b.onclick=()=>{[...$('sceneTabs').querySelectorAll('button')].forEach(x=>x.classList.remove('on'));b.classList.add('on');$('eventMenu').innerHTML='';s.events.forEach(e=>{const z=document.createElement('button');z.textContent=e;z.onclick=()=>{[...$('eventMenu').querySelectorAll('button')].forEach(x=>x.classList.remove('on'));z.classList.add('on');$('pressureLayer').style.display='block';if(!$('task').value)$('task').value=e;saveDraft()};$('eventMenu').appendChild(z)})};$('sceneTabs').appendChild(b)});
 PRESS.forEach(p=>{const b=document.createElement('button');b.textContent=p;b.onclick=()=>{[...$('pressureMenu').querySelectorAll('button')].forEach(x=>x.classList.remove('on'));b.classList.add('on');$('fillLayer').style.display='block';if(!$('pressure').value)$('pressure').value=p;saveDraft()};$('pressureMenu').appendChild(b)});
 $('modePill').textContent=SELF_MODE?'自学模式':'课堂模式';loadDraft();$('startBtn').onclick=()=>{if(!SELF_MODE&&(!$('stuName').value.trim()||!$('stuClass').value.trim())){alert('课堂模式请先填写姓名和班级。');return}unlock('s1');$('s1').scrollIntoView({behavior:'smooth'});renderTokens('restrictTokens','restrict');setStatus('审题中')};$('unlock1').onclick=()=>gate('1','s1','s2','unlockMsg1','code1');$('unlock2').onclick=()=>gate('2','s2','s3','unlockMsg2','code2');['stuName','stuClass','centerInput','quiet','task','pressure','actions','resultLine'].forEach(id=>$(id)?.addEventListener('input',saveDraft));
-$('materialCheck').onclick=()=>{const vals=[$('quiet').value.trim(),$('task').value.trim(),$('pressure').value.trim(),$('actions').value.trim(),$('resultLine').value.trim()];$('selfcheck').classList.add('show');if(vals.some(v=>!v)){alert('先把五句话写完整。');return}const checks=[...$('selfcheck').querySelectorAll('input')];if(checks.some(x=>!x.checked)){alert('请先完成四项自查并全部勾选。');return}doneStep('s3');setStatus('第一页完成 · 等待老师');saveDraft();const center=$('centerInput').value.trim()||CENTER;const params=new URLSearchParams({name:$('stuName').value.trim(),cls:$('stuClass').value.trim(),center,quiet:vals[0],task:vals[1],pressure:vals[2],actions:vals[3],result:vals[4]});if(SELF_MODE)params.set('mode','self');const next='page2.html?'+params.toString();const gateHtml=SELF_MODE?`<a class="btn btn-main" href="${next}">进入第二页 →</a>`:`<div class="checkpoint show"><h3>⏸ 全班停靠点 3 · 带着材料进入第二页</h3><div class="oral">${pick(oralBank.page2)}</div><div class="unlockrow"><input id="code3" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock3">继续 · 进入第二页</button><span class="unlockmsg" id="unlockMsg3"></span></div></div>`;$('result').innerHTML=`<h2 style="font-family:var(--serif);margin-top:0">📇 我的人物写作卡<span class="en">📇 My Character Writing Card</span></h2><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次答对</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div><div class="card"><h3>写作文时照着这张卡</h3><div class="row"><span class="k">人物中心</span><span>${center}</span></div><div class="row"><span class="k">少言证据</span><span>${vals[0]}</span></div><div class="row"><span class="k">主要任务</span><span>${vals[1]}</span></div><div class="row"><span class="k">责任考验</span><span>${vals[2]}</span></div><div class="row"><span class="k">认真负责的行动</span><span>${vals[3]}</span></div><div class="row"><span class="k">结果 / 反应</span><span>${vals[4]}</span></div><div class="row"><span class="k">高分提醒</span><span><b>“认真、有责任心”必须由行动证明。</b>不要只靠旁白反复说他“很好”。</span></div></div>${gateHtml}<div class="acts"><button class="btn btn-line" onclick="window.print()">打印 / 存 PDF</button></div>`;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'});if(!SELF_MODE)setTimeout(()=>{$('unlock3').onclick=()=>{const msg=$('unlockMsg3');location.href=next}},0)};
+$('materialCheck').onclick=()=>{const vals=[$('quiet').value.trim(),$('task').value.trim(),$('pressure').value.trim(),$('actions').value.trim(),$('resultLine').value.trim()];$('selfcheck').classList.add('show');if(vals.some(v=>!v)){alert('先把五句话写完整。');return}const checks=[...$('selfcheck').querySelectorAll('input')];if(checks.some(x=>!x.checked)){alert('请先完成四项自查并全部勾选。');return}doneStep('s3');setStatus('第一页完成 · 等待老师');saveDraft();const center=$('centerInput').value.trim()||CENTER;const params=new URLSearchParams({name:$('stuName').value.trim(),cls:$('stuClass').value.trim(),center,quiet:vals[0],task:vals[1],pressure:vals[2],actions:vals[3],result:vals[4]});if(SELF_MODE)params.set('mode','self');const next='page2.html?'+params.toString();const gateHtml=SELF_MODE?`<a class="btn btn-brush np-btn" href="${next}">进入第二页 · 开始写故事 →</a>`:`<div class="checkpoint show"><h3>⏸ 全班停靠点 3 · 带着材料进入第二页</h3><div class="oral">${pick(oralBank.page2)}</div><div class="unlockrow"><input id="code3" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-brush np-btn" id="unlock3">进入第二页 · 开始写故事 →</button><span class="unlockmsg" id="unlockMsg3"></span></div></div>`;$('result').innerHTML=`<h2 style="font-family:var(--serif);margin-top:0">📇 我的人物写作卡</h2><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次答对</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div><div class="card"><h3>写作文时照着这张卡</h3><div class="row"><span class="k">人物中心</span><span>${center}</span></div><div class="row"><span class="k">少言证据</span><span>${vals[0]}</span></div><div class="row"><span class="k">主要任务</span><span>${vals[1]}</span></div><div class="row"><span class="k">责任考验</span><span>${vals[2]}</span></div><div class="row"><span class="k">认真负责的行动</span><span>${vals[3]}</span></div><div class="row"><span class="k">结果 / 反应</span><span>${vals[4]}</span></div><div class="row"><span class="k">高分提醒</span><span><b>“认真、有责任心”必须由行动证明。</b>不要只靠旁白反复说他“很好”。</span></div></div>${gateHtml}<div class="acts"><button class="btn btn-line" onclick="window.print()">打印 / 保存</button></div>`;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'});if(!SELF_MODE)setTimeout(()=>{$('unlock3').onclick=()=>{const msg=$('unlockMsg3');location.href=next}},0)};
 </script>
 <script>window.XIEZUO_PAGE={id:"chenmo-zeren",page:1};</script>
 <script src="../hook.js"></script>
+
+<script id="green-analysis-bilingual">
+(function(){
+  const GREEN_EN={"范围锁定：班上、一位同学、平时。": "Focus: one classmate and how the classmate usually acts.", "人物关键词锁定：沉默寡言、做事认真、很有责任心。": "Key traits: quiet, careful and responsible.", "对。“沉默寡言”要有证据，但主要作用是形成反差；真正要详写的是“认真、责任心”。": "Show quietness briefly; focus on careful and responsible actions.", "这句直接扣住题目要求的人物特点，不绕远，也不过度拔高。": "This sentence directly matches the required traits.", "扣题：既写到“沉默寡言”的反差，也把“认真/责任心”作为主要赞扬点。": "It shows contrast and highlights care and responsibility.", "甲不是离题，但太平：只有标签和日常事实，没有一个能展开的责任考验，很难写出人物形象。": "A fits, but it is too ordinary to show responsibility clearly.", "乙明显偏题：它主要表现运动能力，几乎没有证据证明“做事认真、很有责任心”。": "B shows sports, not care or responsibility.", "丙最适合：有责任考验，也有一连串具体动作；“认真”和“责任心”不是说出来，而是让读者看出来。": "C is best: actions clearly show care and responsibility.", "对。好材料的证据链是：平时少言 → 承担任务 → 遇到责任考验 → 认真处理 → 坚持到底 → 结果/他人反应。": "Good evidence: quiet → takes a task → faces trouble → finishes well."};
+  const norm=(s)=>s.replace(/\s+/g,' ').trim().replace(/^✓\s*/,'').replace(/^修正成功。/,'');
+  function zhOnly(el){
+    const c=el.cloneNode(true);
+    c.querySelectorAll('.en-analysis').forEach(n=>n.remove());
+    return norm(c.textContent||'');
+  }
+  function decorate(){
+    document.querySelectorAll('.feedback.good,.tokfb.good,.q.right .fb,.tri-card.good .tri-fb,.smart.ok,#reasonFb,.reasonFb').forEach(el=>{
+      const key=zhOnly(el);
+      const en=GREEN_EN[key];
+      const old=el.querySelector(':scope > .en-analysis');
+      if(!en){ if(old) old.remove(); el.removeAttribute('data-en-key'); return; }
+      if(old && el.dataset.enKey===key) return;
+      if(old) old.remove();
+      const span=document.createElement('span');
+      span.className='en-analysis';
+      span.lang='en';
+      span.textContent=en;
+      el.appendChild(span);
+      el.dataset.enKey=key;
+    });
+  }
+  const obs=new MutationObserver(decorate);
+  if(document.body){obs.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class','style']});decorate();}
+})();
+</script>
 </body></html>

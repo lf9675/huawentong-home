@@ -70,29 +70,69 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
   .kicker::before{height:22px}
   .en{font-size:13px}
 }
+
+/* ===== 第二页入口 / 返回链接 ===== */
+.nextpage{
+  margin:22px 0 6px; padding:20px 22px; border-radius:14px;
+  background:linear-gradient(135deg,#FFF6E8,#FDECD9);
+  border:2px solid #D6AE59; text-align:center;
+}
+.np-txt{font-size:15.5px; font-weight:700; color:#7A570D; margin-bottom:14px; line-height:1.6}
+.np-txt .en{font-weight:500; color:#96755F; margin-top:2px}
+.np-btn{
+  display:inline-block !important; font-size:19px !important; font-weight:900 !important;
+  padding:16px 34px !important; border-radius:12px !important;
+  text-decoration:none !important; line-height:1.3 !important;
+  box-shadow:0 6px 18px rgba(122,87,13,.28);
+}
+.np-btn .en{font-size:13px; font-weight:600; opacity:.9; margin-top:3px; color:#fff}
+.backlink{
+  display:inline-flex; align-items:center; gap:6px; margin:0 0 4px;
+  font-size:14px; font-weight:700; color:#8A6A3B; text-decoration:none;
+  background:#FBF2E0; border:1px solid #D6AE59; border-radius:20px; padding:7px 16px;
+}
+.backlink:hover{background:#F6E6C4}
+.backlink .en{display:inline; font-size:12px; font-weight:500; color:#9C8158; margin:0 0 0 4px}
+@media(max-width:620px){ .np-btn{font-size:17px !important; padding:15px 22px !important; width:100%} }
+
+/* ===== 按钮内英文换行排版 ===== */
+button .en, .btn .en, .opts button .en, .tri-opts button .en,
+.dtchoose button .en, .choiceMenu button .en, .eventMenu button .en, .tabs button .en{
+  display:block; font-size:11.5px; font-weight:500; line-height:1.35;
+  margin-top:2px; opacity:.82; letter-spacing:0;
+}
+button, .btn{ line-height:1.35; height:auto }
+.opts button, .tri-opts button, .compare button{ line-height:1.5 }
+/* 深色按钮上的英文用浅色 */
+.opts button.picked .en, .btn-main .en, .btn-brush .en, .btn-fill .en,
+.dtchoose button.on .en, .tri-opts button.chosen .en{ color:#fff; opacity:.85 }
+/* substep 里的英文另起一行 */
+.substep{ align-items:flex-start; flex-wrap:wrap }
+.substep .en{ display:block; width:100%; font-size:12.5px; font-weight:500;
+  color:#7C8A94; margin-top:2px; letter-spacing:0 }
 </style></head><body>
 <nav class="stepper"><div class="stepper-inner"><div class="step on" data-step="s4"><span class="dot">线</span><span class="nm">故事线</span></div><span class="bar"></span><div class="step" data-step="s5"><span class="dot">刻</span><span class="nm">人物刻画</span></div><span class="bar"></span><div class="step" data-step="s6"><span class="dot">写</span><span class="nm">迁移写作</span></div></div></nav>
 <div class="classroomBar"><span>课堂状态：<span class="status" id="status">故事线中</span></span><span class="modePill" id="modePill">课堂模式</span></div>
-<div class="wrap"><header class="hero"><div class="eyebrow">PAGE 2 · EVIDENCE-BASED CHARACTER WRITING</div><h1>别告诉读者“他很负责”，让读者自己看见</h1><p class="sub">故事线与详略 → 人物刻画四证法 → 核心片段迁移</p></header><div class="topic">班上有一位同学虽然平时沉默寡言，但做事认真、很有责任心。试写一篇文章，记叙这个同学。</div><div class="artifact show"><b>你第一页的材料：</b><div id="draftCard"></div></div>
+<div class="wrap"><a class="backlink" href="index.html">← 回第一页看我的审题卡</a><header class="hero"><div class="eyebrow">第二页 · 用证据刻画人物</div><h1>别告诉读者“他很负责”，让读者自己看见</h1><p class="sub">故事线与详略 → 人物刻画四证法 → 核心片段迁移</p></header><div class="topic">班上有一位同学虽然平时沉默寡言，但做事认真、很有责任心。试写一篇文章，记叙这个同学。</div><div class="artifact show"><b>你第一页的材料：</b><div id="draftCard"></div></div>
 
-<section class="stage" id="s4"><p class="kicker">第四关 · 故事线与详略<span class="en">Stage 4 · Story Line & What to Expand</span></p><h2>一个主事件，怎样越写越能证明人物？<span class="en">How can one main event prove what this person is like?</span></h2>
-<div class="substep"><span class="n">A</span>把示范故事线排整齐</div><p class="lead">先点一张，再点另一张交换。注意：这不是“人物成长故事”，而是<b>一步步增加人物证据</b>。<span class="en">Tap one card, then tap another to swap them. Note: this is not a story of the person changing — it builds up evidence about them, step by step.</span></p><div class="sorter" id="sorter"></div><div class="acts"><button class="btn btn-blue" id="checkSort">排好了，检查</button></div><div class="feedback" id="sortFb"></div>
-<div class="substep"><span class="n">B</span>哪些详写？哪些略写？</div><p class="lead">“虽然……但……”决定了：<b>沉默寡言要写得看得见，但不能抢篇幅；责任考验和认真负责的行动要详写。</b><span class="en">"Although… but…" tells you: show that he is quiet, but don't spend too many words on it. Expand instead on the tests of responsibility and his careful, dependable actions.</span></p><div id="detailTask"></div><div class="acts"><button class="btn btn-blue" id="checkDetail">贴好标签，检查</button></div><div class="feedback" id="detailFb"></div>
+<section class="stage" id="s4"><p class="kicker">第四关 · 故事线与详略</p><h2>一个主事件，怎样越写越能证明人物？</h2>
+<div class="substep"><span class="n">A</span>把示范故事线排整齐</div><p class="lead">先点一张，再点另一张交换。注意：这不是“人物成长故事”，而是<b>一步步增加人物证据</b>。</p><div class="sorter" id="sorter"></div><div class="acts"><button class="btn btn-blue" id="checkSort">排好了，检查</button></div><div class="feedback" id="sortFb"></div>
+<div class="substep"><span class="n">B</span>哪些详写？哪些略写？</div><p class="lead">“虽然……但……”决定了：<b>沉默寡言要写得看得见，但不能抢篇幅；责任考验和认真负责的行动要详写。</b></p><div id="detailTask"></div><div class="acts"><button class="btn btn-blue" id="checkDetail">贴好标签，检查</button></div><div class="feedback" id="detailFb"></div>
 <div class="artifact" id="artifact4"><b>故事线口诀：</b>少言铺垫 → 承担任务 → 出现责任考验 → 认真处理 → 坚持到底 → 结果证明。</div>
 <div class="checkpoint" id="cp4"><h3>⏸ 全班停靠点 4</h3><div class="oral" id="oral4"></div><div class="unlockrow"><input id="code4" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock4">老师讲评后解锁人物刻画</button><span class="unlockmsg" id="unlockMsg4"></span></div></div></section>
 
-<section class="stage locked" id="s5"><p class="kicker">第五关 · 人物刻画<span class="en">Stage 5 · Bringing the Character to Life</span></p><h2>人物刻画四证法：少、细、担、映<span class="en">Four ways to prove character: Few words · Careful · Responsible · Seen by others</span></h2>
+<section class="stage locked" id="s5"><p class="kicker">第五关 · 人物刻画</p><h2>人物刻画四证法：少、细、担、映</h2>
 <div class="chargrid"><div class="charstep"><b>少 · 少言</b><span>不用标签，写他怎样少说</span></div><div class="charstep"><b>细 · 认真</b><span>反复核对、检查、修改</span></div><div class="charstep"><b>担 · 担责</b><span>出问题不推，做到最后</span></div><div class="charstep"><b>映 · 侧面</b><span>用别人反应辅助烘托</span></div></div>
 <div class="note"><b>关键：</b>“认真”不是“他成绩好”；“责任心”也不是“他很听话”。真正的责任心要在<b>有压力、有人想放弃、事情出错</b>的时候才最容易看出来。</div>
 <div id="writeList"></div>
 <div class="artifact" id="artifact5"><b>我的人物证据链：</b>少言有表现 · 认真有细节 · 担责有选择 · 侧面有回应。</div>
 <div class="checkpoint" id="cp5"><h3>⏸ 全班停靠点 5</h3><div class="oral" id="oral5"></div><div class="unlockrow"><input id="code5" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock5">老师讲评后解锁迁移写作</button><span class="unlockmsg" id="unlockMsg5"></span></div></div></section>
 
-<section class="stage locked" id="s6"><p class="kicker">第六关 · 迁移写作<span class="en">Stage 6 · Write It Yourself</span></p><h2>把证据写成一段真正的人物片段<span class="en">Turn your evidence into a real character passage</span></h2>
+<section class="stage locked" id="s6"><p class="kicker">第六关 · 迁移写作</p><h2>把证据写成一段真正的人物片段</h2>
 <div class="substep"><span class="n">A</span>哪个开头更好？</div><div class="compare" id="compareOpen"><button>清晨的阳光洒进教室，同学们陆续走进来。我们的班级里有许多性格不同的同学，其中有一位同学让我印象深刻……</button><button>林凯平时话很少。小组讨论时，他常把笔放在本子边上，听完大家说完才低声补一句。可一到真正需要有人把事情做到底时，我们最先想到的却常常是他。</button></div><div class="feedback" id="openFb"></div>
-<div class="substep"><span class="n">B</span>点掉多余句子</div><p class="lead">目标：只留下会影响人物形象的句子。<span class="en">Goal: keep only the sentences that shape our picture of this person.</span></p><div class="cutpassage" id="cutPassage"></div><div class="acts"><button class="btn btn-blue" id="checkCut">检查删减</button></div><div class="feedback" id="cutFb"></div>
-<div class="substep"><span class="n">C</span>结尾三层怎么排？</div><p class="lead">人物记叙文结尾不要突然上大道理：<b>回扣事件 → 点明品质 → 写“我”的感受 / 态度</b>。<span class="en">Don't end a character essay with a sudden lecture. Instead: refer back to the event → name the quality → write how "I" feel about it.</span></p><div class="sorter" id="endSorter"></div><div class="acts"><button class="btn btn-blue" id="checkEnd">检查顺序</button></div><div class="feedback" id="endFb"></div>
-<div class="substep"><span class="n">D</span>写你的核心片段（180–280 字）</div><p class="lead">最好写“责任考验出现以后”的一段。要让读者看见：<b>他少说，但一直在做；他认真；他不推卸；他的行动真的解决了问题。</b><span class="en">Best to write the part after the test of responsibility appears. The reader should see: he says little but keeps working; he is careful; he doesn't pass the blame; his actions really solve the problem.</span></p><textarea id="transferText" rows="10" placeholder="可从一个动作或责任考验开始……"></textarea><div class="acts"><button class="btn btn-blue" id="checkTransfer">检查证据链</button></div><div class="smart" id="transferFb"></div>
+<div class="substep"><span class="n">B</span>点掉多余句子</div><p class="lead">目标：只留下会影响人物形象的句子。</p><div class="cutpassage" id="cutPassage"></div><div class="acts"><button class="btn btn-blue" id="checkCut">检查删减</button></div><div class="feedback" id="cutFb"></div>
+<div class="substep"><span class="n">C</span>结尾三层怎么排？</div><p class="lead">人物记叙文结尾不要突然上大道理：<b>回扣事件 → 点明品质 → 写“我”的感受 / 态度</b>。</p><div class="sorter" id="endSorter"></div><div class="acts"><button class="btn btn-blue" id="checkEnd">检查顺序</button></div><div class="feedback" id="endFb"></div>
+<div class="substep"><span class="n">D</span>写你的核心片段（180–280 字）</div><p class="lead">最好写“责任考验出现以后”的一段。要让读者看见：<b>他少说，但一直在做；他认真；他不推卸；他的行动真的解决了问题。</b></p><textarea id="transferText" rows="10" placeholder="可从一个动作或责任考验开始……"></textarea><div class="acts"><button class="btn btn-blue" id="checkTransfer">检查证据链</button></div><div class="smart" id="transferFb"></div>
 <div class="checkpoint" id="cp6"><h3>⏸ 全班停靠点 6 · 最后解释</h3><div class="oral" id="oral6"></div><div class="unlockrow"><input id="code6" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock6">老师讲评后完成学习单</button><span class="unlockmsg" id="unlockMsg6"></span></div></div></section>
 <div class="result" id="result"></div></div>
 <script>
@@ -113,7 +153,7 @@ let openTry=0;$('compareOpen').querySelectorAll('button').forEach((b,j)=>b.oncli
 const CUT=['那天是星期五，天气十分晴朗。','华文老师给我们安排了小组专题作业。','林凯还是像平时一样话不多，讨论时大多在听。','老师离开教室后，我们还聊了一会儿周末计划。','提交前，我们突然发现资料里少了两个出处。','有人已经收好书包，说先交了再说。','林凯把清单拉到面前，一项一项重新核对。'];const KEEP=new Set([2,4,5,6]);CUT.forEach((s,i)=>{const sp=document.createElement('span');sp.className='cutsent';sp.textContent=s;sp.dataset.i=i;sp.onclick=()=>sp.classList.toggle('cut');$('cutPassage').appendChild(sp);$('cutPassage').appendChild(document.createTextNode(' '))});let cutTry=0;$('checkCut').onclick=()=>{cutTry++;const kept=[...$('cutPassage').querySelectorAll('.cutsent')].filter(x=>!x.classList.contains('cut')).map(x=>+x.dataset.i);const ok=kept.length===KEEP.size&&kept.every(i=>KEEP.has(i)),fb=$('cutFb');if(ok){if(cutTry===1)stats.firstTry++;else stats.revised++;fb.className='feedback show good';fb.textContent='✓ 删得好：留下“平时少言 + 责任考验 + 别人选择 + 他的行动”。';$('checkCut').disabled=true}else if(cutTry===1){stats.wrongClicks++;fb.className='feedback show bad';fb.textContent='△ 提示：只留会帮助读者判断人物性格和品质的句子。'}else{stats.revealed++;fb.className='feedback show bad';fb.textContent='正确应留下第 3、5、6、7 句。';[...$('cutPassage').querySelectorAll('.cutsent')].forEach((x,i)=>x.classList.toggle('cut',!KEEP.has(i)));$('checkCut').disabled=true}};
 const ENDS=['从那以后，每当小组里有人提起“最可靠的人”，我总会先想到那个平时话不多的身影。','那次作业让我真正看见：林凯的沉默并不是冷漠；比起说得漂亮，他更习惯把该做的事一项一项做到最后。','看着他把核对清单折好塞进文件夹，我忽然明白，我们以前只注意到他“安静”，却没有看见他认真负责的一面。'];let eorder=[1,0,2],esel=null;function paintEnd(){const h=$('endSorter');h.innerHTML='';eorder.forEach((idx,p)=>{const d=document.createElement('div');d.className='sortitem'+(esel===p?' sel':'');d.innerHTML=`<span class="seq">${p+1}</span><span>${ENDS[idx]}</span><span class="mv">点两张交换</span>`;d.onclick=()=>{if($('checkEnd').disabled)return;if(esel===null)esel=p;else if(esel===p)esel=null;else{[eorder[esel],eorder[p]]=[eorder[p],eorder[esel]];esel=null}paintEnd()};h.appendChild(d)})}paintEnd();let endTry=0;$('checkEnd').onclick=()=>{endTry++;const ok=eorder.join(',')==='2,1,0',fb=$('endFb');if(ok){if(endTry===1)stats.firstTry++;else stats.revised++;fb.className='feedback show good';fb.innerHTML='✓ 正确：<b>回扣事件 → 点明品质 / 新认识 → 写我的态度</b>。';$('checkEnd').disabled=true}else if(endTry===1){stats.wrongClicks++;fb.className='feedback show bad';fb.textContent='△ 提示：先从刚才看到的具体动作回来，再说你重新认识到他什么，最后落在自己的感受或评价。'}else{stats.revealed++;eorder=[2,1,0];paintEnd();fb.className='feedback show bad';fb.innerHTML='已显示正确顺序：<b>回扣动作 → 点明品质 → 我的态度</b>。';$('checkEnd').disabled=true}};
 $('checkTransfer').onclick=()=>{const t=$('transferText').value.trim(),box=$('transferFb');if(!t){alert('先写核心片段。');return}const len=t.length,quiet=/低声|轻声|沉默|没说|点头|听|话不多|只说|嗯/.test(t),pressure=/出错|遗漏|来不及|很晚|想走|没人|先交|缺|问题|突然/.test(t),care=/(核对|检查|修改|重看|逐项|对照|重新|补齐|确认)/.test(t),take=/(留下|继续|承担|负责|我来|没走|没有抱怨|接过|坚持)/.test(t),mirror=/(同学|老师|我们|组员).{0,12}(点头|笑|愣|说|道谢|竖|放心|安静|改观)/.test(t);const got=[quiet,pressure,care,take,mirror].filter(Boolean).length,range=len>=150&&len<=320;const miss=[];if(!quiet)miss.push('少言的可见证据');if(!pressure)miss.push('责任考验');if(!care)miss.push('认真检查的动作');if(!take)miss.push('主动担责 / 坚持到底');if(!mirror)miss.push('结果或侧面反应');box.className='smart show '+(got>=4&&range?'ok':'warn');box.innerHTML=got>=4&&range?`✓ 证据链完整。你写了 ${len} 字，已经能让读者“看见”人物，而不是只听你评价。再检查动作是否有先后、对话是否简短自然。`:`△ 目前 ${len} 字。重点再补：${miss.join('、')||'字数控制'}。目标是用证据证明人物品质。`;$('cp6').classList.add('show');$('oral6').textContent=pick(['请指出你文中哪个动词最能证明“认真”。','请指出哪一个选择最能证明“责任心”，而不只是“细心”。','如果删掉所有“认真、负责”这些评价词，读者还看得出来吗？']);setStatus('等待老师最后讲评')};
-$('unlock6').onclick=()=>{doneStep('s6');setStatus('学习单完成');const text=$('transferText').value.trim();$('result').innerHTML=`<h2 style="font-family:var(--serif);margin-top:0">✅ 学习完成<span class="en">✅ All Done</span></h2><div class="processGrid"><div class="processBox"><b>${stats.firstTry}</b><span>一次答对 / 达标</span></div><div class="processBox"><b>${stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${stats.revealed}</b><span>二次后看答案</span></div></div><div class="card"><h3>我的人物写作路线</h3><div class="row"><span class="k">人物中心</span><span>${D.center}</span></div><div class="row"><span class="k">少言证据</span><span>${D.quiet||'—'}</span></div><div class="row"><span class="k">主要任务</span><span>${D.task||'—'}</span></div><div class="row"><span class="k">责任考验</span><span>${D.pressure||'—'}</span></div><div class="row"><span class="k">认真负责的行动</span><span>${D.actions||'—'}</span></div><div class="row"><span class="k">核心片段</span><span>${text||'（未写）'}</span></div><div class="row"><span class="k">最后检查</span><span>少言有表现 · 认真有细节 · 担责有选择 · 结果有证明 · 侧面不抢主角 · “我”不抢人物中心</span></div></div><div class="acts"><button class="btn btn-line" onclick="window.print()">打印 / 存 PDF</button></div>`;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'})};
+$('unlock6').onclick=()=>{doneStep('s6');setStatus('学习单完成');const text=$('transferText').value.trim();$('result').innerHTML=`<h2 style="font-family:var(--serif);margin-top:0">✅ 学习完成</h2><div class="processGrid"><div class="processBox"><b>${stats.firstTry}</b><span>一次答对 / 达标</span></div><div class="processBox"><b>${stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${stats.revealed}</b><span>二次后看答案</span></div></div><div class="card"><h3>我的人物写作路线</h3><div class="row"><span class="k">人物中心</span><span>${D.center}</span></div><div class="row"><span class="k">少言证据</span><span>${D.quiet||'—'}</span></div><div class="row"><span class="k">主要任务</span><span>${D.task||'—'}</span></div><div class="row"><span class="k">责任考验</span><span>${D.pressure||'—'}</span></div><div class="row"><span class="k">认真负责的行动</span><span>${D.actions||'—'}</span></div><div class="row"><span class="k">核心片段</span><span>${text||'（未写）'}</span></div><div class="row"><span class="k">最后检查</span><span>少言有表现 · 认真有细节 · 担责有选择 · 结果有证明 · 侧面不抢主角 · “我”不抢人物中心</span></div></div><div class="acts"><button class="btn btn-line" onclick="window.print()">打印 / 保存</button></div>`;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'})};
 </script>
 <script>window.XIEZUO_PAGE={id:"chenmo-zeren",page:2};</script>
 <script src="../hook.js"></script>
