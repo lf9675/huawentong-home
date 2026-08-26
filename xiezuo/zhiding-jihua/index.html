@@ -55,23 +55,67 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
   .kicker::before{height:22px}
   .en{font-size:13px}
 }
-</style></head><body>
+
+/* ===== 第二页入口 / 返回链接 ===== */
+.nextpage{
+  margin:22px 0 6px; padding:20px 22px; border-radius:14px;
+  background:linear-gradient(135deg,#FFF6E8,#FDECD9);
+  border:2px solid #D6AE59; text-align:center;
+}
+.np-txt{font-size:15.5px; font-weight:700; color:#7A570D; margin-bottom:14px; line-height:1.6}
+.np-txt .en{font-weight:500; color:#96755F; margin-top:2px}
+.np-btn{
+  display:inline-block !important; font-size:19px !important; font-weight:900 !important;
+  padding:16px 34px !important; border-radius:12px !important;
+  text-decoration:none !important; line-height:1.3 !important;
+  box-shadow:0 6px 18px rgba(122,87,13,.28);
+}
+.np-btn .en{font-size:13px; font-weight:600; opacity:.9; margin-top:3px; color:#fff}
+.backlink{
+  display:inline-flex; align-items:center; gap:6px; margin:0 0 4px;
+  font-size:14px; font-weight:700; color:#8A6A3B; text-decoration:none;
+  background:#FBF2E0; border:1px solid #D6AE59; border-radius:20px; padding:7px 16px;
+}
+.backlink:hover{background:#F6E6C4}
+.backlink .en{display:inline; font-size:12px; font-weight:500; color:#9C8158; margin:0 0 0 4px}
+@media(max-width:620px){ .np-btn{font-size:17px !important; padding:15px 22px !important; width:100%} }
+
+/* ===== 按钮内英文换行排版 ===== */
+button .en, .btn .en, .opts button .en, .tri-opts button .en,
+.dtchoose button .en, .choiceMenu button .en, .eventMenu button .en, .tabs button .en{
+  display:block; font-size:11.5px; font-weight:500; line-height:1.35;
+  margin-top:2px; opacity:.82; letter-spacing:0;
+}
+button, .btn{ line-height:1.35; height:auto }
+.opts button, .tri-opts button, .compare button{ line-height:1.5 }
+/* 深色按钮上的英文用浅色 */
+.opts button.picked .en, .btn-main .en, .btn-brush .en, .btn-fill .en,
+.dtchoose button.on .en, .tri-opts button.chosen .en{ color:#fff; opacity:.85 }
+/* substep 里的英文另起一行 */
+.substep{ align-items:flex-start; flex-wrap:wrap }
+.substep .en{ display:block; width:100%; font-size:12.5px; font-weight:500;
+  color:#7C8A94; margin-top:2px; letter-spacing:0 }
+</style>
+<style id="green-analysis-bilingual-style">
+.en-analysis{display:block;margin-top:4px;font-size:12.5px;font-weight:500;line-height:1.45;color:inherit;opacity:.82;font-style:normal}
+</style>
+</head><body>
 <nav class="stepper"><div class="stepper-inner"><div class="step on" data-step="s1"><span class="dot">审</span><span class="nm">审题</span></div><span class="bar"></span><div class="step" data-step="s2"><span class="dot">立</span><span class="nm">立意</span></div><span class="bar"></span><div class="step" data-step="s3"><span class="dot">选</span><span class="nm">选材</span></div></div></nav>
 <div class="classroomBar"><span>课堂状态：<span class="status" id="status">准备开始</span></span><span class="modePill" id="modePill">课堂模式</span></div>
-<div class="wrap"><header class="hero"><div class="eyebrow">SITUATIONAL NARRATIVE · ENGAGED LEARNING</div><h1>《制定计划的重要性》互动学习单 · 第一页</h1><p class="sub">先把题目想清楚，再决定故事怎么写。</p><div class="topic">最近发生了一件事，让你明白了制定计划的重要性。</div><div class="meta"><input id="stuName" placeholder="姓名"><input id="stuClass" placeholder="班级"></div><div class="note"><b>今天不是训练“把计划写得很漂亮”。</b>真正要写的是：一件事怎样让你亲身发现——没有计划容易乱，有合理计划才能把时间、任务和先后次序安排好。</div><div class="acts"><button class="btn btn-main" id="startBtn">开始 · 进入审题</button></div></header>
-<section class="stage locked" id="s1"><p class="kicker">第一关 · 审题<span class="en">Stage 1 · Understanding the Question</span></p><h2>先看懂“制定计划”到底是什么<span class="en">First understand what "making a plan" really means</span></h2><p class="lead">很多学生会把“计划”写成一句“我要认真完成”。那不是计划，只是愿望。先把关键词和限制条件抓准。<span class="en">Many students write "I will work hard" and call it a plan. That is a wish, not a plan. First pin down the key words and the limits.</span></p>
-<div class="substep"><span class="n">A</span>点出限制条件</div><p class="lead">限制条件会管住时间、数量和故事走向。点出你认为是限制条件的词。<span class="en">Limits control the time, the number of events, and where the story can go. Tap the words you think are limits.</span></p><div class="tokens" id="restrictTokens"></div><div class="counter" id="restrictCount"></div><div class="feedback" id="restrictFb"></div>
-<div id="keyWrap" style="display:none"><div class="substep"><span class="n">B</span>点出关键词</div><p class="lead">关键词决定文章真正要证明什么。<span class="en">Key words decide what the essay must actually prove.</span></p><div class="tokens" id="keyTokens"></div><div class="counter" id="keyCount"></div><div class="feedback" id="keyFb"></div></div>
+<div class="wrap"><header class="hero"><div class="eyebrow">情境记叙文 · 互动学习</div><h1>《制定计划的重要性》互动学习单 · 第一页</h1><p class="sub">先把题目想清楚，再决定故事怎么写。</p><div class="topic">最近发生了一件事，让你明白了制定计划的重要性。</div><div class="meta"><input id="stuName" placeholder="姓名"><input id="stuClass" placeholder="班级"></div><div class="note"><b>今天不是训练“把计划写得很漂亮”。</b>真正要写的是：一件事怎样让你亲身发现——没有计划容易乱，有合理计划才能把时间、任务和先后次序安排好。</div><div class="acts"><button class="btn btn-main" id="startBtn">开始 · 进入审题</button></div></header>
+<section class="stage locked" id="s1"><p class="kicker">第一关 · 审题</p><h2>先看懂“制定计划”到底是什么</h2><p class="lead">很多学生会把“计划”写成一句“我要认真完成”。那不是计划，只是愿望。先把关键词和限制条件抓准。</p>
+<div class="substep"><span class="n">A</span>点出限制条件</div><p class="lead">限制条件会管住时间、数量和故事走向。点出你认为是限制条件的词。</p><div class="tokens" id="restrictTokens"></div><div class="counter" id="restrictCount"></div><div class="feedback" id="restrictFb"></div>
+<div id="keyWrap" style="display:none"><div class="substep"><span class="n">B</span>点出关键词</div><p class="lead">关键词决定文章真正要证明什么。</p><div class="tokens" id="keyTokens"></div><div class="counter" id="keyCount"></div><div class="feedback" id="keyFb"></div></div>
 <div id="meaningWrap" style="display:none"><div class="substep"><span class="n">C</span>哪一个才算“制定计划”？</div><div id="meaningQ"></div></div>
 <div class="artifact" id="artifact1"><b>审题成果：</b><span id="artifact1Text"></span></div>
 <div class="checkpoint" id="cp1"><h3>⏸ 全班停靠点 1 · 先解释，再进入下一关</h3><div class="oral" id="oral1"></div><div class="unlockrow"><input id="code1" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock1">继续 · 进入立意</button><span class="unlockmsg" id="unlockMsg1"></span></div></div></section>
-<section class="stage locked" id="s2"><p class="kicker">第二关 · 立意<span class="en">Stage 2 · Deciding the Main Message</span></p><h2>中心不是“计划越多越好”<span class="en">The message is NOT "the more planning the better"</span></h2><details class="reveal"><summary>想不出来再点这里</summary><div class="body">问自己三句：① 制定计划解决的主要问题是什么？② 计划是不是越详细越好？③ 这件事最终要让我懂得“以后做事应该怎样”？</div></details><div id="centerQ"></div>
+<section class="stage locked" id="s2"><p class="kicker">第二关 · 立意</p><h2>中心不是“计划越多越好”</h2><details class="reveal"><summary>想不出来再点这里</summary><div class="body">问自己三句：① 制定计划解决的主要问题是什么？② 计划是不是越详细越好？③ 这件事最终要让我懂得“以后做事应该怎样”？</div></details><div id="centerQ"></div>
 <div class="challenge" id="centerChallenge" style="display:none"><b>挑战：</b>用一句不超过 35 字的话写中心思想。<textarea id="centerInput" rows="2" placeholder="例如：制定合理的计划，能帮助我们……"></textarea><div class="acts"><button class="btn btn-blue" id="centerCheck">检查有没有扣题</button></div><div class="smart" id="centerSmart"></div></div>
 <div class="artifact" id="artifact2"><b>我的中心：</b><span id="centerArtifact">制定合理的计划，能帮助我们安排好时间，有条不紊地完成任务。</span></div>
 <div class="checkpoint" id="cp2"><h3>⏸ 全班停靠点 2 · 为什么“有计划”不等于“列一个清单”？</h3><div class="oral" id="oral2"></div><div class="unlockrow"><input id="code2" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock2">继续 · 进入选材</button><span class="unlockmsg" id="unlockMsg2"></span></div></div></section>
-<section class="stage locked" id="s3"><p class="kicker">第三关 · 选材<span class="en">Stage 3 · Choosing Your Material</span></p><h2>选一个能真正看出“计划改变结果”的故事<span class="en">Choose a story that clearly shows planning changed the outcome</span></h2><p class="lead">高分材料最好在<b>同一件事</b>里形成变化：<b>没计划 → 出现混乱/损失 → 意识问题 → 制定具体计划 → 按计划调整 → 结果改善</b>。<span class="en">The best material shows change within one single event: no plan → things get messy or something is lost → I see the problem → I make a specific plan → I adjust and follow it → the result improves.</span></p>
+<section class="stage locked" id="s3"><p class="kicker">第三关 · 选材</p><h2>选一个能真正看出“计划改变结果”的故事</h2><p class="lead">高分材料最好在<b>同一件事</b>里形成变化：<b>没计划 → 出现混乱/损失 → 意识问题 → 制定具体计划 → 按计划调整 → 结果改善</b>。</p>
 <div class="substep"><span class="n">A</span>三个材料，分别卡在哪里？</div><div class="tri" id="triage"></div>
-<div id="reasonWrap" style="display:none"><div class="substep"><span class="n">B</span>为什么丙最好写？</div><p class="lead">勾出真正成立的理由，然后检查。<span class="en">Tick the reasons that actually hold up, then check.</span></p><div class="selfcheck show" id="reasonGrid"></div><div class="acts"><button class="btn btn-blue" id="reasonCheck">检查理由</button></div><div id="reasonFb" class="lead"></div></div>
+<div id="reasonWrap" style="display:none"><div class="substep"><span class="n">B</span>为什么丙最好写？</div><p class="lead">勾出真正成立的理由，然后检查。</p><div class="selfcheck show" id="reasonGrid"></div><div class="acts"><button class="btn btn-blue" id="reasonCheck">检查理由</button></div><div id="reasonFb" class="lead"></div></div>
 <div id="ownWrap" style="display:none"><div class="substep"><span class="n">C</span>搭建你自己的故事</div><div class="scaffold"><div class="layer"><p class="ltitle">1. 先选一个“需要安排多项任务”的真实场景</p><div class="tabs" id="sceneTabs"></div><div class="eventMenu" id="eventMenu" style="margin-top:10px"></div></div><div class="layer" id="habitLayer" style="display:none"><p class="ltitle">2. “我”一开始为什么没有好好计划？</p><div class="choiceMenu" id="habitMenu"></div></div><div class="layer" id="turnLayer" style="display:none"><p class="ltitle">3. 什么具体后果让我发现问题？</p><div class="choiceMenu" id="turnMenu"></div></div><div class="layer fill" id="fillLayer" style="display:none"><p class="ltitle">4. 把材料写成五句</p><label>事情开始时，我面对的任务：</label><input id="task" placeholder="一句话说清楚任务"><label>我一开始没有计划，具体表现是：</label><input id="chaos" placeholder="例如：想到什么做什么、先做容易的、没有分配时间……"><label>后来出现了什么问题：</label><input id="problem" placeholder="写出一个看得见的后果"><label>我后来制定了怎样的计划：</label><input id="plan" placeholder="至少写出：列任务、排先后、分时间中的两项"><label>按计划执行后，结果有什么变化：</label><input id="impact" placeholder="写出可见结果"></div></div>
 <div class="selfcheck" id="selfcheck"><b>提交前先勾：</b><label><input type="checkbox"> 我只写一件事，不是“第一次失败＋第二次成功”两件事</label><label><input type="checkbox"> “没计划”造成了具体问题，不是只说“我很乱”</label><label><input type="checkbox"> 我写清楚“计划内容”，不是一句“我制定了计划”</label><label><input type="checkbox"> 后面的结果能证明计划真的有作用</label></div><div class="acts"><button class="btn btn-main" id="materialCheck">完成第一页 · 生成审题卡</button></div></div></section><div class="result" id="result"></div></div>
 <script>
@@ -98,13 +142,88 @@ function renderTriage(){TRI.forEach((t,i)=>{const d=document.createElement('div'
 function afterTriage(){if(Object.keys(state.triResolved).length===3)$('reasonWrap').style.display='block'}
 const RS=[['同一件事里出现“没计划造成混乱”和“后来制定计划带来改善”，对比鲜明。',true],['计划内容写得具体：列任务、排先后、分配时间。',true],['问题和结果都能看见，因果关系清楚。',true],['只要最后报告成功，前面为什么混乱其实可以省略。',false]];
 RS.forEach(r=>{const l=document.createElement('label');l.innerHTML=`<input type="checkbox"><span>${r[0]}</span>`;$('reasonGrid').appendChild(l)});$('reasonCheck').onclick=()=>{const xs=[...$('reasonGrid').querySelectorAll('input')],picked=xs.map((x,i)=>x.checked?i:-1).filter(i=>i>=0);state.reasonTry++;const ok=picked.length===3&&[0,1,2].every(i=>picked.includes(i))&&!picked.includes(3);if(ok){if(state.reasonTry===1)state.stats.firstTry++;else state.stats.revised++;$('reasonFb').innerHTML='✓ 对。好材料的因果链是：<b>任务复杂 → 没计划造成具体问题 → 事实逼我反思 → 制定具体计划 → 执行后明显改善</b>。';$('reasonFb').style.color='var(--good)';xs.forEach(x=>x.disabled=true);$('reasonCheck').disabled=true;$('ownWrap').style.display='block'}else if(state.reasonTry===1){state.stats.wrongClicks++;$('reasonFb').textContent='△ 提示：重点不是“最后成功”，而是读者能不能看出“为什么计划改变了过程”。再选一次。';$('reasonFb').style.color='var(--bad)'}else{state.stats.revealed++;$('reasonFb').innerHTML='正确理由是前 3 项。第 4 项不成立：如果没有前面的混乱和转折，就很难证明计划为什么重要。';$('reasonFb').style.color='var(--bad)';xs.forEach((x,i)=>{x.checked=i<3;x.disabled=true});$('reasonCheck').disabled=true;$('ownWrap').style.display='block'}};
-const SCENES=[{k:'project',name:'📚 小组专题 / 演讲',events:['准备一份需要资料、幻灯片和排练的专题报告','小组展示前要完成采访、整理资料和口头报告','跨学科项目同时有研究、制作和呈现任务']},{k:'cca',name:'🎭 CCA / 校内活动',events:['为表演同时准备服装、道具、排练和宣传','社团开放日要设计展位、准备材料和分配值班','比赛前既要训练，又要准备器材和交通安排']},{k:'home',name:'🏠 家庭 / 个人任务',events:['假期前同时有几份作业和测验要准备','准备一次家庭聚会，要采购、布置和安排时间','参加比赛前要兼顾训练、作业和休息']},{k:'trip',name:'🚌 校外学习 / 义工',events:['活动前要准备物品、路线、分工和时间','小组义工活动需要联系对象、准备物资和流程','学习之旅前要完成资料搜集、任务分配和集合安排']}];
+const SCENES=[{k:'project',name:'📚 小组专题 / 演讲',events:['准备一份需要资料、幻灯片和排练的专题报告','小组展示前要完成采访、整理资料和口头报告','跨学科项目同时有研究、制作和呈现任务']},{k:'cca',name:'🎭 课外活动 / 校内活动',events:['为表演同时准备服装、道具、排练和宣传','社团开放日要设计展位、准备材料和分配值班','比赛前既要训练，又要准备器材和交通安排']},{k:'home',name:'🏠 家庭 / 个人任务',events:['假期前同时有几份作业和测验要准备','准备一次家庭聚会，要采购、布置和安排时间','参加比赛前要兼顾训练、作业和休息']},{k:'trip',name:'🚌 校外学习 / 义工',events:['活动前要准备物品、路线、分工和时间','小组义工活动需要联系对象、准备物资和流程','学习之旅前要完成资料搜集、任务分配和集合安排']}];
 const HABITS=['觉得时间还多，先做自己喜欢或容易的部分','想到什么就做什么，没有先后次序','没有估算时间，把很多任务都拖到最后','只顾自己那一部分，没有和组员协调进度'];const TURNS=['临近截止才发现最重要的任务还没完成','两个任务撞在一起，时间完全不够用','因为遗漏关键步骤，已经完成的部分需要重做','组员开始互相催促、埋怨，工作变得混乱'];
 function menu(host,arr,cb){arr.forEach(x=>{const b=document.createElement('button');b.textContent=x;b.onclick=()=>{[...$(host).querySelectorAll('button')].forEach(y=>y.classList.remove('on'));b.classList.add('on');cb(x)};$(host).appendChild(b)})}
 SCENES.forEach(s=>{const b=document.createElement('button');b.textContent=s.name;b.onclick=()=>{[...$('sceneTabs').querySelectorAll('button')].forEach(x=>x.classList.remove('on'));b.classList.add('on');$('eventMenu').innerHTML='';s.events.forEach(e=>{const z=document.createElement('button');z.textContent=e;z.onclick=()=>{[...$('eventMenu').querySelectorAll('button')].forEach(x=>x.classList.remove('on'));z.classList.add('on');$('task').value=e;$('habitLayer').style.display='block';saveDraft()};$('eventMenu').appendChild(z)})};$('sceneTabs').appendChild(b)});menu('habitMenu',HABITS,x=>{$('chaos').value=x;$('turnLayer').style.display='block';saveDraft()});menu('turnMenu',TURNS,x=>{$('problem').value=x;$('fillLayer').style.display='block';saveDraft()});
-$('materialCheck').onclick=()=>{const vals=[$('task').value.trim(),$('chaos').value.trim(),$('problem').value.trim(),$('plan').value.trim(),$('impact').value.trim()];$('selfcheck').classList.add('show');if(vals.some(v=>!v)){alert('先把五句话写完整。');return}const checks=[...$('selfcheck').querySelectorAll('input')];if(checks.some(x=>!x.checked)){alert('请先完成四项自查并全部勾选。');return}doneStep('s3');setStatus('第一页完成 · 等待老师');saveDraft();const center=$('centerInput').value.trim()||'制定合理的计划，能帮助我们安排好时间，有条不紊地完成任务。';const params=new URLSearchParams({name:$('stuName').value.trim(),cls:$('stuClass').value.trim(),center,task:vals[0],chaos:vals[1],problem:vals[2],plan:vals[3],impact:vals[4]});if(SELF_MODE)params.set('mode','self');const next='page2.html?'+params.toString();const gateHtml=SELF_MODE?`<a class="btn btn-main" href="${next}">进入第二页 →</a>`:`<div class="checkpoint show"><h3>⏸ 全班停靠点 3 · 带着自己的材料进入第二页</h3><div class="oral">${pick(oralBank.page2)}</div><div class="unlockrow"><input id="code3" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock3">继续 · 进入第二页</button><span class="unlockmsg" id="unlockMsg3"></span></div></div>`;$('result').innerHTML=`<h2 style="font-family:var(--serif);margin-top:0">📇 我的审题卡<span class="en">📇 My Question-Analysis Card</span></h2><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次答对</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div><div class="card"><h3>写作文时照着这张卡</h3><div class="row"><span class="k">中心思想</span><span>${center}</span></div><div class="row"><span class="k">任务</span><span>${vals[0]}</span></div><div class="row"><span class="k">没计划的表现</span><span>${vals[1]}</span></div><div class="row"><span class="k">出现的问题</span><span>${vals[2]}</span></div><div class="row"><span class="k">后来怎么计划</span><span>${vals[3]}</span></div><div class="row"><span class="k">结果变化</span><span>${vals[4]}</span></div><div class="row"><span class="k">高分提醒</span><span><b>不要写成两件事。</b>最好在同一件事中完成“乱 → 醒 → 计划 → 执行 → 改善”。</span></div></div>${gateHtml}<div class="acts"><button class="btn btn-line" onclick="window.print()">打印 / 存 PDF</button></div>`;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'});if(!SELF_MODE)setTimeout(()=>{$('unlock3').onclick=()=>{const msg=$('unlockMsg3');location.href=next}},0)};
+$('materialCheck').onclick=()=>{const vals=[$('task').value.trim(),$('chaos').value.trim(),$('problem').value.trim(),$('plan').value.trim(),$('impact').value.trim()];$('selfcheck').classList.add('show');if(vals.some(v=>!v)){alert('先把五句话写完整。');return}const checks=[...$('selfcheck').querySelectorAll('input')];if(checks.some(x=>!x.checked)){alert('请先完成四项自查并全部勾选。');return}doneStep('s3');setStatus('第一页完成 · 等待老师');saveDraft();const center=$('centerInput').value.trim()||'制定合理的计划，能帮助我们安排好时间，有条不紊地完成任务。';const params=new URLSearchParams({name:$('stuName').value.trim(),cls:$('stuClass').value.trim(),center,task:vals[0],chaos:vals[1],problem:vals[2],plan:vals[3],impact:vals[4]});if(SELF_MODE)params.set('mode','self');const next='page2.html?'+params.toString();const gateHtml=SELF_MODE?`<a class="btn btn-brush np-btn" href="${next}">进入第二页 · 开始写故事 →</a>`:`<div class="checkpoint show"><h3>⏸ 全班停靠点 3 · 带着自己的材料进入第二页</h3><div class="oral">${pick(oralBank.page2)}</div><div class="unlockrow"><input id="code3" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-brush np-btn" id="unlock3">进入第二页 · 开始写故事 →</button><span class="unlockmsg" id="unlockMsg3"></span></div></div>`;$('result').innerHTML=`<h2 style="font-family:var(--serif);margin-top:0">📇 我的审题卡</h2><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次答对</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div><div class="card"><h3>写作文时照着这张卡</h3><div class="row"><span class="k">中心思想</span><span>${center}</span></div><div class="row"><span class="k">任务</span><span>${vals[0]}</span></div><div class="row"><span class="k">没计划的表现</span><span>${vals[1]}</span></div><div class="row"><span class="k">出现的问题</span><span>${vals[2]}</span></div><div class="row"><span class="k">后来怎么计划</span><span>${vals[3]}</span></div><div class="row"><span class="k">结果变化</span><span>${vals[4]}</span></div><div class="row"><span class="k">高分提醒</span><span><b>不要写成两件事。</b>最好在同一件事中完成“乱 → 醒 → 计划 → 执行 → 改善”。</span></div></div>${gateHtml}<div class="acts"><button class="btn btn-line" onclick="window.print()">打印 / 保存</button></div>`;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'});if(!SELF_MODE)setTimeout(()=>{$('unlock3').onclick=()=>{const msg=$('unlockMsg3');location.href=next}},0)};
 $('startBtn').onclick=()=>{unlock('s1');setStatus('审题中');$('s1').scrollIntoView({behavior:'smooth'})};$('unlock1').onclick=()=>gate('1','s1','s2');$('unlock2').onclick=()=>gate('2','s2','s3');renderTokens('restrictTokens','restrict');renderTokens('keyTokens','key');renderTriage();loadDraft();if(SELF_MODE){$('modePill').textContent='自学模式'}
 </script>
+
+<!-- 第一页 → 第二页：统一底部入口 -->
+<style id="page-nav-style">
+.page-nav-footer{max-width:980px;margin:34px auto 70px;padding:0 22px;text-align:center}
+.page-nav-next{width:min(100%,760px);min-height:72px;padding:18px 26px;border:0;border-radius:18px;background:#2F6B45;color:#fff;font-family:inherit;font-size:clamp(20px,2.4vw,28px);font-weight:800;letter-spacing:.02em;cursor:pointer;box-shadow:0 10px 24px rgba(47,107,69,.22);transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+.page-nav-next:hover{background:#285D3C;transform:translateY(-1px);box-shadow:0 12px 28px rgba(47,107,69,.28)}
+.page-nav-next:active{transform:translateY(0)}
+.page-nav-next:focus-visible{outline:4px solid rgba(47,107,69,.24);outline-offset:3px}
+.page-nav-hint{margin-top:10px;font-size:14px;color:#607064}
+.page-nav-hint.warn{color:#A33A32;font-weight:700}
+@media(max-width:640px){.page-nav-footer{padding:0 14px;margin-top:26px}.page-nav-next{min-height:64px;font-size:20px;padding:15px 18px;border-radius:14px}}
+</style>
+<div class="page-nav-footer" aria-label="页面导航">
+  <button class="page-nav-next" id="pageNavNext" type="button">进入第二页：继续写作训练 →</button>
+  <div class="page-nav-hint" id="pageNavHint">完成第一页后，从这里进入第二页。</div>
+</div>
+<script id="page-nav-bridge">
+(function(){
+  const nextBtn=document.getElementById('pageNavNext');
+  const hint=document.getElementById('pageNavHint');
+  if(!nextBtn) return;
+  function visible(el){
+    if(!el) return false;
+    const s=getComputedStyle(el), r=el.getBoundingClientRect();
+    return s.display!=='none' && s.visibility!=='hidden' && r.width>0 && r.height>0 && !el.disabled;
+  }
+  function findRealEntry(){
+    const all=[...document.querySelectorAll('a[href*="page2.html"], button.np-btn, #goPage2, #unlock3')];
+    const candidates=all.filter(el=>el!==nextBtn && !el.closest('.page-nav-footer') && visible(el));
+    return candidates[candidates.length-1]||null;
+  }
+  nextBtn.addEventListener('click',function(){
+    const target=findRealEntry();
+    if(target){
+      hint.classList.remove('warn');
+      if(target.tagName==='A') location.href=target.href;
+      else target.click();
+      return;
+    }
+    hint.textContent='请先完成第一页的全部练习，再进入第二页。';
+    hint.classList.add('warn');
+  });
+})();
+</script>
+
 <script>window.XIEZUO_PAGE={id:"zhiding-jihua",page:1};</script>
 <script src="../hook.js"></script>
+
+<script id="green-analysis-bilingual">
+(function(){
+  const GREEN_EN={"限制锁定：最近（时间不能写太久以前）、一件事（只能围绕一个主事件展开）。": "Focus: one recent event.", "关键词锁定：明白、制定计划、重要性。故事必须让读者看见“为什么我会明白”。": "Key ideas: understand, make a plan, know why planning matters.", "真正的计划至少要包含任务、先后次序和时间安排；必要时还要预留检查或应变时间。": "A real plan includes tasks, order and time.", "这句同时扣住“制定计划”和它带来的作用：安排时间、分清先后、减少慌乱。": "It shows planning helps organise time and what to do first.", "扣题：既写“制定计划”，也写出了计划为什么重要。": "It shows both planning and why it matters.", "甲合题但太浅：只是“没计划→考差→后悔”，没有具体混乱、转折和计划怎样发挥作用，很难写出起伏。": "A fits, but it is too simple to show how planning helps.", "乙的问题是中心不够匹配：忘带一次作业主要体现疏忽或检查习惯，不足以支撑“制定计划的重要性”。": "B is mainly about forgetting, not why planning matters.", "丙最好：同一件事里形成“混乱→觉醒→制定计划→执行→改善”的完整因果链，读者不用看结尾也能明白计划为什么重要。": "C is best: confusion → plan → action → improvement.", "对。好材料的因果链是：任务复杂 → 没计划造成具体问题 → 事实逼我反思 → 制定具体计划 → 执行后明显改善。": "Good material: no plan → problem → think again → plan → improvement."};
+  const norm=(s)=>s.replace(/\s+/g,' ').trim().replace(/^✓\s*/,'').replace(/^修正成功。/,'');
+  function zhOnly(el){
+    const c=el.cloneNode(true);
+    c.querySelectorAll('.en-analysis').forEach(n=>n.remove());
+    return norm(c.textContent||'');
+  }
+  function decorate(){
+    document.querySelectorAll('.feedback.good,.tokfb.good,.q.right .fb,.tri-card.good .tri-fb,.smart.ok,#reasonFb,.reasonFb').forEach(el=>{
+      const key=zhOnly(el);
+      const en=GREEN_EN[key];
+      const old=el.querySelector(':scope > .en-analysis');
+      if(!en){ if(old) old.remove(); el.removeAttribute('data-en-key'); return; }
+      if(old && el.dataset.enKey===key) return;
+      if(old) old.remove();
+      const span=document.createElement('span');
+      span.className='en-analysis';
+      span.lang='en';
+      span.textContent=en;
+      el.appendChild(span);
+      el.dataset.enKey=key;
+    });
+  }
+  const obs=new MutationObserver(decorate);
+  if(document.body){obs.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class','style']});decorate();}
+})();
+</script>
 </body></html>
