@@ -89,25 +89,60 @@
       if (seen[k]) return; seen[k] = 1;
       out.push({ label: label || "未命名", text: text });
     }
-    // (a) 审题卡：.row 里 .k 是栏目名，其余是内容 —— 这是最完整的一份
+    // (a) 只收学生「自己想的、自己写的」四栏，其余（题目规定、详写略写等）
+    //     全班一模一样，收了只会把表格撑爆，不收。
+    var KEEP = /我的场景|我的材料|我的心理句|我的动作句/;
     document.querySelectorAll(".row").forEach(function (r) {
       var k = r.querySelector(".k");
       if (!k) return;
-      var whole = txt(r), key = txt(k);
-      push(key, whole.replace(key, ""));
+      var key = txt(k);
+      if (!KEEP.test(key)) return;
+      push(key, txt(r).replace(key, ""));
     });
-    // (b) 打字题
-    document.querySelectorAll("textarea, input[type=text]").forEach(function (el) {
-      if (/code|stuName|stuClass/i.test(el.id || "")) return;
-      if (/名字|姓名|班|学号|第几组|口令/.test(el.placeholder || "")) return;
-      push(labelOf(el), el.value);
-    });
+    // (b) 打字题（路线卡没带出来时的后备）
+    if (!out.length) {
+      document.querySelectorAll("textarea").forEach(function (el) {
+        push(labelOf(el), el.value);
+      });
+    }
     // (c) 有些页把审题卡写成 artXxx 元素
     document.querySelectorAll("[id^=art]").forEach(function (el) {
       if (el.children.length) return;
       push("审题卡·" + el.id.replace(/^art/, ""), txt(el));
     });
     return out;
+  }
+
+  /* 读总分／满分／等级：新版单页的路线卡上有 #scTotal / #scGrade */
+  function scoreInfo() {
+    var t = document.getElementById("scTotal");
+    var g = document.getElementById("scGrade");
+    var m = document.getElementById("totalText");
+    var total = t ? parseInt(trim(txt(t)), 10) : NaN;
+    var max = NaN;
+    if (m) { var mm = trim(txt(m)).match(/(\d+)\s*$/); if (mm) max = parseInt(mm[1], 10); }
+    if (isNaN(max)) {
+      var sb = document.querySelectorAll(".sbox span");
+      for (var i = 0; i < sb.length; i++) {
+        var q = trim(txt(sb[i])).match(/\/\s*(\d+)/);
+        if (q) { max = parseInt(q[1], 10); break; }
+      }
+    }
+    return {
+      total: isNaN(total) ? "" : total,
+      max: isNaN(max) ? "" : max,
+      grade: g ? trim(txt(g)) : ""
+    };
+  }
+
+  /* 只挑「答错的题」上传：对的题不必逐笔记录，用交卷人数减一减就知道 */
+  function wrongItems() {
+    var L = window.XZ_LOG || [];
+    var w = [];
+    for (var i = 0; i < L.length; i++) {
+      if (!L[i].ok) w.push([L[i].q, L[i].tag, L[i].pick, L[i].right]);
+    }
+    return { wrong: w, answered: L.length, wrongCount: w.length };
   }
 
   function stats() {
@@ -135,32 +170,50 @@
   function upload() {
     if (sent) return;
     var f = collect();
-    if (!f.length) return;                       // 还没内容，等下一次
+    var hasScore = document.getElementById("scTotal") && trim(txt(document.getElementById("scTotal"))) !== "";
+    if (!f.length && !hasScore) return;           // 还没内容，等下一次
     if (!C.API) { sent = true; toast("未连后台：请打印或截图交给老师", false); return; }
     var u = getUser();
     if (!u.name) { sent = true; toast("找不到姓名，请截图交给老师", false); return; }
     sent = true;
     var s = stats();
-    toast("正在把审题卡交给老师……", true);
+    var sc = scoreInfo();
+    var wi = wrongItems();
+    if (sc.total !== "") {
+      f.unshift({ label: "总分", text: sc.total + (sc.max !== "" ? " / " + sc.max : "") + (sc.grade ? "（" + sc.grade + "）" : "") });
+    }
+    toast("正在把成绩和审题卡交给老师……", true);
     fetch(C.API, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },   // 避开跨域预检
       body: JSON.stringify({
         a: "submit", topic: ME.id, title: ME.meta.title, page: ME.page,
         cls: u.cls, name: u.name,
+        total: sc.total, max: sc.max, grade: sc.grade,
+        answered: wi.answered, wrongCount: wi.wrongCount, wrong: wi.wrong,
+        percent: (sc.total !== "" && sc.max) ? Math.round(sc.total / sc.max * 100) : "",
         first: s.first, revised: s.revised, revealed: s.revealed, fields: f
       })
     }).then(function (r) { return r.json(); })
-      .then(function (j) { toast(j && j.ok ? "✓ 已交给老师" : "上传失败，请截图交给老师", !!(j && j.ok)); })
+      .then(function (j) { toast(j && j.ok ? "✓ 成绩已交给老师" : "上传失败，请截图交给老师", !!(j && j.ok)); })
       .catch(function () { toast("网络不通，请截图交给老师", false); });
   }
 
   function watch() {
+    // (A) 旧版页面：#result 加上 class="show" 时交卷
     var r = document.getElementById("result");
-    if (!r) return;
-    var go = function () { if (r.classList.contains("show")) setTimeout(upload, 400); };
-    go();
-    new MutationObserver(go).observe(r, { attributes: true, attributeFilter: ["class"] });
+    if (r) {
+      var go = function () { if (r.classList.contains("show")) setTimeout(upload, 400); };
+      go();
+      new MutationObserver(go).observe(r, { attributes: true, attributeFilter: ["class"] });
+    }
+    // (B) 新版单页闯关：#cardStage 解锁（class 去掉 lock）时交卷
+    var c = document.getElementById("cardStage");
+    if (c) {
+      var go2 = function () { if (!c.classList.contains("lock")) setTimeout(upload, 700); };
+      go2();
+      new MutationObserver(go2).observe(c, { attributes: true, attributeFilter: ["class"] });
+    }
   }
 
   /* ---------- 5. AI 审题诊断 ---------- */

@@ -112,8 +112,8 @@
           '<p class="tip"><b>关键：</b>'+t.brief+'</p>'+
           '<div class="go">';
         if(stage===1){
-          out+='<a class="btn b1" href="./'+k+'/index.html">第一页　开始<small>审题 · 定中心 · 选材</small></a>'+
-               '<a class="btn b2" href="./'+k+'/page2.html">第二页<small>'+t.p2+'</small></a>';
+          out+='<a class="btn b1" href="./'+k+'/index.html">开始<small>审题 · 选材 · 详略 · 详写 · 结尾</small></a>';
+          if(t.p2) out+='<a class="btn b2" href="./'+k+'/page2.html">第二页<small>'+t.p2+'</small></a>';
         }else{
           out+='<a class="btn b1" href="./'+k+'/index.html">开始<small>开头 · 结尾四步 · 动笔迁移</small></a>';
         }
