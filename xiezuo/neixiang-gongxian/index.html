@@ -67,30 +67,74 @@ h2 .en{ display:block; font-size:15px; font-weight:600; color:#7C8A94; margin-to
   .kicker::before{height:22px}
   .en{font-size:13px}
 }
-</style></head><body>
+
+/* ===== 第二页入口 / 返回链接 ===== */
+.nextpage{
+  margin:22px 0 6px; padding:20px 22px; border-radius:14px;
+  background:linear-gradient(135deg,#FFF6E8,#FDECD9);
+  border:2px solid #D6AE59; text-align:center;
+}
+.np-txt{font-size:15.5px; font-weight:700; color:#7A570D; margin-bottom:14px; line-height:1.6}
+.np-txt .en{font-weight:500; color:#96755F; margin-top:2px}
+.np-btn{
+  display:inline-block !important; font-size:19px !important; font-weight:900 !important;
+  padding:16px 34px !important; border-radius:12px !important;
+  text-decoration:none !important; line-height:1.3 !important;
+  box-shadow:0 6px 18px rgba(122,87,13,.28);
+}
+.np-btn .en{font-size:13px; font-weight:600; opacity:.9; margin-top:3px; color:#fff}
+.backlink{
+  display:inline-flex; align-items:center; gap:6px; margin:0 0 4px;
+  font-size:14px; font-weight:700; color:#8A6A3B; text-decoration:none;
+  background:#FBF2E0; border:1px solid #D6AE59; border-radius:20px; padding:7px 16px;
+}
+.backlink:hover{background:#F6E6C4}
+.backlink .en{display:inline; font-size:12px; font-weight:500; color:#9C8158; margin:0 0 0 4px}
+@media(max-width:620px){ .np-btn{font-size:17px !important; padding:15px 22px !important; width:100%} }
+
+/* ===== 按钮内英文换行排版 ===== */
+button .en, .btn .en, .opts button .en, .tri-opts button .en,
+.dtchoose button .en, .choiceMenu button .en, .eventMenu button .en, .tabs button .en{
+  display:block; font-size:11.5px; font-weight:500; line-height:1.35;
+  margin-top:2px; opacity:.82; letter-spacing:0;
+}
+button, .btn{ line-height:1.35; height:auto }
+.opts button, .tri-opts button, .compare button{ line-height:1.5 }
+/* 深色按钮上的英文用浅色 */
+.opts button.picked .en, .btn-main .en, .btn-brush .en, .btn-fill .en,
+.dtchoose button.on .en, .tri-opts button.chosen .en{ color:#fff; opacity:.85 }
+/* substep 里的英文另起一行 */
+.substep{ align-items:flex-start; flex-wrap:wrap }
+.substep .en{ display:block; width:100%; font-size:12.5px; font-weight:500;
+  color:#7C8A94; margin-top:2px; letter-spacing:0 }
+</style>
+<style id="green-analysis-bilingual-style">
+.en-analysis{display:block;margin-top:4px;font-size:12.5px;font-weight:500;line-height:1.45;color:inherit;opacity:.82;font-style:normal}
+</style>
+</head><body>
 <nav class="stepper"><div class="stepper-inner"><div class="step on" data-step="s1"><span class="dot">审</span><span class="nm">审题</span></div><span class="bar"></span><div class="step" data-step="s2"><span class="dot">立</span><span class="nm">立意</span></div><span class="bar"></span><div class="step" data-step="s3"><span class="dot">选</span><span class="nm">选材</span></div></div></nav>
 <div class="classroomBar"><span>课堂状态：<span class="status" id="status">准备开始</span></span><span class="modePill" id="modePill">课堂模式</span></div>
-<div class="wrap"><header class="hero"><div class="eyebrow">SITUATIONAL NARRATIVE · ENGAGED LEARNING</div><h1>内向，也能贡献力量</h1><p class="sub">第一页 · 审题 → 立意 → 选材。每一关都要“想清楚再点”，第一次答错只给提示。</p></header>
+<div class="wrap"><header class="hero"><div class="eyebrow">情境记叙文 · 互动学习</div><h1>内向，也能贡献力量</h1><p class="sub">第一页 · 审题 → 立意 → 选材。每一关都要“想清楚再点”，第一次答错只给提示。</p></header>
 <div class="topic">你原本是一位性格内向的人，但在最近校内举办的一项活动，让你明白自己也能在活动中贡献出自己的力量。试写出事情的经过以及你的感受。</div>
 <div class="meta"><input id="stuName" placeholder="姓名"><input id="stuClass" placeholder="班级 / 学号"></div>
 <div class="note"><b>今天不是训练“怎样变外向”。</b>题目要写的是：原本内向的“我”，在一次校内活动中通过具体行动发现——自己也能为集体出一份力。</div>
 <div class="acts"><button class="btn btn-main" id="startBtn">开始 · 进入审题</button></div>
 
-<section class="stage locked" id="s1"><p class="kicker">第一关 · 审题<span class="en">Stage 1 · Understanding the Question</span></p><h2>先把题目“钉死”<span class="en">First pin down exactly what the question asks</span></h2><p class="lead">圈关键词，不是为了背术语，而是为了保证故事里的每一步都不跑题。<span class="en">We circle key words not to memorise terms, but to make sure every step of your story stays on topic.</span></p>
-<div class="substep"><span class="n">A</span>点出限制条件</div><p class="lead">这些词规定<b>什么时候、在哪里、写几件事、最后还要写什么</b>。（找 5 个词／词组）<span class="en">These words set when, where, how many events, and what else you must write at the end. (Find 5 words or phrases.)</span></p><div class="tokens" id="restrictTokens"></div><div class="counter" id="restrictCount"></div><div class="feedback" id="restrictFb"></div>
-<div id="keyWrap" style="display:none"><div class="substep"><span class="n">B</span>点出关键词</div><p class="lead">这些词决定文章真正要写什么。（找 4 组）<span class="en">These words decide what the essay is really about. (Find 4 groups.)</span></p><div class="tokens" id="keyTokens"></div><div class="counter" id="keyCount"></div><div class="feedback" id="keyFb"></div></div>
+<section class="stage locked" id="s1"><p class="kicker">第一关 · 审题</p><h2>先把题目“钉死”</h2><p class="lead">圈关键词，不是为了背术语，而是为了保证故事里的每一步都不跑题。</p>
+<div class="substep"><span class="n">A</span>点出限制条件</div><p class="lead">这些词规定<b>什么时候、在哪里、写几件事、最后还要写什么</b>。（找 5 个词／词组）</p><div class="tokens" id="restrictTokens"></div><div class="counter" id="restrictCount"></div><div class="feedback" id="restrictFb"></div>
+<div id="keyWrap" style="display:none"><div class="substep"><span class="n">B</span>点出关键词</div><p class="lead">这些词决定文章真正要写什么。（找 4 组）</p><div class="tokens" id="keyTokens"></div><div class="counter" id="keyCount"></div><div class="feedback" id="keyFb"></div></div>
 <div id="meaningWrap" style="display:none"><div class="substep"><span class="n">C</span>“性格内向”最准确的理解是什么？</div><div id="meaningQ"></div></div>
 <div class="artifact" id="artifact1"><b>我的审题成果：</b><span id="artifact1Text"></span></div>
 <div class="checkpoint" id="cp1"><h3>⏸ 全班停靠点 1 · 先解释，再进入下一关</h3><div class="oral" id="oral1"></div><div class="unlockrow"><input id="code1" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock1">继续 · 进入立意</button><span class="unlockmsg" id="unlockMsg1"></span></div></div></section>
 
-<section class="stage locked" id="s2"><p class="kicker">第二关 · 立意<span class="en">Stage 2 · Deciding the Main Message</span></p><h2>中心不是“我要变外向”<span class="en">The message is NOT "I must become outgoing"</span></h2>
+<section class="stage locked" id="s2"><p class="kicker">第二关 · 立意</p><h2>中心不是“我要变外向”</h2>
 <details class="reveal"><summary>想不出来再点这里</summary><div class="body">问自己三句：① 题目有没有要求“我变成外向的人”？② 题目真正要证明的是“我也能做什么”？③ 这份力量是通过什么表现出来的——想法，还是行动？</div></details>
 <div class="substep"><span class="n">A</span>哪一句最贴题？</div><div id="centerQ"></div>
 <div class="challenge" id="centerChallenge" style="display:none"><b>挑战：</b>用一句不超过 35 字的话写中心思想。<textarea id="centerInput" rows="2" placeholder="例如：即使……只要……也能……"></textarea><div class="acts"><button class="btn btn-blue" id="centerCheck">检查有没有扣题</button></div><div class="smart" id="centerSmart"></div></div>
 <div class="artifact" id="artifact2"><b>我的中心：</b><span id="centerArtifact">即使性格内向，只要勇于参与、发挥所长，也能为集体贡献自己的力量。</span></div>
 <div class="checkpoint" id="cp2"><h3>⏸ 全班停靠点 2 · 为什么不是“内向的人要变外向”？</h3><div class="oral" id="oral2"></div><div class="unlockrow"><input id="code2" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock2">继续 · 进入选材</button><span class="unlockmsg" id="unlockMsg2"></span></div></div></section>
 
-<section class="stage locked" id="s3"><p class="kicker">第三关 · 选材<span class="en">Stage 3 · Choosing Your Material</span></p><h2>选一个真的能“证明我有贡献”的故事<span class="en">Choose a story that truly proves you contributed</span></h2><p class="lead">好材料至少满足四点：<b>内向有影响 → 活动有需要 → 我有具体行动 → 行动真的带来帮助</b>。<span class="en">Good material meets four points: being shy actually affects things → the event needs something → I take a specific action → that action genuinely helps.</span></p>
+<section class="stage locked" id="s3"><p class="kicker">第三关 · 选材</p><h2>选一个真的能“证明我有贡献”的故事</h2><p class="lead">好材料至少满足四点：<b>内向有影响 → 活动有需要 → 我有具体行动 → 行动真的带来帮助</b>。</p>
 <div class="substep"><span class="n">A</span>三个材料，各自卡在哪里？</div><div class="tri" id="triage"></div>
 <div id="reasonWrap" style="display:none"><div class="substep"><span class="n">B</span>为什么“丙”比较好？（可多选）</div><div class="selfcheck show" id="reasonGrid"></div><div class="acts"><button class="btn btn-main" id="reasonCheck">检查理由</button></div><div class="feedback show" id="reasonFb" style="background:transparent;padding-left:0"></div></div>
 <div id="ownWrap" style="display:none"><div class="substep"><span class="n">C</span>搭出你自己的材料</div><div class="scaffold">
@@ -132,14 +176,89 @@ function renderTriage(){TRI.forEach((t,i)=>{const d=document.createElement('div'
 function afterTriage(){if(Object.keys(state.triResolved).length===TRI.length){$('reasonWrap').style.display='block';$('reasonWrap').scrollIntoView({behavior:'smooth',block:'center'})}}renderTriage();
 const RS=[['“内向”造成了真实障碍：我原本不敢去前面招呼陌生人。',true],['顾客突然增多，是推动人物改变的具体事件。',true],['“回答问题、介绍商品、整理队伍”把贡献写成了看得见的行动。',true],['最后活动顺利，所以前面的转变过程写不写都不重要。',false]];
 RS.forEach((r,i)=>{const l=document.createElement('label');l.innerHTML=`<input type="checkbox"><span>${r[0]}</span>`;$('reasonGrid').appendChild(l)});$('reasonCheck').onclick=()=>{const xs=[...$('reasonGrid').querySelectorAll('input')],picked=xs.map((x,i)=>x.checked?i:-1).filter(i=>i>=0);state.reasonTry++;const ok=picked.length===3&&[0,1,2].every(i=>picked.includes(i))&&!picked.includes(3);if(ok){if(state.reasonTry===1)state.stats.firstTry++;else state.stats.revised++;$('reasonFb').innerHTML='✓ 对。高分材料的逻辑是：<b>内向造成障碍 → 活动出现真实需要 → 我经历犹豫 → 用具体行动贡献 → 结果证明这份力量有价值</b>。';$('reasonFb').style.color='var(--good)';xs.forEach(x=>x.disabled=true);$('reasonCheck').disabled=true;$('ownWrap').style.display='block';setStatus('搭建自己的材料')}else if(state.reasonTry===1){state.stats.wrongClicks++;$('reasonFb').textContent='△ 提示：不要只看“最后成功”。真正决定材料好坏的是人物为什么改变、怎样贡献。再选一次。';$('reasonFb').style.color='var(--bad)'}else{state.stats.revealed++;$('reasonFb').innerHTML='正确理由是前 3 项。第 4 项不成立：没有自然的转变过程，结局再成功也很难写深。';$('reasonFb').style.color='var(--bad)';xs.forEach((x,i)=>{x.checked=i<3;x.disabled=true});$('reasonCheck').disabled=true;$('ownWrap').style.display='block'}};
-const SCENES=[{k:'fair',name:'🎪 义卖 / 校庆嘉年华',events:['班级经营义卖摊位，突然迎来人潮','负责宣传的同学临时离开，需要人顶上','摊位排队混乱，需要有人说明和分流']},{k:'open',name:'🏫 Open House / CCA 展示',events:['有访客走到班级展位，却没人及时介绍','低年级学生不断询问活动流程，需要有人引导','展示环节设备出问题，需要有人协调和解释']},{k:'culture',name:'🏮 华文 / 文化活动',events:['文化体验摊位缺人示范游戏规则','舞台后台临时需要人报幕或传递信息','展板内容太复杂，访客看不懂，需要重新说明']},{k:'sport',name:'🏃 运动会 / 班级活动',events:['补给点人手不足，需要有人主动招呼和分发','队友受伤后，需要有人接手计时或记录','班级加油区混乱，需要有人组织物资和秩序']}];
+const SCENES=[{k:'fair',name:'🎪 义卖 / 校庆嘉年华',events:['班级经营义卖摊位，突然迎来人潮','负责宣传的同学临时离开，需要人顶上','摊位排队混乱，需要有人说明和分流']},{k:'open',name:'🏫 校园开放日 / 课外活动展示',events:['有访客走到班级展位，却没人及时介绍','低年级学生不断询问活动流程，需要有人引导','展示环节设备出问题，需要有人协调和解释']},{k:'culture',name:'🏮 华文 / 文化活动',events:['文化体验摊位缺人示范游戏规则','舞台后台临时需要人报幕或传递信息','展板内容太复杂，访客看不懂，需要重新说明']},{k:'sport',name:'🏃 运动会 / 班级活动',events:['补给点人手不足，需要有人主动招呼和分发','队友受伤后，需要有人接手计时或记录','班级加油区混乱，需要有人组织物资和秩序']}];
 const SHY=['不敢主动跟陌生人说话，只想做幕后工作','在人多时很怕被注意，总等别人先开口','担心说错话被笑，所以有想法也不敢说','遇到临时任务会紧张，第一反应是躲开'];
 const TRIG=['同伴突然忙不过来，我看到任务真的卡住了','有人需要帮助却一直没人回应，我开始不安','原本负责的人临时离开，团队出现明显缺口','第一次小尝试成功，让我发现自己其实做得到'];
 function menu(host,arr,cb){arr.forEach((x,i)=>{const b=document.createElement('button');b.textContent=x;b.onclick=()=>{[...$(host).querySelectorAll('button')].forEach(y=>y.classList.remove('on'));b.classList.add('on');cb(x,i)};$(host).appendChild(b)})}
 SCENES.forEach(s=>{const b=document.createElement('button');b.textContent=s.name;b.onclick=()=>{[...$('sceneTabs').querySelectorAll('button')].forEach(x=>x.classList.remove('on'));b.classList.add('on');state.scene=s.k;$('eventMenu').innerHTML='';s.events.forEach(e=>{const z=document.createElement('button');z.textContent=e;z.onclick=()=>{[...$('eventMenu').querySelectorAll('button')].forEach(x=>x.classList.remove('on'));z.classList.add('on');state.event=e;$('roleLayer').style.display='block';if(!$('need').value)$('need').value=e;saveDraft()};$('eventMenu').appendChild(z)})};$('sceneTabs').appendChild(b)});menu('shyMenu',SHY,(x)=>{$('triggerLayer').style.display='block';if(!$('shy').value)$('shy').value=x;saveDraft()});menu('triggerMenu',TRIG,(x)=>{$('fillLayer').style.display='block';if(!$('need').value)$('need').value=x;saveDraft()});
 $('modePill').textContent=SELF_MODE?'自学模式':'课堂模式';loadDraft();$('startBtn').onclick=()=>{if(!SELF_MODE&&(!$('stuName').value.trim()||!$('stuClass').value.trim())){alert('课堂模式请先填写姓名和班级。');return}unlock('s1');$('s1').scrollIntoView({behavior:'smooth'});renderTokens('restrictTokens','restrict');renderTokens('keyTokens','key');setStatus('审题中')};$('unlock1').onclick=()=>gate('1','s1','s2');$('unlock2').onclick=()=>gate('2','s2','s3');['stuName','stuClass','centerInput','shy','need','action','impact'].forEach(id=>$(id)?.addEventListener('input',saveDraft));
-$('materialCheck').onclick=()=>{const vals=[$('shy').value.trim(),$('need').value.trim(),$('action').value.trim(),$('impact').value.trim()];$('selfcheck').classList.add('show');if(vals.some(v=>!v)){alert('先把四句话写完整。');return}const checks=[...$('selfcheck').querySelectorAll('input')];if(checks.some(x=>!x.checked)){alert('请先完成四项自查并全部勾选。');return}doneStep('s3');setStatus('第一页完成 · 等待老师');saveDraft();const center=$('centerInput').value.trim()||'即使性格内向，只要勇于参与、发挥所长，也能为集体贡献自己的力量。';const params=new URLSearchParams({name:$('stuName').value.trim(),cls:$('stuClass').value.trim(),center,shy:vals[0],need:vals[1],action:vals[2],impact:vals[3]});if(SELF_MODE)params.set('mode','self');const next='page2.html?'+params.toString();const gateHtml=SELF_MODE?`<a class="btn btn-main" href="${next}">进入第二页 →</a>`:`<div class="checkpoint show"><h3>⏸ 全班停靠点 3 · 带着自己的材料进入第二页</h3><div class="oral">${pick(oralBank.page2)}</div><div class="unlockrow"><input id="code3" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-main" id="unlock3">继续 · 进入第二页</button><span class="unlockmsg" id="unlockMsg3"></span></div></div>`;$('result').innerHTML=`<h2 style="font-family:var(--serif);margin-top:0">📇 我的审题卡<span class="en">📇 My Question-Analysis Card</span></h2><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次答对</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div><div class="card"><h3>写作文时照着这张卡</h3><div class="row"><span class="k">中心思想</span><span>${center}</span></div><div class="row"><span class="k">原本的我</span><span>${vals[0]}</span></div><div class="row"><span class="k">活动需要</span><span>${vals[1]}</span></div><div class="row"><span class="k">我的贡献</span><span>${vals[2]}</span></div><div class="row"><span class="k">真实结果</span><span>${vals[3]}</span></div><div class="row"><span class="k">高分提醒</span><span><b>内向不能只在开头出现。</b>要写“我本来想退缩 → 具体事件推动 → 心里挣扎 → 跨出一步 → 贡献真的产生作用”。</span></div></div>${gateHtml}<div class="acts"><button class="btn btn-line" onclick="window.print()">打印 / 存 PDF</button></div>`;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'});if(!SELF_MODE)setTimeout(()=>{$('unlock3').onclick=()=>{const msg=$('unlockMsg3');location.href=next}},0)};
+$('materialCheck').onclick=()=>{const vals=[$('shy').value.trim(),$('need').value.trim(),$('action').value.trim(),$('impact').value.trim()];$('selfcheck').classList.add('show');if(vals.some(v=>!v)){alert('先把四句话写完整。');return}const checks=[...$('selfcheck').querySelectorAll('input')];if(checks.some(x=>!x.checked)){alert('请先完成四项自查并全部勾选。');return}doneStep('s3');setStatus('第一页完成 · 等待老师');saveDraft();const center=$('centerInput').value.trim()||'即使性格内向，只要勇于参与、发挥所长，也能为集体贡献自己的力量。';const params=new URLSearchParams({name:$('stuName').value.trim(),cls:$('stuClass').value.trim(),center,shy:vals[0],need:vals[1],action:vals[2],impact:vals[3]});if(SELF_MODE)params.set('mode','self');const next='page2.html?'+params.toString();const gateHtml=SELF_MODE?`<a class="btn btn-brush np-btn" href="${next}">进入第二页 · 开始写故事 →</a>`:`<div class="checkpoint show"><h3>⏸ 全班停靠点 3 · 带着自己的材料进入第二页</h3><div class="oral">${pick(oralBank.page2)}</div><div class="unlockrow"><input id="code3" inputmode="numeric" placeholder="教师口令" style="display:none"><button class="btn btn-brush np-btn" id="unlock3">进入第二页 · 开始写故事 →</button><span class="unlockmsg" id="unlockMsg3"></span></div></div>`;$('result').innerHTML=`<h2 style="font-family:var(--serif);margin-top:0">📇 我的审题卡</h2><div class="processGrid"><div class="processBox"><b>${state.stats.firstTry}</b><span>一次答对</span></div><div class="processBox"><b>${state.stats.revised}</b><span>根据提示修正</span></div><div class="processBox"><b>${state.stats.revealed}</b><span>二次后看答案</span></div></div><div class="card"><h3>写作文时照着这张卡</h3><div class="row"><span class="k">中心思想</span><span>${center}</span></div><div class="row"><span class="k">原本的我</span><span>${vals[0]}</span></div><div class="row"><span class="k">活动需要</span><span>${vals[1]}</span></div><div class="row"><span class="k">我的贡献</span><span>${vals[2]}</span></div><div class="row"><span class="k">真实结果</span><span>${vals[3]}</span></div><div class="row"><span class="k">高分提醒</span><span><b>内向不能只在开头出现。</b>要写“我本来想退缩 → 具体事件推动 → 心里挣扎 → 跨出一步 → 贡献真的产生作用”。</span></div></div>${gateHtml}<div class="acts"><button class="btn btn-line" onclick="window.print()">打印 / 保存</button></div>`;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'});if(!SELF_MODE)setTimeout(()=>{$('unlock3').onclick=()=>{const msg=$('unlockMsg3');location.href=next}},0)};
 </script>
+
+<!-- 第一页 → 第二页：统一底部入口 -->
+<style id="page-nav-style">
+.page-nav-footer{max-width:980px;margin:34px auto 70px;padding:0 22px;text-align:center}
+.page-nav-next{width:min(100%,760px);min-height:72px;padding:18px 26px;border:0;border-radius:18px;background:#2F6B45;color:#fff;font-family:inherit;font-size:clamp(20px,2.4vw,28px);font-weight:800;letter-spacing:.02em;cursor:pointer;box-shadow:0 10px 24px rgba(47,107,69,.22);transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+.page-nav-next:hover{background:#285D3C;transform:translateY(-1px);box-shadow:0 12px 28px rgba(47,107,69,.28)}
+.page-nav-next:active{transform:translateY(0)}
+.page-nav-next:focus-visible{outline:4px solid rgba(47,107,69,.24);outline-offset:3px}
+.page-nav-hint{margin-top:10px;font-size:14px;color:#607064}
+.page-nav-hint.warn{color:#A33A32;font-weight:700}
+@media(max-width:640px){.page-nav-footer{padding:0 14px;margin-top:26px}.page-nav-next{min-height:64px;font-size:20px;padding:15px 18px;border-radius:14px}}
+</style>
+<div class="page-nav-footer" aria-label="页面导航">
+  <button class="page-nav-next" id="pageNavNext" type="button">进入第二页：继续写作训练 →</button>
+  <div class="page-nav-hint" id="pageNavHint">完成第一页后，从这里进入第二页。</div>
+</div>
+<script id="page-nav-bridge">
+(function(){
+  const nextBtn=document.getElementById('pageNavNext');
+  const hint=document.getElementById('pageNavHint');
+  if(!nextBtn) return;
+  function visible(el){
+    if(!el) return false;
+    const s=getComputedStyle(el), r=el.getBoundingClientRect();
+    return s.display!=='none' && s.visibility!=='hidden' && r.width>0 && r.height>0 && !el.disabled;
+  }
+  function findRealEntry(){
+    const all=[...document.querySelectorAll('a[href*="page2.html"], button.np-btn, #goPage2, #unlock3')];
+    const candidates=all.filter(el=>el!==nextBtn && !el.closest('.page-nav-footer') && visible(el));
+    return candidates[candidates.length-1]||null;
+  }
+  nextBtn.addEventListener('click',function(){
+    const target=findRealEntry();
+    if(target){
+      hint.classList.remove('warn');
+      if(target.tagName==='A') location.href=target.href;
+      else target.click();
+      return;
+    }
+    hint.textContent='请先完成第一页的全部练习，再进入第二页。';
+    hint.classList.add('warn');
+  });
+})();
+</script>
+
 <script>window.XIEZUO_PAGE={id:"neixiang-gongxian",page:1};</script>
 <script src="../hook.js"></script>
+
+<script id="green-analysis-bilingual">
+(function(){
+  const GREEN_EN={"限制锁定：原本（先写原来的状态）、最近（时间）、校内举办的一项活动（场景＋只写一件事）、感受（最后必须写内心变化）。": "Focus: your old self, one recent school activity, and feelings.", "关键词锁定：性格内向、活动、明白、贡献出自己的力量。这四点必须贯穿故事。": "Key ideas: shy, activity, new understanding, and contribution.", "对。内向是性格特点，不等于没有能力。高分故事应该写“我仍然可能内向，但愿意跨出一步、发挥作用”。": "Being shy does not mean you cannot contribute.", "这句同时扣住“性格内向、参与活动、贡献力量、获得认识”，最贴题。": "This covers being shy, taking part, helping, and learning.", "扣得准：保留了“内向”这一前提，也写出了“参与/发挥所长 → 贡献力量”的认识。": "It keeps your shy nature and shows how you can help.", "甲合题但太浅：从头到尾只是扫地，没有“退缩—事件推动—主动出力”的变化，写不出人物成长。": "A fits, but there is no clear change or growth.", "乙的问题是转变太突然，而且把中心写成“变外向”。题目要的是明白自己也能贡献，不是性格彻底改变。": "B is wrong: the goal is helping, not becoming outgoing.", "丙最适合：内向造成真实障碍，活动中的突发需要推动转变，贡献动作具体，故事本身就能推出中心。": "C is best: a real need pushes you to help.", "对。高分材料的逻辑是：内向造成障碍 → 活动出现真实需要 → 我经历犹豫 → 用具体行动贡献 → 结果证明这份力量有价值。": "Good material: hesitation → need → action → useful contribution."};
+  const norm=(s)=>s.replace(/\s+/g,' ').trim().replace(/^✓\s*/,'').replace(/^修正成功。/,'');
+  function zhOnly(el){
+    const c=el.cloneNode(true);
+    c.querySelectorAll('.en-analysis').forEach(n=>n.remove());
+    return norm(c.textContent||'');
+  }
+  function decorate(){
+    document.querySelectorAll('.feedback.good,.tokfb.good,.q.right .fb,.tri-card.good .tri-fb,.smart.ok,#reasonFb,.reasonFb').forEach(el=>{
+      const key=zhOnly(el);
+      const en=GREEN_EN[key];
+      const old=el.querySelector(':scope > .en-analysis');
+      if(!en){ if(old) old.remove(); el.removeAttribute('data-en-key'); return; }
+      if(old && el.dataset.enKey===key) return;
+      if(old) old.remove();
+      const span=document.createElement('span');
+      span.className='en-analysis';
+      span.lang='en';
+      span.textContent=en;
+      el.appendChild(span);
+      el.dataset.enKey=key;
+    });
+  }
+  const obs=new MutationObserver(decorate);
+  if(document.body){obs.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class','style']});decorate();}
+})();
+</script>
 </body></html>
