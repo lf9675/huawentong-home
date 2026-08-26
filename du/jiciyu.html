@@ -225,8 +225,8 @@ select{padding:6px 8px;border-radius:8px;font-size:14px;border:1.5px solid #ddd;
 .top-err-chip span{font-family:"KaiTi","楷体",serif;font-size:22px}
 .top-err-cnt{font-size:10px;color:var(--red);font-weight:bold}
 
-.unit-picker-btn{padding:5px 9px;border-radius:8px;font-size:12px;border:1.5px solid #ddd;font-weight:bold;background:#f8f9fa;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:3px;font-family:inherit;max-width:130px;overflow:hidden;white-space:nowrap}
-.unit-picker-panel{position:fixed;top:58px;left:8px;background:var(--card);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.2);z-index:200;padding:8px 10px;min-width:155px;display:none}
+.unit-picker-btn{padding:5px 9px;border-radius:8px;font-size:12px;border:1.5px solid #ddd;font-weight:bold;background:#f8f9fa;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:3px;font-family:inherit;max-width:230px;overflow:hidden;white-space:nowrap}
+.unit-picker-panel{position:fixed;top:58px;left:8px;right:8px;max-width:520px;max-height:72vh;overflow-y:auto;background:var(--card);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.22);z-index:200;padding:12px 14px;display:none}
 .unit-picker-panel.open{display:block}
 .unit-check-item{display:flex;align-items:center;gap:8px;padding:6px 4px;border-radius:7px;cursor:pointer;font-size:14px}
 .unit-check-item input{width:16px;height:16px;cursor:pointer;accent-color:var(--green)}
@@ -237,25 +237,77 @@ select{padding:6px 8px;border-radius:8px;font-size:14px;border:1.5px solid #ddd;
 .feedback-right-side{position:fixed;left:calc(50% + 90px);top:34%;writing-mode:vertical-rl;text-orientation:mixed;font-size:22px;font-weight:900;color:#e74c3c;pointer-events:none;z-index:310;display:none;text-shadow:0 3px 10px rgba(231,76,60,.4);letter-spacing:3px}
 .feedback-side-anim{animation:sideIn .4s cubic-bezier(.34,1.56,.64,1)}
 @keyframes sideIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+
+/* ===== v3 新增：登录点选 / 课文多选 / 结算卡 / 老师页 ===== */
+.login-hint{font-size:15px;font-weight:700;color:#2d3436;margin:10px 0 8px}
+.pick-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-height:46vh;overflow-y:auto;padding:4px}
+.pick-btn{min-width:88px;padding:12px 14px;border:2px solid #dfe6e9;border-radius:12px;background:#fff;font-size:16px;font-weight:700;color:#2d3436;cursor:pointer;line-height:1.3}
+.pick-btn:active{transform:scale(.96)}
+.pick-btn .sid-num{display:block;font-size:20px;color:#0984e3}
+.pick-btn .sid-name{display:block;font-size:13px;color:#636e72;font-weight:500}
+.confirm-card{background:#f1f9ff;border:2px solid #74b9ff;border-radius:14px;padding:16px;margin:10px 0;font-size:17px;font-weight:700;color:#2d3436;line-height:1.7}
+.confirm-card .cc-sub{font-size:14px;font-weight:500;color:#636e72;margin-top:6px}
+.modal-btn.ghost{background:#fff;color:#636e72;border:2px solid #dfe6e9;font-weight:600;margin-top:8px}
+.offline-note{background:#fff5e6;border:2px solid #fdcb6e;border-radius:12px;padding:12px;font-size:13px;color:#8d6a1a;line-height:1.6;margin-bottom:10px;text-align:left}
+.lp-unit{margin-bottom:10px}
+.lp-unit-hd{display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:700;color:#2d3436;padding:4px 2px;border-bottom:1px solid #eef1f2;margin-bottom:6px}
+.lp-mini{font-size:12px;padding:3px 9px;border:1px solid #b2bec3;border-radius:999px;background:#fff;color:#636e72;cursor:pointer}
+.lp-lessons{display:flex;flex-wrap:wrap;gap:6px}
+.lp-chip{font-size:13px;padding:7px 12px;border:2px solid #dfe6e9;border-radius:999px;background:#fff;color:#2d3436;cursor:pointer;user-select:none}
+.lp-chip.on{background:#0984e3;border-color:#0984e3;color:#fff;font-weight:700}
+.lp-foot{position:sticky;bottom:0;background:#fff;border-top:1px solid #eef1f2;padding-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.lp-count{flex:1;font-size:13px;color:#636e72;font-weight:700}
+.lp-go{padding:8px 16px;border:none;border-radius:10px;background:#00b894;color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+.lp-go:disabled{background:#b2bec3;cursor:not-allowed}
+.round-card{text-align:left;width:100%}
+.rc-big{font-size:34px;font-weight:900;color:#0984e3;text-align:center;line-height:1.1}
+.rc-line{font-size:15px;color:#2d3436;margin:6px 0}
+.rc-wrong{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.rc-w{font-size:18px;padding:4px 10px;border:2px solid #ff7675;border-radius:8px;color:#d63031;background:#fff5f5}
+.rc-up{font-size:13px;margin-top:10px;padding:8px;border-radius:8px;text-align:center;font-weight:700}
+.rc-up.ok{background:#e8f8f1;color:#00875a}.rc-up.bad{background:#fff5e6;color:#8d6a1a}.rc-up.wait{background:#eef3f8;color:#636e72}
+.pin-box{text-align:center;padding:24px 12px}
+.pin-in{width:160px;font-size:24px;text-align:center;letter-spacing:8px;padding:10px;border:2px solid #dfe6e9;border-radius:10px}
+.t-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.t-tbl th,.t-tbl td{border-bottom:1px solid #eef1f2;padding:6px 4px;text-align:left}
+.t-tbl th{color:#636e72;font-weight:700;font-size:12px}
+.t-miss{color:#d63031;font-weight:700}
 </style>
 </head>
 <body>
 <div class="overlay" id="nameModal">
-<div class="modal">
+<div class="modal" id="loginModal">
 <div class="modal-emoji">🎮</div>
-<div class="modal-title">欢迎来到汉字大乱斗！</div>
-<div class="modal-sub">请先填写你的班级和姓名<br>老师才能看到你的学习记录哦</div>
-<input class="modal-input" id="classInput" placeholder="班级（例如：中二3班）" maxlength="12" type="text">
-<input class="modal-input" id="nameInput" placeholder="姓名（例如：小明）" maxlength="8" type="text">
-<button class="modal-btn" onclick="savePlayerName()">开始游戏 🚀</button>
+<div class="modal-title">汉字大乱斗</div>
+<div class="modal-sub" id="loginSub">正在连接老师的名单……</div>
+<div id="loginStep1" style="display:none">
+  <div class="login-hint">① 点一下你的班级</div>
+  <div class="pick-grid" id="clsGrid"></div>
+</div>
+<div id="loginStep2" style="display:none">
+  <div class="login-hint">② 点一下你的学号</div>
+  <div class="pick-grid sid" id="sidGrid"></div>
+  <button class="modal-btn ghost" onclick="loginBack(1)">← 换班级</button>
+</div>
+<div id="loginStep3" style="display:none">
+  <div class="confirm-card" id="confirmCard"></div>
+  <button class="modal-btn" onclick="loginConfirm()">是我，开始游戏 🚀</button>
+  <button class="modal-btn ghost" onclick="loginBack(2)">← 点错了，重选</button>
+</div>
+<div id="loginOffline" style="display:none">
+  <div class="offline-note">⚠️ 连不上老师的名单（可能是网络不稳，或老师还没上传名单）。<br>先自己填，成绩会先存在这台机器上，联网后自动补交给老师。</div>
+  <input class="modal-input" id="classInput" placeholder="班级（例如：201）" maxlength="12" type="text">
+  <input class="modal-input" id="nameInput" placeholder="姓名（例如：小明）" maxlength="8" type="text">
+  <button class="modal-btn" onclick="savePlayerName()">开始游戏 🚀</button>
+</div>
+<button class="modal-btn ghost" id="offlineBtn" style="display:none" onclick="showOfflineLogin()">名单里没有我 / 连不上</button>
 </div>
 </div>
 <div class="ach-toast" id="achToast"></div>
 <div class="header">
 <div class="select-group">
 <select id="gradeSelect" onchange="updateUnits()"><option value="S1">中一</option><option value="S2">中二</option></select>
-<button class="unit-picker-btn" id="unitPickerBtn" onclick="toggleUnitPicker()"><span id="unitPickerLabel">加载中...</span> ▾</button>
-<select id="lessonSelect" onchange="onLessonChange()"><option value="all">全部课文</option></select>
+<button class="unit-picker-btn" id="unitPickerBtn" onclick="toggleUnitPicker()">📚 <span id="unitPickerLabel">加载中...</span> ▾</button>
 </div>
 <div class="header-mid" id="playerLabel"></div>
 <div class="header-right">
@@ -303,23 +355,45 @@ select{padding:6px 8px;border-radius:8px;font-size:14px;border:1.5px solid #ddd;
 </div>
 
 <div class="page" id="teacherPage">
-<div class="page-title">👩‍🏫 老师管理</div>
-<div class="page-sub">快速生成教学工具，无需登录</div>
-<div class="teacher-card">
-  <div class="teacher-card-title">🔑 班级码</div>
-  <div class="class-code" id="classCode">------</div>
-  <button class="copy-btn" onclick="copyClassCode()">📋 复制班级码</button>
-  <button class="copy-btn green" onclick="genNewCode()" style="margin-top:8px">🔄 生成新班级码</button>
+<div class="page-title">👩‍🏫 老师</div>
+
+<div id="pinGate" class="teacher-card">
+  <div class="pin-box">
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px">请输入教师密码</div>
+    <input class="pin-in" id="pinIn" type="password" inputmode="numeric" maxlength="8" placeholder="····">
+    <div style="margin-top:12px"><button class="copy-btn green" onclick="teacherLogin()">进入</button></div>
+    <div id="pinMsg" style="font-size:13px;color:#d63031;margin-top:8px"></div>
+  </div>
 </div>
-<div class="teacher-card">
-  <div class="teacher-card-title">⚠️ 本班错误率最高的字</div>
-  <div class="top-errors-row" id="topErrorsRow"><div style="color:#b2bec3;font-size:13px">暂无数据，请先开始游戏</div></div>
+
+<div id="teacherBody" style="display:none">
+  <div class="teacher-card">
+    <div class="teacher-card-title">📊 今日练习情况</div>
+    <div style="margin-bottom:8px"><select id="tClsSel" onchange="renderBoard()" style="padding:6px 10px;border-radius:8px;border:1px solid #dfe6e9;font-size:14px"></select>
+    <button class="copy-btn" style="display:inline-block;width:auto;padding:6px 12px;margin-left:6px" onclick="loadBoard()">🔄 刷新</button></div>
+    <div id="tSummary" style="font-size:14px;color:#636e72">点「刷新」读取全班数据</div>
+    <div id="tMissing" style="font-size:13px;margin-top:8px"></div>
+  </div>
+  <div class="teacher-card">
+    <div class="teacher-card-title">⚠️ 全班最容易错的字</div>
+    <div class="top-errors-row" id="topErrorsRow"><div style="color:#b2bec3;font-size:13px">点「刷新」后显示</div></div>
+    <button class="copy-btn" onclick="copyWeakChars()" style="margin-top:8px">📋 复制重点复习字表</button>
+  </div>
+  <div class="teacher-card">
+    <div class="teacher-card-title">🏆 个人榜（按正确率）</div>
+    <div id="tIndiv" style="font-size:13px;color:#b2bec3">点「刷新」后显示</div>
+  </div>
+  <div class="teacher-card">
+    <div class="teacher-card-title">👥 小组榜</div>
+    <div id="tGroup" style="font-size:13px;color:#b2bec3">点「刷新」后显示</div>
+  </div>
 </div>
+
 <div class="teacher-card">
-  <div class="teacher-card-title">📝 当前单元听写清单</div>
-  <div style="font-size:12px;color:#95a5a6;margin-bottom:8px">点击游戏页选好单元后，回来这里查看</div>
+  <div class="teacher-card-title">📝 当前范围听写清单</div>
+  <div style="font-size:12px;color:#95a5a6;margin-bottom:8px">在游戏页选好课文后，回来这里查看</div>
   <ul class="dictation-list" id="dictationList"></ul>
-  <button class="copy-btn" onclick="copyDictation()" style="margin-top:10px">📋 复制听写清单（可发到家长群）</button>
+  <button class="copy-btn" onclick="copyDictation()" style="margin-top:10px">📋 复制听写清单</button>
 </div>
 </div>
 <div class="bottom-nav">
@@ -892,6 +966,36 @@ S2_U6_L4|翻|fān|lr|番,羽|翻天覆地||S
 S2_U6_L4|滞|zhì|lr|氵,带|停滞||S
 `;
 
+
+// ═══════════════════════════════════════════════════════════
+//  ⚙️ 设置区（老师只需要改这一行）
+// ═══════════════════════════════════════════════════════════
+let HWT_API = "";   // ← 把 Apps Script 的网址粘在这两个引号中间
+
+// ---- 与后台通讯：先试 POST，失败自动退回 JSONP（绕开 CORS）----
+function api(params, cb){
+  if(!HWT_API){ cb({ok:false, err:'老师还没设置后台网址'}); return; }
+  var done=false;
+  var to=setTimeout(function(){ if(!done){done=true; jsonp(params,cb);} }, 8000);
+  fetch(HWT_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(params)})
+    .then(function(r){return r.json();})
+    .then(function(j){ if(!done){done=true;clearTimeout(to);cb(j);} })
+    .catch(function(){ if(!done){done=true;clearTimeout(to);jsonp(params,cb);} });
+}
+function jsonp(params, cb){
+  var name='hwtcb_'+Date.now()+'_'+Math.floor(Math.random()*1e6);
+  var q=Object.keys(params).map(function(k){
+    var v=params[k]; if(typeof v==='object') v=JSON.stringify(v);
+    return encodeURIComponent(k)+'='+encodeURIComponent(v);
+  }).join('&');
+  var sc=document.createElement('script'), fired=false;
+  window[name]=function(j){ fired=true; cb(j); try{delete window[name];sc.remove();}catch(e){} };
+  sc.src=HWT_API+'?'+q+'&callback='+name;
+  sc.onerror=function(){ if(!fired){ cb({ok:false,err:'连不上后台'}); try{delete window[name];sc.remove();}catch(e){} } };
+  setTimeout(function(){ if(!fired){ cb({ok:false,err:'后台超时'}); try{delete window[name];sc.remove();}catch(e){} } },15000);
+  document.body.appendChild(sc);
+}
+
 const wordBank={};
 const allDistractors=[];
 const allGlobalParts=[];
@@ -971,13 +1075,9 @@ const PAIRMAP={"惹":[{w:"惹",d:"招来（麻烦等） (Provoke)"},{w:"娘惹",
 "瞩":[{w:"高瞻远瞩",d:"看得很远，很有眼光 (Foresight)"},{w:"引人瞩目",d:"吸引大家的注意 (Eye-catching)"}]};
 
 
-// v2.2：同字词配对严格限制在“当前选中的单元/课文”，不跨单元串词
+// v3：同字词配对严格限制在“当前选中的课文”，不跨范围串词
 function getScopeUnitKeysForSupport(){
-  const selected=getCurrentSelUnits();
-  if(!selected.length)return [];
-  // 若指定单课，就只限该课；若选择“全部课文”，则限当前勾选单元
-  if(currentLessonKey&&currentLessonKey!=='all')return selected;
-  return selected;
+  return getCurrentSelUnits();
 }
 function getScopedPairItems(data){
   const allowedVocabs=new Set();
@@ -1027,34 +1127,118 @@ function lessonKeysOf(gradeCode,unitNum){
 // ═══════════════════════════════════════════════════════════
 //  存储
 // ═══════════════════════════════════════════════════════════
-const SK={name:'hzld_name',cls:'hzld_class',score:'hzld_score',mastery:'hzld_mastery',errors:'hzld_errors',ach:'hzld_ach',dates:'hzld_dates',maxCombo:'hzld_maxCombo'};
+const SK={name:'hzld_name',cls:'hzld_class',sid:'hzld_sid',grp:'hzld_grp',score:'hzld_score',mastery:'hzld_mastery',errors:'hzld_errors',ach:'hzld_ach',dates:'hzld_dates',maxCombo:'hzld_maxCombo',pending:'hzld_pending'};
 const ls={get:k=>{try{return JSON.parse(localStorage.getItem(k));}catch{return null;}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}}};
 
 // ═══════════════════════════════════════════════════════════
 //  游戏状态
 // ═══════════════════════════════════════════════════════════
-let score=0,combo=0,unitPlayQueue={},currentSet=[],currentWordIndex=0,activePiece=null,playerName='',playerClass='',consecutiveCorrect=0,currentPoolKey='';
+let score=0,combo=0,unitPlayQueue={},currentSet=[],currentWordIndex=0,activePiece=null,playerName='',playerClass='',playerSid='',playerGrp='',consecutiveCorrect=0,currentPoolKey='';
+let ROSTER=[], pickCls='', pickStu=null;
+let roundLog={};   // 本轮逐字记录
 
 // ═══════════════════════════════════════════════════════════
 //  玩家名字
 // ═══════════════════════════════════════════════════════════
+function showLoginStep(n){
+  ['loginStep1','loginStep2','loginStep3','loginOffline'].forEach(function(id,i){
+    document.getElementById(id).style.display=(i===n-1)?'block':'none';
+  });
+}
+function setLoginSub(t){document.getElementById('loginSub').innerHTML=t;}
+
 function checkPlayerName(){
-  playerName=ls.get(SK.name)||'';
-  playerClass=ls.get(SK.cls)||'';
-  if(!playerName||!playerClass){document.getElementById('nameModal').style.display='flex';}
-  else{document.getElementById('nameModal').style.display='none';document.getElementById('playerLabel').innerText='👤 '+playerClass+' '+playerName;}
+  playerName=ls.get(SK.name)||''; playerClass=ls.get(SK.cls)||'';
+  playerSid=ls.get(SK.sid)||'';   playerGrp=ls.get(SK.grp)||'';
+  if(playerName&&playerClass){
+    document.getElementById('nameModal').style.display='none';
+    paintPlayerLabel();
+  }else{
+    document.getElementById('nameModal').style.display='flex';
+    bootLogin();
+  }
   recordDate();
 }
+function paintPlayerLabel(){
+  var t='👤 '+playerClass+' '+playerName;
+  if(playerGrp) t+=' · 第'+playerGrp+'组';
+  document.getElementById('playerLabel').innerText=t;
+}
+// 从后台读名单
+function bootLogin(){
+  setLoginSub('正在连接老师的名单……');
+  document.getElementById('offlineBtn').style.display='none';
+  api({a:'roster'}, function(j){
+    if(j&&j.ok&&j.roster&&j.roster.length){
+      ROSTER=j.roster;
+      document.getElementById('offlineBtn').style.display='block';
+      renderClsGrid();
+    }else{
+      setLoginSub('连不上老师的名单');
+      showOfflineLogin();
+    }
+  });
+}
+function renderClsGrid(){
+  var seen={}, list=[];
+  ROSTER.forEach(function(r){ if(!seen[r.cls]){seen[r.cls]=1;list.push(r.cls);} });
+  list.sort();
+  setLoginSub('先点班级，再点学号，不用打字');
+  var g=document.getElementById('clsGrid'); g.innerHTML='';
+  list.forEach(function(c){
+    var b=document.createElement('button'); b.className='pick-btn'; b.innerText=c;
+    b.onclick=function(){ pickCls=c; renderSidGrid(); };
+    g.appendChild(b);
+  });
+  showLoginStep(1);
+}
+function renderSidGrid(){
+  setLoginSub(pickCls+' 班 —— 点你的学号');
+  var g=document.getElementById('sidGrid'); g.innerHTML='';
+  ROSTER.filter(function(r){return r.cls===pickCls;})
+    .sort(function(a,b){return (parseInt(a.sid,10)||0)-(parseInt(b.sid,10)||0);})
+    .forEach(function(r){
+      var b=document.createElement('button'); b.className='pick-btn';
+      b.innerHTML='<span class="sid-num">'+r.sid+'</span><span class="sid-name">'+(r.name||'')+'</span>';
+      b.onclick=function(){ pickStu=r; renderConfirm(); };
+      g.appendChild(b);
+    });
+  showLoginStep(2);
+}
+function renderConfirm(){
+  setLoginSub('确认一下是不是你');
+  var mates=ROSTER.filter(function(r){return r.cls===pickCls&&r.grp&&r.grp===pickStu.grp&&r.sid!==pickStu.sid;})
+                  .map(function(r){return r.name;}).join('、');
+  var html='你好，<span style="color:#0984e3">'+(pickStu.name||pickStu.sid)+'</span>！<br>'+pickCls+' 班 · 学号 '+pickStu.sid;
+  if(pickStu.grp) html+=' · 第 '+pickStu.grp+' 组';
+  if(mates) html+='<div class="cc-sub">同组：'+mates+'</div>';
+  document.getElementById('confirmCard').innerHTML=html;
+  showLoginStep(3);
+}
+function loginBack(n){ if(n===1)showLoginStep(1); else showLoginStep(2); }
+function loginConfirm(){
+  playerClass=pickCls; playerName=pickStu.name||pickStu.sid;
+  playerSid=pickStu.sid; playerGrp=pickStu.grp||'';
+  ls.set(SK.cls,playerClass); ls.set(SK.name,playerName);
+  ls.set(SK.sid,playerSid);   ls.set(SK.grp,playerGrp);
+  document.getElementById('nameModal').style.display='none';
+  paintPlayerLabel(); recordDate(); checkAchievements();
+}
+function showOfflineLogin(){ showLoginStep(4); document.getElementById('offlineBtn').style.display='none'; }
 function savePlayerName(){
   const cls=document.getElementById('classInput').value.trim();
   const v=document.getElementById('nameInput').value.trim();
   if(!cls){document.getElementById('classInput').style.borderColor='var(--red)';return;}
   if(!v){document.getElementById('nameInput').style.borderColor='var(--red)';return;}
-  playerClass=cls; playerName=v;
-  ls.set(SK.cls,playerClass); ls.set(SK.name,playerName);
+  playerClass=cls; playerName=v; playerSid=''; playerGrp='';
+  ls.set(SK.cls,playerClass); ls.set(SK.name,playerName); ls.set(SK.sid,''); ls.set(SK.grp,'');
   document.getElementById('nameModal').style.display='none';
-  document.getElementById('playerLabel').innerText='👤 '+playerClass+' '+playerName;
-  recordDate();checkAchievements();
+  paintPlayerLabel(); recordDate(); checkAchievements();
+}
+// 换人（老师页/长按名字用）
+function switchStudent(){
+  ['name','cls','sid','grp'].forEach(function(k){ ls.set(SK[k],''); });
+  location.reload();
 }
 function recordDate(){
   const today=new Date().toDateString();
@@ -1074,6 +1258,7 @@ function addScore(pts){
 }
 function incCombo(){
   combo++;
+  if(combo>roundMaxCombo)roundMaxCombo=combo;
   const mx=ls.get(SK.maxCombo)||0;
   if(combo>mx)ls.set(SK.maxCombo,combo);
   renderCombo();
@@ -1260,102 +1445,192 @@ function spawnParticles(x,y){
   }
 }
 
+
+// ═══════════════════════════════════════════════════════════
+//  本轮记录（用于结算卡 + 上传给老师）
+// ═══════════════════════════════════════════════════════════
+let roundMaxCombo=0, roundStartScore=0, roundStartTime=0;
+function resetRound(){
+  roundLog={}; roundMaxCombo=0; roundStartScore=score; roundStartTime=Date.now();
+}
+function touchRound(data){
+  if(!data)return;
+  const k=data.w;
+  if(!roundLog[k])roundLog[k]={unit:data._unit||'',w:data.w,py:data.py||'',spell:0,quiz:0,match:0};
+}
+function tallyWrong(stage){
+  const d=currentSet[currentWordIndex]; if(!d)return;
+  touchRound(d);
+  roundLog[d.w][stage]=(roundLog[d.w][stage]||0)+1;
+}
+function roundStats(){
+  const rows=Object.keys(roundLog).map(k=>roundLog[k]);
+  const first=rows.filter(r=>!r.spell&&!r.quiz&&!r.match).length;
+  const wrong=rows.filter(r=>r.spell||r.quiz||r.match);
+  const pct=rows.length?Math.round(first/rows.length*100):0;
+  return {rows:rows,total:rows.length,first:first,pct:pct,wrong:wrong,
+          pts:score-roundStartScore, combo:roundMaxCombo,
+          mins:Math.max(1,Math.round((Date.now()-roundStartTime)/60000))};
+}
+// ---- 上传（失败入队，下次自动补交）----
+function queuePending(pkt){
+  const q=ls.get(SK.pending)||[]; q.push(pkt);
+  ls.set(SK.pending,q.slice(-40));
+}
+function flushPending(){
+  const q=ls.get(SK.pending)||[];
+  if(!q.length||!HWT_API)return;
+  const pkt=q[0];
+  api(pkt,function(j){
+    if(j&&j.ok){ const cur=ls.get(SK.pending)||[]; cur.shift(); ls.set(SK.pending,cur); setTimeout(flushPending,600); }
+  });
+}
+function uploadRound(st,onDone){
+  const pkt={a:'submit',cls:playerClass,sid:playerSid,name:playerName,grp:playerGrp,
+    grade:document.getElementById('gradeSelect').value==='S1'?'中一':'中二',
+    range:rangeText(), chars:st.total, first:st.first, pct:st.pct,
+    pts:st.pts, combo:st.combo, mins:st.mins,
+    detail:st.rows.map(r=>[r.unit,r.w,r.py,r.spell,r.quiz,r.match,(!r.spell&&!r.quiz&&!r.match)?1:0])};
+  api(pkt,function(j){
+    if(j&&j.ok){ onDone('ok'); flushPending(); }
+    else { queuePending(pkt); onDone('bad'); }
+  });
+}
+
 // ═══════════════════════════════════════════════════════════
 //  游戏逻辑
 // ═══════════════════════════════════════════════════════════
 function unitNumLabel(n){return['一','二','三','四','五','六'][n-1]||n;}
 
-// 当前选中的"单元号"集合（复选框存的是单元号，如 "1"）
-function getSelectedUnitNums(gradeCode,allUnitNums){
-  const panel=document.getElementById('unitPickerPanel');
-  const checked=[...panel.querySelectorAll('input[value]:checked')].map(c=>+c.value);
-  return checked.length>0?checked:[...allUnitNums];
+// ═══════════════════════════════════════════════════════════
+//  课文多选（v3）：学生可一次勾选任意几课一起复习
+// ═══════════════════════════════════════════════════════════
+let selLessons=[];   // 当前选中的课文 key 数组，如 ['S1_U5_L1','S1_U5_L3']
+
+function selKeyOfGrade(g){ return 'hzld_selL_'+g; }
+function charCountOf(keys){
+  const seen=new Set();
+  keys.forEach(uk=>(wordBank[uk]||[]).forEach(it=>seen.add(it.w)));
+  return seen.size;
 }
-function updateUnitPickerLabel(gradeCode,allUnitNums){
-  const sel=getSelectedUnitNums(gradeCode,allUnitNums);
+function lessonShort(n){ return ['一','二','三','四'][n-1]||n; }
+
+function updateUnitPickerLabel(){
   const lbl=document.getElementById('unitPickerLabel');
-  if(sel.length===allUnitNums.length)lbl.innerText='全部单元';
-  else lbl.innerText=sel.map(n=>'单元'+unitNumLabel(n)).join('、');
+  const g=document.getElementById('gradeSelect').value;
+  const allNums=unitsOfGrade(g);
+  const totalLessons=allNums.reduce((a,n)=>a+lessonKeysOf(g,n).length,0);
+  if(!selLessons.length){ lbl.innerText='未选课文'; return; }
+  if(selLessons.length===totalLessons){ lbl.innerText='全部课文 · '+charCountOf(selLessons)+'字'; return; }
+  const byU={};
+  selLessons.forEach(uk=>{const pk=parseUnitKey(uk);(byU[pk.unitNum]=byU[pk.unitNum]||[]).push(pk.lessonNum);});
+  const parts=Object.keys(byU).map(Number).sort((a,b)=>a-b).map(u=>{
+    const all=lessonKeysOf(g,u).length, arr=byU[u].sort((a,b)=>a-b);
+    return '单元'+unitNumLabel(u)+(arr.length===all?'全':'第'+arr.map(lessonShort).join('')+'课');
+  });
+  lbl.innerText=parts.join('｜')+' · '+charCountOf(selLessons)+'字';
 }
+// 给后台用的范围文字
+function rangeText(){
+  const g=document.getElementById('gradeSelect').value==='S1'?'中一':'中二';
+  const lbl=document.getElementById('unitPickerLabel').innerText.split(' · ')[0];
+  return g+' '+lbl;
+}
+
 function toggleUnitPicker(){
   const p=document.getElementById('unitPickerPanel');
   p.classList.toggle('open');
-  if(p.classList.contains('open'))document.addEventListener('click',closePickerOutside,true);
+  if(p.classList.contains('open'))setTimeout(()=>document.addEventListener('click',closePickerOutside,true),0);
 }
 function closePickerOutside(e){
-  const p=document.getElementById('unitPickerPanel');
-  const b=document.getElementById('unitPickerBtn');
-  if(!p.contains(e.target)&&!b.contains(e.target)){
-    p.classList.remove('open');
-    document.removeEventListener('click',closePickerOutside,true);
-  }
+  const p=document.getElementById('unitPickerPanel'), b=document.getElementById('unitPickerBtn');
+  if(!p.contains(e.target)&&!b.contains(e.target))closeUnitPicker();
 }
+function closeUnitPicker(){
+  document.getElementById('unitPickerPanel').classList.remove('open');
+  document.removeEventListener('click',closePickerOutside,true);
+}
+
 function updateUnits(){
-  const gradeCode=document.getElementById('gradeSelect').value;
-  const allUnitNums=unitsOfGrade(gradeCode);
-  let saved=ls.get('hzld_selU_'+gradeCode);
-  if(!saved||!saved.length)saved=[...allUnitNums];
-  const panel=document.getElementById('unitPickerPanel');
-  panel.innerHTML='';
-  // 全部 checkbox
-  const allDiv=document.createElement('div');
-  allDiv.className='unit-check-item unit-check-all';
-  const allChk=saved.length===allUnitNums.length;
-  allDiv.innerHTML=`<input type="checkbox" id="ck_all" ${allChk?'checked':''}><label for="ck_all" style="cursor:pointer;font-size:14px">全部单元</label>`;
-  panel.appendChild(allDiv);
-  allUnitNums.forEach(n=>{
-    const div=document.createElement('div');
-    div.className='unit-check-item';
-    div.innerHTML=`<input type="checkbox" id="ck_U${n}" value="${n}" ${saved.includes(n)?'checked':''}><label for="ck_U${n}" style="cursor:pointer;font-size:14px">单元${unitNumLabel(n)}</label>`;
-    panel.appendChild(div);
-  });
-  const onUnitChange=()=>{
-    const allCbs=[...panel.querySelectorAll('input[value]')];
-    document.getElementById('ck_all').checked=allCbs.every(c=>c.checked);
-    const sel=getSelectedUnitNums(gradeCode,allUnitNums);
-    ls.set('hzld_selU_'+gradeCode,sel);
-    updateUnitPickerLabel(gradeCode,allUnitNums);
-    rebuildLessonSelect();
-    initUnitGame(true);
-  };
-  panel.querySelectorAll('input[value]').forEach(cb=>cb.addEventListener('change',onUnitChange));
-  document.getElementById('ck_all').addEventListener('change',e=>{
-    panel.querySelectorAll('input[value]').forEach(cb=>cb.checked=e.target.checked);
-    const sel=getSelectedUnitNums(gradeCode,allUnitNums);
-    ls.set('hzld_selU_'+gradeCode,sel);
-    updateUnitPickerLabel(gradeCode,allUnitNums);
-    rebuildLessonSelect();
-    initUnitGame(true);
-  });
-  updateUnitPickerLabel(gradeCode,allUnitNums);
-  rebuildLessonSelect();
+  const g=document.getElementById('gradeSelect').value;
+  const allNums=unitsOfGrade(g);
+  const allKeys=[]; allNums.forEach(n=>allKeys.push(...lessonKeysOf(g,n)));
+  let saved=ls.get(selKeyOfGrade(g));
+  saved=(saved||[]).filter(k=>allKeys.includes(k));
+  selLessons = saved.length? saved : allKeys.slice();
+  buildLessonPanel();
+  updateUnitPickerLabel();
   initUnitGame(true);
 }
 
-// 当前选中的课文：'all' 表示选中单元下全部课文，否则是具体 unitKey
-let currentLessonKey='all';
-// 重建课文下拉：列出当前选中单元下的所有课文
-function rebuildLessonSelect(){
-  const gradeCode=document.getElementById('gradeSelect').value;
-  const allUnitNums=unitsOfGrade(gradeCode);
-  const selUnits=getSelectedUnitNums(gradeCode,allUnitNums);
-  const sel=document.getElementById('lessonSelect');
-  sel.innerHTML='<option value="all">全部课文</option>';
-  selUnits.forEach(un=>{
-    lessonKeysOf(gradeCode,un).forEach(uk=>{
+function buildLessonPanel(){
+  const g=document.getElementById('gradeSelect').value;
+  const allNums=unitsOfGrade(g);
+  const panel=document.getElementById('unitPickerPanel');
+  panel.innerHTML='';
+
+  const tip=document.createElement('div');
+  tip.style.cssText='font-size:13px;color:#636e72;font-weight:700;margin-bottom:8px';
+  tip.innerText='想复习哪几课？点一下就选上，可以多选';
+  panel.appendChild(tip);
+
+  allNums.forEach(n=>{
+    const keys=lessonKeysOf(g,n);
+    const box=document.createElement('div'); box.className='lp-unit';
+    const hd=document.createElement('div'); hd.className='lp-unit-hd';
+    const nm=document.createElement('span'); nm.innerText='单元'+unitNumLabel(n);
+    const mini=document.createElement('button'); mini.className='lp-mini';
+    mini.innerText='整个单元';
+    mini.onclick=()=>{
+      const allIn=keys.every(k=>selLessons.includes(k));
+      keys.forEach(k=>{
+        const i=selLessons.indexOf(k);
+        if(allIn){ if(i>=0)selLessons.splice(i,1); } else if(i<0) selLessons.push(k);
+      });
+      paintChips(); 
+    };
+    hd.appendChild(nm); hd.appendChild(mini); box.appendChild(hd);
+
+    const row=document.createElement('div'); row.className='lp-lessons';
+    keys.forEach(uk=>{
       const pk=parseUnitKey(uk);
-      const o=document.createElement('option');
-      o.value=uk;
-      o.textContent='单元'+unitNumLabel(un)+' · '+LESSON_NAMES[pk.lessonNum];
-      sel.appendChild(o);
+      const c=document.createElement('div'); c.className='lp-chip'; c.dataset.key=uk;
+      c.innerText=LESSON_NAMES[pk.lessonNum]+'（'+(wordBank[uk]||[]).length+'字）';
+      c.onclick=()=>{
+        const i=selLessons.indexOf(uk);
+        if(i>=0)selLessons.splice(i,1); else selLessons.push(uk);
+        paintChips();
+      };
+      row.appendChild(c);
     });
+    box.appendChild(row); panel.appendChild(box);
   });
-  currentLessonKey='all';
-  sel.value='all';
+
+  const foot=document.createElement('div'); foot.className='lp-foot';
+  const bAll=document.createElement('button'); bAll.className='lp-mini'; bAll.innerText='全选';
+  bAll.onclick=()=>{ selLessons=[]; allNums.forEach(n=>selLessons.push(...lessonKeysOf(g,n))); paintChips(); };
+  const bNone=document.createElement('button'); bNone.className='lp-mini'; bNone.innerText='清空';
+  bNone.onclick=()=>{ selLessons=[]; paintChips(); };
+  const cnt=document.createElement('div'); cnt.className='lp-count'; cnt.id='lpCount';
+  const go=document.createElement('button'); go.className='lp-go'; go.id='lpGo'; go.innerText='开始练习 ▶';
+  go.onclick=()=>{
+    if(!selLessons.length)return;
+    ls.set(selKeyOfGrade(g),selLessons);
+    updateUnitPickerLabel(); closeUnitPicker(); initUnitGame(true);
+  };
+  foot.appendChild(bAll); foot.appendChild(bNone); foot.appendChild(cnt); foot.appendChild(go);
+  panel.appendChild(foot);
+  paintChips();
 }
-function onLessonChange(){
-  currentLessonKey=document.getElementById('lessonSelect').value;
-  initUnitGame(true);
+function paintChips(){
+  const panel=document.getElementById('unitPickerPanel');
+  panel.querySelectorAll('.lp-chip').forEach(c=>{
+    c.classList.toggle('on', selLessons.includes(c.dataset.key));
+  });
+  const c=document.getElementById('lpCount');
+  if(c)c.innerText='已选 '+selLessons.length+' 课 · '+charCountOf(selLessons)+' 个字';
+  const go=document.getElementById('lpGo');
+  if(go)go.disabled=selLessons.length===0;
 }
 
 function buildWeightedPool(selUnitKeys){
@@ -1375,21 +1650,14 @@ function refillPool(poolKey,selUnitKeys){
   // 不自动二刷；本轮完成后由学生主动点击“再练一轮”
   if(!unitPlayQueue[poolKey])unitPlayQueue[poolKey]=[];
 }
-// 返回当前应练习的 unitKey 列表（已结合单元勾选 + 课文下拉）
+// 返回当前应练习的课文 key 列表（v3：学生自由多选）
 function getCurrentSelUnits(){
-  const gradeCode=document.getElementById('gradeSelect').value;
-  const allUnitNums=unitsOfGrade(gradeCode);
-  const selUnits=getSelectedUnitNums(gradeCode,allUnitNums);
-  if(currentLessonKey&&currentLessonKey!=='all'){
-    return [currentLessonKey];   // 指定了某一课
-  }
-  // 全部课文：展开选中单元下的所有课文 key
-  let keys=[];
-  selUnits.forEach(un=>{ keys=keys.concat(lessonKeysOf(gradeCode,un)); });
-  return keys;
+  return selLessons.slice();
 }
 function initUnitGame(forceReset=false){
   const sel=getCurrentSelUnits();
+  if(!sel.length){ showNoSelection(); return; }
+  resetRound();
   const poolKey='pool_'+sel.join('_');
   if(forceReset||!unitPlayQueue[poolKey]||unitPlayQueue[poolKey].length<5){
     unitPlayQueue[poolKey]=buildWeightedPool(sel);
@@ -1400,6 +1668,7 @@ function initUnitGame(forceReset=false){
   currentPoolKey=poolKey;currentWordIndex=0;loadWord();
 }
 function loadWord(){
+  touchRound(currentSet[currentWordIndex]);
   document.getElementById('quizPanel').style.display='none';
   const mp=document.getElementById('matchPanel');if(mp){mp.classList.remove('show');mp.style.display='none';}
   const data=currentSet[currentWordIndex];
@@ -1565,6 +1834,7 @@ function dragEnd(e){
         checkGridComplete();
       }else{
         cell.classList.add('shake');setTimeout(()=>cell.classList.remove('shake'),300);
+        tallyWrong('spell');
         triggerFeedback(false,'位置不对，再试试！');resetPiece(activePiece);
       }
       cleanupDrag();return;
@@ -1580,6 +1850,7 @@ function dragEnd(e){
       addScore(-1);resetCombo();consecutiveCorrect=0;
       const uk=currentSet[currentWordIndex]._unit||getCurrentSelUnits()[0];
       recordWrong(uk,currentSet[currentWordIndex].w,currentSet[currentWordIndex]);
+      tallyWrong('spell');
       triggerFeedback(false,'放错扣1分！');resetPiece(activePiece);
     }
   }else{resetPiece(activePiece);}
@@ -1758,29 +2029,84 @@ function mEnd(e){
       // 错误：抖动提示，可重拖
       tgt.classList.add('wrong-shake');
       setTimeout(()=>tgt.classList.remove('wrong-shake'),350);
+      tallyWrong('match');
       triggerFeedback(false,'再想想！');
     }
   }
   mDragEl=null;
 }
 // 配对/选择题结束后，进入下一题（抽取自原 handleAnswer 的推进逻辑）
+function showNoSelection(){
+  document.getElementById('pool').innerHTML='<div class="pool-title">还没有选课文</div>';
+  document.getElementById('board').innerHTML='';
+  document.getElementById('matchPanel').style.display='none';
+  const panel=document.getElementById('quizPanel');
+  document.querySelector('.quiz-title').innerHTML='📚 请先点左上角「课文」，勾选你要复习的课';
+  document.getElementById('optionsContainer').innerHTML='';
+  panel.style.display='flex';
+  document.getElementById('progressLabel').innerText='未选课文';
+}
+
 function showRoundComplete(){
   window.speechSynthesis.cancel();
   document.getElementById('matchPanel').classList.remove('show');
   document.getElementById('matchPanel').style.display='none';
+  const st=roundStats();
   const panel=document.getElementById('quizPanel');
-  document.getElementById('qw').innerText='【本轮完成】';
-  document.querySelector('.quiz-title').innerHTML='🎉 本轮所有目标字都练完了！';
+  document.querySelector('.quiz-title').innerHTML='🎉 本轮完成！';
   const cont=document.getElementById('optionsContainer');
-  cont.innerHTML='';
+  const grade=document.getElementById('gradeSelect').value==='S1'?'中一':'中二';
+
+  let wrongHtml='';
+  if(st.wrong.length){
+    wrongHtml='<div class="rc-line">这几个字要再练：</div><div class="rc-wrong">'+
+      st.wrong.map(r=>'<span class="rc-w">'+r.w+'</span>').join('')+'</div>';
+  }else{
+    wrongHtml='<div class="rc-line" style="color:#00875a;font-weight:700">全部一次答对，太厉害了！</div>';
+  }
+
+  cont.innerHTML=
+    '<div class="round-card">'+
+      '<div class="rc-big">'+st.pct+'%</div>'+
+      '<div style="text-align:center;font-size:13px;color:#636e72;margin-bottom:10px">一次答对率</div>'+
+      '<div class="rc-line">范围：'+rangeText()+'</div>'+
+      '<div class="rc-line">本轮 '+st.total+' 个字 · 一次答对 <b>'+st.first+'</b> 个 · 最高连击 '+st.combo+'</div>'+
+      wrongHtml+
+      '<div class="rc-up wait" id="rcUp">正在把成绩交给老师……</div>'+
+    '</div>';
+
   const btn=document.createElement('button');
-  btn.className='quiz-btn';
-  btn.style.textAlign='center';
+  btn.className='quiz-btn'; btn.style.textAlign='center';
   btn.innerHTML='🔄 再练一轮（重新随机）';
   btn.onclick=()=>initUnitGame(true);
   cont.appendChild(btn);
+
+  const btn2=document.createElement('button');
+  btn2.className='quiz-btn'; btn2.style.textAlign='center';
+  btn2.innerHTML='📚 换课文再练';
+  btn2.onclick=()=>{ toggleUnitPicker(); };
+  cont.appendChild(btn2);
+
   panel.style.display='flex';
   document.getElementById('progressLabel').innerText='本轮完成 · 每个字只出现一次';
+
+  const up=document.getElementById('rcUp');
+  const codeTxt='【'+grade+'·'+rangeText()+'】'+playerClass+' '+playerSid+' '+playerName+
+                ' | '+st.first+'/'+st.total+' ('+st.pct+'%) | 连击'+st.combo+
+                ' | 错字:'+(st.wrong.map(r=>r.w).join('')||'无');
+  uploadRound(st,function(status){
+    if(status==='ok'){ up.className='rc-up ok'; up.innerText='✅ 成绩已交给老师'; }
+    else{
+      up.className='rc-up bad';
+      up.innerHTML='⚠️ 现在交不上（网络问题），已经存起来，下次打开会自动补交。<br>'+
+        '<button class="copy-btn" style="margin-top:6px" onclick="copyRoundCode(this)">📋 复制成绩交给老师</button>'+
+        '<div id="rcCode" style="display:none">'+codeTxt+'</div>';
+    }
+  });
+}
+function copyRoundCode(btn){
+  const t=document.getElementById('rcCode').innerText;
+  navigator.clipboard.writeText(t).then(()=>{btn.innerText='✅ 已复制';}).catch(()=>alert(t));
 }
 function goNextOrComplete(){
   currentWordIndex++;
@@ -1817,6 +2143,7 @@ function handleAnswer(btn,isCorrect){
     btn.classList.add('wrong');addScore(-1);resetCombo();consecutiveCorrect=0;
     const uk=currentSet[currentWordIndex]._unit||getCurrentSelUnits()[0];
     recordWrong(uk,currentSet[currentWordIndex].w,currentSet[currentWordIndex]);
+    tallyWrong('quiz');
     triggerFeedback(false,'再试一下！');
   }
 }
@@ -1829,40 +2156,126 @@ function triggerFeedback(ok,txt){
 function speakText(txt){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.lang='zh-CN';window.speechSynthesis.speak(u);}
 
 // ═══════════════════════════════════════════════════════════
-//  老师管理
+//  老师（PIN 保护，只读；名单管理与清空在教师看板文件里）
 // ═══════════════════════════════════════════════════════════
-function getOrCreateCode(){
-  let code=ls.get('hzld_classcode');
-  if(!code){code=Math.random().toString(36).substr(2,6).toUpperCase();ls.set('hzld_classcode',code);}
-  return code;
+let T_PIN='', T_DATA=null;
+
+function teacherLogin(){
+  const v=document.getElementById('pinIn').value.trim();
+  const msg=document.getElementById('pinMsg');
+  if(!v){msg.innerText='请输入密码';return;}
+  msg.innerText='正在验证……';
+  api({a:'board',pin:v},function(j){
+    if(j&&j.ok){
+      T_PIN=v; try{sessionStorage.setItem('hzld_tpin',v);}catch(e){}
+      document.getElementById('pinGate').style.display='none';
+      document.getElementById('teacherBody').style.display='block';
+      T_DATA=j; fillClsSel(); renderBoard();
+    }else{ msg.innerText=(j&&j.err)?j.err:'密码不对，或连不上后台'; }
+  });
 }
-function genNewCode(){
-  const code=Math.random().toString(36).substr(2,6).toUpperCase();
-  ls.set('hzld_classcode',code);
-  document.getElementById('classCode').innerText=code;
+function loadBoard(){
+  if(!T_PIN)return;
+  document.getElementById('tSummary').innerText='正在读取……';
+  api({a:'board',pin:T_PIN},function(j){
+    if(j&&j.ok){ T_DATA=j; fillClsSel(); renderBoard(); }
+    else document.getElementById('tSummary').innerText='读取失败：'+((j&&j.err)||'网络问题');
+  });
 }
-function copyClassCode(){
-  const code=document.getElementById('classCode').innerText;
-  navigator.clipboard.writeText('班级码：'+code).then(()=>{
-    const btn=document.querySelector('.copy-btn');
-    btn.innerText='✅ 已复制！';setTimeout(()=>{btn.innerText='📋 复制班级码';},2000);
-  }).catch(()=>alert('班级码：'+code));
+function fillClsSel(){
+  const sel=document.getElementById('tClsSel');
+  const cur=sel.value;
+  const seen={},list=[];
+  (T_DATA.roster||[]).forEach(r=>{if(!seen[r.cls]){seen[r.cls]=1;list.push(r.cls);}});
+  list.sort();
+  sel.innerHTML=list.map(c=>'<option>'+c+'</option>').join('');
+  if(cur&&list.includes(cur))sel.value=cur;
 }
-function renderTeacher(){
-  // 班级码
-  document.getElementById('classCode').innerText=getOrCreateCode();
-  // 错误率最高的字（前6个）
-  const errs=ls.get(SK.errors)||{};
+function todayStr(){
+  const d=new Date(),z=n=>('0'+n).slice(-2);
+  return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());
+}
+function renderBoard(){
+  if(!T_DATA)return;
+  const cls=document.getElementById('tClsSel').value;
+  const roster=(T_DATA.roster||[]).filter(r=>r.cls===cls);
+  const today=todayStr();
+  // 练习记录：[时间,班级,学号,姓名,组号,年级,范围,字数,一次答对,正确率,积分,连击]
+  const recs=(T_DATA.scores||[]).filter(r=>String(r[1])===cls);
+  const todayRecs=recs.filter(r=>String(r[0]).indexOf(today)===0);
+
+  // ---- 汇总 ----
+  const doneSid={}; todayRecs.forEach(r=>{ doneSid[String(r[2])]=(doneSid[String(r[2])]||0)+1; });
+  const doneN=Object.keys(doneSid).length;
+  document.getElementById('tSummary').innerHTML=
+    '<b>'+today+'</b>　已练 <b style="color:#00875a">'+doneN+'</b> / '+roster.length+' 人　共 '+todayRecs.length+' 轮';
+  const missing=roster.filter(r=>!doneSid[String(r.sid)]);
+  document.getElementById('tMissing').innerHTML= missing.length
+    ? '<span class="t-miss">今天还没练（'+missing.length+'）：</span>'+missing.map(r=>r.sid+' '+r.name).join('、')
+    : '<span style="color:#00875a">全班都练过了 ✅</span>';
+
+  // ---- 错字排行（逐字明细：[时间,班,学号,姓名,单元,字,拼音,拼字错,释义错,配对错,一次答对]）----
+  const items=(T_DATA.items||[]).filter(r=>String(r[1])===cls);
+  const agg={};
+  items.forEach(r=>{
+    const w=String(r[5]); if(!w)return;
+    if(!agg[w])agg[w]={w:w,py:String(r[6]||''),att:0,bad:0,spell:0,quiz:0,match:0};
+    agg[w].att++;
+    const sp=+r[7]||0,qz=+r[8]||0,mt=+r[9]||0;
+    if(sp||qz||mt)agg[w].bad++;
+    agg[w].spell+=sp;agg[w].quiz+=qz;agg[w].match+=mt;
+  });
+  const rank=Object.keys(agg).map(k=>agg[k]).filter(x=>x.bad>0)
+    .sort((a,b)=>(b.bad/b.att)-(a.bad/a.att)||b.bad-a.bad).slice(0,12);
   const row=document.getElementById('topErrorsRow');
-  const entries=Object.entries(errs).sort((a,b)=>b[1].count-a[1].count).slice(0,6);
-  if(entries.length===0){
-    row.innerHTML='<div style="color:#b2bec3;font-size:13px">暂无数据，请先开始游戏</div>';
-  }else{
-    row.innerHTML=entries.map(([k,v])=>
-      `<div class="top-err-chip"><span>${v.data.w}</span><div><div style="font-size:11px">${v.data.py}</div><div class="top-err-cnt">错${v.count}次</div></div></div>`
-    ).join('');
-  }
-  // 听写清单
+  row.innerHTML = rank.length ? rank.map(x=>{
+    const pct=Math.round(x.bad/x.att*100);
+    const where=x.spell>=x.quiz&&x.spell>=x.match?'拼字':(x.quiz>=x.match?'释义':'配对');
+    return '<div class="top-err-chip"><span>'+x.w+'</span><div><div style="font-size:11px">'+x.py+'</div>'+
+           '<div class="top-err-cnt">'+pct+'% 错 · 卡在'+where+'</div></div></div>';
+  }).join('') : '<div style="color:#b2bec3;font-size:13px">还没有错误数据</div>';
+  window.__weak=rank;
+
+  // ---- 个人榜（同一学号只取最后一次）----
+  const last={};
+  recs.forEach(r=>{ last[String(r[2])]=r; });
+  const indiv=Object.keys(last).map(k=>last[k])
+    .sort((a,b)=>(+b[9])-(+a[9])||(+b[8])-(+a[8])).slice(0,10);
+  document.getElementById('tIndiv').innerHTML = indiv.length ?
+    '<table class="t-tbl"><tr><th>#</th><th>学号</th><th>姓名</th><th>正确率</th><th>范围</th></tr>'+
+    indiv.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td><b>'+r[9]+'%</b></td><td style="font-size:11px;color:#636e72">'+(r[6]||'')+'</td></tr>').join('')+
+    '</table>' : '<span style="color:#b2bec3">还没有数据</span>';
+
+  // ---- 小组榜 ----
+  const grp={};
+  Object.keys(last).forEach(k=>{
+    const r=last[k], g=String(r[4]||''); if(!g)return;
+    (grp[g]=grp[g]||[]).push(+r[9]||0);
+  });
+  const gRows=Object.keys(grp).sort((a,b)=>a-b).map(g=>{
+    const arr=grp[g], avg=Math.round(arr.reduce((x,y)=>x+y,0)/arr.length);
+    return {g:g,n:arr.length,avg:avg};
+  }).sort((a,b)=>b.avg-a.avg);
+  document.getElementById('tGroup').innerHTML = gRows.length ?
+    '<table class="t-tbl"><tr><th>#</th><th>组</th><th>已练人数</th><th>平均正确率</th></tr>'+
+    gRows.map((x,i)=>'<tr><td>'+(i+1)+'</td><td>第'+x.g+'组</td><td>'+x.n+'</td><td><b>'+x.avg+'%</b></td></tr>').join('')+
+    '</table>' : '<span style="color:#b2bec3">名单里还没有组号，可在教师看板分组</span>';
+}
+function copyWeakChars(){
+  const rank=window.__weak||[];
+  if(!rank.length){alert('还没有错误数据');return;}
+  const cls=document.getElementById('tClsSel').value;
+  const t='【'+cls+' 重点复习字表】（'+todayStr()+'）\n'+
+    rank.map((x,i)=>(i+1)+'. '+x.w+'（'+x.py+'）　错误率 '+Math.round(x.bad/x.att*100)+'%').join('\n');
+  navigator.clipboard.writeText(t).then(()=>alert('✅ 已复制')).catch(()=>alert(t));
+}
+
+// ---- 听写清单（不需要密码）----
+function renderTeacher(){
+  try{
+    const sp=sessionStorage.getItem('hzld_tpin');
+    if(sp&&!T_PIN){ document.getElementById('pinIn').value=sp; teacherLogin(); }
+  }catch(e){}
   const sel=getCurrentSelUnits();
   const words=sel.flatMap(u=>wordBank[u]||[]);
   const list=document.getElementById('dictationList');
@@ -1871,21 +2284,11 @@ function renderTeacher(){
   ).join('');
 }
 function copyDictation(){
-  const gradeKey=document.getElementById('gradeSelect').value;
-  const grade=gradeKey==='S1'?'中一':'中二';
   const sel=getCurrentSelUnits();
   const words=sel.flatMap(u=>wordBank[u]||[]);
-  // 范围名称：若选了具体某课则显示课名，否则按单元
-  let rangeName;
-  if(currentLessonKey&&currentLessonKey!=='all'){
-    const pk=parseUnitKey(currentLessonKey);
-    rangeName='单元'+unitNumLabel(pk.unitNum)+LESSON_NAMES[pk.lessonNum];
-  }else{
-    const unitNums=[...new Set(sel.map(u=>parseUnitKey(u).unitNum))].sort((a,b)=>a-b);
-    rangeName=unitNums.map(n=>'单元'+unitNumLabel(n)).join('、');
-  }
-  const text=`【${grade}${rangeName}听写清单】\n`+words.map((item,i)=>`${i+1}. ${item.w}（${item.py}）— ${item.vocab}`).join('\n');
-  navigator.clipboard.writeText(text).then(()=>alert('✅ 已复制！可直接粘贴到家长群')).catch(()=>alert(text));
+  if(!words.length){alert('请先在游戏页选好课文');return;}
+  const text=`【${rangeText()} 听写清单】\n`+words.map((item,i)=>`${i+1}. ${item.w}（${item.py}）— ${item.vocab}`).join('\n');
+  navigator.clipboard.writeText(text).then(()=>alert('✅ 已复制')).catch(()=>alert(text));
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1914,6 +2317,9 @@ window.onload=()=>{
   score=ls.get(SK.score)||0;
   document.getElementById('scoreVal').innerText=score;
   checkPlayerName();updateUnits();updateErrorBadge();
+  setTimeout(flushPending,1500);
+  const pl=document.getElementById('playerLabel');
+  if(pl)pl.onclick=()=>{ if(confirm('要换成另一个同学吗？（会清掉这台机器上的登录）'))switchStudent(); };
 };
 </script>
 </body>
