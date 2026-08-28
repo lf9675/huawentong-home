@@ -109,7 +109,7 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
 <div class="top">
   <div class="progress">
     <div class="pstep on" data-s="open"><div class="dot">开</div><div class="label">开头</div></div><div class="pbar"></div>
-    <div class="pstep" data-s="end"><div class="dot">结</div><div class="label">结尾四步</div></div><div class="pbar"></div>
+    <div class="pstep" data-s="end"><div class="dot">结</div><div class="label">结尾三层</div></div><div class="pbar"></div>
     <div class="pstep" data-s="transfer"><div class="dot">迁</div><div class="label">动笔迁移</div></div>
   </div>
   <div class="statusbar"><span>课堂状态：<span class="status" id="status">准备开始</span></span><span class="pill" id="modePill">课堂模式</span></div>
@@ -120,7 +120,7 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
 <div class="hero">
   <div class="eyebrow">SECONDARY 2 · WRITING SKILLS · ENGAGED LEARNING</div>
   <h1>中二三题共用 · 写作技能训练</h1>
-  <p class="sub">不背范文。三道题放在一起，同一套方法反复迁移：<b>开头「快、扣、带」</b>、<b>结尾「看见 → 感到 → 明白 → 带走」</b>。</p>
+  <p class="sub">不背范文。三道题反复迁移同一套骨架：<b>开头先做到「扣题＋进事」</b>，再追求简洁；<b>结尾先做到「回＋感＋悟」</b>，「带走」是提升挑战。</p>
   <div class="meta">
     <input id="stuName" placeholder="姓名">
     <input id="stuClass" placeholder="班级，例 201">
@@ -143,17 +143,17 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
 <!-- ==================== 模块一 ==================== -->
 <section class="stage" id="open">
   <p class="kicker">MODULE 1 · 开头</p>
-  <h2>开头还是三个字：快、扣、带</h2>
-  <p class="lead">中一学过，中二不变。变的是「扣」什么——三道题的「原来的状态」各不相同。</p>
+  <h2>开头先做到两件事：扣题＋进事</h2>
+  <p class="lead">先写得对，再写得好。<span class="red">扣题＋进事＝基本达标</span>；背景简洁、保留故事张力＝进一步提升。</p>
 
   <div class="method">
-    <div class="m"><b>快</b><span>两三句进入主事件，不写长篇天气、早餐、场地布置。</span></div>
-    <div class="m"><b>扣</b><span>开头就让读者看见<span class="red">原来的状态</span>。</span></div>
-    <div class="m"><b>带</b><span>最后一句把读者带到<span class="red">真正改变我的那件事</span>。</span></div>
+    <div class="m"><b>⭐ 快</b><span>提升项：背景简洁。天气、早餐等描写如果对后文有用，可以保留；没作用才删。</span></div>
+    <div class="m"><b>① 扣</b><span><span class="red">必修</span>：让读者看见事情发生前「原来的我」是什么状态。</span></div>
+    <div class="m"><b>② 进</b><span><span class="red">必修</span>：尽快进入一件具体事情，让故事真正开始。</span></div>
   </div>
 
   <table class="cmp">
-    <tr><th style="width:120px">题目</th><th>「扣」的原来状态</th><th>「带」出的那件事</th></tr>
+    <tr><th style="width:120px">题目</th><th>先「扣」原来状态</th><th>再「进」具体事情</th></tr>
     <tr><td class="k">A 内向</td><td>我话少、习惯站在人群后面</td><td>一次校内活动</td></tr>
     <tr><td class="k">B 对不起朋友</td><td>伤害已经发生、关系变僵</td><td>一次不得不再合作的机会</td></tr>
     <tr><td class="k">C 社区温情</td><td>我觉得社区活动与我无关</td><td>一次邻里活动</td></tr>
@@ -184,8 +184,8 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
   <div id="communityOpenQ"></div>
 
   <div class="writebox">
-    <h4>小练笔：任选一题，写 45–85 字开头</h4>
-    <p style="font-size:14px;color:var(--soft);margin:0 0 9px">选一题，题目会显示在下面。写完按检查。</p>
+    <h4>小练笔：任选一题，写一个开头</h4>
+    <p style="font-size:14px;color:var(--soft);margin:0 0 9px">建议 40–80 字，但不靠字数过关。先做到：<b>原来的我＋事情开始</b>。写完按「请老师式检查」。</p>
     <select id="openTopic">
       <option value="introvert">A 内向也能贡献力量</option>
       <option value="friend">B 对不起朋友</option>
@@ -194,7 +194,7 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
     <div class="recall" id="openRecall"></div>
     <textarea id="openWrite" rows="4"></textarea>
     <div class="counter" id="openCount">0 字</div>
-    <div class="acts"><button class="btn blue" id="checkOpenWrite">检查方法</button></div>
+    <div class="acts"><button class="btn blue" id="checkOpenWrite">请老师式检查</button></div>
     <div class="fb" id="openSmart"></div>
   </div>
 
@@ -212,26 +212,26 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
 <!-- ==================== 模块二 ==================== -->
 <section class="stage locked" id="end">
   <p class="kicker">MODULE 2 · 结尾＋抒情议论</p>
-  <h2>一条线写到底：看见 → 感到 → 明白 → 带走</h2>
-  <p class="lead">抒情议论不是另外一段，它<span class="red">就是结尾</span>。三道题共用同一条线。</p>
+  <h2>结尾先学三层：回 → 感 → 悟</h2>
+  <p class="lead"><span class="red">回＋感＋悟＝基本达标</span>；写出具体画面、身体反应或「以后我会……」属于提升，不必为了公式硬凑四句。</p>
 
   <div class="steps4">
-    <div class="s"><span class="n">STEP 1</span><b>看见</b><span>回到事件里一个<b>具体画面、动作或一句话</b>。</span></div>
-    <div class="s"><span class="n">STEP 2</span><b>感到</b><span>当时<b>真实的感受</b>。可长可短，不必硬凑。</span></div>
-    <div class="s key"><span class="n">STEP 3</span><b>明白</b><span>我<b>为什么</b>会这样感受？我<b>发现了什么</b>？</span></div>
-    <div class="s"><span class="n">STEP 4</span><b>带走</b><span>这件事以后<b>怎样影响我</b>？</span></div>
+    <div class="s"><span class="n">STEP 1</span><b>回</b><span>回到刚才那件事。能用一个具体画面、动作或一句话，会更有力量。</span></div>
+    <div class="s"><span class="n">STEP 2</span><b>感</b><span><span class="red">必修</span>：写事情结束后真实的感受。直接写「开心／后悔／感动」也可以，再逐步写具体。</span></div>
+    <div class="s key"><span class="n">STEP 3</span><b>悟</b><span><span class="red">必修</span>：这件事让我发现了什么？它怎样改变我原来的看法？</span></div>
+    <div class="s"><span class="n">⭐ CHALLENGE</span><b>带走</b><span>提升项：如果自然，再写这件事以后我会怎样做。没有这一句也可以是完整结尾。</span></div>
   </div>
 
   <div class="fb show good speak-block" id="tipKey"
-       data-main="第三步「明白」是全课的分水岭。"
-       data-say="第三步明白，是全课的分水岭。中二最常见的问题不是没有感情，而是感情停在标签上。我很后悔、我很感动、我很开心，这些只是情绪。明白这一步要回答：我为什么会这样感受？这件事让我发现了什么？"
-       data-more="中二最常见的问题不是没有感情，而是<span class='red'>感情停在标签上</span>。<br>「我很后悔／我很感动／我很开心」都只是情绪。<br>「明白」要回答：我<b>为什么</b>会这样感受？这件事让我<b>发现了什么</b>？"
+       data-main="「悟」是结尾真正要练的核心。"
+       data-say="我很后悔、我很感动、我很开心，这些感受都没有错，是合格的起点。中二要再往前走一步：这件事为什么让我这样感受？它让我发现了什么？这就是悟。"
+       data-more="「我很后悔／我很感动／我很开心」<b>可以写</b>，这是基础。<br>想写得更好，再补一层：我为什么会这样感受？这件事让我<b>发现了什么</b>？"
        data-en="Step 3 is the dividing line. The usual problem is not a lack of feeling but feeling that stops at a label — “I regretted it”, “I was moved”. Step 3 must answer: why did I feel that, and what did I discover?"></div>
 
-  <div class="substep"><span class="n">2A</span> 第一步「看见」：哪一句真正回到事件？</div>
+  <div class="substep"><span class="n">2A</span> 第一层「回」：哪一句回到事件更具体？</div>
   <div id="seeList"></div>
 
-  <div class="substep"><span class="n">2B</span> 第二步「感到」：感受要真，不要只贴标签</div>
+  <div class="substep"><span class="n">2B</span> 第二层「感」：两句都能表达感受，哪一句更具体？</div>
   <div id="feelList"></div>
 
   <div class="checkpoint" id="cpDivide">
@@ -239,34 +239,34 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
     <div class="oral" id="oralDivide"></div>
     <div class="unlock">
       <input id="codeDivide" placeholder="老师给的口令" inputmode="numeric">
-      <button class="btn main" id="unlockDivide">解锁「明白」和「带走」</button>
+      <button class="btn main" id="unlockDivide">解锁「悟」和提升挑战</button>
       <span id="msgDivide" style="color:var(--bad);font-weight:700"></span>
     </div>
   </div>
 
   <div id="afterDivide" class="sub-lock" style="margin-top:22px">
 
-    <div class="substep"><span class="n">2C</span> 第三步「明白」：真正的分水岭</div>
+    <div class="substep"><span class="n">2C</span> 第三层「悟」：从感受到发现</div>
     <div id="understandList"></div>
 
-    <div class="substep"><span class="n">2D</span> 第四步「带走」：只写我真正带走的东西</div>
+    <div class="substep"><span class="n">2D</span> ⭐ 提升挑战「带走」：自然就写，不必硬凑</div>
     <div class="fb show good speak-block" id="tipTake"
-         data-main="「带走」不写「大家都应该……」。"
-         data-say="带走不写大家都应该怎样。落点要回到自己：以后我会怎样做，怎样看待自己或别人。一写大家都应该，就变成对全世界训话，读者立刻感觉到假。"
-         data-more="落点回到<span class='red'>自己</span>：以后我会怎样做、怎样看待自己或别人。<br>一写「大家都应该」，就变成对全世界训话，读者立刻感觉到假。"
+         data-main="「带走」是加分项，不是过关条件。"
+         data-say="如果结尾已经写清感受和发现，就可以完整结束。还有余力，再写以后我会怎样做。写的时候尽量回到自己，而不是对大家喊口号。"
+         data-more="基本结尾做到「感＋悟」已经可以。<br>如果自然，再把落点回到<span class='red'>自己</span>：以后我会怎样做、怎样看待自己或别人。"
          data-en="“Take away” never says “everyone should…”. Bring it back to yourself: what you will do, or how you will see yourself and others from now on. Preaching to everyone reads as fake."></div>
     <div id="takeList"></div>
 
-    <div class="substep"><span class="n">2E</span> 整段结尾：把四步排成正确顺序</div>
+    <div class="substep"><span class="n">2E</span> 看一种完整写法：把「回 → 感 → 悟 → 带走」排顺（不是硬公式）</div>
     <div class="recall"><b>题目 B</b>你曾经做过对不起朋友的一件事。后来，你积极地做了补救，终于挽回彼此的关系。</div>
     <div class="sorter" id="endingSorter"></div>
-    <div class="acts"><button class="btn blue" id="checkEndingSort">检查四步顺序</button></div>
+    <div class="acts"><button class="btn blue" id="checkEndingSort">检查顺序</button></div>
     <div class="fb" id="endingSortFb"></div>
 
     <div class="writebox">
-      <h4>四步写作：任选一题，写 90–150 字结尾</h4>
+      <h4>小练笔：任选一题，写一个结尾</h4>
       <p style="font-size:14px;color:var(--soft);margin:0 0 9px">
-        不要求机械四句。可以把「看见＋感到」合在一句里，但<span class="red">一定要有「明白」和「带走」</span>。</p>
+        建议 60–120 字，但不靠字数过关。先做到<span class="red">「感＋悟」</span>；「回」帮助衔接，「带走」是提升挑战。</p>
       <select id="endTopic">
         <option value="introvert">A 内向也能贡献力量</option>
         <option value="friend">B 对不起朋友</option>
@@ -275,7 +275,7 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
       <div class="recall" id="endRecall"></div>
       <textarea id="endWrite" rows="6"></textarea>
       <div class="counter" id="endCount">0 字</div>
-      <div class="acts"><button class="btn blue" id="checkEndWrite">检查四步</button></div>
+      <div class="acts"><button class="btn blue" id="checkEndWrite">请老师式检查</button></div>
       <div class="fb" id="endSmart"></div>
     </div>
 
@@ -312,14 +312,14 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
       <tr><th>写结尾</th><td id="tipEnd"></td></tr>
     </table>
     <p style="font-size:14px;color:var(--soft);margin:11px 0 0">
-      建议时间：开头 4 分钟（45–90 字），结尾 7 分钟（90–160 字）。写完举手，和同桌交换稿纸。</p>
+      建议时间：开头 4 分钟（约 40–80 字），结尾 7 分钟（约 60–120 字）。字数只是参考，先把意思写完整。写完举手，和同桌交换稿纸。</p>
   </div>
 
   <div id="peerBox" style="display:none">
     <div class="substep"><span class="n">互评</span> 交换稿纸，帮同桌逐条判断</div>
     <div class="checklist" id="checklist"></div>
     <p style="font-size:13.5px;color:var(--soft);margin-top:10px">
-      六条都做出判断后，才能查看学习记录。<span class="red">点「还没」不扣分</span>——找出问题正是这一步的目的。</p>
+      四项基本能力＋两项提升能力都做出判断后，就能查看学习记录。<span class="red">点「还没」不扣分</span>——找出下一步怎么改，才是互评的目的。</p>
     <div class="acts"><button class="btn main" id="finish" disabled>完成 · 看学习记录</button></div>
   </div>
 </section>
@@ -517,7 +517,7 @@ $('openCompare').querySelectorAll('button').forEach((b,j)=>b.addEventListener('c
   }
 }));
 
-mcq($('communityOpenQ'),'写《社区温情》，哪个开头最符合「快、扣、带」？',[
+mcq($('communityOpenQ'),'写《社区温情》，哪个开头做到「扣题＋进事」，而且比较简洁？',[
  '星期六早上天气很好，楼下张灯结彩，摆着很多美食。我和妈妈吃过早餐后就下楼参加活动。',
  '我一直觉得社区活动离自己很远：邻居之间不过是在电梯里点头而过，参加活动也只是浪费周末。直到上个月那场邻里活动，我才第一次真正走进他们中间。',
  '社区是我们共同生活的地方，所以每个人都应该积极参与社区活动。',
@@ -526,42 +526,50 @@ mcq($('communityOpenQ'),'写《社区温情》，哪个开头最符合「快、�
  '活动布置写了不少，但「我原本不热衷」的状态还没出现。','',
  '这是议论，不是把读者带进一次具体事件。','题目说「我不太热衷」，这里已经和题目冲突。'
 ],{
- main:'先扣「不太热衷」，再带进一次具体活动。',
+ main:'先扣「不太热衷」，再进入一次具体活动。',
  more:'开头就把<span class="red">原来的态度</span>写清楚，后面「感受到温情」的转变才有落差。',
  en:'It hooks the “not keen” starting attitude first, then brings the reader into one specific event. Establishing the old attitude is what makes the later change feel like a change.',
- say:'这个开头先扣住了我不太热衷这个原来的态度，再带进一次具体的邻里活动。开头就把原来的态度写清楚，后面感受到温情的转变才有落差。'
+ say:'这个开头先扣住了我不太热衷这个原来的态度，再进入一次具体的邻里活动。开头把原来的态度写清楚，后面感受到温情的转变才有落差。'
 });
 
 $('checkOpenWrite').addEventListener('click',()=>{
   const t=$('openWrite').value.trim(),topic=$('openTopic').value,box=$('openSmart');
-  if(!t){alert('先写开头。');return}
-  const event=/最近|上周|上星期|那天|一次|活动|义卖|比赛|小组|邻里|社区|合作/.test(t);
+  if(!t){alert('先写一个开头草稿。');return}
+
+  // 这里只做“老师式提醒”，不做机器判卷。学生可以用任何合理的同义表达。
+  const event=/那天|那次|后来|直到|突然|老师|同学|朋友|妈妈|邻居|活动|义卖|比赛|小组|合作|社区|楼下|学校|课间|放学|周末|星期/.test(t);
   let key=false;
-  if(topic==='introvert')key=/内向|害羞|不敢|躲|安静|话少|人群后/.test(t);
-  if(topic==='friend')key=/朋友|对不起|伤害|误会|不敢看|疏远|关系|那句话/.test(t);
-  if(topic==='community')key=/不热衷|没兴趣|无聊|浪费|不熟|与我无关|离自己很远|社区/.test(t);
-  const fluff=/阳光明媚|鸟儿|风和日丽|吃过早餐|吃完早餐/.test(t);
-  const spoil=/我明白了|终于明白|我懂得了|大家都应该|一定要/.test(t);
-  const len=t.length,ok=key&&event&&!fluff&&!spoil&&len>=35&&len<=115;
-  const miss=[!key?'原来的状态还没出现':null,!event?'还没带进一件具体的事':null,
-              fluff?'砍掉天气／早餐':null,spoil?'把结论提前说完了，删掉':null,
-              len<35?'太短，补到 45 字以上':null,len>115?'太长，控制在 85 字左右':null].filter(Boolean);
-  const disc='系统只看关键词有没有出现，<b>写得好不好要看老师和同伴</b>。你用别的说法也可以，举手问老师。';
-  if(ok)fbox(box,true,'「快、扣、带」到位，也没有提前说破结论。',disc,
-    'Fast, hooked and leading in — and you have not given away the ending. Note: the checker only looks for keywords; your teacher and partner judge the writing.',
-    '快、扣、带都到位了，也没有提前说破结论。要注意，系统只看关键词有没有出现，写得好不好要看老师和同伴。');
-  else fbox(box,false,'再补：'+miss.join('；')+'。',disc,
-    'Still missing: '+miss.join('; ')+'. Note: the checker only looks for keywords; your teacher and partner judge the writing.',
-    '再补上：'+miss.join('，')+'。系统只看关键词有没有出现，写得好不好要看老师和同伴。');
-  if(ok){$('cpOpen').classList.add('show');
-    $('oralOpen').textContent=pick([
-      '为什么开头最好不要提前写「我终于明白……」？',
-      '「快」不等于一句话。怎样判断一句背景该留还是该砍？',
-      '三道题的开头都要写「原来的状态」，三个状态分别是什么？'])}
+  if(topic==='introvert')key=/内向|害羞|不敢|不主动|很少说|少说|话少|沉默|安静|躲|退缩|站在.*后|低着头|不爱说/.test(t);
+  if(topic==='friend')key=/朋友|对不起|伤害|误会|争吵|吵架|疏远|冷淡|不理|不敢看|关系|那句话|做错/.test(t);
+  if(topic==='community')key=/不热衷|没兴趣|不想参加|不愿参加|无聊|麻烦|浪费|不熟|陌生|与我无关|没关系|社区活动|邻里活动/.test(t);
+
+  const fluff=/阳光明媚|鸟儿.*唱|风和日丽|吃过早餐|吃完早餐/.test(t);
+  const spoil=/我明白了|终于明白|我懂得了|我意识到|我学会了/.test(t);
+  const tips=[];
+
+  if(!key)tips.push('系统暂时没有识别到「原来的我」。如果你已经用自己的话写出了原来的状态，就不用为了机器改词；否则可以补一句。');
+  if(!event)tips.push('看看是否已经进入一件具体事情。如果还停在介绍背景，可以再补一句「事情怎样开始」。');
+  if(fluff)tips.push('你写到了天气／早餐。它们不是错误：如果后文用得上就保留；如果跟故事无关，再考虑删掉。');
+  if(spoil)tips.push('你已经提前写出认识。这也不是错误；如果想保留故事张力，可以把这层认识移到结尾。');
+  if(t.length>100)tips.push('篇幅稍长，可以看看有没有一句背景删掉后故事仍然完整。');
+  if(t.length<30)tips.push('篇幅比较短。如果「原来的我＋事情开始」已经清楚，可以保留；不清楚再补一句。');
+
+  const main=(key&&event)?'🟢 已达标：读者看得到「原来的我」，故事也已经开始。':'🟢 开头草稿完成，可以继续。请用下面的提醒做一次自查。';
+  const more=(tips.length?('下一步建议：<br>· '+tips.join('<br>· ')):'两个基本动作都很清楚。⭐ 想再提升，可以检查：背景是否简洁？有没有把结论说得太早？')+
+    '<br><br><b>重要：</b>系统只提供形式提醒，不会因为你没写某个关键词就判你不合格。';
+  fbox(box,true,main,more,
+    'Draft complete. The checker gives coaching tips only; it does not grade your Chinese or require fixed keywords.',
+    '开头草稿完成，可以继续。系统只提供老师式提醒，不要求固定关键词。先检查有没有写出原来的我，再检查事情有没有真正开始。');
+
+  $('cpOpen').classList.add('show');
+  $('oralOpen').textContent=pick([
+    '开头最基本的两件事是什么？',
+    '天气描写是不是一定要删？怎样判断它有没有用？',
+    '如果开头已经写出「我终于明白……」，一定算错吗？怎样改会更有张力？']);
 });
 $('unlockOpen').addEventListener('click',()=>{
   if(!SELF&&$('codeOpen').value.trim()!==CODES.open){$('msgOpen').textContent='口令不对，先听老师讲评。';return}
-  doneStep('open');$('end').classList.remove('locked');setOn('end');setStatus('结尾训练 · 看见与感到');
+  doneStep('open');$('end').classList.remove('locked');setOn('end');setStatus('结尾训练 · 回与感');
   $('end').scrollIntoView({behavior:'smooth'});
 });
 
@@ -600,28 +608,28 @@ const SEEQS=[
 SEEQS.forEach(q=>mcq($('seeList'),q[0],q[1],q[2],q[3],q[4]));
 
 const FEELQS=[
- ['<b>题目 A</b>：哪一句「感到」更真实？',[
+ ['<b>题目 A</b>：两句都能表达感受，哪一句更具体、更有画面？',[
    '我非常开心，也非常感动。',
    '站到摊位前开口招呼第一位顾客时，我的声音还有些发紧；可听见同伴说「谢谢你来帮忙」，我忽然松了一口气。'
- ],1,['情绪词有了，但缺少身体反应和触发感受的原因。',''],
+ ],1,['这句没有错，是基础表达；再找一句写得更具体的。',''],
  {main:'有身体反应，也有触发点。',
   more:'「声音发紧」是身体反应，「听见同伴说谢谢」是触发点。<span class="red">这两样一有，情绪就不再是标签。</span>',
   en:'There is a physical reaction and a trigger: the tight voice, and hearing a teammate say thank you. Once you have both, the emotion stops being a label.',
   say:'这一句有身体反应，也有触发点。声音发紧是身体反应，听见同伴说谢谢是触发点。这两样一有，情绪就不再是一个标签。'}],
 
- ['<b>题目 B</b>：补救成功后，哪一种感受更贴合前面的经历？',[
+ ['<b>题目 B</b>：两句都可以，哪一句把复杂感受写得更充分？',[
    '我开心极了，因为我们终于和好了。',
    '她重新像从前那样和我说话时，我先是一阵轻松，紧接着又有些惭愧——这份来之不易的信任，原来真的曾被我亲手伤过。'
- ],1,['只写「开心」太单一。前面还有愧疚、紧张、珍惜等复杂感受。',''],
+ ],1,['「开心」可以写；另一句把轻松和惭愧叠在一起，更贴合前面的经历。',''],
  {main:'轻松之后又惭愧——两种感受叠在一起。',
   more:'伤害过朋友再挽回，心情本来就不会只有开心。<span class="red">写出矛盾的两种感受，比写一种更真。</span>',
   en:'Relief, then shame — two feelings layered together. After hurting a friend and winning them back, the mood is never simply happy. Writing the conflicting pair is more honest than writing one.',
   say:'轻松之后又惭愧，两种感受叠在一起。伤害过朋友再挽回，心情本来就不会只有开心。写出矛盾的两种感受，比写一种更真实。'}],
 
- ['<b>题目 C</b>：哪一句没有「喊温暖」？',[
+ ['<b>题目 C</b>：哪一句不用直接说「温暖」，也能让读者感受到温情？',[
    '我觉得社区真的非常温暖，我特别感动。',
    '阿姨把毛巾塞到我手里，又往旁边挪了个位子让我坐下。那一刻，我原本一直绷着的肩膀慢慢放松下来。'
- ],1,['「温暖、感动」只是标签，还没让读者感觉到。',''],
+ ],1,['这句意思正确，但比较概括；再找一句用动作或身体反应来表现。',''],
  {main:'不说「温暖」，让读者自己感觉到温暖。',
   more:'「肩膀放松下来」写的是身体，读者却读到了心情。<span class="red">情绪词说得越少，感受反而越强。</span>',
   en:'It never says “warm”, yet the reader feels it. “My shoulders relaxed” describes the body, but the reader reads the mood. The fewer emotion words, the stronger the feeling.',
@@ -636,13 +644,13 @@ FEELQS.forEach(q=>mcq($('feelList'),q[0],q[1],q[2],q[3],q[4],()=>{
       '「我很后悔」和「我明白自己为什么会后悔」，差在哪里？',
       '为什么「感到」不能代替「明白」？',
       '把「我很感动」往前推一步：你到底发现了什么，才会感动？']);
-    setStatus('停在分水岭 · 感到 ≠ 明白');
+    setStatus('停靠点 · 从感受到悟');
   }
 }));
 
 $('unlockDivide').addEventListener('click',()=>{
   if(!SELF&&$('codeDivide').value.trim()!==CODES.divide){$('msgDivide').textContent='口令不对，先参与全班讨论。';return}
-  $('afterDivide').classList.remove('sub-lock');setStatus('结尾训练 · 明白与带走');
+  $('afterDivide').classList.remove('sub-lock');setStatus('结尾训练 · 悟与提升挑战');
   $('afterDivide').scrollIntoView({behavior:'smooth'});
 });
 
@@ -739,16 +747,16 @@ const endSort=sortable('endingSorter',ENDING);let eTry=0;
 $('checkEndingSort').addEventListener('click',()=>{
   eTry++;const ok=endSort.get().join(',')==='0,1,2,3';
   if(ok){eTry===1?stats.first++:stats.revised++;endSort.lock();
-    fbox($('endingSortFb'),true,'看见 → 感到 → 明白 → 带走，全对。',
-      '四句连起来读一遍：<span class="red">四步顺着心理发展走</span>，道理是从故事里长出来的，不是加上去的。',
+    fbox($('endingSortFb'),true,'这一种顺序很自然：回 → 感 → 悟 → 带走。',
+      '这是一个好用的支架，不是必须照抄的四句公式。核心仍然是：感受清楚、发现扣题。',
       'See → Feel → Understand → Take away. Read the four lines together: they follow the emotional arc, so the lesson grows out of the story instead of being tacked on.',
-      '看见，感到，明白，带走，全对。四句连起来读一遍，四步顺着心理发展走，道理是从故事里长出来的，不是加上去的。');
+      '这一种顺序很自然：回，感，悟，带走。但它只是支架，不是必须照抄的四句公式。');
     $('checkEndingSort').disabled=true}
   else if(eTry===1){
-    fbox($('endingSortFb'),false,'先回到一个看得见的动作。',
-      '看得见的动作 → 感受紧跟其后 → 「为什么」在第三步 → 最后才写以后。',
+    fbox($('endingSortFb'),false,'试试让心理发展更顺。',
+      '可以试：回到事情 → 写感受 → 写发现 → 如果自然，再写以后。',
       'Start with a visible action, let the feeling follow, put the “why” third, and save what happens from now on for last.',
-      '先回到一个看得见的动作，感受紧跟其后，为什么放在第三步，最后才写以后。');
+      '可以试试：先回到事情，再写感受和发现；如果自然，最后再写以后。');
   }
   else{stats.revealed++;endSort.set([0,1,2,3]);endSort.lock();
     fbox($('endingSortFb'),true,'已排成正确顺序（蓝色）。',
@@ -759,46 +767,43 @@ $('checkEndingSort').addEventListener('click',()=>{
 });
 
 function analyzeEnding(t,topic){
-  const see=/看着|看见|听见|她|他|阿姨|叔叔|同学|朋友|递|放|笑|说|拍|扶|搬|低头|背影|捡|塞/.test(t);
-  const feel=/轻松|惭愧|后悔|感动|紧张|松了|心里|胸口|暖|庆幸|自豪|踏实|放松|发紧/.test(t);
-  let understand=false,take=false;
-  if(topic==='introvert'){
-    understand=/明白|发现|原来|意识|才知道/.test(t)&&/内向|贡献|力量|参与|集体|能做|第一步|话少/.test(t);
-    take=/以后|从那以后|下次|再遇到|我会|愿意/.test(t)&&/参与|尝试|承担|帮|走出|贡献|试/.test(t);
-  }
-  if(topic==='friend'){
-    understand=/明白|发现|原来|意识|才知道/.test(t)&&/补救|责任|伤害|信任|原谅|行动|道歉|承担/.test(t);
-    take=/以后|从那以后|下次|我会|再/.test(t)&&/朋友|责任|补救|言语|道歉|伤害|承担/.test(t);
-  }
-  if(topic==='community'){
-    understand=/明白|发现|原来|意识|才知道/.test(t)&&/社区|温情|邻居|关心|互助|照应|伸手/.test(t);
-    take=/以后|从那以后|有机会|我会|愿意/.test(t)&&/社区|参加|邻居|帮助|伸手|活动|走出/.test(t);
-  }
+  const back=/活动结束|结束时|最后|后来|那一刻|这时|看着|看见|听见|想起|她|他|阿姨|叔叔|同学|朋友|递|放|笑|说|拍|扶|搬|背影|捡|塞/.test(t);
+  const feel=/开心|高兴|轻松|惭愧|后悔|感动|紧张|难过|温暖|暖|庆幸|自豪|踏实|放松|松了|心里|胸口|鼻子|眼眶|发紧/.test(t);
+  const insightWord=/明白|发现|原来|意识|懂得|才知道|让我知道|让我看到|不再觉得|开始觉得|其实|并不是|而是/.test(t);
+  let theme=false;
+  if(topic==='introvert')theme=/内向|话少|贡献|力量|参与|集体|帮助|能做|第一步|站在前面|自己的方式/.test(t);
+  if(topic==='friend')theme=/朋友|补救|责任|伤害|信任|原谅|行动|道歉|承担|关系|错误/.test(t);
+  if(topic==='community')theme=/社区|温情|邻居|关心|互助|照应|帮助|伸手|陌生人|邻里/.test(t);
+  const take=/以后|从那以后|下次|再遇到|有机会|我会|我愿意|我不再|我也会/.test(t);
   const preach=/大家都应该|所有人都应该|我们每个人都必须|人人都应该|大家以后都应该/.test(t);
-  return {see,feel,understand,take,preach,ok:see&&understand&&take&&!preach&&t.length>=70};
+  return {back,feel,insight:insightWord&&theme,take,preach};
 }
 $('checkEndWrite').addEventListener('click',()=>{
   const t=$('endWrite').value.trim(),topic=$('endTopic').value,box=$('endSmart');
-  if(!t){alert('先写结尾。');return}
-  const a=analyzeEnding(t,topic),miss=[];
-  if(!a.see)miss.push('① 看见：具体画面或动作');
-  if(!a.feel)miss.push('② 感到：真实感受（可短）');
-  if(!a.understand)miss.push('③ 明白：回答「为什么」');
-  if(!a.take)miss.push('④ 带走：以后怎样影响我');
-  if(a.preach)miss.push('删掉「大家都应该」的口号');
-  if(t.length<70)miss.push('太短，补到 90 字以上');
-  const disc='系统只看四步的标志词在不在，<b>写得好不好要看老师和同伴</b>。用别的说法也可以，举手问老师。';
-  if(a.ok)fbox(box,true,'四步一条线完整，落点回到自己。',disc,
-    'The four steps are all there and it lands back on you. Note: the checker only looks for marker words; your teacher and partner judge the writing.',
-    '四步一条线完整，落点也回到了自己。要注意，系统只看四步的标志词在不在，写得好不好要看老师和同伴。');
-  else fbox(box,false,'继续修改：'+miss.join('；')+'。',disc,
-    'Keep revising: '+miss.join('; ')+'. Note: the checker only looks for marker words; your teacher and partner judge the writing.',
-    '继续修改：'+miss.join('，')+'。系统只看四步的标志词在不在，写得好不好要看老师和同伴。');
-  if(a.ok){$('cpEnd').classList.add('show');
-    $('oralEnd').textContent=pick([
-      '「带走」和「升华」相比，为什么更不容易写成口号？',
-      '四步是不是一定要写成四句话？哪两步可以合在一句里？',
-      '如果结尾只有「看见＋感到」，读者会觉得缺少什么？'])}
+  if(!t){alert('先写一个结尾草稿。');return}
+  const a=analyzeEnding(t,topic),tips=[];
+
+  // 基本能力是“感＋悟”；“回”和“带走”是支架／提升，不作为机器硬性门槛。
+  if(!a.feel)tips.push('【感】系统暂时没识别到感受。如果你已经用自己的话写出感受，不必改词；否则可补一句当时心里怎样。');
+  if(!a.insight)tips.push('【悟】再自问一次：这件事让我发现了什么？它怎样改变我原来的看法？如果已经写到了，只是系统没识别，也可以继续。');
+  if(!a.back)tips.push('⭐【回】想写得更有力量，可以先回到事件里的一个动作、画面或一句话；这不是硬性要求。');
+  if(!a.take)tips.push('⭐【带走】还有余力，可以写以后我会怎样做；没有这一句也可以是完整结尾。');
+  if(a.preach)tips.push('你写到了「大家都应该……」。可以考虑改成「我以后会……」，让落点回到自己。');
+  if(t.length<50)tips.push('篇幅比较短。意思完整就可以；如果「感」或「悟」还没说清，再补一两句。');
+  if(t.length>140)tips.push('篇幅稍长，可以检查有没有重复感受或重复讲道理。');
+
+  const main=(a.feel&&a.insight)?'🟢 基本达标：「感＋悟」已经比较清楚。':'🟢 结尾草稿完成，可以继续。重点再自查「感＋悟」。';
+  const more=(tips.length?('下一步建议：<br>· '+tips.join('<br>· ')):'基本层已经清楚。⭐ 如果想冲得更好，可以加一个具体画面，或自然写出这件事以后怎样影响你。')+
+    '<br><br><b>重要：</b>系统不要求你写「明白、发现、以后」这些固定词，也不会靠字数决定过关。';
+  fbox(box,true,main,more,
+    'Draft complete. Focus on feeling plus insight. Scene details and a future take-away are optional upgrades, not pass/fail requirements.',
+    '结尾草稿完成，可以继续。最重要的是感受和发现。回到画面、写以后怎么做，都是提升项，不是硬性过关条件。');
+
+  $('cpEnd').classList.add('show');
+  $('oralEnd').textContent=pick([
+    '结尾最基本要做到哪两层？',
+    '「我很感动」可不可以写？怎样从基础表达再提升一步？',
+    '「带走」为什么是提升项，而不是每次都必须写？']);
 });
 $('unlockEnd').addEventListener('click',()=>{
   if(!SELF&&$('codeEnd').value.trim()!==CODES.end){$('msgEnd').textContent='口令不对，先听老师讲评。';return}
@@ -809,22 +814,22 @@ $('unlockEnd').addEventListener('click',()=>{
 /* ==================== 模块三 ==================== */
 const TOPICS={
  introvert:{title:'A · 内向也能贡献力量',text:QTEXT.introvert[1],
-   open:'扣住「我话少、习惯站在人群后面」，带出一次校内活动。',
-   end:'看见：同伴忙不过来的画面 ｜ 感到：声音发紧、后来松一口气 ｜ <span class="red">明白：贡献不一定要站在最前面</span> ｜ 带走：下次先看自己能承担什么'},
+   open:'<b>基本：</b>让读者看出「原来的我比较内向」＋尽快进入一次校内活动。<br><b>⭐提升：</b>背景简洁，不急着把最后的认识说完。',
+   end:'<b>基本：</b>写做出贡献后的感受＋发现「内向也能用自己的方式贡献力量」。<br><b>⭐提升：</b>回到一个活动画面；如果自然，再写以后愿意怎样尝试。'},
  friend:{title:'B · 对不起朋友',text:QTEXT.friend[1],
-   open:'扣住「伤害已发生、关系变僵」，带出一次不得不再合作的机会。',
-   end:'看见：她像从前一样的一个动作 ｜ 感到：轻松又惭愧 ｜ <span class="red">明白：「对不起」只是开始，补救要靠持续行动</span> ｜ 带走：以后先承担再补救'},
+   open:'<b>基本：</b>让读者知道伤害已经发生、关系变僵＋进入一次新的接触或合作。<br><b>⭐提升：</b>先别把「补救成功、终于和好」全部说完。',
+   end:'<b>基本：</b>写关系修复后的感受＋发现「道歉只是开始，补救还要靠行动」。<br><b>⭐提升：</b>用朋友一个小动作证明关系修复；自然的话再写以后怎样承担。'},
  community:{title:'C · 社区温情',text:QTEXT.community[1],
-   open:'扣住「社区活动与我无关」，带出一次邻里活动。',
-   end:'看见：有人为别人付出一点代价的动作 ｜ 感到：绷着的肩膀放松 ｜ <span class="red">明白：温情不来自热闹，来自有人愿意伸手</span> ｜ 带走：以后我也愿意伸手'}
+   open:'<b>基本：</b>让读者看出原本不热衷社区活动＋进入一次邻里活动。<br><b>⭐提升：</b>少写无用布置，把篇幅留给真正改变你的事情。',
+   end:'<b>基本：</b>写感受到温情后的感受＋发现「温情来自邻里愿意互相照应」。<br><b>⭐提升：</b>用一个帮助别人的动作让温情落地；自然的话再写以后自己的变化。'}
 };
 const CHECKS=[
- '开头两三句已经进入主事件，没有长篇无效背景。',
- '开头出现了题目的核心状态：内向 ／ 做错事 ／ 不热衷社区。',
- '<span class="red">开头没有把结论提前说完</span>（没有写「我终于明白……」）。',
- '结尾先回到一个具体画面或动作，而不是直接讲道理。',
- '<span class="red">「感到」和「明白」不是同一句意思；「明白」回答了「为什么」。</span>',
- '「带走」回到自己，没有变成「大家都应该……」的口号。'
+ '【基本 1】开头看得出事情发生前「原来的我」是什么状态。',
+ '【基本 2】开头已经进入一件具体事情，不只是在介绍背景。',
+ '【基本 3】结尾写出了事情后的真实感受。',
+ '【基本 4】结尾写出了这件事让我发现／改变了什么，而且回应题意。',
+ '【⭐ 提升】开头背景较简洁，没有急着把整件事和最后结论全部说完。',
+ '【⭐ 提升】结尾用了一个具体画面／动作，或自然写出了以后自己的变化。'
 ];
 let drawn=null;const ckState={};
 function setDraw(k){
@@ -852,20 +857,23 @@ function refreshFinish(){$('finish').disabled=Object.keys(ckState).length<CHECKS
 
 $('finish').addEventListener('click',()=>{
   if(!drawn){alert('先抽题。');return}
-  const notYet=CHECKS.map((c,i)=>ckState[i]===false?strip(c):null).filter(Boolean);
+  const basicNotYet=CHECKS.slice(0,4).map((c,i)=>ckState[i]===false?strip(c):null).filter(Boolean);
+  const starNotYet=CHECKS.slice(4).map((c,j)=>ckState[j+4]===false?strip(c):null).filter(Boolean);
   const T=TOPICS[drawn];
   $('result').innerHTML=
-   '<h2 style="font-family:var(--serif);margin-top:0">📘 我的中二写作技能记录</h2>'+
-   '<div class="process"><div class="p processBox"><b>'+stats.first+'</b><span>一次答对</span></div>'+
-   '<div class="p processBox"><b>'+stats.revised+'</b><span>根据提示修正</span></div>'+
-   '<div class="p processBox"><b>'+stats.revealed+'</b><span>二次后看答案</span></div></div>'+
-   '<div class="card"><h3>'+T.title+'</h3>'+
-   '<div class="row"><span class="k">开头方法</span><span>快（砍三刀）· 扣（原来的状态）· 带（改变我的那件事）</span></div>'+
-   '<div class="row"><span class="k">结尾四步</span><span>看见 → 感到 → <b style="color:var(--key)">明白</b> → 带走</span></div>'+
-   '<div class="row"><span class="k">互评结果</span><span>'+
-     (notYet.length?('还没做到 '+notYet.length+' 条：<br>· '+notYet.join('<br>· ')):'六条全部做到 ✅')+'</span></div>'+
-   '<div class="row"><span class="k">最该记住的</span><span>「感到」只是情绪；「明白」必须回答「为什么」；「带走」只写这件事以后怎样影响我。</span></div>'+
-   '<div class="row"><span class="k">课堂提醒</span><span>根据提示修正不算失败。能说清「为什么错、怎么改」，才是今天的学习成果。</span></div></div>'+
+   '<h2 style="font-family:var(--serif);margin-top:0">📘 我的中二写作技能记录</h2>'+ 
+   '<div class="process"><div class="p processBox"><b>'+stats.first+'</b><span>一次找到重点</span></div>'+ 
+   '<div class="p processBox"><b>'+stats.revised+'</b><span>根据提示修正</span></div>'+ 
+   '<div class="p processBox"><b>'+stats.revealed+'</b><span>二次后看提示答案</span></div></div>'+ 
+   '<div class="card"><h3>'+T.title+'</h3>'+ 
+   '<div class="row"><span class="k">开头基本功</span><span><b>扣题＋进事</b>。先写得对，再追求背景简洁和故事张力。</span></div>'+ 
+   '<div class="row"><span class="k">结尾基本功</span><span><b>感＋悟</b>。先有真实感受，再写这件事让我发现／改变了什么。</span></div>'+ 
+   '<div class="row"><span class="k">基本四项</span><span>'+ 
+     (basicNotYet.length?('还有 '+basicNotYet.length+' 项可继续修改：<br>· '+basicNotYet.join('<br>· ')):'四项基本能力全部做到 ✅')+'</span></div>'+ 
+   '<div class="row"><span class="k">⭐ 提升两项</span><span>'+ 
+     (starNotYet.length?('还有 '+starNotYet.length+' 项可以挑战：<br>· '+starNotYet.join('<br>· ')):'两项提升能力也做到了 ⭐')+'</span></div>'+ 
+   '<div class="row"><span class="k">最该记住的</span><span>写作支架是帮助你思考，不是固定公式。机器只给提醒；真正判断文章好不好，要看题意、内容和表达。</span></div>'+ 
+   '<div class="row"><span class="k">课堂提醒</span><span>根据提示修改不算失败。今天的目标是：知道自己已经做到什么，也知道下一步只改哪一件事。</span></div></div>'+ 
    '<div class="acts"><button class="btn line" onclick="window.print()">打印 / 存 PDF</button></div>';
   $('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth'});
   doneStep('transfer');setStatus('学习单完成');
