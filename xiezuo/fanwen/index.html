@@ -136,6 +136,105 @@ table.ref th,table.ref td{border:1px solid var(--line);padding:9px 10px;text-ali
 table.ref th{background:var(--ink);color:#fff;}
 table.ref td.t{font-weight:700;color:var(--red);white-space:nowrap;}
 
+/* ---- 经过排法示意图 ---- */
+.diagram{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--paper-tint);}
+.diagram .dg-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.diagram .dg-title{font-weight:800;font-size:14.5px;}
+.stairs{display:flex;align-items:flex-end;gap:7px;}
+.stairs .st{flex:1;min-width:0;border-radius:8px 8px 0 0;padding:8px 7px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;}
+.stairs .st b{font-size:13.5px;line-height:1.3;display:block;}
+.stairs .st i{font-style:normal;font-size:11px;opacity:.9;display:block;margin-top:4px;line-height:1.35;}
+.stairs .st .mk{font-size:15px;margin-bottom:4px;}
+.rise{display:flex;justify-content:space-between;align-items:center;border-top:2px solid var(--ink);padding-top:6px;margin-top:0;font-size:12.5px;color:var(--ink-soft);}
+.par{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.par .pc{border-radius:10px;padding:10px;color:#fff;}
+.par .pc .who{font-size:15px;font-weight:800;line-height:1.4;}
+.par .pc .lbl{font-size:11px;opacity:.85;margin-bottom:5px;}
+.par .pc .ds{font-size:12px;opacity:.95;margin-top:5px;line-height:1.4;}
+.dg-cap{font-size:14px;line-height:1.75;margin:12px 0 0;}
+.dg-no{margin-top:10px;background:#fff;border:1.5px dashed var(--red);border-radius:9px;padding:9px 11px;font-size:13.5px;line-height:1.7;color:var(--red);}
+@media(max-width:480px){.stairs .st b{font-size:12px}.stairs .st i{display:none}.par{grid-template-columns:1fr}}
+
+/* ---- 关键词一句话表 ---- */
+.kwlist{border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.kwrow{border-bottom:1px solid var(--line);background:var(--paper);}
+.kwrow:last-child{border-bottom:none;}
+.kwline{display:flex;align-items:center;gap:10px;padding:11px 12px;flex-wrap:wrap;}
+.kwk{font-weight:800;font-size:14.5px;white-space:nowrap;}
+.kwrow.star .kwk{color:var(--red);}
+.kwrow.star .kwk::after{content:" ★";font-size:12px;}
+.kwone{flex:1;min-width:150px;font-size:15px;line-height:1.6;}
+.kwacts{display:flex;gap:6px;margin-left:auto;}
+.mini{border:1px solid var(--line);background:var(--paper);border-radius:14px;font-size:12px;padding:5px 9px;cursor:pointer;color:var(--ink-soft);white-space:nowrap;}
+.mini.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+.kwen,.kwdetail{display:none;padding:0 12px 11px;font-size:13.5px;line-height:1.75;}
+.kwen{color:var(--blue);font-style:italic;}
+.kwdetail{color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:9px;}
+.kwen.show,.kwdetail.show{display:block;}
+
+/* ---- 选材发散四步 ---- */
+.idea{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:14px;}
+.istep{display:flex;gap:10px;margin-bottom:12px;}
+.istep:last-child{margin-bottom:0;}
+.inum{flex:0 0 26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;}
+.ibody{flex:1;min-width:0;}
+.ilabel{font-size:12.5px;color:var(--ink-soft);margin-bottom:4px;}
+.ival{font-size:15.5px;font-weight:700;line-height:1.6;}
+.iask{background:var(--mark);border-radius:8px;padding:8px 11px;font-size:16px;font-weight:800;line-height:1.6;}
+.igrid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:6px;}
+.icell{background:var(--green-soft);border-left:3px solid var(--green);border-radius:7px;padding:8px 9px;font-size:13.5px;line-height:1.55;}
+.icell b{display:block;color:var(--green);}
+.idrop{background:var(--red-soft);border-left:3px solid var(--red);border-radius:7px;padding:8px 10px;font-size:13.5px;line-height:1.6;margin-top:6px;color:#4A1F21;}
+.iarrow{text-align:center;color:var(--ink-soft);font-size:15px;margin:-6px 0 6px 36px;}
+@media(max-width:480px){.igrid{grid-template-columns:1fr}}
+
+
+/* ---- 10秒审题图：关键词 → 发散 → 筛选 ---- */
+.thinkmap{border:2px solid var(--ink);border-radius:14px;background:#fff;padding:14px;margin-top:8px;}
+.tm-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.tm-badge{background:var(--ink);color:#fff;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:800;}
+.tm-hint{font-size:13px;color:var(--ink-soft);font-weight:700;}
+.tm-kws{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:8px 0 2px;}
+.tm-kw{border:2px solid var(--blue);background:var(--blue-soft);color:var(--blue);border-radius:999px;padding:7px 12px;font-size:14px;font-weight:800;}
+.tm-kw.core{border-color:var(--red);background:var(--red-soft);color:var(--red);transform:scale(1.04);}
+.tm-arrow{text-align:center;font-size:22px;line-height:1;color:var(--ink-soft);margin:7px 0;}
+.tm-question{max-width:650px;margin:0 auto;background:var(--mark);border:2px solid #D3B800;border-radius:12px;padding:10px 14px;text-align:center;font-size:17px;font-weight:900;line-height:1.55;}
+.tm-branches{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px;position:relative;}
+.tm-branch{min-width:0;background:var(--green-soft);border:1.5px solid #A9C8B6;border-radius:10px;padding:9px 8px;text-align:center;line-height:1.4;}
+.tm-branch b{display:block;color:var(--green);font-size:14px;margin-bottom:4px;}
+.tm-branch span{font-size:12.5px;color:#365244;}
+.tm-filter{max-width:650px;margin:0 auto;background:#FFF8E5;border:1.5px dashed #B07A1E;border-radius:10px;padding:9px 12px;text-align:center;font-size:14px;font-weight:800;line-height:1.55;color:#6A4C14;}
+.tm-pick{max-width:650px;margin:9px auto 0;background:var(--green-soft);border-left:5px solid var(--green);border-radius:8px;padding:9px 12px;font-size:14px;line-height:1.55;}
+.tm-pick b{color:var(--green);}
+.tm-limits{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.tm-limit{font-size:12px;border:1px dashed var(--ink-soft);border-radius:999px;padding:5px 9px;background:var(--paper-tint);color:var(--ink-soft);}
+.more-audit{margin-top:10px;border:1px solid var(--line);border-radius:10px;background:var(--paper-tint);overflow:hidden;}
+.more-audit summary{cursor:pointer;padding:9px 11px;font-size:13px;font-weight:800;color:var(--blue);list-style:none;}
+.more-audit summary::-webkit-details-marker{display:none;}
+.more-audit summary::before{content:'＋ ';}
+.more-audit[open] summary::before{content:'－ ';}
+.more-audit .inside{padding:0 11px 11px;font-size:13px;line-height:1.7;color:var(--ink-soft);}
+.more-audit .inside ul{margin:6px 0 0;padding-left:18px;}
+@media(max-width:700px){.tm-branches{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:430px){.tm-question{font-size:16px}.tm-branch b{font-size:13px}.tm-branch span{font-size:12px}.tm-kws{gap:5px}.tm-kw{font-size:13px;padding:6px 10px}}
+
+
+/* ---- 弱生支撑：英文/语音默认隐藏，按需打开 ---- */
+.support-tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0 8px;}
+.support-tools .mini,.why-tools .mini{font-size:12px;}
+.support-en{display:none;margin-top:7px;padding:8px 10px;border-radius:8px;background:#F4F8FB;color:var(--blue);font-size:12.5px;line-height:1.6;font-style:italic;}
+.support-en.show{display:block;}
+.audit-en{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);}
+.audit-en li{margin-bottom:5px;}
+.why-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.why-tools{display:flex;gap:6px;align-items:center;}
+.why-en-list{display:none;margin:8px 0 0;padding:9px 12px 9px 30px;background:#F4F8FB;border-radius:8px;color:var(--blue);font-size:12.5px;line-height:1.65;font-style:italic;}
+.why-en-list.show{display:block;}
+.story-support{position:relative;}
+.story-support .support-tools{justify-content:flex-end;margin-top:-2px;}
+.ratio-support{margin-top:7px;}
+
+
 .panel{display:none;}
 .panel.active{display:block;}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
@@ -193,7 +292,130 @@ const REF = [
  ["因果检验","把结尾的道理删掉，故事本身还能推出这个道理吗？能，才算合格。","Delete the moral — can the story still prove it?"]
 ];
 
+/* ================= 经过排法示意图 ================= */
+const SHAPE={
+ e1:{title:"经过怎么排：一波三折",type:"stairs",
+   steps:[{t:"打字道歉",s:"WhatsApp 一长段",mk:"✗",c:"#EAB6B8"},
+          {t:"逐个澄清",s:"被同学讥讽",mk:"✗",c:"#D26065"},
+          {t:"送笔记·当面认错",s:"三个星期",mk:"✓",c:"#C0272D"}],
+   rise:["越往上，补救越实在","三次"],
+   cap:"三次补救，一次比一次实在。<b>前两次必须失败</b>，「终于挽回」才有着落。",
+   en:"Three attempts, each costlier — the first two must fail.",
+   no:"✘ 不要这样：道歉一次 → 马上和好。那就没有「终于」了。"},
+ e2:{title:"经过怎么排：层层加深",type:"stairs",
+   steps:[{t:"整理书籍",s:"不用开口",c:"#EAB6B8"},
+          {t:"帮同学找书",s:"短暂交谈",c:"#DC8A8D"},
+          {t:"提改进建议",s:"用观察力",c:"#CE5A5F"},
+          {t:"上台分享",s:"最难的一步",c:"#C0272D"}],
+   rise:["越往上，越需要开口","四层"],
+   cap:"题目问的是<b>「贡献了什么力量、怎么贡献」</b>，所以要写贡献的<b>层次</b>，不是写困难的<b>次数</b>。",
+   en:"Show deeper contributions, not more obstacles.",
+   no:"✘ 不是「困难 → 克服 → 困难 → 克服」。那是《对不起朋友》的排法。"},
+ e3:{title:"经过怎么排：三个场面并列",type:"par",
+   cols:[{lbl:"场面一",who:"居民 → 居民",ds:"义卖摊位，主动多付钱",c:"#2C5F8A"},
+         {lbl:"场面二",who:"义工 → 老人",ds:"扶住颤抖的手，端茶",c:"#2F6B4F"},
+         {lbl:"场面三",who:"大孩子 → 小孩子",ds:"教剪纸、做灯笼",c:"#B07A1E"}],
+   cap:"三个场面写<b>三种不同的人</b>，社区才是「群像」。每个场面都要走完两步：<b>他们做了什么 ＋ 我感受到什么</b>。",
+   en:"Three different groups make it a community, not just two people.",
+   no:"✘ 写三次「有人帮我」＝还是一个场面，扣不住「社区」。"}
+};
+
+/* ================= 关键词一句话 ================= */
+const KWONE={
+ e1:[["补救＝行动，要写三次","Make up for it with actions — three of them."],
+     ["错必须是我自己造成的","The fault must be mine."],
+     ["结局必须和好，中间要先失败","Must end in reconciliation, after failed attempts."],
+     ["结尾必须写出感受和道理","The ending must state the feeling and the lesson."]],
+ e2:[["写清楚两件事：贡献了什么？怎么贡献？","Say what you contributed and how."],
+     ["每一层贡献都要扣回「内向」","Link every stage back to being shy."],
+     ["必须在校内，只写一项","One activity, inside school."],
+     ["变的是看法，不是性格","Your view changes, not your personality."]],
+ e3:[["温暖的情意：关怀、体贴、帮助","Warmth: care, thoughtfulness, help."],
+     ["要写群像，最少三个场面","Show the whole community — at least three scenes."],
+     ["两步：他们做了什么＋我感受到什么","What they did + what I felt."],
+     ["写出为什么不热衷，结尾推翻它","Say why you weren't keen, then overturn it."]]
+};
+
+/* ================= 关键词 → 选材（发散四步） ================= */
+const IDEA={
+ e1:{kw:"补救",ask:"我把什么弄坏了？就补什么。",askEn:"What did I break? Fix exactly that.",
+   cells:[["说漏了他家的秘密","逐个澄清、帮他挡话"],["弄坏了他很重要的东西","修好，或用心赔一个"],
+          ["比赛当天放他鸽子","陪他从头准备下一次"],["当众取笑他","当众澄清并道歉"]],
+   filter:"说一句「对不起」就能解决的，不要选。",
+   filterEn:"If one apology fixes it, it's too light.",
+   drop:"淘汰：忘了回信息、迟到、借东西没还——太轻，撑不起「积极补救」。"},
+ e2:{kw:"贡献力量",ask:"我有什么长处？",askEn:"What am I actually good at?",
+   cells:[["会画画","班级板报设计"],["会拍照","班级活动摄影"],
+          ["爱看书","图书馆义工、推荐书籍"],["会种花","校园环境美化"]],
+   filter:"换成一个外向的人来做，结果一样吗？",
+   filterEn:"Would an outgoing classmate get the same result?",
+   drop:"一样 → 淘汰：打扫卫生、比赛递水、辅导同学做功课。看不出「自己的」长处。"},
+ e3:{kw:"社区温情",ask:"谁对谁好？",askEn:"Who is being kind to whom?",
+   cells:[["居民 → 居民","义卖互助、慷慨解囊"],["义工 → 老人","陪伴、端茶、聊天"],
+          ["大孩子 → 小孩子","教做灯笼、猜灯谜"],["邻居 → 新住户","帮忙搬家、送吃的"]],
+   filter:"这一段写完，读者感到的是「温暖的情意」吗？",
+   filterEn:"Does this scene leave the reader feeling warmth?",
+   drop:"不是 → 淘汰：捡垃圾（环保）、受到称赞（自豪）、谈天说地（不明显）。"}
+};
+
 /* ================= 三篇 ================= */
+
+const THINKMAP={
+ e1:{
+  kws:[['对不起朋友',false],['积极补救',true],['终于挽回',false]],
+  q:'我把什么“弄坏”了？就补什么。',
+  branches:[['说漏秘密','澄清＋保护'],['当众取笑','公开澄清＋道歉'],['失约缺席','重新陪伴＋承担'],['弄坏重要物品','修好／认真赔偿']],
+  filter:'筛：一句「对不起」就能解决吗？能 → 太轻，换一个。',
+  pick:'最稳角度：<b>泄露朋友秘密 → 多次实际补救 → 信任慢慢回来</b>。',
+  limits:['错由我造成','补救要有行动','结局要挽回']
+ },
+ e2:{
+  kws:[['性格内向',false],['校内活动',false],['贡献自己的力量',true]],
+  q:'我有什么长处，可以先用“安静的方式”发挥？',
+  branches:[['爱看书','图书馆义工'],['会画画','板报／海报设计'],['会拍照','活动摄影'],['细心观察','物资／资料整理']],
+  filter:'筛：这件事能看出“我的长处”，而不只是普通帮忙吗？',
+  pick:'最稳角度：<b>爱看书 → 图书馆义工</b>，贡献可以从整理书到主动推荐，层层加深。',
+  limits:['地点在校内','只写一项活动','变的是看法，不是性格']
+ },
+ e3:{
+  kws:[['不太热衷',false],['邻里活动',false],['社区温情',true]],
+  q:'谁对谁好？先想“人和人之间”的温暖。',
+  branches:[['居民 → 居民','义卖互助'],['义工 → 老人','陪伴／端茶'],['大孩子 → 小孩子','教做灯笼'],['邻居 → 新住户','搬家／送食物']],
+  filter:'筛：这一幕写完，读者感到的是“温暖的情意”吗？',
+  pick:'最稳写法：<b>从不同对象中选3个场面</b>，每个场面＝动作＋我的感受，写出“社区群像”。',
+  limits:['一次邻里活动','至少3个不同场面','每场面都要写感受']
+ }
+};
+
+
+
+const AUDIT_CN={
+ e1:['补救要写行动，而且最好有升级，不只是说“对不起”。','错误必须是我造成的，不能把责任推给误会或别人。','“终于挽回”说明中间不能一次就成功，要有过程。','感受要回到友情、信任和自己的改变。'],
+ e2:['贡献力量：写清“我做了什么、怎样帮到大家”。','内向：贡献方式要符合话少、慢热的性格，不要突然变得很外向。','校内一项活动：地点在学校，只写一项活动。','变化的是“我对自己的看法”，不一定是性格完全改变。'],
+ e3:['温情：重点是关怀、体贴、互助带来的温暖。','社区：不能只写一个人，要让读者看到不同居民或义工。','每个场面写两步：他们做了什么＋我感到什么。','先写我为什么不热衷，结尾再写看法怎样改变。']
+};
+const KW_DETAIL_EN={
+ e1:['Make-up must be shown through actions, ideally with stronger attempts each time, not just “sorry”.','The fault must be caused by you; do not turn it into a misunderstanding or someone else’s fault.','“Finally repaired the friendship” means the repair should take time and should not succeed at once.','Your reflection should return to friendship, trust and how you changed.'],
+ e2:['Contribution: say what you did and how it helped the group.','Your way of contributing should still fit an introverted person; do not suddenly become highly outgoing.','The event must be one school activity.','The key change is your view of yourself, not a complete personality change.'],
+ e3:['Warmth means care, thoughtfulness and mutual help that make people feel supported.','“Community” needs more than one person; show different residents or volunteers.','Each scene needs two parts: what they did + what you felt.','Show why you were not keen at first, then overturn that view at the end.']
+};
+const THINK_EN={
+ e1:{q:'What exactly did I damage in the friendship? Repair that exact damage.',ideas:['Leaked a family secret — clarify and protect him','Damaged something important — repair or replace it carefully','Let a teammate down — prepare the next event with him','Mocked him in public — correct it and apologise publicly'],filter:'If one quick “sorry” can fix it, the incident is too light.',pick:'Choose a mistake that needs real action to rebuild trust.'},
+ e2:{q:'What am I actually good at?',ideas:['Drawing — class display','Photography — event photos','Reading — library volunteer / book recommendations','Gardening — school beautification'],filter:'Does this activity show MY strength, not just a task anyone can do?',pick:'Choose an activity where your quiet strength becomes useful.'},
+ e3:{q:'Who is being kind to whom?',ideas:['Resident → resident — charity sale / mutual help','Volunteer → elderly — company / tea / help','Older child → younger child — lantern making','Neighbour → new resident — moving help / food'],filter:'After this scene, does the reader actually feel warmth?',pick:'Use different groups so the community feels like a whole group, not one helpful person.'}
+};
+const RATIO_EN={
+ e1:'Keep the mistake and background short. Spend most space on the repair attempts, especially the hardest one.',
+ e2:'Keep the “old me” short. Spend most space on the growing contributions and the key step that changes your view.',
+ e3:'Keep the reason for joining short. Spend most space on three different scenes that show community warmth.'
+};
+const WHY_EN={
+ e1:['The fault is clearly yours, so the need to make up for it is convincing.','The repair has several steps and becomes more sincere each time.','Trust is rebuilt by action, not by a single apology.','The ending returns to what friendship and trust mean.'],
+ e2:['The activity matches an introverted student’s strengths.','The contribution grows step by step instead of jumping suddenly.','Each stage still connects to being introverted, so the character stays believable.','The ending changes the view of self, not the whole personality.'],
+ e3:['Different groups create a real community picture, not just one helpful person.','Every scene shows both an action and the narrator’s feeling.','The three scenes show different kinds of warmth, so they do not repeat each other.','The ending directly overturns the old belief that community activities are “not my business”.']
+};
+
+
 const ESSAYS = [
 {
  id:"e1", tab:"一、对不起朋友",
@@ -354,11 +576,14 @@ const ESSAYS = [
 const tabsEl=document.getElementById('tabs');
 const panelsEl=document.getElementById('panels');
 
-function ratioHTML(list){
+function ratioHTML(list,e){
   const bar=list.map(r=>`<div style="width:${r.pct}%;background:${r.color}">${r.pct}%</div>`).join('');
   const leg=list.map(r=>`<span style="--sw:${r.color}">${r.label} ${r.pct}%</span>`).join('');
+  const id=`${e.id}-ratio-note`, enId=`${e.id}-ratio-en`;
   return `<div class="ratio">${bar}</div><div class="ratio-legend">${leg}</div>
-  <p style="font-size:13px;color:var(--ink-soft);margin:8px 0 0;line-height:1.7">开头铺垫不要超过全文的 <b>1/5</b>；经过一定是最长的一块。头重脚轻是最常见的失分原因。</p>`;
+  <div class="ratio-support"><div class="support-tools"><button class="mini" data-en="${enId}">EN</button><button class="speak" data-read="${id}" title="朗读详略说明">🔊</button></div>
+  <p id="${id}" style="font-size:13px;color:var(--ink-soft);margin:0;line-height:1.7">开头要短；<b>直接证明题目关键词的核心经过要最长</b>。不要头重脚轻。</p>
+  <div class="support-en" id="${enId}">${RATIO_EN[e.id]||'Keep the opening short and spend most space on the main event.'}</div></div>`;
 }
 
 function materialHTML(m){
@@ -370,11 +595,128 @@ function materialHTML(m){
   </div><p class="note-why">${m.why}</p>`;
 }
 
+function shapeHTML(e){
+  const d=SHAPE[e.id]; if(!d) return '';
+  let body='';
+  if(d.type==='stairs'){
+    const h=[62,88,114,140];
+    const n=d.steps.length;
+    body='<div class="stairs">'+d.steps.map((st,i)=>{
+      const hh=h[i+(4-n)];
+      return `<div class="st" style="height:${hh}px;background:${st.c}">${st.mk?`<span class="mk">${st.mk}</span>`:''}<b>${st.t}</b><i>${st.s}</i></div>`;
+    }).join('')+'</div>'
+    +`<div class="rise"><span>${d.rise[0]} →</span><span>${d.rise[1]}</span></div>`;
+  }else{
+    body='<div class="par">'+d.cols.map(c=>
+      `<div class="pc" style="background:${c.c}"><div class="lbl">${c.lbl}</div><div class="who">${c.who}</div><div class="ds">${c.ds}</div></div>`
+    ).join('')+'</div>';
+  }
+  const id=e.id+'-shapecap';
+  return `<div class="diagram">
+    <div class="dg-head"><span class="dg-title">${d.title}</span>
+      <button class="mini" data-en="${id}-en">EN</button>
+      <button class="speak" data-read="${id}" title="朗读">🔊</button></div>
+    ${body}
+    <p class="dg-cap" id="${id}">${d.cap}</p>
+    <div class="kwen" id="${id}-en">${d.en}</div>
+    <div class="dg-no">${d.no}</div>
+  </div>`;
+}
+
+function kwHTML(e){
+  const one=KWONE[e.id]||[];
+  return '<div class="kwlist">'+e.kw.map((k,i)=>{
+    const id=`${e.id}-kw${i}`;
+    const o=one[i]||[k.v,''];
+    return `<div class="kwrow ${k.star?'star':''}">
+      <div class="kwline">
+        <span class="kwk">${k.k}</span>
+        <span class="kwone" id="${id}">${o[0]}</span>
+        <span class="kwacts">
+          <button class="speak" data-read="${id}" title="朗读">🔊</button>
+          <button class="mini" data-en="${id}-en">EN</button>
+          <button class="mini" data-detail="${id}-d">详</button>
+        </span>
+      </div>
+      <div class="kwen" id="${id}-en">${o[1]}</div>
+      <div class="kwdetail" id="${id}-d">${k.v}</div>
+    </div>`;
+  }).join('')+'</div>';
+}
+
+function ideaHTML(e){
+  const d=IDEA[e.id]; if(!d) return '';
+  const cells=d.cells.map(c=>`<div class="icell"><b>${c[0]}</b>${c[1]}</div>`).join('');
+  const id=e.id+'-idea';
+  return `<div class="idea">
+    <div class="istep"><div class="inum">1</div><div class="ibody">
+      <div class="ilabel">圈出最重要的那一个关键词</div><div class="ival">${d.kw}</div></div></div>
+    <div class="iarrow">↓</div>
+    <div class="istep"><div class="inum">2</div><div class="ibody">
+      <div class="ilabel">问自己一句话（发散的开关）
+        <button class="mini" data-en="${id}-en">EN</button>
+        <button class="speak" data-read="${id}-ask" title="朗读">🔊</button></div>
+      <div class="iask" id="${id}-ask">${d.ask}</div>
+      <div class="kwen" id="${id}-en" style="padding:6px 0 0">${d.askEn}</div></div></div>
+    <div class="iarrow">↓</div>
+    <div class="istep"><div class="inum">3</div><div class="ibody">
+      <div class="ilabel">照这句话列四条，不要只想一条</div>
+      <div class="igrid">${cells}</div></div></div>
+    <div class="iarrow">↓</div>
+    <div class="istep"><div class="inum">4</div><div class="ibody">
+      <div class="ilabel">用一句话筛
+        <button class="speak" data-read="${id}-f" title="朗读">🔊</button></div>
+      <div class="iask" id="${id}-f">${d.filter}<span style="display:block;font-size:12.5px;font-weight:400;font-style:italic;color:#7A6A2E;margin-top:4px">${d.filterEn}</span></div>
+      <div class="idrop">${d.drop}</div></div></div>
+  </div>`;
+}
+
+
+function thinkHTML(e){
+  const d=THINKMAP[e.id]; if(!d) return '';
+  const en=THINK_EN[e.id]||{};
+  const kws=d.kws.map(x=>`<span class="tm-kw ${x[1]?'core':''}">${x[0]}</span>`).join('');
+  const bs=d.branches.map(x=>`<div class="tm-branch"><b>${x[0]}</b><span>${x[1]}</span></div>`).join('');
+  const ls=d.limits.map(x=>`<span class="tm-limit">${x}</span>`).join('');
+  const enIdeas=(en.ideas||[]).map(x=>`<li>${x}</li>`).join('');
+  const enId=`${e.id}-think-en`;
+  return `<div class="thinkmap">
+    <div class="tm-top"><span class="tm-badge">10秒审题</span><span class="tm-hint">圈 → 问 → 发散 → 筛</span><button class="mini" data-en="${enId}">EN</button></div>
+    <div class="tm-kws">${kws}</div>
+    <div class="tm-arrow">↓</div>
+    <div class="tm-question">问：${d.q}</div>
+    <div class="tm-arrow">↓</div>
+    <div class="tm-branches">${bs}</div>
+    <div class="tm-arrow">↓</div>
+    <div class="tm-filter">${d.filter}</div>
+    <div class="tm-pick">✓ ${d.pick}</div>
+    <div class="tm-limits">${ls}</div>
+    <div class="support-en" id="${enId}"><b>Question:</b> ${en.q||''}<ul style="margin:5px 0 5px 18px">${enIdeas}</ul><b>Filter:</b> ${en.filter||''}<br><b>Best angle:</b> ${en.pick||''}</div>
+  </div>`;
+}
+
+function auditDetails(e){
+  const cn=AUDIT_CN[e.id]||e.kw.map(k=>k.v);
+  const ens=KW_DETAIL_EN[e.id]||[];
+  const items=e.kw.map((k,i)=>`<li><b>${k.k}：</b>${cn[i]||k.v}</li>`).join('');
+  const enItems=ens.map((x,i)=>`<li><b>${e.kw[i]?.k||''}:</b> ${x}</li>`).join('');
+  const enId=`${e.id}-audit-en`;
+  return `<details class="more-audit"><summary>需要时再看：关键词详细解释</summary><div class="inside">
+    <div class="support-tools"><button class="mini" data-en="${enId}">EN</button></div>
+    <ul>${items}</ul><div class="support-en audit-en" id="${enId}"><ul style="margin:0;padding-left:18px">${enItems}</ul></div>
+  </div></details>`;
+}
+
+function whyHTML(e){
+  const en=WHY_EN[e.id]||[]; const enId=`${e.id}-why-en`;
+  const cn=e.why.map(w=>`<li>${w}</li>`).join('');
+  const ens=en.map(w=>`<li>${w}</li>`).join('');
+  return `<div class="why" style="margin-top:16px"><div class="why-head"><h2 style="margin-bottom:0">这一篇为什么能拿高分</h2><div class="why-tools"><button class="mini" data-en="${enId}">EN</button></div></div><ol>${cn}</ol><ol class="why-en-list" id="${enId}">${ens}</ol></div>`;
+}
+
 function essayHTML(e,idx){
-  const kwRows=e.kw.map(k=>`<tr class="${k.star?'star':''}"><td class="k">${k.k}</td><td>${k.v}</td></tr>`).join('');
   const limits=e.limits.map(l=>`<span class="chip">${l}</span>`).join('');
-  const mustBlock=e.must?`<div class="must"><b>这一题的特别要求：</b>${e.must}</div>`:'';
-  const matBlock=e.material?`<h3>三、选材（先判断，再动笔）</h3>${materialHTML(e.material)}`:'';
+  const matBlock=e.material?`<p style="font-size:13px;color:var(--ink-soft);margin:12px 0 6px">老师给的判断清单：</p>${materialHTML(e.material)}`:'';
   const paras=e.paras.map((p,i)=>{
     const tags=p.tags.map((t,j)=>`<button class="tag" aria-expanded="false" data-note="${e.id}-n${i}-${j}">${t.t}</button>`).join('');
     const notes=p.tags.map((t,j)=>`<div class="note" id="${e.id}-n${i}-${j}"><b>${t.t}｜</b>${t.n}<span class="en">${t.en}</span></div>`).join('');
@@ -390,23 +732,21 @@ function essayHTML(e,idx){
     <div class="card">
       <span class="type-chip">${e.type}</span>
       <div class="prompt">${e.prompt}</div>
-      ${mustBlock}
-      <h3>一、关键词拆解（先看这里，再看范文）</h3>
-      <table class="kw"><tr><th>关键词</th><th>我一定要写到什么</th></tr>${kwRows}</table>
-      <h3>二、限制条件（踩中一条就大扣分）</h3>
-      <div class="chips">${limits}</div>
-      ${matBlock}
-      <h3>${e.material?'四':'三'}、中心（B 型题，自己推断出来的）</h3>
-      <div class="center-box">${e.center}</div>
-      <h3>${e.material?'五':'四'}、经过怎么排＋详略比例</h3>
-      <p style="font-size:14px;line-height:1.75;margin:0 0 8px">${e.shape}</p>
-      ${ratioHTML(e.ratio)}
+      <h3>一、审题一张图：从关键词想到选材</h3>
+      ${thinkHTML(e)}
+      ${auditDetails(e)}
+      <h3>二、故事怎么排（看图就够）</h3>
+      ${shapeHTML(e)}
+      <h3>三、中心一句话</h3>
+      <div class="center-box" id="${e.id}-center">${e.center}</div>
+      <h3>四、详略比例</h3>
+      ${ratioHTML(e.ratio,e)}
     </div>
     <div class="card" style="padding-bottom:10px"><h2>范文</h2>
       <p style="font-size:13px;color:var(--ink-soft);margin:-4px 0 0;line-height:1.7">先读一遍，什么都不点；读完再点开红批，看每一段用了什么技巧。</p>
     </div>
     <div class="essay">${paras}</div>
-    <div class="why" style="margin-top:16px"><h2>这一篇为什么能拿高分</h2><ol>${why}</ol></div>
+    ${whyHTML(e)}
   </section>`;
 }
 
@@ -455,6 +795,22 @@ panelsEl.addEventListener('click',ev=>{
     const note=document.getElementById(tag.dataset.note);
     const open=note.classList.toggle('show');
     tag.setAttribute('aria-expanded',open?'true':'false');
+    return;
+  }
+  const enb=ev.target.closest('[data-en]');
+  if(enb){
+    const box=document.getElementById(enb.dataset.en);
+    if(box){enb.classList.toggle('on',box.classList.toggle('show'));}
+    return;
+  }
+  const dtl=ev.target.closest('[data-detail]');
+  if(dtl){
+    const box=document.getElementById(dtl.dataset.detail);
+    if(box){
+      const open=box.classList.toggle('show');
+      dtl.classList.toggle('on',open);
+      dtl.textContent=open?'收起':'详';
+    }
     return;
   }
   const sp=ev.target.closest('.speak');
