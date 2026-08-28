@@ -211,6 +211,8 @@ table.ref td.t{font-weight:700;color:var(--red);white-space:nowrap;}
 .ratio-support{margin-top:7px;}
 
 
+.men{display:block;font-size:12px;line-height:1.55;color:var(--blue);font-style:italic;margin-top:3px;}
+
 .panel{display:none;}
 .panel.active{display:block;}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
@@ -256,7 +258,7 @@ const REF = [
  ["开头四步（引名言型）","引名言 → 简单解释 → 我原来的看法 → 引出要写的事。可以模仿这个结构，但不要机械背同一段套所有题。","Quote → explain → my old view → the event."],
  ["砍废话三刀法","砍重复、砍无效信息（天气／早餐／坐车）、只留会改变故事走向的词。","Cut repetition, cut filler, keep only what moves the story."],
  ["关键词贯穿全文","关键词要在经过一、二、三里反复出现，不是开头写一次就算。","Keep hitting the key words all the way through."],
- ["经过怎么排（四种）","①<b>一波三折</b>——劝了三次／补救三次（用在转变型）②<b>因果链</b>——铺垫→不听→后果→后悔，一环扣一环（用在「不听劝就吃亏」型）③<b>前后对比</b>——同一件事做两次，只有态度不同（用在勤奋／努力型）④<b>层层加深</b>——一层比一层难（用在贡献／能力型）。先判断题目属于哪一种，再决定经过怎么排。","Pick the shape that fits the question."],
+ ["经过怎么排（四种）","①<b>一波三折</b>——劝了三次／补救三次（用在转变型）②<b>一环扣一环</b>——铺垫→不听→后果→后悔，一环扣一环（用在「不听劝就吃亏」型）③<b>前后对比</b>——同一件事做两次，只有态度不同（用在勤奋／努力型）④<b>层层加深</b>——一层比一层难（用在贡献／能力型）。先判断题目属于哪一种，再决定经过怎么排。","Pick the shape that fits the question."],
  ["一波三折","经过不能一帆风顺。长辈劝三次、我推三次，一次比一次不耐烦。","Three rounds, not one."],
  ["后果要连锁","一个后果不够，要一环扣一环（起晚 → 塞车 → 迟到 → 考砸），代价才够重。","Chain the consequences so the price feels real."],
  ["先甜后苦","偷懒、走捷径的甜头要写足，后面的代价才够苦。","Write the sweet part fully so the bitter part lands."],
@@ -269,7 +271,7 @@ const REF = [
  ["反面假设","用「如果我当初……就不会……」把因果倒着说一遍，是最省力的反思写法。","'If only I had…' — the easiest way to reflect."],
  ["首尾呼应","结尾回到开头那句话，把它翻过来；或者开头引名言，结尾再引一句。","Turn the opening line around at the end."],
  ["结尾：回扣＋感悟＋可选行动","先回扣这件事，再写真正的感受／认识；如果题意和人物转变需要，再自然写「以后我会怎么做」。第三层是提升，不必机械硬凑。","Recall the event → realise what changed → add a future action only when it fits."],
- ["因果检验","把结尾的道理删掉，故事本身还能推出这个道理吗？能，才算合格。","Delete the moral — can the story still prove it?"]
+ ["删掉道理试一试","把结尾的道理删掉，故事本身还能推出这个道理吗？能，才算合格。","Delete the moral — can the story still prove it?"]
 ];
 const SHAPE={
  "e1": {
@@ -296,12 +298,12 @@ const SHAPE={
    "台阶的高度＝篇幅。两笔日常各一段，核心事件写四段 →",
    "一主两辅"
   ],
-  "cap": "写人物最怕<b>平均用力</b>：写四五件小事，每件三句，人物就散了。<b>两笔日常只是打底，真正立住人物的是一个完整的核心事件。</b>而且核心事件里要有一个<b>他完全可以推给别人、却选择自己承担</b>的时刻。",
+  "cap": "写人最怕<b>平均用力</b>。两笔日常只是打底，人物要靠<b>一个完整的事件</b>立住。<br>事件里必须有一刻：<b>他可以推给别人，却自己扛了。</b>",
   "en": "Two quick habits, then one full event — that's how a person becomes real.",
   "no": "✘ 不要写「他做了三件好事」，每件两三句。那是清单，不是文章。"
  },
  "e2": {
-  "title": "经过怎么排：因果链（没计划 → 有计划）",
+  "title": "经过怎么排：一环扣一环",
   "type": "chain",
   "steps": [
    {
@@ -335,12 +337,12 @@ const SHAPE={
     "c": "#3F5147"
    }
   ],
-  "cap": "这一题要证明计划带来<b>三样</b>东西：①先后次序 ②时间分配 ③遇到变化有余地。<b>第五格「遇到变化」最容易漏</b>，可是少了它，「计划」就只是「清单」。",
+  "cap": "计划要带来<b>三样</b>：①次序 ②时间 ③遇到变化有余地。<br><b>第五格最容易漏</b>——少了它，计划就只是清单。",
   "en": "Order, timing, and room to adapt — the third one is what makes it a plan.",
   "no": "✘ 列了清单 → 一切顺利。中间没有失控、没有意外，读者不会信。"
  },
  "e3": {
-  "title": "经过怎么排：分歧 → 后果 → 转变 → 验证",
+  "title": "经过怎么排：一环扣一环",
   "type": "chain",
   "steps": [
    {
@@ -374,7 +376,7 @@ const SHAPE={
     "c": "#2F6B4F"
    }
   ],
-  "cap": "关键在第四格：<b>后果必须一条一条打在她提醒过的地方</b>。她说「站远一点什么都看不清」，后果就是「没人停留、老师问不出主题」。这样「接受意见」才是被事实说服，不是被逼认输。",
+  "cap": "关键在第四格：<b>后果要打在她提醒过的地方。</b><br>她说「站远看不清」，后果就是「没人停下来看」。这样才是被事实说服，不是认输。",
   "en": "The consequences must land exactly where the advice warned.",
   "no": "✘ 别人一提意见我就接受＝没有性格冲突；或者后果和意见对不上＝证明不了她说得对。"
  }
@@ -460,7 +462,7 @@ const IDEA={
   ],
   "filter": "如果把「负责」两个字删掉，这件事本身还看得出他在负责吗？",
   "filterEn": "Delete the word 'responsible' — can the event still show it?",
-  "drop": "看不出 → 淘汰：上课不说话、考试成绩好、扶老人过马路。那证明的是安静、用功、善良，<b>不是责任心</b>。"
+  "drop": "看不出 → 淘汰：上课不说话、成绩好、扶老人。那是安静、用功、善良，<b>不是责任心</b>。"
  },
  "e2": {
   "kw": "制定计划的重要性",
@@ -468,7 +470,7 @@ const IDEA={
   "askEn": "Which task had a deadline, many steps, and something going wrong?",
   "cells": [
    [
-    "小组短片作业",
+    "小组短视频作业",
     "十天：拍摄、旁白、剪辑、交件"
    ],
    [
@@ -512,7 +514,7 @@ const IDEA={
   ],
   "filter": "对方的意见，有没有一个说得出口的理由？",
   "filterEn": "Does the other side have a reason they can state?",
-  "drop": "没有理由、只是随口一句 → 淘汰。<b>没有理由，「接受」就变成服从，不是判断</b>，也就扣不住「有些时候」。"
+  "drop": "只是随口一句 → 淘汰。<b>没有理由，「接受」就变成服从。</b>"
  }
 };
 const KW_DETAIL_EN={
@@ -555,24 +557,24 @@ const ESSAYS = [
   "id": "e1",
   "tab": "一、沉默却负责的同学",
   "prompt": "班上有一位同学虽然平时沉默寡言，但做事认真、很有责任心。试写一篇文章，记叙这个同学。",
-  "type": "人物记叙题：题目已给人物特点，重点是用事件把特点写实",
+  "type": "写人题：用事件证明人物的特点",
   "kw": [
    {
     "k": "很有责任心",
     "star": true,
-    "v": "问题出现后不逃、不推、不敷衍，把答应的事情负责到底。最好写一个<b>可以离开，却主动留下</b>的关键选择。"
+    "v": "出了问题不推、不敷衍。写一个<b>可以走，却留下</b>的选择。"
    },
    {
     "k": "做事认真",
-    "v": "认真要写成细节：列清单、逐项核对、发现小错误、重新检查，而不是连续三次写「他很认真」。"
+    "v": "认真＝<b>列清单、逐项核对、再查一遍</b>，不是重复写「他很认真」。"
    },
    {
     "k": "沉默寡言",
-    "v": "话少、不抢着表现。用动作表现：别人讨论时他多听少说；需要开口时话不多，但一开口就说到事情上。"
+    "v": "话少，但<b>一开口就说到点子上</b>。用动作写，不要直接说他内向。"
    },
    {
     "k": "记叙这个同学",
-    "v": "「我」只是观察者。全文最亮的动作、选择、语言都应该属于这个同学，不能写到最后变成「我如何完成活动」。"
+    "v": "「我」只负责看。<b>最亮的动作和话都要归他。</b>"
    }
   ],
   "limits": [
@@ -585,16 +587,16 @@ const ESSAYS = [
   "center": "一个人是否值得信赖，不在于他说了多少，而在于答应一件事以后，能不能认真地把它做到最后。",
   "material": {
    "good": [
-    "班级开放日／学习成果展的物资负责人：有清单、有突发状况、有负责到底的空间",
-    "小组项目的资料统筹：发现遗漏后主动补救并逐项复查",
-    "班级图书角负责人：长期认真记录，遇到遗失问题不推卸，主动查清"
+    "活动物资负责人<span class='men'>Has a checklist, a crisis, and room to see it through.</span>",
+    "小组资料统筹<span class='men'>Spots a gap, fixes it, then checks again.</span>",
+    "班级图书角负责人<span class='men'>A lost book gets traced, not excused.</span>"
    ],
    "bad": [
-    "只写他上课不说话、考试成绩好——只能证明安静和用功，证明不了责任心",
-    "写他扶老人、捡钱包——是善良或诚实，题目核心会跑掉",
-    "连续写三四件小好事，每件两三句——人物会散，缺少一个真正立得住的核心事件"
+    "上课不说话、成绩好<span class='men'>Proves quiet and hardworking — not responsible.</span>",
+    "扶老人、捡钱包<span class='men'>That is kindness or honesty. Wrong keyword.</span>",
+    "三四件小好事，每件两三句<span class='men'>A list, not a story. No single event stands out.</span>"
    ],
-   "why": "选材要问：<b>如果把「负责」两个字删掉，这件事本身还能让读者看出他在负责吗？</b>能，才值得写。"
+   "why": "判断标准只有一句：<b>把「负责」两个字删掉，这件事本身还看得出他在负责吗？</b>"
   },
   "ratio": [
    {
@@ -634,7 +636,7 @@ const ESSAYS = [
       "en": "Give the first impression, then pivot straight to the real trait."
      },
      {
-      "t": "人物特点要用动作证明",
+      "t": "用动作证明",
       "n": "「安静地听，偶尔笑一笑」比直接写「他沉默寡言」更像真实人物。人物特点先让读者看见，再由题目词去概括。",
       "en": "Show quietness through behaviour instead of repeating the label."
      }
@@ -645,7 +647,7 @@ const ESSAYS = [
     "text": "每天放学前，他负责收齐班上的读书报告。别人把本子往讲台上一放就走，他却会把名单摊开，<mark>一行一行地对名字</mark>；少一本，他不会在群里大喊，而是轻声问附近的同学：「你看到子谦的读书报告吗？」找到以后，他才在名单旁打一个小小的勾。<span class=\"it\">认真</span>",
     "tags": [
      {
-      "t": "一主两辅·辅助一",
+      "t": "小事只写一段（一）",
       "n": "这只是一个日常小细节，所以一段就够。作用只有一个：让「认真」先有证据，为后面的核心事件铺底。",
       "en": "A short everyday detail proves carefulness without stealing space from the main event."
      },
@@ -661,7 +663,7 @@ const ESSAYS = [
     "text": "小组讨论时也是这样。大家抢着说想法，他通常先低头记，等声音渐渐停下来，才把笔抬起来说一句：「还有一个地方，我们好像没算进去。」他说得不多，却常常正好指出我们漏掉的细节。<span class=\"it\">沉默＋认真</span>",
     "tags": [
      {
-      "t": "一主两辅·辅助二",
+      "t": "小事只写一段（二）",
       "n": "第二笔日常细节同时扣住「沉默」和「认真」：他不抢着说，但会认真听、认真记。两种特点不是分开的。",
       "en": "The second detail links quietness and carefulness together."
      }
@@ -672,7 +674,7 @@ const ESSAYS = [
     "text": "真正让我重新认识他，是上个月学校举行学习成果展的时候。我们班负责一个阅读主题摊位，班主任把展示板、问答卡和从资源室借来的三台平板交给明轩统一管理。听到老师问「谁愿意负责最后核对？」时，教室里忽然安静下来。明轩抬起头，只说了两个字：<span class=\"dlg\">「我来。」</span>说完，他把老师列出的物品一项项抄进自己的小本子，还在旁边画了三个栏：<mark>「带到会场／活动中／归还」</mark>。<span class=\"it\">责任开始具体化</span>",
     "tags": [
      {
-      "t": "关键词贯穿全文",
+      "t": "关键词要一直出现",
       "n": "责任心不是等出问题才突然出现。接任务时，他先把责任变成一张可执行的清单，人物性格从这里开始进入主事件。",
       "en": "Responsibility starts when he turns the task into a concrete checklist."
      },
@@ -688,7 +690,7 @@ const ESSAYS = [
     "text": "展览当天早上，我们把东西搬到礼堂。离开放还有二十分钟，明轩照着小本子重新检查，忽然停住了。他把装问答卡的蓝色盒子翻了两遍，又蹲下来查看桌子底下，脸色一下认真起来。<span class=\"dlg\">「少了一叠高级题卡。」</span>旁边负责搬箱子的同学愣了愣，说：「可能昨天没装进去吧。反正还有别的题，应该没事。」我也劝他先算了，老师已经在催我们布置。明轩却低头看了一眼清单，说：<span class=\"dlg\">「这是我负责最后核对的。我回教室找，你们先继续。」</span>",
     "tags": [
      {
-      "t": "关键选择写责任心",
+      "t": "他可以推掉，却没推",
       "n": "这一段是全文分水岭。他完全可以说「不是我漏装的」，也可以接受「算了」，但他把「最后核对」视为自己的责任。<b>责任心就在这个选择里。</b>",
       "en": "He could blame others or ignore it, but he chooses to own the final check."
      },
@@ -709,7 +711,7 @@ const ESSAYS = [
       "en": "Finding the cards is not enough; he checks them before declaring the task done."
      },
      {
-      "t": "人物特点要用动作证明",
+      "t": "用动作证明",
       "n": "整段几乎没有写「认真」「负责」四个字，但读者已经自己看出来了。这样的描写比直接评价有力量。",
       "en": "The actions prove the traits without repeating the labels."
      }
@@ -725,7 +727,7 @@ const ESSAYS = [
       "en": "Others leaving early makes his follow-through stand out."
      },
      {
-      "t": "首尾物件呼应",
+      "t": "首尾呼应",
       "n": "小本子从接任务出现，到最后一个勾结束。一个具体物件把整件事串起来，也让「负责到底」有了看得见的终点。",
       "en": "The checklist notebook carries the responsibility from start to finish."
      }
@@ -736,7 +738,7 @@ const ESSAYS = [
     "text": "那天回家前，我看见明轩一个人把小本子塞进书包，仍旧没有说什么豪言壮语。可是从那以后，每当老师问「这件事交给谁比较放心」时，我脑中第一个想到的总是他。我终于明白，<mark>责任心从来不靠声音大小来证明</mark>。一个人话可以很少，却能用一次次认真检查、一次次负责到底的行动，让别人真正信任他。",
     "tags": [
      {
-      "t": "感悟不要喊口号",
+      "t": "结尾不要喊口号",
       "n": "结尾只写「我对这个同学的认识变了」，不扩大成「我们每个人都应该有责任心」。人物题落回人物，最稳。",
       "en": "Keep the ending about what you learned about this person, not a general sermon."
      },
@@ -753,7 +755,7 @@ const ESSAYS = [
    "采用「一主两辅」：日常两笔很短，学习成果展写得最长，人物不散。",
    "核心事件里设置了两次可以「算了」的机会，他都没有推开责任，人物特点因此立得住。",
    "「我」只负责观察和认识人物，没有抢走故事中心。",
-   "因果检验：删掉结尾评价，只看清单、找题卡、归还物品，读者仍然会觉得这个同学认真而负责。"
+   "删掉道理试一试：删掉结尾评价，只看清单、找题卡、归还物品，读者仍然会觉得这个同学认真而负责。"
   ],
   "author": "教学示范范文"
  },
@@ -761,12 +763,12 @@ const ESSAYS = [
   "id": "e2",
   "tab": "二、制定计划的重要性",
   "prompt": "最近发生了一件事，让你明白了制定计划的重要性。",
-  "type": "转变型情境记叙文：题目只给「认识」，故事必须自己设计因果链",
+  "type": "A 型：题目已经给了中心，重点是选材和因果",
   "kw": [
    {
     "k": "制定计划的重要性",
     "star": true,
-    "v": "故事必须证明计划带来三样东西：<b>先后次序、时间分配、遇到变化时有调整空间</b>。不是把「计划很重要」重复三遍。"
+    "v": "故事要证明三样：<b>次序、时间、能应付变化</b>。"
    },
    {
     "k": "最近发生的一件事",
@@ -774,11 +776,11 @@ const ESSAYS = [
    },
    {
     "k": "让我明白",
-    "v": "结尾的认识要从前面的失败与改善自然长出来。若删掉结尾，读者仍应能看出「没计划会乱，有计划会稳」。"
+    "v": "认识要从前面的失败里长出来，不能最后硬加。"
    },
    {
     "k": "我",
-    "v": "第一人称要承担真实责任：前面为什么没计划、后来如何改变做法，都要写出自己的选择。"
+    "v": "要写清楚：<b>我当初为什么不做计划。</b>"
    }
   ],
   "limits": [
@@ -791,16 +793,16 @@ const ESSAYS = [
   "center": "计划不是把人绑住，而是先替时间和任务排出次序，让我们在真正忙起来时不至于手忙脚乱，也更有余地应付变化。",
   "material": {
    "good": [
-    "小组短片／展示项目：有脚本、拍摄、剪辑、交件等多个步骤，最适合写计划的作用",
-    "筹备班级活动：场地、物资、分工、时间必须协调",
-    "考试复习：可以写，但一定要具体到时间分配和调整，不能变成学习心得"
+    "小组短视频<span class='men'>Script, filming, editing, deadline — many steps.</span>",
+    "筹备班级活动<span class='men'>Venue, materials and roles must match the timing.</span>",
+    "考试复习<span class='men'>Only if you give real time slots and real changes.</span>"
    ],
    "bad": [
-    "因为没有计划所以早上迟到一次——事情太小，难以把「制定计划的重要性」写深",
-    "列了一张待办清单，然后所有事情立刻顺利——缺少前后因果与真实困难",
-    "最后靠老师帮忙才完成，却说是计划的功劳——故事证据和中心对不上"
+    "早上迟到一次<span class='men'>Too small to prove that planning matters.</span>",
+    "列了清单，一切顺利<span class='men'>No chaos, no trouble — nobody believes it.</span>",
+    "靠老师帮忙才完成<span class='men'>Then the plan did not do the work.</span>"
    ],
-   "why": "最好选择一个<b>有期限＋有多个步骤＋会出现意外</b>的任务。计划的价值，只有在复杂事情里才真正看得见。"
+   "why": "要选<b>有期限＋多个步骤＋会出意外</b>的任务。事情太简单，计划就显不出用处。"
   },
   "ratio": [
    {
@@ -832,7 +834,7 @@ const ESSAYS = [
   "paras": [
    {
     "part": "开头·原来看法",
-    "text": "以前，只要有人提到「制定计划」，我总觉得那是一件很麻烦的事。要做什么，做就是了；时间到了，自然会完成。我甚至常对自己说：<mark>「计划写得再漂亮，也不如马上动手。」</mark><span class=\"it\">原来的看法</span>直到最近一次小组短片作业，我才发现，这句话只对了一半。",
+    "text": "以前，只要有人提到「制定计划」，我总觉得那是一件很麻烦的事。要做什么，做就是了；时间到了，自然会完成。我甚至常对自己说：<mark>「计划写得再漂亮，也不如马上动手。」</mark><span class=\"it\">原来的看法</span>直到最近一次小组短视频作业，我才发现，这句话只对了一半。",
     "tags": [
      {
       "t": "开门见山两步走",
@@ -840,7 +842,7 @@ const ESSAYS = [
       "en": "State the old belief, then jump straight into the recent event."
      },
      {
-      "t": "前后对照",
+      "t": "前后对比",
       "n": "「计划不如马上动手」是全文要被推翻的旧看法。后面的故事必须一步步证明它为什么不完整。",
       "en": "This opening belief is the sentence the story must overturn."
      }
@@ -851,7 +853,7 @@ const ESSAYS = [
     "text": "华文老师让我们四人一组，制作一段三分钟的环保短片，十天后交上去。我是组长。组员问我要不要先分工、列拍摄清单，我摆摆手说：「不用这么麻烦，大家先拍，有素材再说。」于是有人负责拍校园里的垃圾桶，有人去访问同学，我自己想到什么就拍什么。我们每天在群里传来一大堆片段，看起来忙得不得了，我还暗自觉得：<mark>进度不是挺快吗？</mark><span class=\"it\">忙 ≠ 有进度</span>",
     "tags": [
      {
-      "t": "因果链·先埋原因",
+      "t": "先说清楚原因",
       "n": "后面会乱，不是作者临时制造麻烦，而是这里已经埋下原因：没有分工、没有清单、没有统一方向。",
       "en": "The later chaos is caused here: no roles, no list, no shared direction."
      },
@@ -867,7 +869,7 @@ const ESSAYS = [
     "text": "直到离截止日期只剩三天，我把所有片段拖进剪辑软件，问题一下子全冒了出来：三个同学都拍了垃圾分类，却<mark>没有一个人拍短片的开场</mark>；访问片段有六段，但问题各不相同，根本接不起来；更糟的是，我们原本想在操场拍的结尾还没拍，而负责出镜的同学第二天要参加比赛训练。屏幕上明明有四十多个文件，我却找不到三分钟可以顺着讲完的内容。那一刻，我第一次真正慌了。",
     "tags": [
      {
-      "t": "因果链·后果落地",
+      "t": "后果要写具体",
       "n": "三个问题分别对应前面的三个缺口：无统一方向→重复素材；无问题清单→访问接不上；无时间安排→关键镜头来不及拍。因果要一一扣住。",
       "en": "Each failure matches an earlier planning gap."
      },
@@ -893,7 +895,7 @@ const ESSAYS = [
       "en": "A short line diagnoses the real problem and turns the story."
      },
      {
-      "t": "埋伏笔（这一句最关键）",
+      "t": "埋伏笔",
       "n": "计划表上那一行「万一下雨呢」，必须<b>在这里就写出来</b>。如果等到真的下雨才说「我们翻回计划，看见旁边写着一个备注」，读者会觉得是临时编的，整段「计划能应付变化」就塌了。<b>伏笔要埋在前面，收在后面。</b>",
       "en": "Plant the rain note now — otherwise the later payoff looks invented."
      }
@@ -904,12 +906,12 @@ const ESSAYS = [
     "text": "第二天下午，我们没有再像之前那样到处乱拍。我拿着清单，只补三个缺口：十秒开场、两段过渡镜头、一个结尾。拍完一项，我就在纸上划掉一项。负责旁白的子豪在家录音，欣怡把所有采访统一剪成一句核心回答。晚上八点，我们第一次把整段短片从头到尾顺利播完。虽然还很粗糙，但每个人都清楚下一步该改什么。<span class=\"it\">计划带来次序</span>",
     "tags": [
      {
-      "t": "前后对照",
+      "t": "前后对比",
       "n": "前面是四十多个文件却接不起来；现在只补三个缺口，反而第一次顺利播完。前后对比越清楚，「计划的重要性」越有证据。",
       "en": "Fewer targeted tasks create more real progress than random busyness."
      },
      {
-      "t": "关键词贯穿全文",
+      "t": "关键词要一直出现",
       "n": "计划不是只在上一段出现。执行时继续让读者看见清单怎样指导行动，这才叫关键词贯穿。",
       "en": "Keep showing how the plan guides action, not just how it was written."
      }
@@ -920,12 +922,12 @@ const ESSAYS = [
     "text": "没想到第二天中午突然下起大雨，我们原定在操场拍的最后一个镜头无法进行。要是换作几天前，我大概又会临时想到哪里拍到哪里。可这一次，我们翻回计划，看见旁边写着一个小小的备注：<mark>「下雨：改在有盖走廊，拍自带水瓶和分类桶。」</mark>我们只讨论了两分钟，就换到走廊完成拍摄。雨没有打乱整个进度，只是让其中一格计划换了位置。",
     "tags": [
      {
-      "t": "计划不是死板",
+      "t": "计划要留一手",
       "n": "这一段非常关键：计划的价值不是保证事情完全照原样发生，而是让人遇到变化时仍知道目标、顺序和替代方案。",
       "en": "A plan is not rigidity; it gives you room to adjust without losing direction."
      },
      {
-      "t": "因果检验",
+      "t": "删掉道理试一试",
       "n": "如果没有前面那个备用备注，这场雨又会让小组陷入混乱。故事用意外再次证明计划的作用。",
       "en": "The unexpected rain tests and proves the plan."
      }
@@ -952,7 +954,7 @@ const ESSAYS = [
       "en": "The ending refines, rather than simply reverses, the opening belief."
      },
      {
-      "t": "感悟不要喊口号",
+      "t": "结尾不要喊口号",
       "n": "落点是「以后我面对复杂任务会怎样做」，没有写「大家都应该制定计划」。这样更真实。",
       "en": "Keep the resolution personal instead of preaching to everyone."
      }
@@ -963,8 +965,8 @@ const ESSAYS = [
    "故事因果清楚：没有计划造成重复、缺漏和时间冲突；制定计划后，次序、分工和检查点解决了这些问题。",
    "计划被具体写出来，不是空泛一句「我们列了计划」。",
    "加入下雨这个变化，进一步证明计划不是死板，而是帮助人有秩序地调整。",
-   "前后对照非常明显：前面四十多个文件仍混乱，后面只补三个缺口就顺利推进。",
-   "因果检验：删掉最后一段，读者仍能从故事读出「复杂任务需要先规划」。"
+   "前后对比非常明显：前面四十多个文件仍混乱，后面只补三个缺口就顺利推进。",
+   "删掉道理试一试：删掉最后一段，读者仍能从故事读出「复杂任务需要先规划」。"
   ],
   "author": "教学示范范文"
  },
@@ -972,7 +974,7 @@ const ESSAYS = [
   "id": "e3",
   "tab": "三、学会接受别人的意见",
   "prompt": "你一向坚持自己的看法，不太愿意接受别人的意见。最近发生了一件事，让你学会了有些时候要懂得接受别人的劝告或意见。",
-  "type": "转变型情境记叙文：必须写清「我的看法—别人的意见—拒绝—后果—接受—验证」",
+  "type": "A 型：题目已经给了中心，重点是把转变写可信",
   "kw": [
    {
     "k": "接受别人的劝告或意见",
@@ -1003,16 +1005,16 @@ const ESSAYS = [
   "center": "坚持自己的想法并没有错，但当别人从另一个角度看见了我们的盲点时，愿意先听进去、再作判断，往往比一味坚持更成熟。",
   "material": {
    "good": [
-    "班级壁报／展板设计：别人站远一点就能看见我看不见的问题，效果可以现场验证",
-    "小组作品设计：我坚持某种做法，队友从观众角度提意见，改完立刻能比较",
-    "活动流程安排：动线、分工有多个角度，意见有明确理由"
+    "班级壁报设计<span class='men'>Someone standing back sees what you cannot.</span>",
+    "小组作品设计<span class='men'>Change it, then compare at once.</span>",
+    "活动流程安排<span class='men'>Many angles, and the advice has a clear reason.</span>"
    ],
    "bad": [
-    "妈妈劝我早点睡，我不听所以第二天困——容易写成「听父母的话」，中心太浅",
-    "朋友叫我别闯红灯——那是安全常识，不是需要判断的「意见」",
-    "别人随口说一句，我立刻接受——没有性格冲突，也没有真正的转变过程"
+    "妈妈叫我早点睡<span class='men'>Becomes 'obey your parents'. Too shallow.</span>",
+    "朋友叫我别闯红灯<span class='men'>A safety rule, not an opinion to weigh.</span>",
+    "随口一句，我立刻接受<span class='men'>No conflict, no real change.</span>"
    ],
-   "why": "最好的材料要让双方<b>一开始都像有道理</b>，后来由事情本身说明：我的方案有盲点，对方的意见值得听。这样「接受意见」才不是被迫认输。"
+   "why": "两边<b>一开始都要像有道理</b>，最后由事情本身证明她对。这样「接受」才不是认输。"
   },
   "ratio": [
    {
@@ -1057,7 +1059,7 @@ const ESSAYS = [
       "en": "One habitual line of self-talk is enough to sketch the 'before'."
      },
      {
-      "t": "首尾伏笔",
+      "t": "埋伏笔",
       "n": "「坚持自己的看法」和「拒绝听别人说话」在这里被摆成两样东西——这正是结尾要分清的那个分寸。开头先埋，结尾才好收。",
       "en": "Two things separated here, so the ending can tell them apart."
      }
@@ -1095,7 +1097,7 @@ const ESSAYS = [
     "text": "壁报挂出去的第二天，我在走廊上守了一节课间。我以为大家会围过来看，可是<mark>经过的同学多数只是瞄一眼就走了</mark>，停下来的几个也只看了最上面那两张。第三天，一位科学老师在壁报前站了一会儿，转头问我：「<mark>你们这一块，最想告诉别人的是什么？</mark>」我张了张嘴，指着中间说：「就是……环保。」老师笑了笑，没有再问。我顺着走廊往前走，看见隔壁班的壁报只贴了七八张，中间一个大标题：「一个塑料瓶的三百年」，<mark>连我自己都忍不住停下来看完了</mark>。那一刻我的脸有点热。<span class=\"it\">后果验证了她的意见</span>",
     "tags": [
      {
-      "t": "后果要验证意见",
+      "t": "后果要对得上她说的",
       "n": "没人停留、老师问不出主题——正好对上嘉雯那句「我站远一点，什么字都看不清」。<b>后果必须一条一条打在对方提醒过的地方</b>，「接受意见」才不是认输，是被事实说服。",
       "en": "Each consequence lands exactly where she warned."
      },
@@ -1116,7 +1118,7 @@ const ESSAYS = [
       "en": "Five inner beats make the change believable."
      },
      {
-      "t": "让对方留有余地",
+      "t": "对方不要得意",
       "n": "「她没有说『我早就告诉你了』」——这一句很重要。对方越体面，我越好意思低头；如果她得意，故事就变成赌气了。",
       "en": "She doesn't gloat — that's what makes accepting possible."
      }
@@ -1127,12 +1129,12 @@ const ESSAYS = [
     "text": "当天放学，我们留下来动手。嘉雯把二十多份作品摊在地上，按内容分成三堆；我们每一堆只挑两张最清楚的，其余十五份小心地取下来，收进文件夹。空出来的地方，我们用彩纸剪了三个大标题贴在上方：「问题」「行动」「结果」。中间最显眼的位置，留给了子豪那张画着塑料袋缠住海龟的漫画，四周特意空出一圈。<mark>做完退后一看，壁报比原来空了将近一半，可是站在走廊那一头，也认得出我们在讲什么。</mark><span class=\"it\">意见落实为行动</span>",
     "tags": [
      {
-      "t": "接受意见要写成动作",
+      "t": "照着改要写出来",
       "n": "分三堆、只留两张、剪三个大标题、中央留一圈空白——<b>四个动作，一条一条对应嘉雯的三点建议。</b>写「我接受了她的意见」是不算数的。",
       "en": "Four actions, each answering one of her three points."
      },
      {
-      "t": "前后对照",
+      "t": "前后对比",
       "n": "「比原来空了将近一半」——同一块壁报，前面是「满满当当」，这里是「空了一半」。<b>用同一个东西的两个样子做对照，最省字。</b>",
       "en": "Same board, two states — the cheapest contrast there is."
      }
@@ -1143,12 +1145,12 @@ const ESSAYS = [
     "text": "第二天课间，我又去走廊上站了一会儿。这一次，停下来的人明显多了，还有低年级的同学指着那只海龟问同伴：「三百年真的假的？」<mark>撤下来的十五份作品，我们没有丢</mark>，而是做成一本小册子放在壁报下方的桌上，谁想看都可以翻——这个主意也是嘉雯提的，<mark>我这次没有等她说完就点头了</mark>。星期五评审那天，评审老师在我们班的壁报前停了很久，写下一句评语：「重点清楚，看得下去。」<span class=\"it\">改变不只发生一次</span>",
     "tags": [
      {
-      "t": "改变不能只发生一次",
+      "t": "改变要出现两次",
       "n": "第二次她再提意见，我「没有等她说完就点头」。<b>转变要在同一篇文章里出现第二次，才算真的变了</b>——只改一次，读者会怀疑是被逼的。",
       "en": "The change must happen twice; once looks forced."
      },
      {
-      "t": "听进去之后再想一层",
+      "t": "听完还要自己想",
       "n": "撤下来的十五份没有丢，做成小册子。这一笔既解决了我一开始的顾虑（「撤下来的同学会不高兴」），也说明我不是全盘照搬，而是<b>听进去以后自己又想了一层</b>。",
       "en": "She listens, then adds her own idea — not blind obedience."
      }
@@ -1352,11 +1354,11 @@ function refHTML(){
     <div class="card"><h2>三篇的经过，排法各不相同</h2>
     <table class="ref"><tr><th style="width:32%">题目</th><th>经过怎么排</th></tr>
     <tr><td class="t">沉默却负责的同学</td><td>一主两辅——两笔日常各一段，核心事件写四段（<b>写人物</b>）</td></tr>
-    <tr><td class="t">制定计划的重要性</td><td>因果链——没计划 → 失控 → 做计划 → 推进 → 应变 → 提前交件</td></tr>
-    <tr><td class="t">学会接受别人的意见</td><td>因果链——我的方案 → 她提意见 → 我拒绝 → 后果 → 我接受 → 改善</td></tr>
+    <tr><td class="t">制定计划的重要性</td><td>一环扣一环——没计划 → 失控 → 做计划 → 推进 → 应变 → 提前交件</td></tr>
+    <tr><td class="t">学会接受别人的意见</td><td>一环扣一环——我的方案 → 她提意见 → 我拒绝 → 后果 → 我接受 → 改善</td></tr>
     </table>
     <p style="font-size:13.5px;color:var(--ink-soft);margin:10px 0 0;line-height:1.75">审题时<b>先判断题目属于哪一种</b>，再决定经过怎么排。<br>
-    写<b>人物</b>的题目（第一篇）和写<b>事情</b>的题目（第二、三篇）排法不一样：写人物要「一主两辅」，写事情要「因果链」。</p></div>
+    写<b>人物</b>的题目（第一篇）和写<b>事情</b>的题目（第二、三篇）排法不一样：写人物要「一主两辅」，写事情要「一环扣一环」。</p></div>
   </section>`;
 }
 

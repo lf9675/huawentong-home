@@ -235,6 +235,8 @@ table.ref td.t{font-weight:700;color:var(--red);white-space:nowrap;}
 .ratio-support{margin-top:7px;}
 
 
+.men{display:block;font-size:12px;line-height:1.55;color:var(--blue);font-style:italic;margin-top:3px;}
+
 .panel{display:none;}
 .panel.active{display:block;}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
@@ -289,7 +291,7 @@ const REF = [
  ["前后对比","「前」略写（两三个日常小细节），「后」详写。不能把「前」写成一件完整的事。","Sketch the 'before', spell out the 'after'."],
  ["首尾呼应","结尾回到开头那句话，把它翻过来。","End by turning your opening line around."],
  ["抒情议论三层结构","①回扣事件 ②内心变化 ③展望未来。三层缺一层就不完整。","Recall the event → what changed in me → what I'll do next."],
- ["因果检验","把结尾的道理删掉，故事本身还能推出这个道理吗？能，才算合格。","Delete the moral — can the story still prove it?"]
+ ["删掉道理试一试","把结尾的道理删掉，故事本身还能推出这个道理吗？能，才算合格。","Delete the moral — can the story still prove it?"]
 ];
 
 /* ================= 经过排法示意图 ================= */
@@ -444,7 +446,7 @@ const ESSAYS = [
    tags:[{t:"一波三折·第一折",n:"第一次补救＝最省力的方式（打字道歉），所以它<b>必须失败</b>。如果一道歉就和好，「终于挽回」就没有着落了。",en:"The easiest attempt must fail first."}]},
   {part:"经过·第二折",text:"第二天在学校，我想跟他解释，他把书包一背就去了图书馆。我知道光道歉没有用，于是利用休息时间，<mark>一个一个</mark>找那天在场的同学，请他们别再把这件事传出去。有人不耐烦地说：「你自己讲的，现在才来紧张。」我脸上发烫，但还是把每一个人都说服了。可是那天放学，俊杰还是没有看我一眼。",
    tags:[{t:"一波三折·第二折",n:"补救升级了：从「说」变成「做」，而且我自己付出了代价（被同学讥讽）。但还是没成功——留给第三折。",en:"Second attempt costs more, still fails."},
-         {t:"关键词贯穿全文",n:"「补救」这个关键词在第一折、第二折、第三折里各出现一次，形式一次比一次实在。这就叫关键词贯穿全文。",en:"The key word reappears in every setback."}]},
+         {t:"关键词要一直出现",n:"「补救」这个关键词在第一折、第二折、第三折里各出现一次，形式一次比一次实在。这就叫关键词贯穿全文。",en:"The key word reappears in every setback."}]},
   {part:"经过·第三折（高潮）",text:"第三个星期，俊杰发烧请了三天假。我把每一堂课的笔记抄成一份，连老师随口补充的重点都记下来，放学后骑脚踏车到他家楼下，托管理处转交。第一天，没有回音。第二天，也没有。第三天傍晚，我正把袋子递出去，身后忽然传来一声：「放着吧。」",
    tags:[{t:"发现要细",n:"「连老师随口补充的重点都记下来」——一个细节就写出了我有多认真。比写十句「我很努力补救」有用。",en:"One concrete detail beats ten lines of 'I tried hard'."}]},
   {part:"经过·当面认错",text:"我转过身。俊杰站在电梯口，穿着拖鞋，脸色还有点白。我的<mark>手心一下子全是汗</mark>。我张了张嘴，把准备了三个星期的话说了出来：<span class=\"dlg\">「对不起。我不该替你说出那件事。我以为我在帮你，其实我只是想表现自己。」</span><span class=\"dlg\">他低头看着地上，好一会儿才说：「我不是气你讲出来。我是气……我最相信的人，也守不住。」</span>我的眼眶一下子热了。<span class=\"dlg\">「那你再给我一次机会。」我说，「这次我用做的，不用讲的。」</span>他沉默了几秒，伸手接过那袋笔记，轻轻说了一句：「字还是那么丑。」",
@@ -461,7 +463,7 @@ const ESSAYS = [
   "错是我自己犯的（口快想表现自己），「对不起」才站得住。",
   "补救写了三次，一次比一次实在：打字 → 澄清 → 送笔记。这就是一波三折。",
   "和好不是靠一句道歉，是靠三个星期的行动——符合「终于挽回」。",
-  "因果检验：把结尾的道理删掉，光看故事，读者一样能读出「行动才能挽回信任」。"
+  "删掉道理试一试：把结尾的道理删掉，光看故事，读者一样能读出「行动才能挽回信任」。"
  ]
 },
 {
@@ -479,9 +481,9 @@ const ESSAYS = [
  limits:["只写一项活动","第一人称「我」","最近发生","地点：校内","结局：明白自己也能贡献力量"],
  center:"即使性格内向，我们也能够在活动中贡献自己的力量。",
  material:{
-  good:["班级板报设计（擅长绘画）","图书馆义工（喜欢阅读、推荐书籍）","班级活动的摄影工作（擅长拍摄）","校园环境美化志愿者（种植花草、维护花坛）"],
-  bad:["打扫卫生","比赛时递水给参赛队员","辅导同学做功课"],
-  why:"不恰当的共同问题：看不出你发挥了什么<b>长处</b>，换成任何性格的人都能做，扣不住「<b>自己的</b>力量」，也和「性格内向」搭不上关系。"
+  good:["班级板报设计<span class='men'>If you draw well.</span>","图书馆义工<span class='men'>If you love reading.</span>","班级活动摄影<span class='men'>If you take good photos.</span>","校园环境美化<span class='men'>If you like growing things.</span>"],
+  bad:["打扫卫生<span class='men'>Anyone could do it.</span>","比赛时递水<span class='men'>Shows no strength of your own.</span>","辅导同学做功课<span class='men'>Nothing to do with being shy.</span>"],
+  why:"共同问题：<b>看不出你的长处</b>，谁来做都一样，扣不住「自己的」力量。"
  },
  ratio:[{label:"介绍人物",pct:12,color:"#2C5F8A"},{label:"介绍活动",pct:13,color:"#5B8CB0"},{label:"贡献力量一~四（详写）",pct:55,color:"#C0272D"},{label:"我的感受",pct:10,color:"#7A8C80"},{label:"感悟反思",pct:10,color:"#3F5147"}],
  paras:[
@@ -490,10 +492,10 @@ const ESSAYS = [
          {t:"开门见山两步走",n:"第一句说清我是谁，最后一句「彻底改变了我对自己的看法」引出这件事。中间不铺垫。",en:"Who I am, then straight to the event."}]},
   {part:"介绍活动（起）",text:"这项活动要求学生协助整理书籍、帮助其他同学借阅书籍<span class=\"it\">活动内容</span>。当时，我正好在图书馆借书，图书馆老师知道我经常来这里，于是主动向我推荐了这项活动<span class=\"it\">老师为什么让我参加</span>。虽然一开始我犹豫不决，但最终还是答应了，毕竟这项活动看起来<mark>不会有太多社交压力</mark>，而且在安静的图书馆工作也符合我的性格<span class=\"it\">我为什么决定参加</span>。",
    tags:[{t:"选材扣题",n:"三个问题一次答完：什么活动？内容是什么？我为什么参加？<b>「安静、符合我的性格」这一句最关键</b>——它让内向的人参加这项活动变得合乎生活逻辑。",en:"Answer what/why in one paragraph; make the fit believable."},
-         {t:"关键词贯穿全文",n:"起因段就已经在扣「性格内向」了（犹豫不决、没有社交压力）。关键词从第一段一直咬到最后一段。",en:"The key word is already working in the opening."}]},
+         {t:"关键词要一直出现",n:"起因段就已经在扣「性格内向」了（犹豫不决、没有社交压力）。关键词从第一段一直咬到最后一段。",en:"The key word is already working in the opening."}]},
   {part:"经过·贡献力量一",text:"起初，我的工作非常简单，就是将书架上的书籍整理好并归类<span class=\"it\">贡献力量一</span>。面对那些熟悉的书架和书本，我觉得这样的任务并不难完成。在这些安静的时光里，我默默地整理着书架，<mark>没有过多与人交流，觉得这正好适合我</mark><span class=\"it\">性格内向</span>。但随着时间的推移，我发现，自己不仅可以完成这些基本的任务，还能够在活动中贡献更多的力量<span class=\"it\">我对自己的看法</span>。",
    tags:[{t:"层层加深·第一层",n:"最低一层的贡献：只做体力活，不需要开口。这一层必须写，因为它符合「内向」的起点——后面三层才有对比。",en:"Start at the lowest rung so the climb is visible."},
-         {t:"每一层的写法（固定三步）",n:"这一段的写法后面三段全部照用：<b>①我做了什么（贡献）②这时候我的内向是怎样的 ③我对自己的看法变了一点</b>。学生只要记住这三步，四段都会写。",en:"Each stage: what I did → how my shyness showed → how my view shifted."}]},
+         {t:"每一层的三个步骤",n:"这一段的写法后面三段全部照用：<b>①我做了什么（贡献）②这时候我的内向是怎样的 ③我对自己的看法变了一点</b>。学生只要记住这三步，四段都会写。",en:"Each stage: what I did → how my shyness showed → how my view shifted."}]},
   {part:"经过·贡献力量二",text:"在帮助整理图书的过程中，常常有同学会来询问某本书的位置，或者不知道该如何借阅特定的书籍。起初，我只是简单地指引他们，但后来我发现，<mark>这其实是一个帮助别人的机会</mark><span class=\"it\">性格内向</span>。我开始主动询问他们需要哪类书，并耐心地帮他们查找书籍<span class=\"it\">贡献力量二</span>。虽然每次对话都很短暂，但在这些互动中，我慢慢感觉到，原来自己也能为别人带来实际的帮助。这让我开始逐渐摆脱内向的束缚，尝试与更多的同学沟通交流<span class=\"it\">我对自己的看法</span>。",
    tags:[{t:"层层加深·第二层",n:"从「不用开口」升到「主动开口」，但只是短暂对话——升一小级，不是一步登天。这就是转变合乎逻辑的关键。",en:"One small step up, not a leap."},
          {t:"心理要真",n:"「虽然每次对话都很短暂」——诚实承认自己还是内向的。写成「我一下子变得很健谈」就不合生活逻辑了。",en:"Admit the change is still small — that's what makes it believable."}]},
@@ -501,7 +503,7 @@ const ESSAYS = [
    tags:[{t:"层层加深·第三层",n:"这一层最能扣住「<b>自己的</b>力量」：内向的人常在旁边观察，所以看得见别人看不见的问题。他贡献的不是嗓门，是观察力和想法。",en:"The quiet one notices what others miss — that's his own strength."},
          {t:"发现要细",n:"建议写得很具体（加分类标签、热门书放显眼处），不是笼统写「我提了一些建议」。具体，读者才信。",en:"A concrete suggestion, not a vague one."}]},
   {part:"经过·贡献力量四",text:"活动进行到中期，老师决定举办一次书籍推荐会，邀请学生们分享自己喜欢的书籍。让我没想到的是，老师居然邀请我也上台发言。起初，我感到非常紧张，毕竟在众人面前发言对我这个内向的人来说并不容易<span class=\"it\">性格内向</span>。但想到自己对这段时间活动的参与和贡献，我决定试着迈出这一步。那天，我站在台上，<mark>虽然声音有些颤抖</mark>，但我还是顺利地向大家介绍了自己最喜欢的几本书，并分享了阅读的感受<span class=\"it\">贡献力量四</span>。看到同学们专注的眼神和他们的鼓励，我感到无比自豪<span class=\"it\">我对自己的看法</span>。",
-   tags:[{t:"层层加深·第四层（高潮）",n:"最难的一步：上台。前面三层是铺垫，有了它们，「上台」才不突兀——他是<b>累积了三层信心</b>才敢上台的，不是被一句话说服的。",en:"The hardest step comes last, earned by the three before it."},
+   tags:[{t:"层层加深·第四层",n:"最难的一步：上台。前面三层是铺垫，有了它们，「上台」才不突兀——他是<b>累积了三层信心</b>才敢上台的，不是被一句话说服的。",en:"The hardest step comes last, earned by the three before it."},
          {t:"心理要真",n:"「虽然声音有些颤抖」——这五个字保住了整篇文章的可信度。内向的人上台本来就会抖，写出来才真实。",en:"The shaky voice is what makes it true."}]},
   {part:"我的感受（合）",text:"通过这次活动，我不仅学会了如何整理书籍、帮助同学，还明白了自己在集体活动中并非无所作为<span class=\"it\">总结收获</span>。我的贡献让图书馆的工作变得更加顺畅，同时我也在帮助他人的过程中收获了极大的满足感<span class=\"it\">总结贡献</span>。更重要的是，我克服了性格内向的障碍，开始主动参与活动，用自己的方式为大家服务<span class=\"it\">活动对我的影响</span>。",
    tags:[{t:"结果扣题",n:"结果要同时答两件事：<b>我贡献了什么</b>（图书馆更顺畅）＋<b>我有什么感受</b>（满足感）。题目问了感受，这里就必须有。",en:"State both the contribution and the feeling."}]},
@@ -516,7 +518,7 @@ const ESSAYS = [
   "贡献分四层，一层比一层难：整理书 → 帮同学找书 → 提改进建议 → 上台分享。这是「层层加深」，不是「一波三折」。",
   "每一层都回扣「性格内向」，关键词贯穿全文，不是开头写一次就丢开。",
   "结尾承认「我依旧是那个安静、内向的我」——变的是看法不是性格，合乎生活逻辑。",
-  "因果检验：删掉结尾的道理，光看四层贡献，读者一样读得出「内向的人也能出力」。"
+  "删掉道理试一试：删掉结尾的道理，光看四层贡献，读者一样读得出「内向的人也能出力」。"
  ]
 },
 {
@@ -534,9 +536,9 @@ const ESSAYS = [
  limits:["一次邻里活动","第一人称「我」","最近发生","地点：社区／邻里","最少三个不同的场面","结局：感受到社区的温情"],
  center:"社区不仅仅是一个地理概念，更是一个充满人情味的大家庭；只有积极参与其中，才能真正感受到这份温暖。",
  material:{
-  good:["<b>别人帮你</b>：我参加社区活动，居民都来帮我（要想清楚怎样才合乎生活逻辑）","<b>你帮别人</b>：我帮助社区弱势群体","<b>我看到一些人帮助另一些人</b>：社区义工关心帮助孤寡老人（本篇范文用的就是这一种）"],
-  bad:["和妈妈的对话、为什么会参加：不要写／略写","社区捡垃圾：只说明环保有意义，说明不了温情","我捡垃圾受到居民称赞：那是自豪，不是温情","居民之间谈天说地：温情表现不明显","送爱心礼包给乐龄人士：写成了「助人为快乐之本」","参加中秋活动、吃月饼：重点必须落在「你如何从中感受到温情」"],
-  why:"这些角度不是不能碰，而是<b>写着写着就跑到别的中心去了</b>（环保、自豪、助人为乐）。判断标准只有一条：这一段写完，读者感受到的是不是「<b>温暖的情意</b>」？"
+  good:["<b>别人帮我</b><span class='men'>Neighbours help me. Make it believable.</span>","<b>我帮别人</b><span class='men'>I help someone in the neighbourhood.</span>","<b>我看见别人互相帮助</b><span class='men'>Volunteers care for the elderly. This model essay uses this one.</span>"],
+  bad:["和妈妈的对话<span class='men'>Skip it, or keep it to two lines.</span>","社区捡垃圾<span class='men'>Shows care for the environment, not warmth.</span>","我受到居民称赞<span class='men'>That is pride, not warmth.</span>","居民谈天说地<span class='men'>The warmth is not visible.</span>","送礼包给乐龄人士<span class='men'>Turns into 'helping others feels good'.</span>","中秋活动、吃月饼<span class='men'>Only counts if you show what you felt.</span>"],
+  why:"这些角度都会<b>跑到别的中心去</b>。判断只看一条：这一段写完，读者感到的是不是<b>温暖的情意</b>？"
  },
  ratio:[{label:"介绍人物",pct:10,color:"#2C5F8A"},{label:"引出活动",pct:12,color:"#5B8CB0"},{label:"三个场面（详写）",pct:58,color:"#C0272D"},{label:"总结感受",pct:12,color:"#7A8C80"},{label:"升华",pct:8,color:"#3F5147"}],
  paras:[
@@ -546,16 +548,16 @@ const ESSAYS = [
    tags:[{t:"砍废话三刀法",n:"「我怎么会去参加」只用了三句：散步 → 看见 → 被吸引。<b>不要写一大堆妈妈如何逼我参加</b>——那一段对中心没有用，写长了就是详略不当。",en:"Three lines to get there; no long argument with Mum."},
          {t:"描写升级三层法",n:"①长什么样：五颜六色的帐篷、彩灯 ②在做什么：音乐声、笑语飘来 ③让人觉得怎么样：仿佛一股暖流。第三层最重要——「暖」字一出来，温情就开始了。",en:"Looks → sounds → makes you feel warm."}]},
   {part:"场面一：义卖区",text:"犹豫片刻，我鬼使神差地走向了人群。首先映入眼帘的是一个热闹的义卖区。许多居民搭起摊位，售卖自制的美食、手工艺品和二手物品。我看到一位年轻妈妈带着孩子正在挑选绘本，旁边的摊主热情地为他们介绍着每本书的内容。更让我惊讶的是，有几个摊位前贴着“收益将用于社区老人关怀”的标语，顾客们似乎因此更加慷慨，有的甚至主动多付了钱<span class=\"it\">场面一：居民互助、慷慨解囊</span>。<mark>这种无私奉献的精神深深打动了我，让我第一次感受到了社区成员间的互助与关怀</mark><span class=\"it\">感受社区的温情</span>。",
-   tags:[{t:"场面并列·第一个场面",n:"三个场面各写一种温情，<b>不能重复</b>。第一个写的是：居民之间的<b>互助与慷慨</b>。",en:"Scene one: neighbours' generosity."},
-         {t:"两步走（这一题的必答动作）",n:"前半段写<b>居民做了什么</b>（摊主介绍绘本、顾客主动多付钱），后半段写<b>我感受到什么</b>（互助与关怀）。三个场面全部照这两步写。<b>只写热闹、不写感受＝失分。</b>",en:"What they did + what I felt. Every scene, both halves."},
+   tags:[{t:"场面一",n:"三个场面各写一种温情，<b>不能重复</b>。第一个写的是：居民之间的<b>互助与慷慨</b>。",en:"Scene one: neighbours' generosity."},
+         {t:"两步走",n:"前半段写<b>居民做了什么</b>（摊主介绍绘本、顾客主动多付钱），后半段写<b>我感受到什么</b>（互助与关怀）。三个场面全部照这两步写。<b>只写热闹、不写感受＝失分。</b>",en:"What they did + what I felt. Every scene, both halves."},
          {t:"发现要细",n:"「有的甚至主动多付了钱」——一个具体动作，就把「慷慨」写实了。不要只写「大家都很热心」。",en:"One concrete action makes 'generous' real."}]},
   {part:"场面二：关怀老人",text:"继续往前走，一阵欢声笑语吸引了我。十几位老人围坐在一起，有的品尝着香甜的月饼，有的正在玩一种简单有趣的棋类游戏。义工们有的陪老人聊天，有的耐心地解释游戏规则，还有的细心地为老人们端茶倒水。我注意到<mark>一位老爷爷的手有些颤抖，一个年轻义工立刻上前，轻轻扶住他的手，帮他稳稳地拿起茶杯</mark><span class=\"it\">场面二：义工关怀孤寡老人</span>。那一刻，我仿佛看到了跨越年龄的温情互动<span class=\"it\">感受社区的温情</span>。",
-   tags:[{t:"场面并列·第二个场面",n:"第二种温情：<b>跨越年龄的关爱</b>。和第一个场面（互助慷慨）不重复。",en:"Scene two: care across generations."},
+   tags:[{t:"场面二",n:"第二种温情：<b>跨越年龄的关爱</b>。和第一个场面（互助慷慨）不重复。",en:"Scene two: care across generations."},
          {t:"行动要慢",n:"全篇最好的一处：手颤抖 → 义工上前 → 轻轻扶住 → 帮他稳稳拿起茶杯。四个动作，把「温情」两个字写成了一个画面。<b>这就是详写。</b>",en:"Four small actions turn an abstract word into a picture."},
          {t:"以物写情",n:"温情落在一只<b>茶杯</b>上。不用写「我好感动」，读者自己就感动了。",en:"The teacup carries the feeling."}]},
   {part:"场面三：孩子做灯笼",text:"不远处，一群孩子的欢笑声引起了我的注意。原来是社区的青少年义工正在带领一些低龄儿童猜灯谜、制作灯笼。孩子们兴高采烈地举手猜谜，每猜对一个就会得到热烈的掌声和鼓励。在制作灯笼的环节中，<mark>年长一些的孩子耐心地指导年幼的孩子，有的帮忙剪纸，有的教导如何粘贴</mark><span class=\"it\">场面三：青少年义工陪孩童</span>。看到孩子们脸上洋溢的笑容，我不禁也跟着微笑起来<span class=\"it\">感受社区的温情</span>。",
-   tags:[{t:"场面并列·第三个场面",n:"第三种温情：<b>社区对下一代的培养</b>。三个场面分别是「居民之间」「对老人」「对孩子」——这样才叫<b>群像</b>，才扣得住「社区」两个字。",en:"Scene three: the community raising its young."},
-         {t:"三个场面怎么选（记这一条）",n:"往<b>三个不同的对象</b>去找：<b>对老人／对孩子／居民彼此之间</b>。三个场面写三种人，社区的样子就出来了。写三次「有人帮我」＝还是一个场面。",en:"Pick three different groups: elderly, children, neighbours."}]},
+   tags:[{t:"场面三",n:"第三种温情：<b>社区对下一代的培养</b>。三个场面分别是「居民之间」「对老人」「对孩子」——这样才叫<b>群像</b>，才扣得住「社区」两个字。",en:"Scene three: the community raising its young."},
+         {t:"三个场面怎么选",n:"往<b>三个不同的对象</b>去找：<b>对老人／对孩子／居民彼此之间</b>。三个场面写三种人，社区的样子就出来了。写三次「有人帮我」＝还是一个场面。",en:"Pick three different groups: elderly, children, neighbours."}]},
   {part:"总结感受（合）",text:"不知不觉中，我心里逐渐被一种前所未有的温暖充满。这次经历让我深刻体会到了社区的温情：<mark>在义卖活动中，我看到了居民们的慷慨和互助精神；在关怀老人的活动里，我感受到了不同年龄层居民之间的爱与尊重；在制作灯笼的活动中，我见证了社区对下一代的培养和关爱</mark>。最让我感动的是，这些活动都体现了对社区每一位成员的包容和关怀，不分年龄、不论身份<span class=\"it\">总结：感受社区的温情</span>。",
    tags:[{t:"三个场面收拢",n:"用三个分句把前面三个场面各点一次，再用一句话收成一个总的印象（包容和关怀，不分年龄、不论身份）。<b>这一段是「社区」两个字最后落地的地方。</b>",en:"Name all three scenes, then sum them into one impression."}]},
   {part:"升华",text:"那一刻，我才真正地认识到：<mark>社区不仅仅是一个地理概念，更是一个充满人情味的大家庭</mark>。只有积极参与其中，才能真正感受到这份温暖，也才能为这个大家庭贡献自己的一份力量<span class=\"it\">升华文章主题</span>。",
@@ -567,7 +569,7 @@ const ESSAYS = [
   "每个场面都走完两步：居民做了什么 ＋ 我感受到什么。少了第二步就只是在写热闹。",
   "三个场面各写一种温情，不重复：互助慷慨 / 跨年龄关爱 / 对下一代的培养。",
   "「我为什么会去」只用三句带过，没有写妈妈怎么劝我——详略正确。",
-  "因果检验：删掉结尾的道理，光看三个场面，读者一样读得出社区的温情。"
+  "删掉道理试一试：删掉结尾的道理，光看三个场面，读者一样读得出社区的温情。"
  ]
 }
 ];
