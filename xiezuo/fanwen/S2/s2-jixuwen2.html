@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>记叙文范文五篇·红笔批注·教师优化版</title>
+<style>
+:root{
+  --paper:#FFFFFF;
+  --paper-tint:#F4F6F3;
+  --grid:#C9DACE;
+  --ink:#1B1B1B;
+  --ink-soft:#5A5F5C;
+  --red:#C0272D;
+  --red-soft:#FBEDED;
+  --blue:#2C5F8A;
+  --blue-soft:#EAF1F7;
+  --mark:#FCE96A;
+  --line:#DDE3DE;
+  --green:#2F6B4F;
+  --green-soft:#E8F2EC;
+  --font-body:"Songti SC","Noto Serif CJK SC","SimSun",serif;
+  --font-ui:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0;
+  min-height:100vh;
+  overflow-y:auto;
+  background:var(--paper-tint);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:28px 28px;
+  color:var(--ink);
+  font-family:var(--font-ui);
+  padding-bottom:100px;
+}
+.wrap{max-width:840px;margin:0 auto;padding:0 14px;}
+
+header.top{background:var(--paper);border-bottom:3px solid var(--ink);padding:18px 0 0;}
+.title-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+h1{font-family:var(--font-body);font-size:26px;margin:0;letter-spacing:1px;}
+.sub{font-size:13px;color:var(--ink-soft);}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0 14px;font-size:12.5px;color:var(--ink-soft);}
+.legend b{color:var(--red);font-weight:600;}
+.legend i{color:var(--blue);font-style:normal;font-weight:600;}
+
+nav.tabs{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+nav.tabs button{
+  flex:0 0 auto;border:1px solid var(--line);border-bottom:none;background:var(--paper-tint);
+  color:var(--ink-soft);font-family:var(--font-ui);font-size:14px;padding:10px 14px;
+  border-radius:8px 8px 0 0;cursor:pointer;white-space:nowrap;
+}
+nav.tabs button[aria-selected="true"]{background:var(--paper);color:var(--ink);font-weight:700;border-color:var(--ink);box-shadow:inset 0 3px 0 var(--red);}
+
+.toolbar{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);padding:8px 0;margin-bottom:16px;}
+.toolbar .wrap{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.btn{border:1px solid var(--line);background:var(--paper);color:var(--ink);font-family:var(--font-ui);font-size:13.5px;padding:8px 12px;border-radius:20px;cursor:pointer;}
+.btn:active{transform:scale(.97);}
+.btn.on{background:var(--red);border-color:var(--red);color:#fff;}
+.btn.on.blue{background:var(--blue);border-color:var(--blue);}
+.btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px;}
+.card h2{font-family:var(--font-body);font-size:19px;margin:0 0 10px;padding-bottom:8px;border-bottom:2px solid var(--ink);}
+.card h3{font-size:14px;margin:18px 0 6px;color:var(--blue);letter-spacing:.5px;}
+.card h3:first-of-type{margin-top:14px;}
+
+.prompt{background:var(--blue-soft);border-left:5px solid var(--blue);border-radius:0 8px 8px 0;padding:12px 14px;font-family:var(--font-body);font-size:16.5px;line-height:1.8;}
+.type-chip{display:inline-block;background:var(--ink);color:#fff;font-size:12px;padding:3px 9px;border-radius:4px;margin-bottom:8px;}
+.must{background:var(--red-soft);border:1.5px solid var(--red);border-radius:8px;padding:10px 12px;font-size:14.5px;line-height:1.75;color:#4A1F21;margin-top:8px;}
+.must b{color:var(--red);}
+
+table.kw{width:100%;border-collapse:collapse;font-size:14px;}
+table.kw th,table.kw td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;line-height:1.65;}
+table.kw th{background:var(--paper-tint);font-weight:700;white-space:nowrap;}
+table.kw td.k{font-weight:700;white-space:nowrap;}
+table.kw tr.star td.k{color:var(--red);}
+table.kw tr.star td.k::after{content:" ★最重要";font-size:11px;font-weight:400;}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{background:var(--paper-tint);border:1px dashed var(--ink-soft);border-radius:14px;padding:5px 10px;font-size:13px;}
+
+.center-box{background:var(--mark);border-radius:8px;padding:12px 14px;font-family:var(--font-body);font-size:16px;line-height:1.8;}
+
+.mat{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mat>div{border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.75;}
+.mat .good{background:var(--green-soft);border-left:4px solid var(--green);}
+.mat .bad{background:var(--red-soft);border-left:4px solid var(--red);}
+.mat h4{margin:0 0 6px;font-size:13.5px;}
+.mat .good h4{color:var(--green);}
+.mat .bad h4{color:var(--red);}
+.mat ul{margin:0;padding-left:18px;}
+.mat li{margin-bottom:3px;}
+.mat .note-why{margin:8px 0 0;font-size:13px;color:var(--ink-soft);}
+@media(max-width:560px){.mat{grid-template-columns:1fr;}}
+
+.ratio{display:flex;width:100%;height:34px;border:1px solid var(--ink);border-radius:6px;overflow:hidden;margin-top:6px;}
+.ratio div{display:flex;align-items:center;justify-content:center;font-size:11.5px;color:#fff;border-right:1px solid rgba(255,255,255,.5);overflow:hidden;}
+.ratio div:last-child{border-right:none;}
+.ratio-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;font-size:12.5px;color:var(--ink-soft);}
+.ratio-legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;background:var(--sw);}
+
+.essay{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:8px 0 4px;}
+.para{border-bottom:1px dashed var(--line);padding:14px 16px;}
+.para:last-child{border-bottom:none;}
+.para-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.part{font-size:12px;color:var(--blue);background:var(--blue-soft);border-radius:4px;padding:3px 8px;font-weight:700;letter-spacing:.5px;}
+.speak{border:1px solid var(--line);background:var(--paper);border-radius:50%;width:30px;height:30px;font-size:14px;line-height:1;cursor:pointer;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;margin-left:auto;flex:0 0 auto;}
+.speak.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+.text{font-family:var(--font-body);font-size:18px;line-height:2.05;text-indent:2em;margin:0;}
+.text mark{background:var(--mark);padding:0 2px;border-radius:2px;}
+.text .dlg{display:block;text-indent:2em;}
+.it{
+  font-family:var(--font-ui);font-size:11.5px;color:var(--blue);background:var(--blue-soft);
+  border-radius:3px;padding:1px 5px;margin:0 3px;white-space:nowrap;text-indent:0;
+}
+body.hide-it .it{display:none;}
+
+.tagrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.tag{border:1.5px solid var(--red);color:var(--red);background:var(--paper);font-size:13px;padding:5px 11px;border-radius:16px;cursor:pointer;font-family:var(--font-ui);}
+.tag::before{content:"✎ ";}
+.tag[aria-expanded="true"]{background:var(--red);color:#fff;}
+.tag:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+.note{display:none;margin-top:8px;background:var(--red-soft);border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:10px 12px;font-size:14.5px;line-height:1.8;color:#4A1F21;}
+.note.show{display:block;}
+.note .en{display:block;margin-top:5px;font-size:12.5px;color:#7A4A4C;font-style:italic;}
+
+.why{background:var(--paper);border:2px solid var(--ink);border-radius:12px;padding:16px;margin-bottom:16px;}
+.why h2{border-bottom:none;margin-bottom:6px;font-family:var(--font-body);font-size:19px;}
+.why ol{margin:0;padding-left:20px;font-size:15px;line-height:1.9;}
+.why li{margin-bottom:4px;}
+
+table.ref{width:100%;border-collapse:collapse;font-size:14.5px;}
+table.ref th,table.ref td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top;line-height:1.7;}
+table.ref th{background:var(--ink);color:#fff;}
+table.ref td.t{font-weight:700;color:var(--red);white-space:nowrap;}
+
+/* ---- 经过排法示意图 ---- */
+.diagram{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--paper-tint);}
+.diagram .dg-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.diagram .dg-title{font-weight:800;font-size:14.5px;}
+.stairs{display:flex;align-items:flex-end;gap:7px;}
+.stairs .st{flex:1;min-width:0;border-radius:8px 8px 0 0;padding:8px 7px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;}
+.stairs .st b{font-size:13.5px;line-height:1.3;display:block;}
+.stairs .st i{font-style:normal;font-size:11px;opacity:.9;display:block;margin-top:4px;line-height:1.35;}
+.stairs .st .mk{font-size:15px;margin-bottom:4px;}
+.rise{display:flex;justify-content:space-between;align-items:center;border-top:2px solid var(--ink);padding-top:6px;margin-top:0;font-size:12.5px;color:var(--ink-soft);}
+.par{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.par .pc{border-radius:10px;padding:10px;color:#fff;}
+.par .pc .who{font-size:15px;font-weight:800;line-height:1.4;}
+.par .pc .lbl{font-size:11px;opacity:.85;margin-bottom:5px;}
+.par .pc .ds{font-size:12px;opacity:.95;margin-top:5px;line-height:1.4;}
+.dg-cap{font-size:14px;line-height:1.75;margin:12px 0 0;}
+.dg-no{margin-top:10px;background:#fff;border:1.5px dashed var(--red);border-radius:9px;padding:9px 11px;font-size:13.5px;line-height:1.7;color:var(--red);}
+@media(max-width:480px){.stairs .st b{font-size:12px}.stairs .st i{display:none}.par{grid-template-columns:1fr}}
+
+.chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;}
+.chain .cb{flex:1 1 130px;min-width:118px;border-radius:9px;padding:9px 10px;color:#fff;}
+.chain .cb b{font-size:13.5px;display:block;line-height:1.35;}
+.chain .cb i{font-style:normal;font-size:11px;opacity:.92;display:block;margin-top:5px;line-height:1.4;}
+.author{font-size:12.5px;color:var(--ink-soft);margin:6px 0 0;}
+
+/* ---- 关键词一句话表 ---- */
+.kwlist{border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.kwrow{border-bottom:1px solid var(--line);background:var(--paper);}
+.kwrow:last-child{border-bottom:none;}
+.kwline{display:flex;align-items:center;gap:10px;padding:11px 12px;flex-wrap:wrap;}
+.kwk{font-weight:800;font-size:14.5px;white-space:nowrap;}
+.kwrow.star .kwk{color:var(--red);}
+.kwrow.star .kwk::after{content:" ★";font-size:12px;}
+.kwone{flex:1;min-width:150px;font-size:15px;line-height:1.6;}
+.kwacts{display:flex;gap:6px;margin-left:auto;}
+.mini{border:1px solid var(--line);background:var(--paper);border-radius:14px;font-size:12px;padding:5px 9px;cursor:pointer;color:var(--ink-soft);white-space:nowrap;}
+.mini.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+.kwen,.kwdetail{display:none;padding:0 12px 11px;font-size:13.5px;line-height:1.75;}
+.kwen{color:var(--blue);font-style:italic;}
+.kwdetail{color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:9px;}
+.kwen.show,.kwdetail.show{display:block;}
+
+/* ---- 选材发散四步 ---- */
+.idea{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:14px;}
+.istep{display:flex;gap:10px;margin-bottom:12px;}
+.istep:last-child{margin-bottom:0;}
+.inum{flex:0 0 26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;}
+.ibody{flex:1;min-width:0;}
+.ilabel{font-size:12.5px;color:var(--ink-soft);margin-bottom:4px;}
+.ival{font-size:15.5px;font-weight:700;line-height:1.6;}
+.iask{background:var(--mark);border-radius:8px;padding:8px 11px;font-size:16px;font-weight:800;line-height:1.6;}
+.igrid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:6px;}
+.icell{background:var(--green-soft);border-left:3px solid var(--green);border-radius:7px;padding:8px 9px;font-size:13.5px;line-height:1.55;}
+.icell b{display:block;color:var(--green);}
+.idrop{background:var(--red-soft);border-left:3px solid var(--red);border-radius:7px;padding:8px 10px;font-size:13.5px;line-height:1.6;margin-top:6px;color:#4A1F21;}
+.iarrow{text-align:center;color:var(--ink-soft);font-size:15px;margin:-6px 0 6px 36px;}
+@media(max-width:480px){.igrid{grid-template-columns:1fr}}
+
+
+/* ---- 弱生支撑：英文/语音默认隐藏，按需打开 ---- */
+.support-tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0 8px;}
+.support-tools .mini,.why-tools .mini{font-size:12px;}
+.support-en{display:none;margin-top:7px;padding:8px 10px;border-radius:8px;background:#F4F8FB;color:var(--blue);font-size:12.5px;line-height:1.6;font-style:italic;}
+.support-en.show{display:block;}
+.audit-en{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);}
+.audit-en li{margin-bottom:5px;}
+.why-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.why-tools{display:flex;gap:6px;align-items:center;}
+.why-en-list{display:none;margin:8px 0 0;padding:9px 12px 9px 30px;background:#F4F8FB;border-radius:8px;color:var(--blue);font-size:12.5px;line-height:1.65;font-style:italic;}
+.why-en-list.show{display:block;}
+.story-support{position:relative;}
+.story-support .support-tools{justify-content:flex-end;margin-top:-2px;}
+.ratio-support{margin-top:7px;}
+
+
+.panel{display:none;}
+.panel.active{display:block;}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+@media (max-width:480px){
+  h1{font-size:22px;}
+  .text{font-size:17px;line-height:1.95;}
+  table.kw{font-size:13px;}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="title-row">
+      <h1>记叙文范文 · 五篇</h1>
+      <span class="sub">中学高级华文｜红笔批注｜教师优化版（基于原稿改写）</span>
+    </div>
+    <div class="legend">
+      <span><i>蓝标</i> = 这一段／这一句在做什么</span>
+      <span><b>✎ 红批</b> = 用了什么技巧，点开看</span>
+      <span>🔊 = 朗读这一段</span>
+      <span style="color:var(--green);font-weight:700">✓ 优化重点：因果站得住、结尾不喊口号</span>
+    </div>
+    <nav class="tabs" id="tabs" role="tablist"></nav>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <button class="btn" id="toggleAll">展开全部红批</button>
+    <button class="btn" id="toggleInline">隐藏句子标注</button>
+    <button class="btn" id="stopSpeak">停止朗读</button>
+  </div>
+</div>
+
+<main class="wrap" id="panels"></main>
+
+<script>
+/* ================= 技巧速查 ================= */
+const REF = [
+ ["开门见山两步走","第一句点出「我原来是怎样的人／有什么毛病」，第二句引出这件事。不绕圈子。","Name your flaw, then jump into the event."],
+ ["开头四步（引名言型）","引名言 → 简单解释 → 我原来的看法 → 引出要写的事。可以模仿这个结构，但不要机械背同一段套所有题。","Quote → explain → my old view → the event."],
+ ["砍废话三刀法","砍重复、砍无效信息（天气／早餐／坐车）、只留会改变故事走向的词。","Cut repetition, cut filler, keep only what moves the story."],
+ ["关键词贯穿全文","关键词要在经过一、二、三里反复出现，不是开头写一次就算。","Keep hitting the key words all the way through."],
+ ["经过怎么排（四种）","①<b>一波三折</b>——劝了三次／补救三次（用在转变型）②<b>因果链</b>——铺垫→不听→后果→后悔，一环扣一环（用在「不听劝就吃亏」型）③<b>前后对比</b>——同一件事做两次，只有态度不同（用在勤奋／努力型）④<b>层层加深</b>——一层比一层难（用在贡献／能力型）。先判断题目属于哪一种，再决定经过怎么排。","Pick the shape that fits the question."],
+ ["一波三折","经过不能一帆风顺。长辈劝三次、我推三次，一次比一次不耐烦。","Three rounds, not one."],
+ ["后果要连锁","一个后果不够，要一环扣一环（起晚 → 塞车 → 迟到 → 考砸），代价才够重。","Chain the consequences so the price feels real."],
+ ["先甜后苦","偷懒、走捷径的甜头要写足，后面的代价才够苦。","Write the sweet part fully so the bitter part lands."],
+ ["核心情节详写四诀","发现要细、分歧要响、心理要真、行动要慢——用在全文最重要的那一段。","Detail, dialogue, real inner struggle, slow-motion action."],
+ ["行动要慢","把动作拆开：停顿、身体感觉（手心冒汗、双手发抖），一秒钟写成一段。","Break the action into small steps and body sensations."],
+ ["心理要真","写具体的挣扎，不写「我很紧张」这种空话。","Show the struggle, don't just name the feeling."],
+ ["分歧要响","用对话写冲突，一人一个立场，让人物自己说话。","Use dialogue to make the conflict audible."],
+ ["以物写情","把感情放在一件具体的东西上（一袋早点、一盘蛋糕、一朵泪花），不直接喊「我很感动」。","Put the emotion into an object."],
+ ["前后对比","同一件事做两次，或同一个人前后两样。「前」略写，「后」详写。","Same event twice, or same person before and after."],
+ ["反面假设","用「如果我当初……就不会……」把因果倒着说一遍，是最省力的反思写法。","'If only I had…' — the easiest way to reflect."],
+ ["首尾呼应","结尾回到开头那句话，把它翻过来；或者开头引名言，结尾再引一句。","Turn the opening line around at the end."],
+ ["结尾：回扣＋感悟＋可选行动","先回扣这件事，再写真正的感受／认识；如果题意和人物转变需要，再自然写「以后我会怎么做」。第三层是提升，不必机械硬凑。","Recall the event → realise what changed → add a future action only when it fits."],
+ ["因果检验","把结尾的道理删掉，故事本身还能推出这个道理吗？能，才算合格。","Delete the moral — can the story still prove it?"]
+];
+
+const SHAPE={
+ e1:{title:"经过怎么排：因果链（一环扣一环）",type:"chain",
+   steps:[{t:"铺垫",s:"膝盖刚扭伤恢复；奶奶有运动护理经验",c:"#2C5F8A"},
+          {t:"老人言",s:"「别盘腿久坐，每半小时起来活动」",c:"#5B8CB0"},
+          {t:"我不听",s:"觉得已经好了；一坐就是几个小时",c:"#C0272D"},
+          {t:"吃亏",s:"膝盖僵痛，起身险些摔倒",c:"#8E1F24"},
+          {t:"后悔",s:"回家路程加倍，第二天训练也参加不了",c:"#3F5147"}],
+   cap:"这一题最重要的是把<b>劝告和后果扣成同一条因果链</b>：奶奶懂运动护理，提醒我膝伤刚好不要长时间盘腿久坐；我偏偏久坐不动，随后膝盖僵痛。这样「不听 → 吃亏」才站得住。",
+   en:"Prove the elder is worth listening to first — then ignoring them becomes a mistake.",
+   no:"✘ 不要写成「吹冷气 → 脚踝受伤」这类因果不稳的情节。后果必须能由前面的具体行为直接推出。"},
+ e2:{title:"经过怎么排：一波三折（劝三次）",type:"stairs",
+   steps:[{t:"「该睡觉了」",s:"我：我又不困",mk:"✗",c:"#EAB6B8"},
+          {t:"「定闹钟了吗」",s:"我：反正也能起来",mk:"✗",c:"#D26065"},
+          {t:"「凡事都有万一」",s:"我：捂住耳朵喊过去",mk:"✗",c:"#C0272D"}],
+   rise:["姥姥劝得越来越具体，我推得越来越不耐烦 →","三次"],
+   cap:"同一个人劝三次，每次说的话都<b>不一样</b>、一次比一次具体；我的反应一次比一次差。后果也是连锁的：起晚 → 塞车 → 迟到半小时 → 睡眠不足 → 考砸。",
+   en:"Three different warnings, three worse reactions, then a chain of consequences.",
+   no:"✘ 三次都写成「姥姥叫我早点睡」＝重复，不是一波三折。"},
+ e3:{title:"经过怎么排：先甜后苦（因果链）",type:"chain",
+   steps:[{t:"压力",s:"要拿高分＋其他科目也逼近",c:"#2C5F8A"},
+          {t:"偷懒",s:"练习稿直接贴着屏幕描轮廓",c:"#B07A1E"},
+          {t:"甜头",s:"一晚完成，作品看起来很漂亮",c:"#2F6B4F"},
+          {t:"露馅",s:"正式考试改画现场静物，无法独立构图",c:"#C0272D"},
+          {t:"代价",s:"实践考试失手，练习机会也白白浪费",c:"#8E1F24"}],
+   cap:"甜头一定要写足（绿色那一格）。<b>甜写得越香，苦才越苦。</b>更重要的是：老师布置练习稿，本来就是让学生练比例和构图；我却用描图跳过了练习，所以正式考试换成现场静物时，真正缺的能力立刻暴露。",
+   en:"Make the shortcut feel good first; the price must be caused by the shortcut itself.",
+   no:"✘ 不要把「描图」只写成作弊被发现。那样中心会跑到诚信。这里要写清：<b>我为了省练习，结果真正需要能力时不会做</b>，才扣住「偷懒」。"},
+ e4:{title:"经过怎么排：前后对比（同一件事做两次）",type:"par",
+   cols:[{lbl:"第一次 · 校队模拟",who:"没准备",ds:"同一辩题、同一对手组 → 资料只有几张 → 结辩时脑中一片空白",c:"#8E1F24"},
+         {lbl:"第二次 · 一周后复测",who:"扎实准备",ds:"同一辩题、同一对手组 → 每天整理资料＋计时练习 → 获选正式四辩",c:"#2F6B4F"}],
+   cap:"为了让对比经得起因果检验，优化版把两次都设成<b>校队内部同一辩题、同一对手组、同一赛制的模拟与复测</b>。主要变化落在准备程度上，这样「勤奋带来进步」才更站得住。",
+   en:"Same stage twice — only the preparation changed.",
+   no:"✘ 如果第二次换辩题、换对手、题目更简单，或有人替我准备，成功就可能来自别的因素。<b>对比越干净，中心越有说服力。</b>"},
+ e5:{title:"经过怎么排：因果链（矛盾 → 化解）",type:"chain",
+   steps:[{t:"起因",s:"楼上滴水，衣服全湿",c:"#2C5F8A"},
+          {t:"爆发",s:"妈妈上楼，两人互不相让",c:"#C0272D"},
+          {t:"升级",s:"越吵越大声，邻居皱眉",c:"#8E1F24"},
+          {t:"我出手",s:"先说明影响，再问发生了什么",c:"#B07A1E"},
+          {t:"和解",s:"了解原因 → 商量办法 → 双方道歉",c:"#2F6B4F"}],
+   cap:"转折点从一句问题开始，但不能停在「问出苦衷」。完整的处理应是：<b>先停下指责 → 了解处境 → 把自己的困扰说清楚 → 一起商量可实行的办法</b>。这样「体谅」和「沟通」才真正落地。",
+   en:"The turn begins with a question, then moves to listening, explaining the impact and finding a workable solution.",
+   no:"✘ 只写「我劝她们别吵，她们就和好了」太跳。必须写出：为什么愿意停下来、双方各自说了什么、最后怎样解决实际问题。"}
+};
+
+const KWONE={
+ e1:[["哪位长辈、说了哪一句话，要写清楚","Name the elder and quote the advice."],
+     ["要写出为什么不听、怎么不听","Show why you ignored it and how."],
+     ["亏要吃得快，而且是自己造成的","The loss must come fast and be your own fault."],
+     ["只写一件，时间是最近","One recent event only."]],
+ e2:[["哪位长辈、说了哪一句话，要写清楚","Name the elder and quote the advice."],
+     ["要写出为什么不听、怎么不听","Show why you ignored it and how."],
+     ["亏要吃得快，而且是自己造成的","The loss must come fast and be your own fault."],
+     ["只写一件，时间是最近","One recent event only."]],
+ e3:[["代价要大，而且是偷懒直接造成的","The price must be big and caused by the shortcut."],
+     ["偷懒只落在一个具体动作上","One specific lazy shortcut, not a lazy life."],
+     ["代价必须由我自己承担","You pay the price yourself."],
+     ["结尾必须写出感受和道理","The ending must state the feeling and the lesson."]],
+ e4:[["勤奋要写成看得见的动作","Show diligence as visible actions."],
+     ["结局必须成功，而且是勤奋换来的","Success must come from the effort, nothing else."],
+     ["同一件事做两次，只有准备不同","Same task twice; only the preparation differs."],
+     ["只写一件，时间是最近","One recent event only."]],
+ e5:[["体谅＝先停下判断，愿意了解对方处境","Understanding means pausing judgment and considering the other side."],
+     ["沟通＝说明问题＋听解释＋一起找办法","Communication means state the problem, listen, then find a solution together."],
+     ["结局是双方都退一步、恢复和气","Both sides must give way."],
+     ["只写一件，地点在邻里之间","One event, between neighbours."]]
+};
+
+const IDEA={
+ e1:{kw:"老人言",ask:"长辈平时常唠叨我哪一件事？",askEn:"Which nagging do I always ignore?",
+   cells:[["奶奶：膝伤刚好别盘腿久坐","久坐后膝盖僵痛、无法参加训练"],["姥姥：早点睡、定闹钟","睡过头，考试迟到"],
+          ["妈妈：吃完东西马上收","招来蚂蚁蟑螂"],["爸爸：出门带雨伞","淋雨感冒，误了比赛"]],
+   filter:"不听这句话，很快就会出事吗？",
+   filterEn:"Will ignoring it hurt you soon?",
+   drop:"不会 → 淘汰：叫我少玩手机、叫我多读书。后果太慢、太笼统，写不出「吃亏在<b>眼前</b>」。"},
+ e2:{kw:"老人言",ask:"我最近一次「后悔没听话」，后悔的是什么？（从后果倒着想）",askEn:"Start from the regret, then find who warned you.",
+   cells:[["考试迟到","姥姥叫我定闹钟"],["旧伤复发","奶奶叫我穿长裤"],
+          ["整晚被蚊子咬","妈妈叫我关纱窗"],["手机摔碎屏","爸爸叫我买保护壳"]],
+   filter:"这个亏，是不是因为不听那句话才吃的？",
+   filterEn:"Was the loss really caused by ignoring that advice?",
+   drop:"不是 → 淘汰。例如生病、被别人连累——不是自己不听劝造成的，扣不住「不听老人言」。"},
+ e3:{kw:"巨大代价",ask:"我为了省事，走过哪一条捷径？",askEn:"What shortcut did I take to save effort?",
+   cells:[["把纸贴在屏幕上描画","考场没图样，完全画不出"],["抄同学的作业","考试同类题一题也不会"],
+          ["背答案不理解","换个问法就答不出"],["值日草草扫一遍","卫生检查全班扣分"]],
+   filter:"捷径当时省下的，后来有没有加倍还回来？",
+   filterEn:"Did the shortcut cost you more later?",
+   drop:"没有 → 淘汰：睡懒觉迟到、忘带课本。那是粗心，不是「走捷径」，也谈不上<b>巨大</b>代价。"},
+ e4:{kw:"勤奋",ask:"同一件事，我做过两次吗？",askEn:"Have I done the same thing twice?",
+   cells:[["辩论赛","第一场临时抱佛脚 → 第二场天天准备"],["华文听写","第一次考前才背 → 第二次每天背五个"],
+          ["田径选拔","第一次没训练 → 第二次每天跑"],["演讲比赛","第一次照稿念 → 第二次反复练"]],
+   filter:"两次之间，是不是只有「准备」不一样？",
+   filterEn:"Is preparation the only difference between the two?",
+   drop:"还有别的原因（换了对手、题目变简单、有人帮忙）→ 淘汰。对比不干净，就证明不了勤奋的作用。"},
+ e5:{kw:"体谅和沟通",ask:"我家和邻居因为什么事闹过不愉快？",askEn:"What friction did we have with a neighbour?",
+   cells:[["楼上晾衣服滴水","洗衣机坏了，只能用手拧"],["隔壁装修太吵","白天要上班，只能晚上做"],
+          ["走廊堆鞋子挡路","家里空间小，鞋柜放不下"],["半夜拖椅子的声音","孩子夜里发烧要送医"]],
+   filter:"这个冲突里，双方有没有各自合理的一部分？",
+   filterEn:"Can both sides have a reasonable concern that needs to be heard?",
+   drop:"如果一方完全没有可理解的处境，只靠主角一句话就突然变好，故事会很假。最好选双方都有一点理由、也都有一点需要调整的矛盾。"}
+};
+
+
+
+const KW_DETAIL_EN={
+ e1:[
+  'Do not write only “an elder’s advice”. Name who said it, quote the advice, and show why it has a sound reason.',
+  'Show both the thought behind ignoring it and the action that goes against the advice.',
+  'The loss must happen soon and be directly caused by ignoring that exact advice.',
+  'Write one recent event only.'
+ ],
+ e2:[
+  'The elder gives three different warnings, each more specific than the previous one.',
+  'Your reactions also worsen step by step; that decline becomes part of the plot.',
+  'The loss comes the next morning and forms a clear chain: oversleep → traffic → late → confused → poor performance.',
+  'Write one recent event only.'
+ ],
+ e3:[
+  'The price must be serious and directly caused by the lazy shortcut.',
+  '“A moment of laziness” should be one specific shortcut, not a general lazy personality.',
+  'You must personally bear the consequence; the ending should not erase the price.',
+  'End with your feeling and what you now understand.'
+ ],
+ e4:[
+  'Diligence must be visible in specific actions: how long you prepared, what you prepared, and what extra work you did.',
+  'Success must come from the effort, not luck, an easier task or a weaker opponent.',
+  'For a clean comparison, keep the task and conditions the same; preparation should be the main changed factor.',
+  'Write one recent event.'
+ ],
+ e5:[
+  'Understanding means pausing your first judgment and learning the other person’s situation.',
+  'Communication means state the problem clearly, listen to the explanation, and work out a solution together.',
+  'The ending should show both sides adjusting so the living environment becomes peaceful again.',
+  'Write one recent neighbourhood incident.'
+ ]
+};
+const IDEA_MORE_EN={
+ e1:['Grandma: do not sit cross-legged for hours after a knee injury → pain/stiffness','Grandma: sleep early and set an alarm → oversleep and miss the exam','Mum: clear food away → ants/cockroaches','Dad: carry an umbrella → get soaked and miss an activity'],
+ e2:['Exam late → grandmother told me to set an alarm','Knee problem → grandmother warned me to protect it','Mosquitoes all night → mum told me to close the screen','Phone screen broken → dad told me to use protection'],
+ e3:['Trace a picture on a screen → cannot draw independently in the exam','Copy homework → cannot solve a similar exam question','Memorise answers without understanding → fail when wording changes','Rush cleaning duty → class loses marks'],
+ e4:['Debate — last-minute prep vs daily prep','Chinese spelling — cram once vs practise a few words daily','Track trial — no training vs daily running','Speech — read from script vs repeated practice'],
+ e5:['Dripping laundry → washing machine broken','Renovation noise → work schedule problem','Shoes blocking corridor → lack of space','Dragging chairs at night → sick child needs care']
+};
+const RATIO_EN={
+ e1:'Keep the setup brief. Spend the most space on the moment you ignore the advice and the believable consequence.',
+ e2:'The three warnings and the chain of consequences are the main body; the opening should stay short.',
+ e3:'Spend most space on the shortcut, the temporary “sweet” result, and the moment the shortcut fails.',
+ e4:'Keep the first weak performance shorter than the second preparation-and-improvement section. The contrast must stay clean.',
+ e5:'Spend most space on the conflict and the communication that changes it; the ending can be short.'
+};
+const WHY_EN={
+ e1:['The elder’s advice is credible and specific before the narrator ignores it.','The sitting habit is both a planted detail and the direct cause of the later problem.','Ignoring is shown in both thought and action.','The consequence is concrete and believable.','Even without the moral at the end, the story itself proves the lesson.'],
+ e2:['The opening clearly shows the narrator’s old attitude.','The elder warns three times with different, increasingly specific advice.','The consequences form a tight chain from oversleeping to poor performance.','A small breakfast action shows the elder’s care without preaching.','The ending returns to the lesson in a personal way.'],
+ e3:['The lazy shortcut is one concrete action, not a vague “lazy personality”.','Pressure builds first, so the shortcut feels believable.','The shortcut gives a temporary reward before the cost appears.','The exam failure is directly caused by not practising the real skill.','The ending now states both the lesson and what the narrator will do differently.'],
+ e4:['The comparison keeps the task and conditions as similar as possible.','Diligence is shown through visible preparation actions.','The improvement is measured by performance, not just self-praise.','The result follows from preparation rather than luck.','The ending turns the lesson into a future habit.'],
+ e5:['The conflict is small and believable in an HDB setting.','Both sides have understandable concerns, so “understanding” is meaningful.','Communication is shown as asking, explaining, listening and solving.','Both sides adjust their behaviour, which creates real harmony.','The final small detail shows the relationship has changed without a big slogan.']
+};
+
+const ESSAYS = [
+{
+ id:"e1", tab:"一、不听老人言（图书馆）",
+ prompt:"最近发生的一件事，让你认识到「不听老人言，吃亏在眼前」的道理。试写出这件事的经过以及你的感受。",
+ type:"A 型：题目已经给了中心，选材最关键",
+ author:"张耘硕 · 302班",
+ kw:[
+  {k:"老人言",star:true,v:"不能笼统写「长辈的话」。要写出：<b>谁说的？说了哪一句话？这句话为什么有道理？</b>这一篇先交代奶奶有运动护理经验，再让她给出具体、可执行的提醒。"},
+  {k:"不听",v:"光写「我没听」不够。要有<b>心理描写</b>（我觉得已经能走路，坐着不会有事）＋<b>行动描写</b>（嘴上答应，到了图书馆还是盘腿久坐）。"},
+  {k:"吃亏在眼前",v:"「眼前」＝很快就发生，不能隔半年。而且必须是<b>因为不听那句话</b>才吃的亏，不能是别的原因。"},
+  {k:"最近发生的一件事",v:"限制：只写一件，时间是最近。"}
+ ],
+ limits:["只写一件事","第一人称「我」","最近发生","结局：吃了亏并且后悔"],
+ center:"长辈的提醒未必句句都要照单全收，但面对有根据、与眼前风险直接相关的劝告，如果只凭自己的感觉拒绝思考，很可能马上吃亏。",
+ ratio:[{label:"背景铺垫",pct:20,color:"#2C5F8A"},{label:"老人言",pct:10,color:"#5B8CB0"},{label:"我如何不听",pct:20,color:"#B07A1E"},{label:"后果（详写）",pct:35,color:"#C0272D"},{label:"感受＋领悟",pct:15,color:"#3F5147"}],
+ paras:[
+  {part:"开门见山·介绍人物",text:"我向来爱看书，一到图书馆就能安安静静地坐上几个小时。更麻烦的是，我有个习惯：找到喜欢的书，常常就在书架旁<mark>盘腿坐下，一坐就忘了时间</mark><span class=\"it\">埋伏笔：久坐习惯</span>。平时这样并没有什么，可上个星期，我晨跑时刚扭伤了右膝，这个习惯却差点让我再次吃亏。",
+   tags:[{t:"开门见山两步走",n:"第一句就说清「我爱看书」，第二句马上埋下「盘腿久坐」这个会惹祸的习惯。背景只留以后会起作用的东西。",en:"Say who you are in one line; keep only the detail that causes trouble later."},
+         {t:"埋伏笔",n:"「盘腿久坐」看起来只是一个生活习惯，后面却直接变成吃亏的原因。<b>好的铺垫，是把真正会推动后果的动作提前埋好。</b>",en:"The habit of sitting cross-legged for hours is planted here; it will cause the later trouble."}]},
+  {part:"铺垫·老人言为什么有道理",text:"受伤后的几天，我上下楼都得扶着栏杆。奶奶年轻时在运动队做过护理工作，见惯了扭伤后的恢复过程。她帮我冰敷，也一再提醒我：<mark>「不痛了，不等于完全好了；这几天别让膝盖一直弯着，更不要盘腿久坐。」</mark><span class=\"it\">老人言为什么可信</span>。到了周末，我走路已经不怎么痛了，便自以为恢复得差不多。",
+   tags:[{t:"这一段是全篇的关键",n:"奶奶有运动护理经验，而且劝告具体到「不要盘腿久坐、定时起来活动」。<b>劝告有根据，「不听」才真正构成错误。</b>",en:"This one line makes the elder's advice credible — without it, the whole point collapses."},
+         {t:"铺垫不是流水账",n:"受伤、奶奶照料、康复，三件事都在为同一个目的服务：证明奶奶懂、我欠她。<b>凡是不为中心服务的铺垫，一律砍掉。</b>",en:"Every line of the setup must serve the point."}]},
+  {part:"起因",text:"星期六下午，我背上书包准备去图书馆。一个星期没去，我早就惦记着书架上的新书。临出门前，我活动了两下膝盖，见没有明显痛感，心里更认定自己已经没事了。",
+   tags:[{t:"砍废话三刀法",n:"这一段只做两件事：交代我要去图书馆，并写出「我觉得膝盖已经好了」这个错误判断。三句进入正题，不铺无关背景。",en:"Only the trip to the library and the mistaken belief that the knee is fine matter here."}]},
+  {part:"老人言",text:"正要出门，奶奶从厨房里追出来，一边擦手一边叮嘱：<span class=\"dlg\">「去可以，<mark>别再盘腿坐在地上几个小时。每隔半小时起来走一走，膝盖一不舒服就回来。</mark>」<span class=\"it\">老人言：具体、可执行</span></span>",
+   tags:[{t:"老人言要具体到一句话",n:"必须把长辈的原话写出来，加引号。<b>写成「奶奶叮嘱我要注意身体」就不行</b>——太笼统，后面「不听」也就没有具体的对象。",en:"Quote the elder's exact words; a summary won't do."},
+         {t:"发现要细",n:"「一边擦手」四个字，让奶奶从厨房走出来这件事变得真实。一个小动作胜过一句「奶奶很关心我」。",en:"'Wiping her hands' makes the moment real."}]},
+  {part:"我如何不听",text:"我嘴上答应得很快，心里却不以为然：<mark>都已经能正常走路了，坐着看书又不是跑步，能出什么事？</mark><span class=\"it\">心理描写：我有自己的理由</span>我挥挥手说「知道啦」，便快步下了楼。那时的我把奶奶的提醒当成过度小心，根本没想过要照做。",
+   tags:[{t:"心理要真",n:"「已经能走路，坐着又不是跑步」——这个理由听起来甚至有一点道理。<b>人物先说服自己，才会真的做出错误选择。</b>",en:"Give him a reason that sounds sensible — that's what makes it believable."},
+         {t:"行动要慢",n:"这里没有夸张地顶嘴，而是「嘴上答应、心里不信」。到了图书馆真正盘腿久坐，才把「不听」落实成行动。",en:"Three actions act out the refusal."}]},
+  {part:"经过·又一次不听",text:"到了图书馆，我很快挑好几本书。靠近窗边的座位坐满了人，我便像往常一样在书架旁铺开外套，<mark>盘腿坐了下来</mark><span class=\"it\">行动：直接违背劝告</span>。手机震了一次，我看见已经过了四十分钟，却想着「再看完这一章就起来」。一章接一章，等我再次抬头时，墙上的时钟已经走过三个小时。奶奶说的「每半小时起来走一走」，早被我忘得一干二净。",
+   tags:[{t:"关键词贯穿全文",n:"前面是「心里不信」，这里是「实际违背」：超过提醒的时间仍继续久坐。关键词要在事件里不断得到新证据。",en:"The second act of ignoring — the key word keeps working."}]},
+  {part:"后果一（详写）",text:"闭馆提示响起时，我才恋恋不舍地合上书。双手撑着地面准备站起来，右膝却像被什么卡住似的，一时伸不直。我愣了一下，又试着用力，<mark>一阵尖锐的酸痛从膝盖里窜上来</mark>。我赶紧扶住书架，差点把旁边的一排书撞倒。刚才还觉得「坐着能有什么事」的我，望着自己僵着的右腿，脸一下子热了起来<span class=\"it\">后果：由久坐直接引起</span>。",
+   tags:[{t:"行动要慢",n:"起身这几秒被拆开：撑地 → 膝盖伸不直 → 再用力 → 酸痛窜上来 → 扶住书架。<b>全文最重要的那几秒，要写得最慢。</b>",en:"Standing up is stretched into five beats — the key seconds run slowest."},
+         {t:"后果要写得能摸到",n:"「伸不直」「尖锐的酸痛」「差点撞倒书」把后果写成动作和感觉，比一句「膝盖很痛」具体得多。",en:"Numb, icy, piercing — the reader feels it too."}]},
+  {part:"后果二·代价加倍",text:"我扶着栏杆，一小步一小步地往家挪。平时从图书馆走回家只要十几分钟，那天我却走了将近半个小时。回到家，奶奶没有取笑我，只看了一眼我不敢弯曲的右腿，就问：「是不是又坐太久了？」我低下头。第二天原本安排好的篮球训练，我只能坐在场边看同伴练习。<mark>奶奶昨天下午才说过的话，不到一天就在我眼前变成了后果。</mark><span class=\"it\">吃亏在眼前</span>",
+   tags:[{t:"用数字，不用形容词",n:"「十几分钟的路走了将近半个小时」——一个数字就让代价变得可见。能量化后果时，数字往往比一串形容词更有力量。",en:"One number beats ten adjectives."},
+         {t:"代价要落地",n:"不必硬加第二种伤。这里把代价延伸到<b>走路变慢＋第二天不能参加训练</b>，已经足够让「吃亏」变得具体可信。",en:"One believable consequence, fully developed, is stronger than two forced ones."},
+         {t:"克制比训话更真",n:"奶奶没有趁机说教，只问一句「是不是又坐太久了」。<b>越克制，越能让我的心虚和后悔自己冒出来。</b>",en:"The grandmother does not lecture; her restraint makes the regret feel more genuine."}]},
+  {part:"抒情议论·反思",text:"坐在场边听着球鞋摩擦地板的声音，我越想越懊恼。<mark>如果当时不是只凭「我觉得已经好了」来判断，而是认真想一想奶奶为什么这样提醒我，我根本不必再忍这一轮疼痛。</mark><span class=\"it\">反思：把错误想法和后果扣回去</span>我第一次明白，真正让我吃亏的并不是奶奶的「唠叨」，而是我连想都没想就把有根据的劝告推开了。",
+   tags:[{t:"反思要抓错因",n:"真正要反思的不是「我很倒霉」，而是<b>我为什么会做错判断</b>：只凭自己的感觉，把有根据的提醒当成唠叨。",en:"Reflect on the mistaken reasoning, not just the bad outcome."}]},
+  {part:"结尾·阐述",text:"这件事以后，我没有变成「长辈说什么都照做」的人；但再听见提醒时，我会先问自己：<mark>这句话有没有经验和理由支撑？它提醒的风险是不是就在眼前？</mark><span class=\"it\">怎样听老人言</span>如果答案是肯定的，我就不会再急着证明自己才是对的。所谓「不听老人言，吃亏在眼前」，真正提醒我的，是别让自以为是抢在思考前面。",
+   tags:[{t:"结尾不走极端",n:"没有写成「以后长辈说什么我都听」。真正的成长是：<b>先听理由、判断根据，再决定是否接受</b>。这样比喊口号成熟。",en:"The lesson is not blind obedience; it is to listen to reasons before judging."},
+         {t:"阐述要回答三个问题",n:"这一段其实在答三问：<b>为什么应该听老人言？不听会怎样？我们应该怎么听？</b>把三个问题答完，议论就不空了。",en:"Answer three questions: why, what if not, and how."}]}
+ ],
+ why:[
+  "先证明奶奶为什么值得听，再把劝告写得具体可执行，中心有了地基。",
+  "「盘腿久坐」既是开头习惯，也是后面后果的直接原因，伏笔和因果合在一起。",
+  "「不听」写足两层：心理上觉得自己已经好了，行动上仍盘腿久坐三个小时。",
+  "后果写得具体：膝盖伸不直、起身险些摔倒、十几分钟的路走了半小时、第二天无法训练。",
+  "因果检验：删掉结尾道理，光看「奶奶提醒不要久坐 → 我久坐三小时 → 膝盖僵痛」也能推出中心。"
+ ]
+},
+{
+ id:"e2", tab:"二、不听老人言（闹钟）",
+ prompt:"最近发生的一件事，让你认识到「不听老人言，吃亏在眼前」的道理。试写出这件事的经过以及你的感受。",
+ type:"A 型：和篇一同题，写法完全不同",
+ author:"李梦妍 · 308班",
+ kw:[
+  {k:"老人言",star:true,v:"这一篇的「老人言」出现了<b>三次</b>，每次说的话都不一样：该睡觉了 → 定闹钟了吗 → 凡事都有万一。三句话越来越具体，这就是一波三折。"},
+  {k:"不听",v:"三次的反应一次比一次差：不耐烦 → 随口敷衍 → 捂住耳朵喊过去。<b>态度的滑坡本身就是情节。</b>"},
+  {k:"吃亏在眼前",v:"第二天早上就吃亏了，「眼前」扣得很紧。而且后果是连锁的：起晚 → 塞车 → 迟到半小时 → 思路混乱 → 考砸。"},
+  {k:"最近发生的一件事",v:"限制：只写一件，时间是最近。"}
+ ],
+ limits:["只写一件事","第一人称「我」","最近发生","结局：吃了亏并且后悔"],
+ center:"长辈的劝告是经验换来的；一味我行我素，很快就会自食其果。",
+ ratio:[{label:"开头引名言",pct:12,color:"#2C5F8A"},{label:"背景",pct:10,color:"#5B8CB0"},{label:"劝三次（详写）",pct:33,color:"#C0272D"},{label:"后果连锁",pct:25,color:"#8E1F24"},{label:"抒情议论",pct:20,color:"#3F5147"}],
+ paras:[
+  {part:"开头（四步走）",text:"常言道：「不听老人言，吃亏在眼前。」<span class=\"it\">1 点题，引入熟语</span>以前的我却总觉得，这不过是长辈用来管晚辈的一句话：时代不同了，他们的经验未必适合我<span class=\"it\">2＋3 解释＋我原来的看法</span>。<mark>直到最近那场考试，我才发现，有些看似重复的提醒，其实是在替我指出自己没有看见的风险。</mark><span class=\"it\">4 引出要写的事</span>",
+   tags:[{t:"开头四步（可模仿）",n:"<b>引名言 → 简单解释 → 我原来的看法 → 引出要写的事。</b>可以模仿顺序，但不要为了套模板硬找名言；没有合适名言，直接进事反而更好。",en:"You may imitate the structure, but do not force a quotation into every essay."},
+         {t:"原来的看法要写清",n:"开头先交代：我以前觉得长辈的经验未必适合自己。<b>先写清原来的判断，后面的改变才有落差。</b>这里不必照搬「我不以为然」等固定句式。",en:"Make the old belief clear first, so the later change has contrast."}]},
+  {part:"背景",text:"我是家里出了名的「夜猫子」，最爱把事情拖到深夜才做，偏偏又有一个坏习惯：<mark>睡前不定闹钟，总觉得自己第二天自然会醒</mark>。姥姥作息规律，为这件事提醒过我不少次，我却嫌她太紧张。<mark>考试前一晚，这个坏习惯终于让我吃了眼前亏。</mark><span class=\"it\">故事背景，紧扣「不听老人言」</span>",
+   tags:[{t:"砍废话三刀法",n:"背景只留两样：<b>我的毛病</b>（晚睡、不定闹钟）和<b>谁在管我</b>（姥姥）。三句话交代完。",en:"Two things only: my bad habit, and who warns me."},
+         {t:"好过渡句",n:"「考试前一晚，这个坏习惯终于让我吃了眼前亏」直接把背景带进主事件，也把题目的「吃亏在眼前」提前埋好。",en:"A seven-word hook into the main event."}]},
+  {part:"一波三折·第一次劝",text:"考试前一晚，我复习完一科又刷起手机，不知不觉已经十二点。姥姥推开房门，皱着眉头说道：「<mark>妍妍，太晚了，该睡觉了。你明天不是还要考试吗？这么晚睡，明天会起不来的。</mark>」而我心里一阵不耐烦，心想：我又不困，为什么要睡这么早，我明天肯定能按时起来。我嘴上应着「就睡了」，手指却还在屏幕上滑，一拖又拖到了凌晨一点<span class=\"it\">紧扣「不听老人言」</span>。",
+   tags:[{t:"一波三折·第一折",n:"第一次的劝告最笼统（该睡觉了），我的反应也最轻（心里不耐烦）。<b>三折要从轻到重排。</b>",en:"Round one: the mildest warning, the mildest refusal."},
+         {t:"老人言要说出口",n:"姥姥的话是完整的一句，还带上了理由（明天要考试）。<b>长辈的话越具体，后面「不听」的错就越明显。</b>",en:"The more specific the warning, the clearer the mistake."}]},
+  {part:"一波三折·第二次劝",text:"就在我盖好被子，闭上眼睛，打算沉浸在美好的梦境时，姥姥又一次敲开了我的房门。「<mark>妍妍，定闹钟了吗？</mark>」一个温柔又带着几分沙哑的声音传了进来。<mark>平日里总让人感到温暖的声音，在睡意正浓的我听来，却变成了扰人清梦的噪音。</mark>「不定了，不定了，反正也能起来。」我把自己裹到被子里，随口回答道。",
+   tags:[{t:"一波三折·第二折",n:"劝告更具体了（定闹钟了吗），我的反应也更差了（随口敷衍、裹进被子）。<b>两条线一起走：她越具体，我越敷衍。</b>",en:"Round two: more specific warning, worse response."},
+         {t:"心理要真",n:"「温暖的声音变成了扰人清梦的噪音」——这一句写出了当时真实的心理。<b>不是姥姥变了，是我不想听。</b>比写「我很烦」高明得多。",en:"The warm voice becomes noise — the change is in me, not her."}]},
+  {part:"一波三折·第三次劝",text:"「<mark>还是定一个吧，凡事都有万一，要是起不来怎么办？</mark>」那声音还在继续讲着大道理。「哎呀，都说了不定了，哪有那么多万一！」<mark>我捂住了自己的耳朵，向门外喊过去。</mark>门外的声音消失了，传来渐行渐远的轻轻的脚步声<span class=\"it\">紧扣「不听老人言」</span>。房间终于安静下来，我也很快沉入睡梦。<mark>殊不知，这便是麻烦的开始。</mark>",
+   tags:[{t:"一波三折·第三折",n:"第三次的劝告最有道理（凡事都有万一），我的反应也最过分（捂耳朵、喊过去）。三折走完，读者已经在等我出事了。",en:"Round three: the wisest warning meets the rudest refusal."},
+         {t:"渐行渐远的脚步声",n:"没有写姥姥生气或伤心，只写了<b>脚步声越来越远</b>。留白，反而更让人心里一沉。",en:"Fading footsteps say more than 'she was hurt'."},
+         {t:"悬念句",n:"「殊不知，这便是麻烦的开始」——一句话把上下两半接住，也把读者的心提起来。",en:"One line hands the reader over to the consequences."}]},
+  {part:"后果一",text:"天已经大亮了。我揉了揉眼睛，眨了数下，适应光线，随即望向了一旁的挂钟。天哪！<mark>当时已经是早上八点了，而我第一次考试恰巧就在八点开始。</mark>怎么办，我居然真的没能按时起床！我以最快的速度穿衣洗漱，冲出家门时，正好遇见从楼下买早餐回来的姥姥。「怎么这么急，都不看路了！」姥姥一把抓住险些摔倒的我。「我考试要迟到了！」我焦急地回答道。「唉，你看看你这个丫头，就是不听话。快拿着路上吃！」<mark>老人家皱着眉叹了口气，将手中的早点塞到我的怀里</mark><span class=\"it\">不听老人言的后果</span>。",
+   tags:[{t:"以物写情",n:"姥姥没有骂人，只把<b>早点塞到我怀里</b>。刚被我捂着耳朵喊过的人，转头还在给我准备早餐——这一个动作，把长辈的心写尽了。<b>全篇最动人的一处。</b>",en:"She was shouted at last night; this morning she hands over breakfast."},
+         {t:"数字点题",n:"八点起床、八点考试。两个「八点」一撞，后果立刻成立，不用解释。",en:"Eight o'clock twice — the disaster explains itself."}]},
+  {part:"后果二·连锁",text:"一路上，塞车十分严重，因为我晚出门的这半个多小时，恰巧赶上了早高峰。而<mark>我到达学校时，考试已经开始半个多小时了</mark>。由于时间上的不充裕，再加上熬夜导致的睡眠不足，我的思路一片混乱。走出考场的时候，我便<mark>深知自己考砸了</mark>。",
+   tags:[{t:"后果要连锁",n:"起晚 → 赶上早高峰 → 迟到半小时 → 加上熬夜没睡够 → 思路混乱 → 考砸。<b>五环扣在一起，每一环都推得动下一环。</b>一个后果太轻，连锁起来才叫「吃亏」。",en:"Five links, each pushing the next — that's what makes the price real."}]},
+  {part:"抒情议论·反思",text:"回家之后，我坐在沙发上回顾整件事，十分后悔。<mark>如果我听姥姥的话早点睡觉，早上就不会起不来了，也不会头脑混乱了。如果我听了姥姥的话，定了闹钟，考试也不会迟到了。</mark>可惜没有那么多如果，我还是因为没有听老人家的劝告吃了亏<span class=\"it\">反思自己的行为</span>。",
+   tags:[{t:"反面假设",n:"两个「如果……就不会……」，把因果<b>倒着说一遍</b>。这是最省力、也最有效的反思写法，任何一篇「后悔类」作文都能用。",en:"Two 'if only' sentences reverse the causal chain — the easiest reflection template."}]},
+  {part:"结尾·阐述",text:"那天晚上，我没有等姥姥来催，自己先把手机调成睡眠模式，又设了两个闹钟。<mark>我终于明白，她前一晚说的「凡事都有万一」，不是老生常谈，而是经验替我提前看见了我不愿意看的风险。</mark><span class=\"it\">感悟：为什么老人言值得听</span>以后再听见长辈提醒，我也许不会句句照办，但至少会先把理由听完，再决定怎么做。",
+   tags:[{t:"结尾：回扣＋感悟＋行动",n:"上一段用「如果」回扣错误，这一段再落到一个具体变化：主动设闹钟、先把理由听完。结尾不是喊「以后一定听话」，而是写出可实行的改变。",en:"Recall the mistake, explain the realisation, then show one believable change in behaviour."},
+         {t:"首尾呼应",n:"开头用熟语提出问题，结尾不用第二句名言，而用「主动设闹钟」这个行动回答问题。<b>首尾呼应不一定靠重复名言，也可以靠前后行为翻转。</b>",en:"The ending answers the opening proverb through a changed action rather than another quotation."}]}
+ ],
+ why:[
+  "开头四步可以作为一种选择：引名言 → 简单解释 → 我原来的看法 → 引出事件；重点是结构，不是背固定句子。",
+  "姥姥劝了三次，三句话各不相同、一次比一次具体；我的反应一次比一次差。这才叫一波三折。",
+  "后果是连锁的：起晚 → 塞车 → 迟到半小时 → 睡眠不足 → 考砸。五环扣死。",
+  "早点塞到怀里那一个动作，把「长辈为什么值得听」写出来了，不用一句解释。",
+  "和篇一同题、同一个中心，但选材、结构、开头全都不一样——这就是同一道题的两条路。"
+ ]
+},
+{
+ id:"e3", tab:"三、偷懒要不得",
+ prompt:"你因为一时的偷懒付出巨大代价。试写出这件事的经过以及你的感受。",
+ type:"B 型：只给故事框架（偷懒 → 付出代价），中心要自己推断",
+ author:"韩蕴茜 · 405班",
+ kw:[
+  {k:"巨大代价",star:true,v:"代价要大，而且必须是<b>偷懒直接造成</b>的。这一篇：练习时用描图跳过比例与构图训练，正式考试换成现场静物后无法独立完成——链子一环都不断。"},
+  {k:"一时的偷懒",v:"不是「我一直很懒」，而是<b>这一次为了省事，选了一条捷径</b>（把纸贴在电脑屏幕上描）。要落在一个具体动作上。"},
+  {k:"付出",v:"代价必须由<b>我自己</b>承担，不能是别人替我承担，也不能最后被补救掉。"},
+  {k:"我的感受",v:"结尾要写出后悔，更要写清自己到底明白了什么。若自然，再写以后会怎样避免重犯。"}
+ ],
+ limits:["只写一件事","第一人称「我」","最近发生","结局：付出代价，不能补救成功"],
+ center:"为了省掉练习而走捷径，省下的只是眼前的时间，失去的却是真正的能力；需要独立完成时，代价会一起找回来。",
+ ratio:[{label:"起因·压力",pct:15,color:"#2C5F8A"},{label:"偷懒",pct:20,color:"#B07A1E"},{label:"尝到甜头",pct:18,color:"#2F6B4F"},{label:"露馅（详写）",pct:32,color:"#C0272D"},{label:"代价＋感受",pct:15,color:"#3F5147"}],
+ paras:[
+  {part:"起因·用对话开头",text:"「同学们，考试前要完成三幅构图练习。正式考试我会摆一组新的静物，你们要现场观察、自己起稿。<mark>这三幅不是为了交差，是让你们把比例和构图练熟。</mark>」陈老师话音刚落，同学们就开始讨论要画什么。「永丽，你这次考试准备画什么呀？<mark>你不是一直美术都很好，这次也一定会拿全班最高分了是吧？</mark>」我的好朋友边走边说，叽叽喳喳个不停。",
+   tags:[{t:"用对话开头",n:"不写「有一天，老师布置了三幅画」，直接让老师开口。<b>对话开头比叙述开头快，一句话就把任务和期限交代完了。</b>",en:"Open with speech — it delivers the task in one line."},
+         {t:"埋伏笔",n:"好朋友那句「一定会拿全班最高分」，就是后面压力的一部分，也让「我为什么想走捷径」更容易理解。",en:"The friend's expectation adds pressure and helps explain why the shortcut becomes tempting."}]},
+  {part:"压力一·自己的期待",text:"我的美术一直是我的强项，但这次的年终考试令我有些担心：如果我不能拿到一个不错的分数怎么办？<mark>我一定要拿全班最高分的压力仿佛一块儿巨石，压在我的心上。</mark>回到家里，我拿起画笔认真地埋头苦干起来。时间飞逝，不知不觉，我已经画了四个小时了。甩了甩酸痛的右手，我突然惊觉，我还没有复习别的科目！年终考试将近，我一刻都不能闲着，但时间有限的我为了兼顾美术与学习，只好「开夜车」了，每天都带着深深的黑眼圈<span class=\"it\">压力二：时间不够</span>。",
+   tags:[{t:"偷懒要有理由",n:"她不是一开始就什么都不做。<b>先写她确实努力过</b>（画了四个小时、还要兼顾其他科目），后面那一次偷懒才更像真实的人性弱点。",en:"Show the effort first, so the shortcut feels like a fall, not laziness."}]},
+  {part:"压力三·对手出现",text:"很快，在下一节美术课上，我还在专心地画着我的第一幅画，隔壁桌的一阵骚动引起了我的注意。居然是伟奇，大家都围在他身边，称赞他的画。天呐，他什么时候变得那么厉害了？他不好意思地挠了挠头，向大家解释，他的父母为他请了一名美术老师。我回头看了看自己的半成品，心烦意乱地走了回去。<mark>我要是不努力，第一名就不保了！</mark>",
+   tags:[{t:"压力要堆三层",n:"自己要拿第一 → 时间不够 → 伟奇追上来。<b>三层压力堆完，人才会走捷径。</b>只写一层，偷懒就显得无理由。",en:"Three layers of pressure make the shortcut inevitable."}]},
+  {part:"转折·一时的偷懒",text:"繁重的学业与来自伟奇的压力压得我快喘不过气了。我强忍着对第一幅画的不满把它画完了，但在打第二幅画的草稿时，我一直对它不满意，一直无法找到物体合适的比例。我没有心情再继续画下去了，便烦躁地把草稿抓成一团，扔到一旁。我呆坐在书桌前，盯着电脑上的图样。突然，<mark>一个念头在我脑中一闪而过：如果我把纸放在电脑上，照着描出来，不就会更快吗？</mark><span class=\"it\">一时的偷懒</span>",
+   tags:[{t:"「一时的偷懒」要落在一个动作上",n:"整篇文章的「偷懒」，就是<b>这一个念头、一个动作</b>：把纸贴在屏幕上描。写成「我最近变得很懒散」就扣不住「一时」两个字了。",en:"The laziness must be one concrete act, not a general attitude."},
+         {t:"行动要慢",n:"不满意 → 找不到比例 → 抓成一团扔掉 → 呆坐 → 盯着电脑 → 念头闪过。六步，把「起了坏心」这一秒写慢了。",en:"Six beats slow down the moment temptation arrives."}]},
+  {part:"甜头（先甜）",text:"我尝试着把纸放在电脑屏幕上，图片清晰可见。我把轮廓描了出来，又拿下来上了色，不但效率提高了不少，画出来的东西也更加逼真了。<mark>我只用了一个晚上就画完了第二幅画。</mark>当我把画带到学校时，也得到了大家的一致肯定。看着伟奇那还略有不足的作品，<mark>我扬起了一直紧抿着的嘴角</mark><span class=\"it\">先甜</span>。",
+   tags:[{t:"先甜后苦",n:"甜头写得很足：又快、又逼真、大家肯定、赢过伟奇。<b>甜写得越香，后面的苦才越苦。</b>很多学生一写偷懒就马上出事，落差反而不够。",en:"Write the sweet part fully — the fall hurts more from higher up."},
+         {t:"以物写情",n:"「扬起了一直紧抿着的嘴角」——不写「我很得意」，写嘴角。一个表情就够了。",en:"The corner of the mouth says 'smug' without saying it."}]},
+  {part:"露馅（高潮·详写）",text:"我用同样的方法完成了第三幅练习稿，自信满满地走进考场。讲台上摆着一组从没见过的静物：玻璃瓶、白布和一只倾斜的木盒。就在我提笔准备起稿时，<mark>我突然不知道第一条线该落在哪里</mark>。瓶子画得太高，木盒的角度又歪了；我擦掉重画，比例还是不对。直到那一刻我才明白：前两幅画看起来漂亮，是因为屏幕上的轮廓替我做完了最难的判断。<mark>现在没有可以描的线，我才发现自己根本没有练会独立观察和构图。</mark><span class=\"it\">代价：偷懒直接造成</span>时间一分一秒过去，我的橡皮屑堆满桌角，手心全是汗。最后，眼泪滴在反复擦薄的画纸上，晕开了一小片灰。",
+   tags:[{t:"因果检验（全篇最关键）",n:"练习时描轮廓 → 没有练独立判断比例与构图 → 正式考试换成现场静物 → 起稿困难。<b>这条链子一环都不断。</b>删掉结尾的道理，读者照样能看出偷懒的代价。",en:"Tracing skips the practice; the unseen still life exposes the missing skill. The causal chain stays intact."},
+         {t:"行动要慢",n:"第一条线无从落笔 → 画高了 → 擦掉 → 角度又歪 → 反复修改 → 橡皮屑堆满桌角。把「不会独立构图」写成连续动作，读者才能真正看见失败。",en:"Repeated drawing, erasing and correcting slow down the exam failure and make it visible."},
+         {t:"以物写情",n:"「眼泪滴在反复擦薄的画纸上，晕开一小片灰」把懊恼落在一张具体的纸上。<b>情绪不必喊出来，让物件替人物说。</b>",en:"The tear stain on the worn paper carries the emotion without naming it directly."}]},
+  {part:"结尾",text:"考试结束，我看着那张被擦得发毛的画纸，心里又羞又悔。<mark>我终于明白，练习最麻烦、最费时间的部分，恰恰就是能力真正长出来的地方；我偷掉的不是几小时，而是一次次自己判断、自己修改的机会。</mark>这次低分已经无法补回，但以后无论功课多赶，我都不会再用「看起来完成了」代替「我真的学会了」。",
+   tags:[{t:"结尾扣题",n:"结尾不只重复题目，而是把「巨大代价」解释清楚：失去的不只是分数，更是本来应该通过练习长出来的能力。",en:"The ending explains the real cost: lost marks and, more importantly, lost practice."},
+         {t:"行动层：自然补，不机械补",n:"优化版自然落到「不再用看起来完成了代替真的学会了」。<b>以后怎么做是提升项，不是所有结尾都必须硬加</b>；这里适合写，是因为人物经历了一次明确的错误与教训。",en:"A future action helps here because the event changes how the narrator will work next time."}]}
+ ],
+ why:[
+  "「一时的偷懒」落在一个具体动作上：把纸贴在电脑屏幕上描。不是笼统地写「我很懒」。",
+  "压力堆了三层（要拿第一 → 时间不够 → 伟奇追上来），偷懒才有说服力。",
+  "先甜后苦：甜头写足了（一晚画完、大家肯定），后面的代价才够重。",
+  "因果扣得死：练习时描轮廓 → 没练比例与构图 → 正式考试换现场静物 → 无法独立起稿。这是全篇最值得学的地方。",
+  "优化后的结尾完成「回扣后果 → 说清领悟 → 自然落到今后的做法」，但不把三层当成机械公式。"
+ ]
+},
+{
+ id:"e4", tab:"四、勤奋是成功的秘诀",
+ prompt:"最近发生的一件事，让你认识到勤奋是成功的秘诀。试写出这件事的经过以及你的感受。",
+ type:"A 型：题目已经给了中心，选材最关键",
+ author:"周嘉敏 · 412班",
+ kw:[
+  {k:"勤奋",star:true,v:"不能只写「我很努力」。要写成<b>看得见的动作</b>：准备了几天、准备了什么、连对方的观点都想过。"},
+  {k:"成功",v:"结局必须成功，而且成功要<b>由勤奋换来</b>——不能是运气好、对手弱、老师放水。"},
+  {k:"对比（这一题的写法）",v:"同一任务做<b>两次</b>：第一次没准备 → 失败；第二次扎实准备 → 成功。尽量固定辩题、对手、赛制，让主要变量落在「准备程度」。"},
+  {k:"最近发生的一件事",v:"限制：只写一件，时间是最近。两场比赛属于同一件事，不算写了两件。"}
+ ],
+ limits:["只写一件事（同一次校队选拔的模拟＋复测）","第一人称「我」","最近发生","主要变量：准备程度","结局：因勤奋而进步／成功"],
+ center:"勤奋不是反复说「我很努力」，而是把准备拆成持续、具体、可检查的行动；这些行动积累起来，才把成功从运气变成较有把握的结果。",
+ ratio:[{label:"开头点题",pct:8,color:"#2C5F8A"},{label:"第一次·没准备（详写）",pct:37,color:"#8E1F24"},{label:"转折·六天准备",pct:15,color:"#B07A1E"},{label:"第二次·复测成功",pct:25,color:"#2F6B4F"},{label:"感悟＋行动",pct:15,color:"#3F5147"}],
+ paras:[
+  {part:"开头·直接点题",text:"以前听到「勤奋是成功的秘诀」，我总觉得那不过是一句谁都会说的道理。<mark>直到校队那两次几乎一模一样的辩论训练，我才第一次看见「勤奋」究竟怎样改变一个人的表现。</mark><span class=\"it\">开头：旧看法＋引出事件</span>",
+   tags:[{t:"开门见山",n:"两句话就完成「原来的看法 → 最近发生的事」。没有堆名言，也没有先把结论说尽，读者会自然追问：两次训练到底差在哪里？",en:"Two lines are enough: the old belief, then the event that changed it."}]},
+  {part:"第一场·没准备",text:"上个星期，校队为了选出正式比赛的四辩，安排了两次训练赛。老师特地说明：<mark>两次使用同一个辩题、同一组对手、同样的三分半钟结辩时间</mark>，一周后再测一次。第一次训练那天，我看着队友桌上按观点分类的一叠资料，再看看自己临时打印的几张 A4 纸，才开始心虚。过去几天，学姐叫我补的资料，我总想着「明天再找」，结果到了上场前才发现根本来不及。<span class=\"it\">用画面写「不勤奋」</span>",
+   tags:[{t:"用画面写抽象词",n:"「不勤奋」怎么写？<b>一大沓资料 vs 几张 A4 纸。</b>一个画面，抵十句「我准备得很不充分」。这个方法可以搬到任何作文里。",en:"A thick stack vs a few sheets — show the abstract word as an image."}]},
+  {part:"第一场·上场",text:"于是，我就带着自己前一天晚上<mark>临时抱佛脚</mark>所准备的资料，忐忑不安地上场。身为四辩，我需要听我方与他方的立场，并针对整场比赛做总结。但是由于我对辩题并没有十分深入的理解，平时学姐让我回去找的资料也都没有认真去找，因此我在场上时，<mark>脑中是一片空白的</mark>。眼看时间一分一秒地过去，再多一位队友发言就轮到我了。那一刻我就<mark>如热锅上的蚂蚁</mark>，不知所措。",
+   tags:[{t:"把原因写清楚",n:"「对辩题没有深入理解」「学姐让我找的资料没认真找」——把懒散写成两条具体的账。<b>后面的失败才不冤枉。</b>",en:"Two concrete failures of preparation, itemised."}]},
+  {part:"第一场·惨败（高潮一）",text:"「三分三十秒，前面就用两分钟来复述比赛内容……接下来一分钟三十秒……怎么办呀？惨了……快想呀嘉敏……」就当我在心中盘算着该如何应对时，突然听见有人说：「接下来，三分三十秒，有请正方四辩做结辩陈词。」<mark>那一刻，我感觉我的心漏了一拍。</mark>在所有人目光的注视下，我缓缓地站立。前面的两分钟，我稳稳地将刚才所整理的论点念了出来，但在接下去的一分钟三十秒里，我却完全无法想出任何的话。在半分钟过去后，我决定随便拿起我手中的资料念，因为这样起码不会比保持沉默来得尴尬。就这样，<mark>接下来的一分钟里，我没头没脑地念出手中的资料，以至于自己在念什么都不知道</mark><span class=\"it\">不勤奋的后果</span>。",
+   tags:[{t:"心理要真",n:"用<b>心里的倒计时</b>来写紧张：三分三十秒 → 两分钟 → 一分钟三十秒 → 半分钟 → 最后一分钟。时间一格一格逼近，读者跟着心慌。",en:"A countdown inside her head does the work of 'I was nervous'."},
+         {t:"后果要具体",n:"「自己在念什么都不知道」——这是失败最真实的样子。写成「我表现得很差」就没有画面了。",en:"'I didn't know what I was reading' — failure made visible."}]},
+  {part:"转折·全力准备",text:"第一次训练结束后，我把那几张皱巴巴的 A4 纸摊在桌上，给自己列了一张六天计划。每天放学后，我先补一个论点的资料，再写可能遭到的反驳；晚饭后用手机计时练一次三分半钟结辩，录下来重听，把卡住的地方圈出来。<mark>到第五天，我不仅能说清我方的观点，也能替对方列出最强的三条反驳，再逐条准备回应。</mark><span class=\"it\">勤奋＝持续、具体、可检查</span>",
+   tags:[{t:"勤奋要写成动作",n:"优化版把「勤奋」拆成一串可见动作：列六天计划、补论点、想反驳、计时练习、录音复盘。<b>抽象品质一定要写成行为证据。</b>",en:"Diligence becomes visible through a six-day plan, timed practice, recordings and prepared rebuttals."}]},
+  {part:"第二场·前后对比",text:"<mark>一周后的复测，还是那间训练室，还是同一个辩题，连坐在对面的三张脸都没有变。</mark>不同的是，我桌上的资料已经按「论点—证据—反驳」贴好了标签。轮到我结辩时，对方突然重提第一次把我问住的观点，我心里一紧，却马上翻到对应的卡片，抬头回应。三分半钟结束，我第一次觉得时间不是在追着我跑，而是在我的掌握之中。<span class=\"it\">前后对比</span>",
+   tags:[{t:"前后对比：先固定条件",n:"这里把相同条件写得更具体：同一训练室、同一辩题、同一对手组。<b>先固定条件，再突出准备程度的变化</b>，对比才真正有证明力。比起背一个漂亮句式，<b>控制变量</b>更值得学。",en:"Keep the conditions the same, then make preparation the clearest changed variable."}]},
+  {part:"结果",text:"训练结束后，老师没有先宣布谁赢，只把两次评分表并排放在桌上。我的「论证完整」「临场回应」「结辩结构」三项都明显提高。最后，她抬头对我说：「正式比赛的四辩，就由你来。」<mark>那一刻我最开心的，不只是被选上，而是我清楚知道这六天里哪一件事把自己推到了这里。</mark>",
+   tags:[{t:"用别人的话证明进步",n:"进步不是只靠一句夸奖，而是由<b>两次评分表＋最终入选正式四辩</b>共同证明。结果越具体，越能说明勤奋确实产生了变化。",en:"Use scoring sheets and the selection result to prove the improvement objectively."}]},
+  {part:"结尾",text:"回家后，我没有丢掉第一次训练时那几张皱巴巴的 A4 纸，而是把它们夹在新资料夹的最前面。<mark>它们提醒我：勤奋并不会保证每一次都赢，却能把「我希望自己表现好」变成「我已经为可能发生的情况做过准备」。</mark>以后面对比赛，我不会再等到紧张来临才后悔，而会把功夫做在上场之前。",
+   tags:[{t:"首尾呼应",n:"优化版没有再堆第二句名言，而是用「第一次那几张皱巴巴的 A4 纸」收尾。<b>具体物件比再引用一句名言更能把这次经历留在读者心里。</b>",en:"A concrete object from the failed first attempt returns at the end and closes the essay."},
+         {t:"行动层：由故事自然长出来",n:"优化版用「皱巴巴的 A4 纸」回扣第一次失败，再自然写到「把功夫做在上场之前」。<b>行动不是为了凑第三层，而是为了证明人物的做法真的变了。</b>",en:"The future action works because it grows directly out of the narrator's changed habit."}]}
+ ],
+ why:[
+  "前后对比更干净：同一辩题、同一对手组、同一赛制的一周前后复测，主要变量落在准备程度。",
+  "「不勤奋」用画面写：一大沓资料 vs 几张 A4 纸。「勤奋」也用画面写：连对方的观点都想过。",
+  "惨败那一段用心里的倒计时拖慢节奏，最难受的那几分钟被写足了。",
+  "进步由两次评分表和老师的正式选拔结果共同证明，比「我觉得自己进步了」更有说服力。",
+  "结尾用第一次那几张 A4 纸回扣开头的准备不足，具体、有记忆点，也自然写出今后的做法。"
+ ]
+},
+{
+ id:"e5", tab:"五、体谅和沟通",
+ prompt:"最近发生的一件事，让你深刻地体会到，和谐的居住环境需要体谅和沟通。试写出这件事的经过以及你的感受。",
+ type:"A 型：中心给了两个词——体谅、沟通，两个都要扣",
+ author:"陈祖琳 · 409班",
+ kw:[
+  {k:"体谅",star:true,v:"体谅不是替对方找借口，而是<b>先暂停判断，愿意了解并考虑对方的处境</b>。问「是不是遇到什么困难」只是把体谅写具体的一种方法。"},
+  {k:"沟通",star:true,v:"沟通不能只有一句漂亮话。要写出<b>我方说明困扰 → 对方解释 → 双方商量办法</b>。语气、倾听和解决方案都是内容的一部分。"},
+  {k:"和谐的居住环境",v:"结局必须是双方都退一步、恢复和气。只有一方道歉不算「和谐」。"},
+  {k:"最近发生的一件事",v:"限制：只写一件，地点在邻里之间。"}
+ ],
+ limits:["只写一件事","第一人称「我」","最近发生","地点：组屋／邻里","两个关键词都要扣：体谅＋沟通","结局：双方和好"],
+ center:"邻里摩擦不是靠谁吵赢来解决的；先愿意理解彼此的处境，再把问题说清楚并一起找办法，才能把一次冲突变成长期的和气。",
+ ratio:[{label:"起因",pct:18,color:"#2C5F8A"},{label:"冲突爆发",pct:25,color:"#8E1F24"},{label:"体谅＋沟通（详写）",pct:30,color:"#C0272D"},{label:"解决＋和好",pct:12,color:"#2F6B4F"},{label:"感悟",pct:15,color:"#3F5147"}],
+ paras:[
+  {part:"起因·用对话开头",text:"「<mark>到底是谁晾衣服不拧干，竟然把我昨天晾的衣服都打湿了！</mark>」我在房间里就听见了妈妈的狮子吼，连忙用手盖住耳朵。我走出房间，来到晾衣服处才发现，那些原本应该晒干了的衣服竟然湿透了，还有许多水珠从天上滴滴答答地掉落在我的衣服上。但是，<mark>今天的天气特别好，阳光暴晒，没有一丝乌云的踪影，这水是从哪里来的呢？</mark>我往楼上一看，原来打湿我衣服的罪魁祸首，是晾在我们家五楼上的衣服<span class=\"it\">起因</span>。",
+   tags:[{t:"选材要小、要真",n:"楼上晾衣服滴水打湿楼下的衣服——<b>组屋里天天在发生的事</b>，不用编，读者一看就信。写邻里题目，越小的事越好写。",en:"A real HDB annoyance — small, true, instantly believable."},
+         {t:"设问引出真相",n:"「天气这么好，水是从哪里来的呢？」先卖个关子，再往楼上一看。<b>一个设问，把平淡的交代变成了小小的悬念。</b>",en:"One rhetorical question turns exposition into suspense."}]},
+  {part:"冲突爆发·分歧要响",text:"妈妈一见，立刻收了衣服，怒气冲冲地往楼上跑。我一口气跑上楼，正喘着气，就忽然听见了一阵吵闹声。我转头一看，只见妈妈和一位女士在争吵。只听见妈妈叫：「<mark>你怎么那么没公德心，没拧干的衣服你还敢晾出来！你以为整个组屋只有你在晾衣服吗？</mark>」那女士<mark>眼里闪过一丝惭愧</mark>，可听见妈妈一上来就骂她没公德心，脸也沉了下来：「我知道水滴下去了，可我也不是故意的。<mark>你连发生什么事都不问，就这样骂人吗？</mark>」",
+   tags:[{t:"分歧要响",n:"两句对话，一人一个立场，火就烧起来了。<b>写冲突不要用「她们吵得很凶」，要让人物自己说话。</b>",en:"Two lines of dialogue light the fire — don't narrate a quarrel."},
+         {t:"「眼里闪过一丝惭愧」是伏笔",n:"这七个字很重要：它提前告诉读者，<b>这位女士其实心里有数、有苦衷</b>。有了这一笔，后面她愿意说出洗衣机坏了，才不突兀。",en:"That flash of shame is planted so her later confession isn't a surprise."}]},
+  {part:"冲突升级",text:"我见妈妈和女士来回不断地争吵，声音也渐渐地变得越来越大声，<mark>附近的邻居听见了都纷纷皱着眉头往她们的方向看</mark>。我知道吵到邻居了，就马上上前，拉住了妈妈，示意她别再吵了。妈妈见了我，就把刚要说出口的话吞进肚子里，忍住气，并<mark>狠狠地瞪了女士一眼，而女士也同样瞪着她</mark>。见她们如此，我叹了一口气，<mark>深知要她们和好并不容易</mark>。",
+   tags:[{t:"矛盾要顶到最高点",n:"吵到别的邻居皱眉、两人互瞪、我叹一口气——<b>先把死结打紧，后面那一句话才显得厉害。</b>矛盾太容易化解，「体谅和沟通」就不值钱了。",en:"Tighten the knot first; the solution only impresses if the problem is real."},
+         {t:"「我」开始介入",n:"这一题的主角必须是「我」。妈妈和女士是配角，<b>解决问题的人一定要是「我」</b>，否则中心跟我无关。",en:"The narrator must be the one who solves it."}]},
+  {part:"沟通（高潮·详写）",text:"我先拉住妈妈，没有急着替谁辩护，只对那位女士说：「阿姨，我们楼下的衣服确实被滴湿了，妈妈才会着急。<mark>不过您刚才说不是故意的，是不是家里出了什么状况？</mark>」她沉默了一下，语气终于缓下来：「洗衣机的脱水功能坏了，维修员明天才来。我刚才用手拧过，没想到还是会滴这么多水。」<span class=\"it\">体谅：先了解处境</span>",
+   tags:[{t:"全文的转折点是一句话",n:"这一问一答只是转折的开始：先把指责停下来，让对方愿意解释。真正的沟通还要继续到下一段——<b>说明影响、商量办法、双方让步</b>。",en:"The question opens the door; the full communication continues into the solution that follows."},
+         {t:"「体谅」怎么写",n:"体谅不是替别人猜理由，也不是无条件让步。这里先问「是不是出了什么状况」，是为了<b>暂缓判断、了解处境</b>；知道情况以后，仍然可以把楼下衣服被滴湿的问题说清楚。",en:"Understanding means suspending judgment long enough to learn the other side's situation."},
+         {t:"态度也是内容",n:"沟通的关键不只在表情，而在完整过程：先说明我方受到的影响，再听对方解释，最后一起商量办法。<b>只有「态度好」而没有解决问题，还不算真正写完沟通。</b>",en:"Good communication needs explanation, listening and a workable solution — not just a polite tone."}]},
+  {part:"结果·和好",text:"我接着说：「那我们想个办法，别让水再滴到楼下就好。」林阿姨想了想，答应今天先把衣服晾在浴室的活动架上，等维修好再挂到窗外；妈妈也放软语气，说如果以后又有类似情况，<mark>先按门铃说一声，我们可以把楼下的衣服暂时收进去</mark>。妈妈为刚才说话太冲道歉，林阿姨也为滴湿我们的衣服道歉。两个人相视一笑，刚才绷紧的气氛终于松了下来。",
+   tags:[{t:"结果扣题：双方都要退一步",n:"双方都道歉只是结果的一部分；更重要的是出现了<b>可执行的解决办法</b>：暂时改在室内晾、以后先通知楼下。和谐不是「握手」两个字，而是冲突以后知道怎样相处。",en:"Both sides apologise and agree on a practical way to prevent the same problem next time."}]},
+  {part:"结尾·用一个细节收尾",text:"这件事让我明白，体谅不是先认定对方有理，而是愿意在发火之前多问一句；沟通也不是把自己的话说完，而是听完对方的话以后，<mark>一起找到双方都做得到的办法</mark>。后来，我们知道那位女士姓林。洗衣机修好后的周末，林阿姨端了一小盘自己做的蛋糕来敲门，妈妈笑着把她请进屋。<span class=\"it\">用一个细节收尾</span>从「楼上那位女士」到「林阿姨」，我第一次感觉到，和谐的邻里关系往往就是从愿意多听一句开始的。",
+   tags:[{t:"以物写情（这一篇最好的收尾）",n:"结尾没有喊口号，只写了一件小事：<b>林阿姨常送蛋糕过来，妈妈特别欢迎她。</b>一盘蛋糕，就是「和谐的居住环境」。而且从「那位女士」到「林阿姨」，称呼的变化本身就是结果。",en:"A plate of cake is the harmony — and 'that woman' has become 'Auntie Lin'."},
+         {t:"称呼的变化",n:"开头是「一位女士」，结尾是「林阿姨」。<b>同一个人，两个称呼，前后对比就藏在里面。</b>这是很高级的一手。",en:"'A woman' becomes 'Auntie Lin' — the contrast hides in the name."}]}
+ ],
+ why:[
+  "选材极小、极真实：组屋楼上晾衣服滴水。中学生真的会遇到，不用编。",
+  "冲突用对话写，两句话就把火点起来——分歧要响。",
+  "转折点从一句问题开始，但真正完成「体谅＋沟通」的是：了解苦衷、说明影响、共同商量办法。",
+  "对方的困难合理而不等于完全没错：洗衣机坏了可以理解，水滴到楼下仍要解决。这样「体谅」不会写成无原则偏袒。",
+  "结尾不喊口号，用林阿姨的蛋糕收尾；而且称呼从「那位女士」变成「林阿姨」，结果藏在称呼里。"
+ ]
+}
+];
+/* ================= 渲染 ================= */
+const tabsEl=document.getElementById('tabs');
+const panelsEl=document.getElementById('panels');
+
+function ratioHTML(list,e){
+  const bar=list.map(r=>`<div style="width:${r.pct}%;background:${r.color}">${r.pct}%</div>`).join('');
+  const leg=list.map(r=>`<span style="--sw:${r.color}">${r.label} ${r.pct}%</span>`).join('');
+  const id=`${e.id}-ratio-note`, enId=`${e.id}-ratio-en`;
+  return `<div class="ratio">${bar}</div><div class="ratio-legend">${leg}</div>
+  <div class="ratio-support"><div class="support-tools"><button class="mini" data-en="${enId}">EN</button><button class="speak" data-read="${id}" title="朗读详略说明">🔊</button></div>
+  <p id="${id}" style="font-size:13px;color:var(--ink-soft);margin:0;line-height:1.7">开头要短；<b>直接证明题目关键词的核心经过要最长</b>。不要头重脚轻。</p>
+  <div class="support-en" id="${enId}">${RATIO_EN[e.id]||'Keep the opening short and spend most space on the main event.'}</div></div>`;
+}
+
+function materialHTML(m){
+  const g=m.good.map(x=>`<li>${x}</li>`).join('');
+  const b=m.bad.map(x=>`<li>${x}</li>`).join('');
+  return `<div class="mat">
+    <div class="good"><h4>✔ 可以写</h4><ul>${g}</ul></div>
+    <div class="bad"><h4>✘ 不要写</h4><ul>${b}</ul></div>
+  </div><p class="note-why">${m.why}</p>`;
+}
+
+function shapeHTML(e){
+  const d=SHAPE[e.id]; if(!d) return '';
+  let body='';
+  if(d.type==='chain'){
+    body='<div class="chain">'+d.steps.map(st=>
+      `<div class="cb" style="background:${st.c}"><b>${st.t}</b><i>${st.s}</i></div>`
+    ).join('')+'</div>';
+  }else if(d.type==='stairs'){
+    const h=[62,88,114,140];
+    const n=d.steps.length;
+    body='<div class="stairs">'+d.steps.map((st,i)=>{
+      const hh=h[i+(4-n)];
+      return `<div class="st" style="height:${hh}px;background:${st.c}">${st.mk?`<span class="mk">${st.mk}</span>`:''}<b>${st.t}</b><i>${st.s}</i></div>`;
+    }).join('')+'</div>'
+    +`<div class="rise"><span>${d.rise[0]} →</span><span>${d.rise[1]}</span></div>`;
+  }else{
+    body=`<div class="par" style="grid-template-columns:repeat(${d.cols.length},1fr)">`+d.cols.map(c=>
+      `<div class="pc" style="background:${c.c}"><div class="lbl">${c.lbl}</div><div class="who">${c.who}</div><div class="ds">${c.ds}</div></div>`
+    ).join('')+'</div>';
+  }
+  const id=e.id+'-shapecap';
+  return `<div class="diagram">
+    <div class="dg-head"><span class="dg-title">${d.title}</span>
+      <button class="mini" data-en="${id}-en">EN</button>
+      <button class="speak" data-read="${id}" title="朗读">🔊</button></div>
+    ${body}
+    <p class="dg-cap" id="${id}">${d.cap}</p>
+    <div class="kwen" id="${id}-en">${d.en}</div>
+    <div class="dg-no">${d.no}</div>
+  </div>`;
+}
+
+function kwHTML(e){
+  const one=KWONE[e.id]||[];
+  const detailEn=KW_DETAIL_EN[e.id]||[];
+  return '<div class="kwlist">'+e.kw.map((k,i)=>{
+    const id=`${e.id}-kw${i}`;
+    const o=one[i]||[k.v,''];
+    return `<div class="kwrow ${k.star?'star':''}">
+      <div class="kwline">
+        <span class="kwk">${k.k}</span>
+        <span class="kwone" id="${id}">${o[0]}</span>
+        <span class="kwacts">
+          <button class="speak" data-read="${id}" title="朗读">🔊</button>
+          <button class="mini" data-en="${id}-en">EN</button>
+          <button class="mini" data-detail="${id}-d">详</button>
+        </span>
+      </div>
+      <div class="kwen" id="${id}-en">${o[1]}</div>
+      <div class="kwdetail" id="${id}-d">${k.v}<div style="margin-top:7px;color:var(--blue);font-style:italic;font-size:12.5px;line-height:1.6">${detailEn[i]||''}</div></div>
+    </div>`;
+  }).join('')+'</div>';
+}
+
+function ideaHTML(e){
+  const d=IDEA[e.id]; if(!d) return '';
+  const cells=d.cells.map(c=>`<div class="icell"><b>${c[0]}</b>${c[1]}</div>`).join('');
+  const enCells=(IDEA_MORE_EN[e.id]||[]).map(x=>`<li>${x}</li>`).join('');
+  const id=e.id+'-idea';
+  return `<div class="idea">
+    <div class="istep"><div class="inum">1</div><div class="ibody">
+      <div class="ilabel">圈出最重要的那一个关键词</div><div class="ival">${d.kw}</div></div></div>
+    <div class="iarrow">↓</div>
+    <div class="istep"><div class="inum">2</div><div class="ibody">
+      <div class="ilabel">问自己一句话（发散的开关）
+        <button class="mini" data-en="${id}-en">EN</button>
+        <button class="speak" data-read="${id}-ask" title="朗读">🔊</button></div>
+      <div class="iask" id="${id}-ask">${d.ask}</div>
+      <div class="kwen" id="${id}-en" style="padding:7px 0 0"><b>${d.askEn}</b><ul style="margin:5px 0 5px 18px">${enCells}</ul><b>Filter:</b> ${d.filterEn}</div></div></div>
+    <div class="iarrow">↓</div>
+    <div class="istep"><div class="inum">3</div><div class="ibody">
+      <div class="ilabel">照这句话列四条，不要只想一条</div>
+      <div class="igrid">${cells}</div></div></div>
+    <div class="iarrow">↓</div>
+    <div class="istep"><div class="inum">4</div><div class="ibody">
+      <div class="ilabel">用一句话筛
+        <button class="speak" data-read="${id}-f" title="朗读">🔊</button></div>
+      <div class="iask" id="${id}-f">${d.filter}<span style="display:block;font-size:12.5px;font-weight:400;font-style:italic;color:#7A6A2E;margin-top:4px">${d.filterEn}</span></div>
+      <div class="idrop">${d.drop}</div></div></div>
+  </div>`;
+}
+
+function whyHTML(e){
+  const en=WHY_EN[e.id]||[]; const enId=`${e.id}-why-en`;
+  const cn=e.why.map(w=>`<li>${w}</li>`).join('');
+  const ens=en.map(w=>`<li>${w}</li>`).join('');
+  return `<div class="why" style="margin-top:16px"><div class="why-head"><h2 style="margin-bottom:0">这一篇为什么能拿高分</h2><div class="why-tools"><button class="mini" data-en="${enId}">EN</button></div></div><ol>${cn}</ol><ol class="why-en-list" id="${enId}">${ens}</ol></div>`;
+}
+
+function essayHTML(e,idx){
+  const limits=e.limits.map(l=>`<span class="chip">${l}</span>`).join('');
+  const matBlock=e.material?`<p style="font-size:13px;color:var(--ink-soft);margin:12px 0 6px">老师给的判断清单：</p>${materialHTML(e.material)}`:'';
+  const paras=e.paras.map((p,i)=>{
+    const tags=p.tags.map((t,j)=>`<button class="tag" aria-expanded="false" data-note="${e.id}-n${i}-${j}">${t.t}</button>`).join('');
+    const notes=p.tags.map((t,j)=>`<div class="note" id="${e.id}-n${i}-${j}"><b>${t.t}｜</b>${t.n}<span class="en">${t.en}</span></div>`).join('');
+    return `<div class="para">
+      <div class="para-head"><span class="part">${p.part}</span>
+      <button class="speak" data-read="${e.id}-p${i}" title="朗读这一段">🔊</button></div>
+      <p class="text" id="${e.id}-p${i}">${p.text}</p>
+      <div class="tagrow">${tags}</div>${notes}
+    </div>`;
+  }).join('');
+  const why=e.why.map(w=>`<li>${w}</li>`).join('');
+  return `<section class="panel${idx===0?' active':''}" id="panel-${e.id}" role="tabpanel">
+    <div class="card">
+      <span class="type-chip">${e.type}</span>
+      <div class="prompt">${e.prompt}</div>
+      <p class="author">原稿署名：${e.author}</p>
+      <h3>一、经过怎么排（先看这张图）</h3>
+      ${shapeHTML(e)}
+      <h3>二、关键词：每条只记一句话</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin:0 0 8px">🔊 朗读　EN 英文　详 看完整解释</p>
+      ${kwHTML(e)}
+      <h3>三、审题底线（真正不能漏）</h3>
+      <div class="chips">${limits}</div>
+      <h3>四、关键词 → 选材：四步找到角度</h3>
+      ${ideaHTML(e)}
+      ${matBlock}
+      <h3>五、${e.type.startsWith("A 型")?"中心（题目已经给出）":"中心（根据故事框架推断）"}
+        <button class="speak" data-read="${e.id}-center" title="朗读">🔊</button></h3>
+      <div class="center-box" id="${e.id}-center">${e.center}</div>
+      <h3>六、详略比例</h3>
+      ${ratioHTML(e.ratio,e)}
+    </div>
+    <div class="card" style="padding-bottom:10px"><h2>范文</h2>
+      <p style="font-size:13px;color:var(--ink-soft);margin:-4px 0 0;line-height:1.7">先读一遍，什么都不点；读完再点开红批，看每一段用了什么技巧。</p>
+    </div>
+    <div class="essay">${paras}</div>
+    ${whyHTML(e)}
+  </section>`;
+}
+
+function refHTML(){
+  const rows=REF.map(r=>`<tr><td class="t">${r[0]}</td><td>${r[1]}<span style="display:block;font-size:12.5px;color:var(--ink-soft);font-style:italic;margin-top:4px">${r[2]}</span></td></tr>`).join('');
+  return `<section class="panel" id="panel-ref" role="tabpanel">
+    <div class="card"><h2>技巧速查表</h2>
+    <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 10px;line-height:1.7">这些就是五篇范文红批里出现的主要技巧，和课堂笔记使用同一套名称。</p>
+    <table class="ref"><tr><th style="width:32%">技巧</th><th>怎么做</th></tr>${rows}</table></div>
+    <div class="card"><h2>写作五步（建议按这个顺序）</h2>
+    <p style="font-family:var(--font-body);font-size:17px;line-height:2.2;margin:0">圈关键词　→　找限制　→　定中心和故事逻辑　→　选材　→　按模板规划结构</p></div>
+    <div class="card"><h2>五篇的经过，排法各不相同</h2>
+    <table class="ref"><tr><th style="width:30%">题目</th><th>经过怎么排</th></tr>
+    <tr><td class="t">不听老人言（图书馆）</td><td>因果链——铺垫 → 老人言 → 我不听 → 吃亏 → 后悔</td></tr>
+    <tr><td class="t">不听老人言（闹钟）</td><td>一波三折——同一个人劝三次，一次比一次具体</td></tr>
+    <tr><td class="t">偷懒要不得</td><td>先甜后苦的因果链——压力 → 偷懒 → 甜头 → 露馅 → 代价</td></tr>
+    <tr><td class="t">勤奋是成功的秘诀</td><td>前后对比——同一件事做两次，只有准备不同</td></tr>
+    <tr><td class="t">体谅和沟通</td><td>因果链——矛盾爆发 → 升级 → 我问一句 → 化解</td></tr>
+    </table>
+    <p style="font-size:13.5px;color:var(--ink-soft);margin:10px 0 0;line-height:1.75">审题时<b>先判断题目属于哪一种</b>，再决定经过怎么排。排错了，写得再好也扣不住关键词。<br>
+    第一、二篇是<b>同一道题</b>：同样的中心，两种完全不同的写法——可以对着看。</p></div>
+  </section>`;
+}
+
+let html='',tabsHtml='';
+ESSAYS.forEach((e,i)=>{
+  tabsHtml+=`<button role="tab" aria-selected="${i===0}" data-p="panel-${e.id}">${e.tab}</button>`;
+  html+=essayHTML(e,i);
+});
+tabsHtml+=`<button role="tab" aria-selected="false" data-p="panel-ref">技巧速查</button>`;
+html+=refHTML();
+tabsEl.innerHTML=tabsHtml;
+panelsEl.innerHTML=html;
+
+/* ================= 交互 ================= */
+tabsEl.addEventListener('click',ev=>{
+  const b=ev.target.closest('button[data-p]'); if(!b) return;
+  tabsEl.querySelectorAll('button').forEach(x=>x.setAttribute('aria-selected','false'));
+  b.setAttribute('aria-selected','true');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(b.dataset.p).classList.add('active');
+  stopSpeaking();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+panelsEl.addEventListener('click',ev=>{
+  const tag=ev.target.closest('.tag');
+  if(tag){
+    const note=document.getElementById(tag.dataset.note);
+    const open=note.classList.toggle('show');
+    tag.setAttribute('aria-expanded',open?'true':'false');
+    return;
+  }
+  const enb=ev.target.closest('[data-en]');
+  if(enb){
+    const box=document.getElementById(enb.dataset.en);
+    if(box){enb.classList.toggle('on',box.classList.toggle('show'));}
+    return;
+  }
+  const dtl=ev.target.closest('[data-detail]');
+  if(dtl){
+    const box=document.getElementById(dtl.dataset.detail);
+    if(box){
+      const open=box.classList.toggle('show');
+      dtl.classList.toggle('on',open);
+      dtl.textContent=open?'收起':'详';
+    }
+    return;
+  }
+  const sp=ev.target.closest('.speak');
+  if(sp){ readPara(sp); }
+});
+
+const toggleBtn=document.getElementById('toggleAll');
+let allOpen=false;
+toggleBtn.addEventListener('click',()=>{
+  const panel=document.querySelector('.panel.active');
+  if(!panel) return;
+  allOpen=!allOpen;
+  panel.querySelectorAll('.note').forEach(n=>n.classList.toggle('show',allOpen));
+  panel.querySelectorAll('.tag').forEach(t=>t.setAttribute('aria-expanded',allOpen?'true':'false'));
+  toggleBtn.textContent=allOpen?'收起全部红批':'展开全部红批';
+  toggleBtn.classList.toggle('on',allOpen);
+});
+
+const inlineBtn=document.getElementById('toggleInline');
+inlineBtn.addEventListener('click',()=>{
+  const hidden=document.body.classList.toggle('hide-it');
+  inlineBtn.textContent=hidden?'显示句子标注':'隐藏句子标注';
+  inlineBtn.classList.toggle('on',hidden);
+  inlineBtn.classList.toggle('blue',hidden);
+});
+
+let curBtn=null;
+function stopSpeaking(){
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  if(curBtn){curBtn.classList.remove('on');curBtn=null;}
+}
+document.getElementById('stopSpeak').addEventListener('click',stopSpeaking);
+
+function readPara(btn){
+  if(!('speechSynthesis' in window)){alert('这个浏览器不支持朗读功能。');return;}
+  const wasCur=(curBtn===btn);
+  stopSpeaking();
+  if(wasCur) return;
+  const el=document.getElementById(btn.dataset.read);
+  const clone=el.cloneNode(true);
+  clone.querySelectorAll('.it').forEach(x=>x.remove());
+  const txt=(clone.innerText||clone.textContent||'').replace(/\s+/g,' ').trim();
+  if(!txt) return;
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang='zh-CN'; u.rate=0.9;
+  u.onend=()=>{btn.classList.remove('on'); if(curBtn===btn) curBtn=null;};
+  u.onerror=()=>{btn.classList.remove('on'); if(curBtn===btn) curBtn=null;};
+  curBtn=btn; btn.classList.add('on');
+  window.speechSynthesis.speak(u);
+}
+window.addEventListener('beforeunload',stopSpeaking);
+</script>
+</body>
+</html>
