@@ -137,7 +137,7 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
   <b>三题的共同点：</b>都是「我原来是＿＿，后来一件事改变了我」。
   所以开头都要先写<span class="red">原来的状态</span>，结尾都要写<span class="red">这件事到底改变了我什么</span>。
   三题的差别只在中间那个「＿＿」是什么。<br>
-  每完成一段会停在停靠点，老师讲评后才给口令。第一次答错只给提示。每个解释旁边有 <b>🔊 朗读</b> 和 <b>EN</b>。
+  每完成一段会停在停靠点，等老师讲评后再按按钮继续。第一次答错只给提示。每个解释旁边有 <b>🔊 朗读</b> 和 <b>EN</b>。
 </div>
 
 <!-- ==================== 模块一 ==================== -->
@@ -202,9 +202,7 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
     <h3>⏸ 停靠点 1 · 开头做完，先解释方法</h3>
     <div class="oral" id="oralOpen"></div>
     <div class="unlock">
-      <input id="codeOpen" placeholder="老师给的口令" inputmode="numeric">
       <button class="btn main" id="unlockOpen">进入结尾训练</button>
-      <span id="msgOpen" style="color:var(--bad);font-weight:700"></span>
     </div>
   </div>
 </section>
@@ -238,9 +236,7 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
     <h3>⏸ 停靠点 2 · 全课分水岭</h3>
     <div class="oral" id="oralDivide"></div>
     <div class="unlock">
-      <input id="codeDivide" placeholder="老师给的口令" inputmode="numeric">
       <button class="btn main" id="unlockDivide">解锁「悟」和提升挑战</button>
-      <span id="msgDivide" style="color:var(--bad);font-weight:700"></span>
     </div>
   </div>
 
@@ -283,9 +279,7 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
       <h3>⏸ 停靠点 3 · 整段结尾做完</h3>
       <div class="oral" id="oralEnd"></div>
       <div class="unlock">
-        <input id="codeEnd" placeholder="老师给的口令" inputmode="numeric">
         <button class="btn main" id="unlockEnd">进入动笔迁移</button>
-        <span id="msgEnd" style="color:var(--bad);font-weight:700"></span>
       </div>
     </div>
   </div>
@@ -331,7 +325,6 @@ select{font:600 15px var(--sans);padding:9px 11px;border:1px solid var(--line);b
 <script>
 const $=id=>document.getElementById(id);
 const SELF=new URLSearchParams(location.search).get('mode')==='self';
-const CODES={open:'4726',divide:'8315',end:'2604'};
 const stats={first:0,revised:0,revealed:0};
 if(SELF)$('modePill').textContent='自学模式';
 function setStatus(t){$('status').textContent=t}
@@ -568,7 +561,6 @@ $('checkOpenWrite').addEventListener('click',()=>{
     '如果开头已经写出「我终于明白……」，一定算错吗？怎样改会更有张力？']);
 });
 $('unlockOpen').addEventListener('click',()=>{
-  if(!SELF&&$('codeOpen').value.trim()!==CODES.open){$('msgOpen').textContent='口令不对，先听老师讲评。';return}
   doneStep('open');$('end').classList.remove('locked');setOn('end');setStatus('结尾训练 · 回与感');
   $('end').scrollIntoView({behavior:'smooth'});
 });
@@ -649,7 +641,6 @@ FEELQS.forEach(q=>mcq($('feelList'),q[0],q[1],q[2],q[3],q[4],()=>{
 }));
 
 $('unlockDivide').addEventListener('click',()=>{
-  if(!SELF&&$('codeDivide').value.trim()!==CODES.divide){$('msgDivide').textContent='口令不对，先参与全班讨论。';return}
   $('afterDivide').classList.remove('sub-lock');setStatus('结尾训练 · 悟与提升挑战');
   $('afterDivide').scrollIntoView({behavior:'smooth'});
 });
@@ -806,7 +797,6 @@ $('checkEndWrite').addEventListener('click',()=>{
     '「带走」为什么是提升项，而不是每次都必须写？']);
 });
 $('unlockEnd').addEventListener('click',()=>{
-  if(!SELF&&$('codeEnd').value.trim()!==CODES.end){$('msgEnd').textContent='口令不对，先听老师讲评。';return}
   doneStep('end');$('transfer').classList.remove('locked');setOn('transfer');setStatus('动笔迁移中');
   $('transfer').scrollIntoView({behavior:'smooth'});
 });
