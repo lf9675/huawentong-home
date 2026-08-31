@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>私人电邮 · 我自己想得出来</title>
+<style>
+:root{
+  --ink:#16232E; --ink-soft:#4B5F70;
+  --paper:#FFFFFF; --tint:#EEF3F8; --line:#D3DFE9;
+  --sea:#2F5D8A; --sea-deep:#1B3D5E;
+  --amber:#B8791F; --amber-tint:#FBF2E2;
+  --good:#2A6B52; --good-tint:#E4F1EB;
+  --miss:#B24338; --miss-tint:#FAEAE8;
+  --red:#C0272D;
+  --r:14px;
+  --shadow:0 2px 4px rgba(22,35,46,.05), 0 12px 28px rgba(22,35,46,.10);
+  --display:"Noto Serif SC","Songti SC","Source Han Serif SC","SimSun",serif;
+  --body:"Noto Sans SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+html{
+  scroll-behavior:smooth; height:auto; min-height:100%;
+  -webkit-text-size-adjust:100%; overscroll-behavior-y:auto; touch-action:manipulation;
+}
+body{
+  margin:0; height:auto; min-height:100vh; overflow-y:auto;
+  -webkit-overflow-scrolling:touch; overscroll-behavior-y:auto;
+  font-family:var(--body); color:var(--ink); line-height:1.75;
+  background:linear-gradient(180deg,#F6F9FC 0%,#E8F0F7 22%,#D5E4F0 45%,#A9C4DC 68%,#5D86AC 86%,#2F5D8A 100%);
+  background-attachment:scroll;
+}
+button{touch-action:manipulation}
+
+.rail{position:fixed; left:18px; top:50%; transform:translateY(-50%); z-index:50; pointer-events:none}
+.rail-item{display:flex; align-items:center; gap:10px; height:46px; position:relative}
+.rail-item::before{content:""; position:absolute; left:5px; top:50%; width:2px; height:46px; background:rgba(47,93,138,.28)}
+.rail-item:last-child::before{display:none}
+.rail-dot{width:12px; height:12px; border-radius:50%; background:rgba(47,93,138,.32); transition:.35s; flex:none}
+.rail-label{font-family:var(--mono); font-size:11px; letter-spacing:.05em; color:rgba(47,93,138,.66); white-space:nowrap; transition:.35s}
+.rail-item.on .rail-dot{background:var(--amber); box-shadow:0 0 0 5px rgba(184,121,31,.18); transform:scale(1.15)}
+.rail-item.on .rail-label{color:var(--sea-deep); font-weight:700}
+@media (max-width:1160px){ .rail{display:none} }
+
+.wrap{max-width:840px; margin:0 auto; padding:0 22px 90px}
+
+header.hero{padding:52px 0 24px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--sea-deep); margin:0 0 12px}
+h1{font-family:var(--display); font-size:clamp(30px,6vw,50px); line-height:1.14; margin:0 0 6px; font-weight:800}
+.sub{font-size:18px; color:var(--sea-deep); margin:0 0 22px; font-weight:600}
+.idbox{background:var(--paper); border-radius:var(--r); padding:18px; box-shadow:var(--shadow)}
+.idask{font-size:15px; font-weight:700; color:var(--sea-deep); margin:0 0 12px}
+.manualrow{display:flex; flex-wrap:wrap; gap:10px}
+.manualrow label{display:flex; align-items:center; gap:8px; flex:1 1 150px; font-size:14px; color:var(--ink-soft)}
+.manualrow input{flex:1; min-width:0; border:1px solid var(--line); border-radius:8px; padding:10px; font-family:var(--body); font-size:15px; background:#FBFDFF; color:var(--ink)}
+.manualrow input:focus{outline:2px solid var(--sea); outline-offset:1px}
+.uploadbox{border-radius:11px; padding:12px 16px; margin-top:14px; font-size:14.5px; font-weight:600}
+.uploadbox.ok{background:var(--good-tint); color:#1D5236}
+.uploadbox.bad{background:var(--miss-tint); color:#8A2F27}
+.uploadbox.wait{background:var(--tint); color:var(--ink-soft)}
+
+section.task{background:var(--paper); border-radius:var(--r); padding:28px 26px 32px; margin:26px 0; box-shadow:var(--shadow); scroll-margin-top:20px}
+.tasknum{font-family:var(--mono); font-size:12px; letter-spacing:.14em; color:var(--amber); font-weight:700; margin:0 0 6px}
+h2{font-family:var(--display); font-size:25px; line-height:1.3; margin:0 0 8px; font-weight:700}
+h3{font-size:17px; margin:24px 0 12px; color:var(--sea-deep); display:flex; align-items:center; gap:9px; flex-wrap:wrap}
+h3 .n{font-family:var(--mono); font-size:12px; background:var(--sea); color:#fff; border-radius:20px; padding:3px 10px; letter-spacing:.06em}
+.hint{font-size:15px; color:var(--ink-soft); margin:0 0 18px}
+.hint strong{color:var(--sea-deep)}
+.key{color:var(--red); font-weight:700}
+.pg{font-family:var(--mono); font-size:12px; color:var(--ink-soft); margin-left:auto}
+.en2{display:block; font-size:13px; font-style:italic; color:var(--ink-soft); font-weight:500; margin-top:3px}
+
+/* 来信 */
+.mail{border:1px solid var(--line); border-radius:12px; overflow:hidden; margin:0 0 16px}
+.mail .bar{background:var(--sea); color:#fff; padding:8px 14px; font-size:13.5px; font-weight:700; display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.mail .head{background:var(--tint); padding:10px 14px; font-size:14px; color:var(--ink-soft); border-bottom:1px solid var(--line)}
+.mail .head b{color:var(--sea-deep)}
+.mail .body{padding:14px 16px; font-size:15.5px; background:#FCFDFF}
+.mail .body p{margin:0 0 8px}
+.mail .body p.ind{text-indent:2em}
+.mail mark{background:#FDF0CE; padding:1px 2px; border-radius:3px}
+
+.spk{font-family:var(--body); font-size:12.5px; font-weight:700; cursor:pointer; border-radius:20px; padding:4px 12px; border:1px solid rgba(255,255,255,.6); background:rgba(255,255,255,.16); color:#fff; min-height:32px}
+.spk.dark{border-color:var(--line); background:var(--paper); color:var(--sea-deep)}
+.fbspk{font-family:var(--body); font-size:12px; font-weight:700; cursor:pointer; border-radius:16px; padding:2px 10px; margin-left:8px; border:1px solid currentColor; background:rgba(255,255,255,.6); min-height:28px}
+
+/* 思路地图 */
+.map{border:1px solid var(--line); border-radius:12px; overflow:hidden; margin:10px 0 8px}
+.mstep{display:grid; grid-template-columns:54px 1fr; border-bottom:1px solid var(--line)}
+.mstep:last-child{border-bottom:none}
+.mno{background:var(--sea); color:#fff; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:18px; font-weight:700}
+.mstep.acc .mno{background:var(--amber)}
+.mbody{padding:12px 15px; background:#FBFDFF}
+.mbody h5{margin:0 0 3px; font-size:16.5px; color:var(--sea-deep); font-weight:700}
+.mbody .ask{margin:0; font-size:14px; color:var(--miss); font-weight:700}
+.chain{display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-top:8px}
+.chain b{background:var(--tint); border:1px solid var(--line); border-radius:7px; padding:5px 10px; font-size:13.5px; color:var(--sea-deep); font-weight:700}
+.chain b.hot{background:var(--amber-tint); border-color:#E0C89A; color:#7A4E0C}
+.chain i{font-style:normal; color:var(--sea); font-weight:700; font-size:15px}
+
+/* 已做好的示范（我做） */
+.worked{border:1px solid #E0C89A; background:var(--amber-tint); border-radius:12px; padding:15px 17px; margin:8px 0 16px}
+.worked h5{margin:0 0 10px; font-size:16.5px; color:#7A4E0C; font-weight:800}
+.wrow{display:grid; grid-template-columns:88px 1fr; gap:10px; padding:7px 0; border-bottom:1px dashed #E0C89A; align-items:start}
+.wrow:last-child{border-bottom:none}
+@media (max-width:520px){ .wrow{grid-template-columns:1fr; gap:2px} }
+.wrow .wk{font-size:13.5px; font-weight:700; color:#8B6420}
+.wrow .wv{font-size:15px; color:#3E3218; line-height:1.7}
+.wrow .wv b{color:var(--red)}
+
+.guide{border:1px solid var(--line); border-radius:12px; overflow:hidden; margin:8px 0 16px}
+.grow{display:grid; grid-template-columns:34% 66%; border-bottom:1px solid var(--line)}
+.grow:last-child{border-bottom:none}
+@media (max-width:640px){ .grow{grid-template-columns:1fr} .gleft{border-bottom:1px solid var(--line)} }
+.gleft{background:#DFF0F5; padding:13px 15px; font-size:15px; font-weight:700; color:#12414F; line-height:1.6}
+.gright{background:#DCEFE6; padding:13px 15px; font-size:15px; color:#17453A; line-height:1.8}
+.gright b{color:var(--red)}
+
+/* 四问题 */
+.four{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:8px 0 12px}
+@media (max-width:640px){ .four{grid-template-columns:repeat(2,1fr)} }
+.four span{background:var(--paper); border:1px solid var(--line); border-radius:9px; padding:11px 8px; font-size:14px; font-weight:700; color:var(--sea-deep); text-align:center; line-height:1.45}
+
+/* 对应表 */
+.pairs{width:100%; border-collapse:collapse; margin:6px 0 16px; font-size:15px}
+.pairs th{background:#DFF0F5; color:#12414F; text-align:left; padding:10px 13px; font-size:14.5px; border:1px solid var(--line)}
+.pairs td{padding:10px 13px; border:1px solid var(--line); line-height:1.7}
+.pairs td.p{background:#F4FAFC; font-weight:700; color:#12414F}
+.pairs td.a{background:#F8FBFD; color:var(--ink-soft); font-weight:700}
+.pairs tr.demo td{background:var(--amber-tint); color:#3E3218}
+.pairs tr.demo td.p{background:#F6E9CE; color:#7A4E0C}
+
+/* 错例卡 */
+.errs{display:grid; grid-template-columns:1fr 1fr; gap:11px; margin:8px 0 16px}
+@media (max-width:640px){ .errs{grid-template-columns:1fr} }
+.ecard{border-radius:12px; padding:14px 15px; border:1px solid var(--line)}
+.ecard h4{margin:0 0 5px; font-family:var(--display); font-size:18px}
+.ecard p{margin:0; font-size:14px; line-height:1.7}
+.ecard.e1{background:var(--miss-tint); border-color:#E7BDB8} .ecard.e1 h4{color:#8A2F27}
+.ecard.e2{background:#FDF3E4; border-color:#E7CFA2} .ecard.e2 h4{color:#7A4E0C}
+.ecard.e3{background:#F1EDF7; border-color:#D2C6E3} .ecard.e3 h4{color:#513C73}
+.ecard.e4{background:var(--good-tint); border-color:#B6D8C8} .ecard.e4 h4{color:#1D5236}
+
+.demoQA{border:1px solid var(--line); border-radius:12px; overflow:hidden; margin:8px 0 16px}
+.demoQA div{padding:12px 15px; font-size:15px; line-height:1.75}
+.demoQA .qq{background:var(--tint); font-weight:700; color:var(--sea-deep)}
+.demoQA .aa{background:#FCFDFF}
+.demoQA .why{background:var(--miss-tint); color:#8A2F27; font-weight:600; font-size:14.5px}
+
+/* 段落示范 */
+.demo{border:1px solid var(--line); border-radius:12px; background:#FBFDFF; margin:8px 0 16px; overflow:hidden}
+.demoline{display:grid; grid-template-columns:96px 1fr; border-bottom:1px solid var(--line)}
+.demoline:last-child{border-bottom:none}
+@media (max-width:520px){ .demoline{grid-template-columns:1fr} }
+.dtag{background:var(--tint); padding:11px 10px; font-size:13px; font-weight:700; color:var(--sea-deep); text-align:center}
+.dtxt{padding:11px 14px; font-size:15px; line-height:1.8}
+
+/* 祝颂语排版示意卡 */
+.lyt{display:block; border:1px solid var(--line); border-radius:9px; margin:9px 0; overflow:hidden; background:#fff}
+.lyt i{display:block; background:var(--tint); padding:6px 13px; font-style:normal; font-size:13px; font-weight:700; color:var(--sea-deep); letter-spacing:.08em}
+.lyt em{display:block; padding:11px 13px; font-style:normal; font-family:var(--mono); font-size:16px; line-height:1.95; white-space:pre-wrap}
+
+/* ===== 范文批注 ===== */
+.fwtop{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:0 0 14px}
+.fwtop button{font-family:var(--body); font-size:14px; font-weight:700; cursor:pointer; border-radius:9px; padding:10px 16px; min-height:44px; border:1px solid var(--line); background:var(--paper); color:var(--sea-deep)}
+.fwtop button:hover{border-color:var(--sea)}
+.fwsubject{background:var(--tint); border-radius:9px; padding:9px 14px; font-size:15px; font-weight:700; color:var(--sea-deep); margin:0 0 14px}
+
+.outline{width:100%; border-collapse:collapse; margin:6px 0 18px; font-size:14.5px}
+.outline th{background:#DFF0F5; color:#12414F; text-align:left; padding:9px 12px; font-size:14px; border:1px solid var(--line)}
+.outline td{padding:8px 12px; border:1px solid var(--line); line-height:1.6}
+.outline td.on{background:#F4FAFC; font-weight:700; color:#12414F; text-align:center; width:56px}
+.outline td.src{font-size:13.5px; color:var(--ink-soft); width:34%}
+.outline tr.r3 td.src{background:var(--amber-tint); color:#7A4E0C; font-weight:700}
+
+.fw{border:1px solid var(--line); border-radius:12px; margin:0 0 12px; overflow:hidden; background:#FBFDFF}
+.fw.open{border-color:var(--sea)}
+.fwhead{display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:10px 14px; background:var(--tint)}
+.fwn{font-family:var(--mono); font-size:12.5px; font-weight:700; color:var(--sea-deep); background:var(--paper); border:1px solid var(--line); border-radius:20px; padding:4px 11px}
+.fwname{font-size:15.5px; font-weight:800; color:var(--sea-deep); display:none}
+.fw.open .fwname{display:inline}
+.fwask{font-family:var(--body); font-size:13.5px; font-weight:700; cursor:pointer; border-radius:20px; padding:6px 14px; min-height:36px; border:1px solid var(--sea); background:var(--paper); color:var(--sea-deep); margin-left:auto}
+.fw.open .fwask{border-color:var(--line); color:var(--ink-soft)}
+.fwtxt{padding:13px 15px; font-size:15.5px; line-height:2.05}
+.fwtxt .tg{display:none; font-family:var(--body); font-size:12.5px; font-weight:700; color:#8A2F27; background:#FBE7E4; border-radius:5px; padding:2px 7px; margin:0 3px; white-space:nowrap}
+.fw.open .fwtxt .tg{display:inline}
+.fwtxt .ind{text-indent:2em; display:block}
+.fwans{display:none; padding:12px 15px; background:var(--good-tint); border-top:1px solid #B6D8C8; font-size:14.5px; line-height:1.75; color:#1D5236; font-weight:600}
+.fw.open .fwans{display:block}
+.fwans .en2{color:#2A6B52}
+.fwnote{background:var(--amber-tint); border-left:4px solid var(--amber); border-radius:8px; padding:13px 16px; margin:14px 0 0; font-size:15px; color:#7A4E0C}
+.fwnote b{color:var(--red)}
+
+.q{border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:11px; background:#FBFDFF}
+.q.right{background:var(--good-tint); border-color:var(--good)}
+.q.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.q .stem{font-size:16px; margin:0 0 11px}
+.q .stem b{color:var(--sea-deep)}
+.opts{display:flex; flex-wrap:wrap; gap:8px}
+.opts button{font-family:var(--body); font-size:14.5px; font-weight:600; cursor:pointer; border-radius:9px; padding:11px 15px; min-height:46px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s; text-align:left}
+.opts button:hover{border-color:var(--sea); color:var(--sea-deep)}
+.opts button.picked{background:var(--ink); color:#fff; border-color:var(--ink)}
+.opts button:disabled{cursor:default}
+.opts button.picked:disabled{opacity:1}
+.opts button:disabled:not(.picked){opacity:.5}
+.fb{font-size:14.5px; font-weight:600; margin:10px 0 0; display:none; line-height:1.7}
+.q.right .fb{display:block; color:var(--good)}
+.q.wrong .fb{display:block; color:var(--miss)}
+
+.pick{border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:11px; background:#FBFDFF}
+.pick.right{background:var(--good-tint); border-color:var(--good)}
+.pick.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.pick .stem{font-size:16px; margin:0 0 11px}
+.pick .fb{font-size:14.5px; font-weight:600; margin:10px 0 0; display:none; line-height:1.7}
+.pick.right .fb, .pick.wrong .fb{display:block}
+.pick.right .fb{color:var(--good)} .pick.wrong .fb{color:var(--miss)}
+.pbtns{display:flex; gap:8px; flex-wrap:wrap}
+.pbtns button{flex:0 0 auto; font-family:var(--body); font-size:14.5px; font-weight:700; cursor:pointer; border-radius:9px; padding:11px 16px; min-height:46px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s}
+.pbtns button:hover{border-color:var(--sea); color:var(--sea-deep)}
+.pbtns button.picked{background:var(--sea-deep); color:#fff; border-color:var(--sea-deep)}
+.pbtns button:disabled{cursor:default}
+.pbtns button:disabled:not(.picked){opacity:.45}
+
+textarea{width:100%; min-height:150px; border:1px solid var(--line); border-radius:10px; padding:12px; font-family:var(--body); font-size:15.5px; line-height:1.8; background:#FBFDFF; color:var(--ink); resize:vertical; overflow:hidden}
+textarea:focus{outline:2px solid var(--sea); outline-offset:1px}
+.scaffold{background:var(--tint); border-radius:10px; padding:12px 14px; margin:0 0 12px; font-size:15px}
+.scaffold p{margin:0 0 7px}
+.scaffold p:last-child{margin:0}
+
+.checks{display:flex; flex-direction:column; gap:8px}
+.checks button{font-family:var(--body); font-size:15px; font-weight:600; text-align:left; cursor:pointer; border-radius:10px; padding:12px 15px; min-height:48px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s; line-height:1.6}
+.checks button:hover{border-color:var(--sea)}
+.checks button.on{background:var(--good-tint); border-color:var(--good); color:#1D5236}
+.checks button.on::before{content:"✓ "}
+.checks button:not(.on)::before{content:"○ "}
+.checks button.hard{border-color:#E0BC8C; background:#FDF7EC}
+.checks button.hard.on{background:var(--good-tint); border-color:var(--good)}
+
+.subbar{background:var(--paper); border-radius:var(--r); padding:22px; margin:26px 0; box-shadow:var(--shadow); text-align:center}
+.actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:12px}
+.btn{font-family:var(--body); font-size:15.5px; font-weight:700; cursor:pointer; border-radius:10px; padding:13px 24px; min-height:50px; border:1px solid transparent; transition:.15s}
+.btn-sea{background:var(--sea); color:#fff}
+.btn-sea:hover{background:var(--sea-deep)}
+.btn-line{background:var(--paper); color:var(--ink-soft); border-color:var(--line)}
+.btn-line:hover{border-color:var(--sea); color:var(--sea-deep)}
+
+.result{display:none; background:var(--paper); border-radius:var(--r); padding:26px; margin:26px 0; box-shadow:var(--shadow)}
+.result.show{display:block}
+.medalrow{display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+.medal{width:74px; height:74px; flex:none}
+.rankname{font-family:var(--display); font-size:24px; font-weight:800; margin:0}
+.rankline{font-size:14.5px; color:var(--ink-soft); margin:2px 0 0}
+.bigscore{font-family:var(--display); font-size:32px; font-weight:800; margin:0; color:var(--sea-deep)}
+.bd{margin:20px 0 0}
+.bdrow{display:flex; justify-content:space-between; font-size:14.5px; margin:12px 0 4px}
+.bdrow .v{font-family:var(--mono); font-weight:700; color:var(--sea-deep)}
+.bar{height:9px; background:var(--tint); border-radius:20px; overflow:hidden}
+.bar span{display:block; height:100%; background:var(--sea); border-radius:20px}
+.advice{background:var(--amber-tint); border-radius:11px; padding:14px 16px; margin-top:18px; font-size:15px}
+.pending{background:var(--tint); border-radius:11px; padding:14px 16px; margin-top:12px; font-size:14.5px; color:var(--ink-soft)}
+@media print{ .rail,.subbar,.spk,.fbspk{display:none} body{background:#fff} }
+</style>
+</head>
+<body>
+
+<nav class="rail">
+  <div class="rail-item" data-rail="s0"><span class="rail-dot"></span><span class="rail-label">00 思路地图</span></div>
+  <div class="rail-item" data-rail="s1"><span class="rail-dot"></span><span class="rail-label">01 挖讯息</span></div>
+  <div class="rail-item" data-rail="s2"><span class="rail-dot"></span><span class="rail-label">02 认题型</span></div>
+  <div class="rail-item" data-rail="s3"><span class="rail-dot"></span><span class="rail-label">03 想要点</span></div>
+  <div class="rail-item" data-rail="s4"><span class="rail-dot"></span><span class="rail-label">04 辨错例</span></div>
+  <div class="rail-item" data-rail="s5"><span class="rail-dot"></span><span class="rail-label">05 写成段</span></div>
+  <div class="rail-item" data-rail="s6"><span class="rail-dot"></span><span class="rail-label">06 格式</span></div>
+  <div class="rail-item" data-rail="s7"><span class="rail-dot"></span><span class="rail-label">07 我来写</span></div>
+  <div class="rail-item" data-rail="s8"><span class="rail-dot"></span><span class="rail-label">08 查自己</span></div>
+  <div class="rail-item" data-rail="s9"><span class="rail-dot"></span><span class="rail-label">09 范文</span></div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Higher Chinese · Private Email</p>
+  <h1>我自己想得出来</h1>
+  <p class="sub">私人电邮 · 要点怎么想出来，怎么才算真的在回答</p>
+  <div class="idbox">
+    <p class="idask">先写上你的名字和组别，成绩才算得到你身上。</p>
+    <div id="idManual">
+      <div class="manualrow">
+        <label>姓名<input data-save="name" placeholder="你的名字"></label>
+        <label>班级<input data-save="class" placeholder="例：201"></label>
+        <label>组别<input data-save="group" placeholder="例：第3组"></label>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 来信 ============ -->
+<section class="task">
+  <p class="tasknum">THE LETTER</p>
+  <h2>宝华寄来的电邮</h2>
+  <p class="hint">这封信你在家已经回过一次了。今天在课室里，<strong>不看那一篇</strong>，重新想一遍。</p>
+  <div class="mail">
+    <div class="bar">✉ 收件箱 <button class="spk" data-spk="mailtext">🔊 听一遍</button></div>
+    <div class="head">
+      <div><b>发件人：</b>谢宝华 &lt;chiapohhua@xyz.com&gt;</div>
+      <div><b>收件人：</b>林小飞 &lt;linxiaofei@abc.net&gt;</div>
+      <div><b>日　期：</b>9月19日 14:30　　<b>主　题：</b>网上订餐</div>
+    </div>
+    <div class="body" id="mailtext">
+      <p>小飞：</p>
+      <p class="ind">好久不见，近来好吗？</p>
+      <p class="ind">记得上次去你家玩，<mark>你在网上订了快餐请我们吃</mark>。食物很快就送来了，而且很好吃。</p>
+      <p class="ind">那次之后，我也尝试在网上订餐，感觉的确不错。不过，<mark>也有几次不太好的经验</mark>。</p>
+      <p class="ind"><mark>你对网上订餐有什么看法？</mark><mark>你觉得我在网上订餐需要注意些什么？</mark></p>
+      <p class="ind">好了，我就写到这里。希望能尽快收到你的回邮。</p>
+      <p class="ind">祝</p>
+      <p>学业进步</p>
+      <p>宝华</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 思路地图 ============ -->
+<section class="task" id="s0">
+  <p class="tasknum">THE MAP · 先看路，再走路</p>
+  <h2>思路地图：从一封信到六个要点</h2>
+  <p class="hint">写不出来，从来不是因为「没灵感」，是因为<strong>不知道下一步该想什么</strong>。这五步，每一步只问自己一个问题。<button class="spk dark" data-spk="mapbox">🔊 听一遍</button></p>
+
+  <div class="map" id="mapbox">
+    <div class="mstep">
+      <div class="mno">1</div>
+      <div class="mbody">
+        <h5>挖讯息</h5>
+        <p class="ask">问自己：这一句，是讯息、是问题，还是寒暄？</p>
+        <div class="chain"><b>逐句读</b><i>→</i><b>讯息拿去用</b><i>+</i><b>问题拿去答</b></div>
+      </div>
+    </div>
+    <div class="mstep">
+      <div class="mno">2</div>
+      <div class="mbody">
+        <h5>认题型</h5>
+        <p class="ask">问自己：他要我「说看法」，还是「给建议」？</p>
+        <div class="chain"><b>谈看法</b><i>=</i><b>立场＋理由</b><i>｜</i><b>建议类</b><i>=</i><b>他做得到的办法</b></div>
+      </div>
+    </div>
+    <div class="mstep acc">
+      <div class="mno">3</div>
+      <div class="mbody">
+        <h5>想要点　<span style="font-size:13px;color:var(--amber)">← 最难的一步，两条路</span></h5>
+        <p class="ask">问自己：这一问的要点，要从哪里挖出来？</p>
+        <div class="chain"><b class="hot">第一问</b><i>→</i><b>定立场</b><i>→</i><b>从角度找理由</b></div>
+        <div class="chain"><b class="hot">第二问</b><i>→</i><b>列他的麻烦</b><i>→</i><b>一个麻烦一条建议</b></div>
+      </div>
+    </div>
+    <div class="mstep acc">
+      <div class="mno">4</div>
+      <div class="mbody">
+        <h5>查要点</h5>
+        <p class="ask">问自己：这一条，真的在回答他问的那件事吗？</p>
+        <div class="chain"><b>答非所问？</b><b>中途转题？</b><b>误解问题？</b></div>
+      </div>
+    </div>
+    <div class="mstep">
+      <div class="mno">5</div>
+      <div class="mbody">
+        <h5>写成段</h5>
+        <p class="ask">问自己：这个要点，我讲得出「是什么、为什么、怎么做」吗？</p>
+        <div class="chain"><b>过渡</b><i>→</i><b>要点</b><i>→</i><b>解释</b><i>=</i><b>五行</b></div>
+      </div>
+    </div>
+  </div>
+  <p class="hint" style="margin:6px 0 0">两问各三个要点，一共六段。<span class="key">六个要点，全部从第 3 步生出来。</span><span class="en2">Six points, six paragraphs. All of them come from Step 3.</span></p>
+</section>
+
+<!-- ============ 任务一 ============ -->
+<section class="task" id="s1">
+  <p class="tasknum">TASK 01 · 第 1 步 · 6 分</p>
+  <h2>挖讯息：一句一句看</h2>
+  <div class="worked">
+    <h5>先看老师做一句</h5>
+    <div class="wrow"><div class="wk">这一句</div><div class="wv">「食物很快就送来了，而且很好吃。」</div></div>
+    <div class="wrow"><div class="wk">我问自己</div><div class="wv">这是讯息、问题，还是寒暄？</div></div>
+    <div class="wrow"><div class="wk">判断</div><div class="wv"><b>讯息</b>——他说过「快、好吃」，我谈看法时可以接着他的话说，不必从头介绍。</div></div>
+  </div>
+  <p class="hint" style="margin:0 0 6px"><span class="key">题目里没有废话。</span><span class="en2">Nothing in his email is filler. Every line is there for a reason.</span></p>
+  <h3><span class="n">A</span>这一句是什么<span class="pg" id="pg1">已完成 0 / 6</span></h3>
+  <div id="qa"></div>
+</section>
+
+<!-- ============ 任务二 ============ -->
+<section class="task" id="s2">
+  <p class="tasknum">TASK 02 · 第 2 步 · 3 分</p>
+  <h2>认题型：他要我做哪两件事</h2>
+  <p class="hint">同样是回信，<strong>问「看法」和问「注意什么」，写法完全不同</strong>。弄错了，整段都白写。</p>
+  <div class="guide">
+    <div class="grow">
+      <div class="gleft">你对网上订餐<br>有什么看法？</div>
+      <div class="gright"><b>谈看法</b>　→　立场 ＋ 支持立场的理由<span class="en2">Your stand, then reasons that back it up.</span></div>
+    </div>
+    <div class="grow">
+      <div class="gleft">你觉得我需要<br>注意些什么？</div>
+      <div class="gright"><b>建议类</b>　→　针对他的问题 · 能解决 · 他做得到<span class="en2">Advice he can actually follow.</span></div>
+    </div>
+  </div>
+  <h3><span class="n">A</span>四选一<span class="pg" id="pg2">已完成 0 / 3</span></h3>
+  <div id="qb"></div>
+</section>
+
+<!-- ============ 任务三 ============ -->
+<section class="task" id="s3">
+  <p class="tasknum">TASK 03 · 第 3 步 · 8 分</p>
+  <h2>想要点：要点不靠灵感，靠路线</h2>
+
+  <h3><span class="n">路线一</span>第一问 · 定立场 → 从角度找理由</h3>
+  <div class="worked">
+    <h5>老师整条走一遍（你照着做，第一问就有三个要点了）</h5>
+    <div class="wrow"><div class="wk">他问</div><div class="wv">你对网上订餐有什么看法？</div></div>
+    <div class="wrow"><div class="wk">第 1 步<br>定立场</div><div class="wv">我认为网上订餐<b>有利有弊</b>。<br><span style="font-size:13.5px;color:#8B6420">（也可以选「好处很多」或「问题不少」，选了就要一路撑住它）</span></div></div>
+    <div class="wrow"><div class="wk">第 2 步<br>找角度</div><div class="wv">从六个角度挑三个：<br><span style="font-size:13.5px">省时省力　·　选择多　·　花费　·　健康　·　包装垃圾　·　食物安全</span></div></div>
+    <div class="wrow"><div class="wk">第 3 步<br>查方向</div><div class="wv">立场是「有利有弊」→ 就要 <b>两好一坏</b>：省时省力（好）、选择多（好）、花费高（坏）</div></div>
+    <div class="wrow"><div class="wk">结果</div><div class="wv"><b>三个要点到手</b>，一个角度写一段。</div></div>
+  </div>
+
+  <h3><span class="n">路线二</span>第二问 · 列他的麻烦 → 一个麻烦一条建议</h3>
+  <p class="hint" style="margin:0 0 6px">他说「也有几次不太好的经验」，却没说是什么。<strong>那就替他想：网上订餐会出什么岔子？</strong></p>
+  <div class="four">
+    <span>①<br>食物品质<br>卫生</span>
+    <span>②<br>送错地址</span>
+    <span>③<br>等待时间<br>过长</span>
+    <span>④<br>花冤枉钱</span>
+  </div>
+  <p class="hint" style="margin:0 0 8px"><span class="key">一个问题 ＝ 一条建议 ＝ 一个要点。</span><span class="en2">One problem → one piece of advice → one paragraph.</span></p>
+
+  <table class="pairs">
+    <tr><th style="width:36%">他可能遇到的问题</th><th>我给他的建议</th></tr>
+    <tr class="demo"><td class="p">③ 等待时间过长</td><td>先跟同学打听哪一家送得快　<span style="font-size:13px">（老师示范）</span></td></tr>
+    <tr><td class="p">① 食物品质·卫生</td><td class="a">？　下面第 1、5 题</td></tr>
+    <tr><td class="p">② 送错地址</td><td class="a">？　下面第 3、6 题</td></tr>
+    <tr><td class="p">③ 等待时间过长</td><td class="a">？　下面第 2、7 题</td></tr>
+    <tr><td class="p">④ 花冤枉钱</td><td class="a">？　下面第 4、8 题</td></tr>
+  </table>
+
+  <h3><span class="n">A</span>这一条建议，在解决哪一个问题<span class="pg" id="pg3">已完成 0 / 8</span></h3>
+  <div id="qc"></div>
+</section>
+
+<!-- ============ 任务四 ============ -->
+<section class="task" id="s4">
+  <p class="tasknum">TASK 04 · 第 4 步 · 7 分</p>
+  <h2>辨错例：像在回答，其实没有</h2>
+  <p class="hint">想到要点还不够。<strong>很多人写了一大段，看起来在答，其实一句也没答到。</strong>先看一个。<button class="spk dark" data-spk="demoQA">🔊 听一遍</button></p>
+
+  <div class="demoQA" id="demoQA">
+    <div class="qq">宝华问：你觉得我在网上订餐需要注意些什么？</div>
+    <div class="aa">有同学答：网上订餐真的很方便，食物送得又快，我建议你多多使用。</div>
+    <div class="why">✗ 他问的是「要小心什么」，你答的是「有多好、要多用」。看着像建议，其实没回答。</div>
+  </div>
+
+  <p class="hint" style="margin:0 0 8px">这类毛病一共三种，加上合格的写法，一共四张卡：</p>
+  <div class="errs">
+    <div class="ecard e1"><h4>答非所问</h4><p>他问东，你答西。句子通顺，就是没答到他问的那件事。<span class="en2">Looks like an answer. Isn't one.</span></p></div>
+    <div class="ecard e2"><h4>中途转题</h4><p>开头讲 A，讲着讲着变成 B，说了后面忘了前面。<span class="en2">Starts on topic, drifts away.</span></p></div>
+    <div class="ecard e3"><h4>误解问题</h4><p>根本弄错他在问什么，整段方向就错了。<span class="en2">Misread the question.</span></p></div>
+    <div class="ecard e4"><h4>合格</h4><p>有要点、有解释，从头到尾都在回答同一个问题。<span class="en2">One question, one answer, all the way.</span></p></div>
+  </div>
+
+  <h3><span class="n">A</span>这一段是哪一种<span class="pg" id="pg4">已完成 0 / 7</span></h3>
+  <div id="qd"></div>
+  <h3><span class="n">B</span>那要怎么改</h3>
+  <div id="qe"></div>
+</section>
+
+<!-- ============ 任务五 ============ -->
+<section class="task" id="s5">
+  <p class="tasknum">TASK 05 · 第 5 步 · 4 分</p>
+  <h2>写成段：一个要点撑五行</h2>
+  <p class="hint">要点对了，还要撑得起一段。<strong>一个要点 ＝ 一段 ＝ 至少五行。</strong><button class="spk dark" data-spk="demo">🔊 听一遍</button></p>
+  <div class="demo" id="demo">
+    <div class="demoline"><div class="dtag">衔接过渡</div><div class="dtxt">其次，我还要提醒你一件事。</div></div>
+    <div class="demoline"><div class="dtag">要点</div><div class="dtxt">下单前一定要看清楚<b>总数</b>。</div></div>
+    <div class="demoline"><div class="dtag">解释 · 是什么</div><div class="dtxt">很多人只看菜的价钱，忘了下面还有送餐费和包装费。</div></div>
+    <div class="demoline"><div class="dtag">解释 · 为什么</div><div class="dtxt">一顿常常因此多出两三块钱，一个月下来就是一笔不小的开销。</div></div>
+    <div class="demoline"><div class="dtag">解释 · 怎么做</div><div class="dtxt">我通常先把总数跟自己去食阁买的价钱比一比，超过太多就不订了。</div></div>
+  </div>
+  <p class="hint" style="margin:0 0 8px"><span class="key">从头到尾，五行都在讲「总数」这两个字。</span>这就叫不转题。</p>
+  <h3><span class="n">A</span>这一句在段里是哪一块<span class="pg" id="pg5">已完成 0 / 4</span></h3>
+  <div id="qf"></div>
+</section>
+
+<!-- ============ 任务六 ============ -->
+<section class="task" id="s6">
+  <p class="tasknum">TASK 06 · 4 分</p>
+  <h2>格式与套语：能背就不要错</h2>
+  <div class="guide">
+    <div class="grow">
+      <div class="gleft">开头三步</div>
+      <div class="gright">问候　→　引出话题　→　说明这封信的目的<br><span style="font-size:14px">「你好！谢谢你的问候！」→「在上一个电邮中你问我……」→「我就在这个电邮中谈谈我的看法。」</span></div>
+    </div>
+    <div class="grow">
+      <div class="gleft">结束语</div>
+      <div class="gright">好了，我就写到这里。希望早日收到你的电邮。</div>
+    </div>
+  </div>
+  <h3><span class="n">A</span>四选一<span class="pg" id="pg6">已完成 0 / 4</span></h3>
+  <div id="qg"></div>
+</section>
+
+<!-- ============ 任务七 ============ -->
+<section class="task" id="s7">
+  <p class="tasknum">TASK 07 · 老师另行评分</p>
+  <h2>我来写：第二问的第一段</h2>
+  <p class="hint">从任务三挑<strong>一条建议</strong>，照第 5 步写成一整段。<span class="key">不看你在家写的那一篇。</span></p>
+  <div class="scaffold">
+    <p><b>首先，</b>＿＿＿＿＿＿＿＿。<span style="color:var(--ink-soft)">（要点：一句话说完，扣住他的问题）</span></p>
+    <p><b>很多人</b>＿＿＿＿＿＿＿＿。<span style="color:var(--ink-soft)">（是什么：别人常犯的错）</span></p>
+    <p><b>这样一来，</b>＿＿＿＿＿＿。<span style="color:var(--ink-soft)">（为什么：会有什么后果）</span></p>
+    <p><b>我通常</b>＿＿＿＿＿＿＿＿。<span style="color:var(--ink-soft)">（怎么做：你自己的做法）</span></p>
+  </div>
+  <textarea data-save="para" placeholder="首先，……"></textarea>
+  <h3><span class="n">✓</span>交之前自己检查</h3>
+  <div class="checks" id="selfcheck">
+    <button data-c="c1">我这一段是在回答「要注意什么」，不是在说好处或坏处</button>
+    <button data-c="c2">我有解释「是什么」和「为什么」</button>
+    <button data-c="c3">我写了自己的做法，有时间、地点或当时的情况</button>
+    <button data-c="c4">从第一行到最后一行，我都在讲同一件事，没有转题</button>
+    <button data-c="c5">我这一段够五行</button>
+  </div>
+</section>
+
+<!-- ============ 任务八 ============ -->
+<section class="task" id="s8">
+  <p class="tasknum">TASK 08 · 不计分</p>
+  <h2>查自己：拿出你在家写的那一篇</h2>
+  <p class="hint">现在打开你在家写好的电邮，<strong>一条一条对</strong>。勾不下去的，就是要重写的地方。</p>
+  <div class="checks" id="finalcheck">
+    <button data-c="f1">我指得出信里哪一句用到了宝华信中的讯息</button>
+    <button data-c="f2">我的每一条建议，都对得上他可能遇到的一个问题</button>
+    <button data-c="f3">我的每一个要点，都真的在回答他问的那件事</button>
+    <button data-c="f4">每一段从头到尾讲同一件事，没有说了后面忘了前面</button>
+    <button data-c="f5">每个要点各自成段，每段至少五行，段中有过渡、要点、解释</button>
+    <button data-c="f6">开头有三步；结束语、主题、称呼、祝词都没写错</button>
+    <button data-c="f7" class="hard">★ 我能合上稿子，把两个问题的要点各说一遍</button>
+  </div>
+  <p class="hint" style="margin:16px 0 0"><span class="key">最后一条勾不下去的，那篇不是你写的。</span>今天课上重写。</p>
+  <p class="hint" style="margin:8px 0 0">改之前，先看下面那篇<strong>范文全解</strong>——每一段在写什么，都标出来了。</p>
+</section>
+
+<!-- ============ 范文 ============ -->
+<section class="task" id="s9">
+  <p class="tasknum">范文全解 · 不计分</p>
+  <h2>范文：每一段在写什么</h2>
+  <p class="hint">先自己想「这一段在写什么」，再按按钮揭晓。<strong>不要先看答案。</strong></p>
+
+  <p class="hint" style="margin:0 0 8px"><strong>整封信的骨架</strong>——注意橙色那六行，全部是从<span class="key">地图第 3 步</span>生出来的。</p>
+  <table class="outline">
+    <tr><th>段</th><th>在写什么</th><th>从哪里来</th></tr>
+    <tr><td class="on">1</td><td>称呼 ＋ 问候</td><td class="src">格式 · 开头三步之 1</td></tr>
+    <tr><td class="on">2</td><td>引出话题 ＋ 说明目的</td><td class="src">格式 · 开头三步之 2、3</td></tr>
+    <tr><td class="on">3</td><td>立场：有利有弊</td><td class="src">第 3 步 · 路线一「定立场」</td></tr>
+    <tr class="r3"><td class="on">4</td><td>理由一 · 省时省力（好）</td><td class="src">第 3 步 · 角度「省时省力」</td></tr>
+    <tr class="r3"><td class="on">5</td><td>理由二 · 选择多（好）</td><td class="src">第 3 步 · 角度「选择多」</td></tr>
+    <tr class="r3"><td class="on">6</td><td>理由三 · 花费高（坏）</td><td class="src">第 3 步 · 角度「花费」</td></tr>
+    <tr><td class="on">7</td><td>过渡：转入第二问</td><td class="src">一句话就够</td></tr>
+    <tr class="r3"><td class="on">8</td><td>注意一 · 避开高峰</td><td class="src">第 3 步 · 麻烦③ 等太久</td></tr>
+    <tr class="r3"><td class="on">9</td><td>注意二 · 地址写清楚</td><td class="src">第 3 步 · 麻烦② 送错地址</td></tr>
+    <tr class="r3"><td class="on">10</td><td>注意三 · 看清楚总价</td><td class="src">第 3 步 · 麻烦④ 花冤枉钱</td></tr>
+    <tr><td class="on">11</td><td>结束语</td><td class="src">格式 · 固定句</td></tr>
+    <tr><td class="on">12</td><td>祝颂语 ＋ 署名</td><td class="src">格式 · 背下来</td></tr>
+  </table>
+
+  <div class="fwtop">
+    <button id="fwAll">全部揭晓</button>
+    <button id="fwNone">全部收起</button>
+    <button class="spk dark" data-spk="fwlist">🔊 读一遍全文</button>
+  </div>
+  <p class="fwsubject">主题：回复：网上订餐</p>
+  <div id="fwlist"></div>
+
+  <div class="fwnote">
+    <p style="margin:0"><b>留一手给你自己：</b>第 3 步里那四种麻烦，范文只用了三种——<b>「① 食物品质·卫生」还没写</b>。回去改你那封信的时候，用任务三第 1、5 题的两条建议，自己补上第四段。</p>
+  </div>
+</section>
+
+<div class="subbar">
+  <p style="margin:0 0 4px; font-size:15px; color:var(--ink-soft)">六个任务做完了？交上来看看成绩。</p>
+  <div class="actions">
+    <button class="btn btn-sea" id="submitAll">提交，看我的成绩</button>
+    <button class="btn btn-line" onclick="window.print()">打印 / 存成 PDF</button>
+    <button class="btn btn-line" id="clearAll">清空重做</button>
+  </div>
+</div>
+
+<div class="result" id="result"></div>
+
+</div>
+
+<script>
+/* ==========================================================
+   ①　设置区　—— 老师只需要改这里
+   ========================================================== */
+const CONFIG = {
+  // 要把成绩自动传到 Google 表格，就把 Apps Script 部署网址贴进下面这对引号
+  // 留空 = 方案 A：纯本地计分，学生按「复制成绩交给老师」
+  API: "",
+  LESSON: "私人电邮·网上订餐"
+};
+/* ========================================================== */
+
+/* ================= 题库 ================= */
+
+/* 任务一 · 讯息 / 问题 / 寒暄 */
+const INFO = [
+  ["好久不见，近来好吗？", "hi",
+   "寒暄。回信问候一句就够。<span class=\"en2\">Just a greeting.</span>"],
+  ["上次去你家玩，你在网上订了快餐请我们吃。", "info",
+   "他把你当有经验的人。你的话要说得像老手。<span class=\"en2\">He sees you as the experienced one.</span>"],
+  ["你对网上订餐有什么看法？", "ask",
+   "第一个问题。必须有一整段正面回答。"],
+  ["不过，也有几次不太好的经验。", "info",
+   "他真正的困扰在这里。你的建议要针对它。<span class=\"en2\">This is the problem your advice must solve.</span>"],
+  ["你觉得我在网上订餐需要注意些什么？", "ask",
+   "第二个问题。两个问题都要答，漏一个就扣分。"],
+  ["希望能尽快收到你的回邮。", "hi",
+   "客套话。结尾回一句就好。<span class=\"en2\">Just politeness.</span>"]
+];
+const INFO_LABELS = [["info","讯息·要用上"],["ask","问题·必须答"],["hi","寒暄"]];
+
+/* 任务二 · 电邮类型 */
+const TYPE = [
+  ["第一问「你对网上订餐有什么看法」，属于哪一类？",
+   ["谈看法——要有立场和理由","分享经验——要写清楚经过","建议类——要给他解决办法","劝慰类——要先安慰他的心情"], 0,
+   "问看法，就先表明立场，再用理由撑住它。<span class=\"en2\">Stand first, then reasons.</span>"],
+  ["第二问「我需要注意些什么」，属于哪一类？",
+   ["谈看法——说说我的立场就好","建议类——给他做得到的办法","报告生活——写我最近怎么订餐","话题讨论——分析这个社会现象"], 1,
+   "笔记三条：针对他的问题、能解决问题、他做得到。"],
+  ["下面哪一条建议<b>不合格</b>？",
+   ["平台公司应该加强对餐馆的监管","下单前先看清楚总数和送餐费","高峰时段先订，或者错开时间订","收到食物先检查有没有送错"], 0,
+   "建议要「对方做得到」。宝华是学生，管不了平台公司。<span class=\"en2\">He can't do it, so it's not advice.</span>"]
+];
+
+/* 任务三 · 建议针对哪一个问题（四对四） */
+const MATCH = [
+  ["先看店家的评价，特别是最近三个月的差评。", "food",
+   "差评里最常提到的就是不新鲜、不干净。先看，就少踩坑。"],
+  ["避开中午十二点和傍晚六点半这两个高峰。", "late",
+   "这两个时段订的人最多，等上一个小时是常事。"],
+  ["组屋座号、楼层、单位号码写全，再留手机号。", "addr",
+   "组屋一栋接一栋，外表相似，写不全人家只能在楼下打转。"],
+  ["结账那一页要看最后的总数，不只看菜价。", "cost",
+   "送餐费加包装费，一顿常多出两三块钱。"],
+  ["食物一送到就打开检查，趁热吃。", "food",
+   "凉了、变味了，趁早发现还来得及联络平台。"],
+  ["在备注栏写「送到电梯口，我下来拿」。", "addr",
+   "省得对方找不到门牌，双方都省事，饭也不会放凉。"],
+  ["先看应用上写的预计送达时间，超过一小时就换。", "late",
+   "先弄清楚要等多久，再决定订不订，主动权在自己手上。"],
+  ["别为了凑到免送餐费，就多点一份吃不完的。", "cost",
+   "省了两块送餐费，多花五块买吃不完的东西，更亏。"]
+];
+const MATCH_LABELS = [["food","① 品质·卫生"],["addr","② 送错地址"],["late","③ 等太久"],["cost","④ 花冤枉钱"]];
+
+/* 任务四 A · 错例辨析 */
+const BAD = [
+  ["每天在网上订餐会让我们营养不良，所以网上订餐不好。", "wrong",
+   "两处弄错：他问「要注意什么」，你答「好不好」；而且营养不良是天天吃外卖的问题，跟「在网上订」这个方式无关。<span class=\"en2\">He asked what to watch out for, not whether it's bad.</span>"],
+  ["你要注意的地方很多。网上订餐现在越来越普遍，很多人都在用。", "off",
+   "说了「要注意」却没说注意什么，后半句转去讲现象。看着像答，其实没答。"],
+  ["首先要看清楚总数，不能只看菜价。结账那一页会把送餐费和包装费一起算出来。", "ok",
+   "有要点、有解释，从头到尾扣着「要注意什么」。"],
+  ["下单前要看评价。说到评价，现在很多评价都是假的，商家请人写好评，这种风气应该管一管。", "drift",
+   "开头讲「看评价」，讲着讲着变成批评假评价的风气，忘了自己是在给宝华建议。<span class=\"en2\">Started right, then drifted.</span>"],
+  ["我觉得网上订餐很方便，食物送得快，还能选很多种类。", "off",
+   "这是第一问（看法）的答案，被搬到第二问来了。两问的内容不能互换。"],
+  ["地址要写全组屋座号、楼层和单位号码，免得送餐员找不到你。", "ok",
+   "具体、他做得到，对得上「送错地址」这个问题。"]
+];
+const BAD_LABELS = [["ok","合格"],["off","答非所问"],["drift","中途转题"],["wrong","误解问题"]];
+
+/* 任务四 B · 怎么改 */
+const BAD_Q = [
+  ["「每天在网上订餐会让我们营养不良」这一句，怎么改才算<b>真的在回答</b>「要注意什么」？",
+   ["订餐时要注意搭配，别天天点炸的","网上订餐的坏处其实非常多","营养不良会影响学习和身体健康","所以我建议你以后尽量别在网上订餐"], 0,
+   "把「会有什么后果」改成「他做得到的动作」，才算回答。<span class=\"en2\">Turn a consequence into an action he can take.</span>"]
+];
+
+/* 任务五 · 段落三块 */
+const PARA = [
+  ["其次，我还要提醒你一件事。", "link",
+   "把上一段接到这一段，还没讲内容。<span class=\"en2\">A bridge, not content.</span>"],
+  ["下单前一定要看清楚总数。", "point",
+   "这一段要说的那句话，摆在最前面。"],
+  ["很多人只看菜的价钱，忘了还有送餐费。", "explain",
+   "解释「是什么」——把要点说清楚。"],
+  ["我通常先跟食阁的价钱比一比。", "explain",
+   "举例说明「怎么做」，读的人才看得到画面。"]
+];
+const PARA_LABELS = [["link","衔接过渡"],["point","要点"],["explain","解释/举例"]];
+
+/* 任务六 · 格式与套语 */
+const FORM = [
+  ["称呼应该怎么写？",
+   ["「宝华：」顶格写","「亲爱的宝华同学：」","「尊敬的宝华先生：」","「谢宝华收：」空两格"], 0,
+   "朋友之间写名字加冒号，顶格。<span class=\"en2\">\"亲爱的\" is a direct translation of \"Dear\" — don't use it.</span>"],
+  ["祝颂语的排版，哪一种是对的？<span class=\"lyt\"><i>甲</i><em>　　祝学业进步</em></span><span class=\"lyt\"><i>乙</i><em>　　祝<br>学业进步</em></span><span class=\"lyt\"><i>丙</i><em>祝<br>　　学业进步</em></span>",
+   ["甲","乙","丙"], 1,
+   "「祝」空两格另起一行，祝愿的话再另起一行顶格。"],
+  ["笔记说开头有三步。正确的顺序是——",
+   ["问候 → 引出话题 → 说明目的","说明目的 → 问候 → 引出话题","引出话题 → 说明目的 → 问候","问候 → 说明目的 → 引出话题"], 0,
+   "先接住他的话，再点出要谈什么，最后说这封信要做什么。"],
+  ["结束语，哪一句最合适？",
+   ["我就写到这里，希望早日收到你的回邮","我的话已经讲完了，你自己看着办吧！","以上就是我个人的看法，谢谢你的阅读","就这样吧，我还要去做功课，先走一步"], 0,
+   "笔记给的固定句。写给朋友，客气而不生硬。"]
+];
+
+
+/* ================= 范文（逐段批注） ================= */
+const FanwenParas = [
+ {n:"1", name:"称呼 ＋ 问候",
+  L:[["宝华：",""],["IND你好！谢谢你的问候，我最近一切都好。","问候"]],
+  why:"先接住他那句「近来好吗」，一句就够，不必长篇寒暄。",
+  en:"Answer his greeting first. One line is enough."},
+
+ {n:"2", name:"引出话题 ＋ 说明目的",
+  L:[["IND在上一个电邮中，你问我对网上订餐有什么看法，也问我需要注意些什么。","引出话题"],
+     ["我就在这个电邮中谈谈我的看法，并提出一些建议，希望对你有帮助。","写电邮的目的"]],
+  why:"把他的两个问题抄一遍，读的人立刻知道你一个也没漏答。",
+  en:"Repeat his two questions. It proves you read them."},
+
+ {n:"3", name:"立场 · 回答第一问",
+  L:[["IND我认为网上订餐有利有弊，不能一概而论。","立场"]],
+  why:"立场先摆出来，后面三段就有了方向——两个好处、一个坏处。",
+  en:"State your stand first. Everything after it must support that stand."},
+
+ {n:"4", name:"理由一 · 省时省力（好）",
+  L:[["IND首先，网上订餐最大的好处是省时省力。","理由一"],
+     ["我们只要打开应用，点几下就能下单，不必出门排队等候。","解释：为什么省时省力"],
+     ["对我们中学生来说，这一点特别重要。平日放学后还有CCA训练，回到家往往已经七点多，人又累又饿；碰上下雨天，连走到楼下的食阁都不愿意。","联系中学生的情况"],
+     ["上个星期三我练完球回家，就在应用上订了一份鸡饭，二十分钟后饭就送到楼下，我洗完澡刚好可以吃，省下了不少时间温习功课。","联系个人经验"]],
+  why:"要点 → 为什么 → 我们的情况 → 我的经历，一层比一层具体，五行自然就到了。",
+  en:"Point, then why, then our situation, then my own story. Each layer is more concrete."},
+
+ {n:"5", name:"理由二 · 选择多（好）",
+  L:[["IND其次，网上订餐的选择比自己出门多得多。","理由二"],
+     ["同一个应用里，鸡饭、板面、马来餐、印度煎饼样样都有，还能看到每一家的价钱和别人的评价。","为什么说选择多"],
+     ["自己出门，往往只能在住家附近那几摊之间挑，看到什么就买什么；在应用上却可以把几家比一比，再决定订哪一家。","对比：自己出门的局限"],
+     ["你上次在我家吃到的那份快餐，就是我比较了三四家以后才订下来的，所以你才会觉得好吃。","联系个人经验 ＋ 用上他的讯息"]],
+  why:"最后一句把他信里「食物很好吃」那句接过来当证据——他自己说过的话，最有说服力。",
+  en:"The last line uses a fact from his own email as evidence."},
+
+ {n:"6", name:"理由三 · 花费高（坏）",
+  L:[["IND不过，网上订餐也有它的问题，最明显的是花费比较高。","理由三 · 转折"],
+     ["菜的价钱以外，还有送餐费和包装费，有时候另加服务费。一顿饭常常因此多出两三块钱，如果天天订，一个月下来就是一笔不小的开销。","进一步解释还有哪些花费"],
+     ["另外，每一份餐都用一个塑料盒、一个塑料袋，吃完就丢，对环境也不好。","补充：其他问题"],
+     ["所以我平时只在赶时间或下雨的时候才订，其余时间还是走到楼下的食阁买。","联系个人经验"]],
+  why:"立场是「有利有弊」，这一段坏的就非写不可。「不过」两个字把方向转过来。",
+  en:"Your stand was both good and bad, so this bad point is compulsory."},
+
+ {n:"7", name:"过渡 · 转入第二问",
+  L:[["IND至于你问我需要注意些什么，我想到三点。","过渡段"]],
+  why:"一句话就够。告诉读的人：第一问答完了，现在开始答第二问。",
+  en:"One line. It tells the reader you are switching to the second question."},
+
+ {n:"8", name:"注意一 · 避开高峰（麻烦③ 等太久）",
+  L:[["IND首先，要避开午餐和晚餐的高峰时段。","注意事项一"],
+     ["中午十二点到一点、傍晚六点到七点半，订餐的人最多，餐馆和送餐员都忙不过来。","为什么"],
+     ["你说有几次经验不太好，我猜其中一次很可能就是等得太久，食物送到时已经凉了。","联系对方的经验"],
+     ["如果时间允许，不妨提早半个小时下单，或者干脆错开高峰；下单前也留意应用上写的预计送达时间，超过一个小时的，我通常就换一家。","具体建议"]],
+  why:"直接接住他那句「有几次不太好的经验」，建议才有针对性，不是泛泛而谈。",
+  en:"It answers the exact problem he mentioned."},
+
+ {n:"9", name:"注意二 · 地址写清楚（麻烦② 送错地址）",
+  L:[["IND其次，地址务必写清楚。","注意事项二"],
+     ["组屋的座号、楼层和单位号码都要写全，最好再留下手机号码。","具体建议"],
+     ["新加坡的组屋一栋接一栋，外表又相似，送餐员如果找不到你，只能在楼下打转，饭菜放凉了不说，有时还会送错人家。","为什么要这样做"],
+     ["我自己的做法是在备注栏加上一句「送到电梯口，我下来拿」，这样双方都省事，也不必让人家在楼下等。","我的做法 ＋ 好处"]],
+  why:"新加坡组屋的实况，只有住在这里的人写得出来——这就叫言之有物。",
+  en:"Only someone who lives here could write this. That is what makes it real."},
+
+ {n:"10", name:"注意三 · 看清楚总价（麻烦④ 花冤枉钱）",
+  L:[["IND最后，下单前要看清楚最后的总价钱，而不是只看菜的价钱。","注意事项三"],
+     ["结账那一页会把送餐费、包装费和折扣一起算出来，那才是你真正要付的钱。","总价钱包括什么"],
+     ["很多人只看到「鸡饭五块半」就按下确定，付款以后才发现变成了八块多。","不注意会有什么后果"],
+     ["另外，也不要为了凑到「免送餐费」的门槛，就多点一份自己吃不完的东西，那样反而更浪费。","补充提醒"],
+     ["我通常会把总数和自己走到食阁买的价钱比一比，超过太多我就不订了。","联系个人经验"]],
+  why:"具体到「五块半变八块多」，读的人算得出来，就信得过。数字比形容词有力。",
+  en:"Real numbers make it believable. Numbers beat adjectives."},
+
+ {n:"11", name:"结束语",
+  L:[["IND好了，我就写到这里。","表示电邮写完了"],
+     ["快要放假了，有空来我家玩，我们一起到楼下的小贩中心吃炒粿条。","寒暄 · 回扣上次见面"],
+     ["希望早日收到你的电邮。","期待回信"]],
+  why:"固定句 ＋ 回扣他信里「上次去你家玩」，首尾就呼应上了。",
+  en:"The fixed closing line, plus a callback to his own email."},
+
+ {n:"12", name:"祝颂语 ＋ 署名",
+  L:[["IND祝",""],["BR学业进步",""],["BR小飞","署名"]],
+  why:"「祝」空两格另起一行，祝愿语另起一行顶格，署名顶格。这是背下来就不该错的。",
+  en:"Fixed format. Memorise it."}
+];
+
+/* ================= 存储（优先用平台存储，离线时退回浏览器本地） ================= */
+const KEY = "sirendianyou-v3";
+const S = {
+  async get(k){
+    try{ if(window.storage){ const r = await window.storage.get(k); if(r && r.value) return r.value; } }catch(e){}
+    try{ return localStorage.getItem(k); }catch(e){ return null; }
+  },
+  async set(k,v){
+    try{ if(window.storage){ await window.storage.set(k,v); return; } }catch(e){}
+    try{ localStorage.setItem(k,v); }catch(e){}
+  },
+  async del(k){
+    try{ if(window.storage){ await window.storage.delete(k); } }catch(e){}
+    try{ localStorage.removeItem(k); }catch(e){}
+  }
+};
+let store = {};
+function save(){ S.set(KEY, JSON.stringify(store)); }
+const $ = id => document.getElementById(id);
+
+/* ================= 联网工具 ================= */
+function jsonp(url, params){
+  return new Promise(res=>{
+    const cb = "cb_" + Math.random().toString(36).slice(2);
+    const s = document.createElement("script");
+    const q = Object.keys(params).map(k=>encodeURIComponent(k)+"="+encodeURIComponent(
+      typeof params[k]==="object" ? JSON.stringify(params[k]) : params[k])).join("&");
+    window[cb] = d => { res(d); delete window[cb]; s.remove(); };
+    s.src = url + "?callback=" + cb + "&" + q;
+    s.onerror = () => { res({ok:false, err:"连不上老师的成绩表"}); delete window[cb]; s.remove(); };
+    document.body.appendChild(s);
+    setTimeout(()=>{ if(window[cb]){ res({ok:false, err:"等太久，没有回应"}); delete window[cb]; } }, 12000);
+  });
+}
+async function callAPI(payload){
+  if(!CONFIG.API) return {ok:false, err:"老师还没填上传网址"};
+  try{
+    const r = await fetch(CONFIG.API, {method:"POST", body:JSON.stringify(payload)});
+    return await r.json();
+  }catch(e){
+    const light = Object.assign({}, payload);
+    delete light.detail;
+    return await jsonp(CONFIG.API, light);
+  }
+}
+
+/* ================= 朗读 ================= */
+let speaking = null;
+function speakText(txt, btn, label){
+  try{
+    if(!window.speechSynthesis){ return; }
+    if(speaking){ window.speechSynthesis.cancel(); const b=speaking; speaking=null; b.textContent=b.dataset.rest||"🔊"; if(b===btn) return; }
+    const u = new SpeechSynthesisUtterance(String(txt).replace(/\s+/g," "));
+    u.lang = "zh-CN"; u.rate = 0.9;
+    btn.dataset.rest = label;
+    u.onend = ()=>{ btn.textContent = label; speaking = null; };
+    btn.textContent = "■"; speaking = btn;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+document.querySelectorAll("[data-spk]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const el = $(btn.dataset.spk);
+    if(el) speakText(el.innerText, btn, "🔊 听一遍");
+  });
+});
+function attachFbSpeak(fbEl){
+  try{
+    if(!window.speechSynthesis) return;
+    const b = document.createElement("button");
+    b.className = "fbspk"; b.type = "button"; b.textContent = "🔊";
+    b.addEventListener("click", ()=> speakText(fbEl.innerText.replace(/🔊|■/g,""), b, "🔊"));
+    fbEl.appendChild(b);
+  }catch(e){}
+}
+
+/* ================= 选择题 ================= */
+function renderMCQ(host, list, prefix, opts){
+  list.forEach((item,i)=>{
+    const [stem, choices, ans, why] = item;
+    const id = prefix+i;
+    const d = document.createElement("div");
+    d.className = "q";
+    d.innerHTML = `<p class="stem">${i+1}. ${stem}</p><div class="opts"></div><p class="fb"></p>`;
+    const bar = d.querySelector(".opts");
+    function lock(j){
+      bar.querySelectorAll("button").forEach(x=>x.disabled=true);
+      bar.querySelectorAll("button")[j].classList.add("picked");
+      const ok = j===ans;
+      d.classList.add(ok?"right":"wrong");
+      const fb = d.querySelector(".fb");
+      fb.innerHTML = (ok ? "✓ 对了。" : "✗ 正确答案是「"+choices[ans]+"」。") + why;
+      attachFbSpeak(fb);
+    }
+    choices.forEach((c,j)=>{
+      const b = document.createElement("button");
+      b.textContent = (opts && opts.letters ? "ABCD"[j]+"　" : "") + c;
+      b.addEventListener("click", ()=>{ if(store[id]!==undefined) return; store[id]=j; save(); lock(j); updateProgress(); });
+      bar.appendChild(b);
+    });
+    host.appendChild(d);
+    if(store[id]!==undefined) lock(store[id]);
+  });
+}
+
+/* ================= 分类题 ================= */
+function renderPick(host, list, prefix, labels){
+  const dict = {}; labels.forEach(([k,t])=>dict[k]=t);
+  list.forEach((row,i)=>{
+    const [stem, ansKey, why] = row;
+    const id = prefix+i;
+    const d = document.createElement("div");
+    d.className = "pick";
+    d.innerHTML = `<p class="stem">${i+1}. 「${stem}」</p><div class="pbtns"></div><p class="fb"></p>`;
+    const bar = d.querySelector(".pbtns");
+    function lock(val){
+      bar.querySelectorAll("button").forEach(x=>{ x.disabled=true; if(x.dataset.k===val) x.classList.add("picked"); });
+      const ok = val===ansKey;
+      d.classList.add(ok?"right":"wrong");
+      const fb = d.querySelector(".fb");
+      fb.innerHTML = (ok ? "✓ 对了。" : "✗ 应该是「"+dict[ansKey]+"」。") + why;
+      attachFbSpeak(fb);
+    }
+    labels.forEach(([k,t])=>{
+      const b = document.createElement("button");
+      b.textContent = t; b.dataset.k = k;
+      b.addEventListener("click", ()=>{ if(store[id]!==undefined) return; store[id]=k; save(); lock(k); updateProgress(); });
+      bar.appendChild(b);
+    });
+    host.appendChild(d);
+    if(store[id]!==undefined) lock(store[id]);
+  });
+}
+
+
+/* ================= 范文渲染 ================= */
+function esc(t){ return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function renderFanwen(host){
+  FanwenParas.forEach((p,i)=>{
+    const id = "fw"+i;
+    const d = document.createElement("div");
+    d.className = "fw";
+    let body = "";
+    p.L.forEach(([txt,tag])=>{
+      let t = txt, cls = "";
+      if(t.indexOf("IND")===0){ t = t.slice(3); cls = "ind"; }
+      else if(t.indexOf("BR")===0){ t = t.slice(2); cls = "ind"; }
+      const tg = tag ? `<span class="tg">【${esc(tag)}】</span>` : "";
+      body += cls ? `<span class="ind">${esc(t)}${tg}</span>` : `${esc(t)}${tg}`;
+    });
+    d.innerHTML =
+      `<div class="fwhead"><span class="fwn">第 ${p.n} 段</span>`+
+      `<span class="fwname">${esc(p.name)}</span>`+
+      `<button class="fwask" type="button">这一段在写什么？</button></div>`+
+      `<div class="fwtxt">${body}</div>`+
+      `<div class="fwans">为什么这样写：${esc(p.why)}<span class="en2">${esc(p.en)}</span></div>`;
+    const btn = d.querySelector(".fwask");
+    function setOpen(v){
+      d.classList.toggle("open", v);
+      btn.textContent = v ? "收起" : "这一段在写什么？";
+      store[id] = v ? 1 : 0;
+    }
+    btn.addEventListener("click", ()=>{ setOpen(!d.classList.contains("open")); save(); });
+    host.appendChild(d);
+    if(store[id]) setOpen(true);
+  });
+}
+
+/* ================= 勾选清单 ================= */
+document.querySelectorAll("#selfcheck button, #finalcheck button").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    const k = "chk_"+b.dataset.c;
+    store[k] = store[k] ? 0 : 1;
+    b.classList.toggle("on", !!store[k]);
+    save();
+  });
+});
+function autoGrow(el){
+  if(el.tagName !== "TEXTAREA") return;
+  el.style.height = "auto";
+  el.style.height = Math.max(150, el.scrollHeight + 4) + "px";
+}
+document.querySelectorAll("[data-save]").forEach(el=>{
+  el.addEventListener("input", ()=>{ store[el.dataset.save] = el.value; save(); autoGrow(el); });
+});
+
+/* ================= 进度 ================= */
+function cnt(prefix,n){ let c=0; for(let i=0;i<n;i++) if(store[prefix+i]!==undefined) c++; return c; }
+function updateProgress(){
+  $("pg1").textContent = `已完成 ${cnt("a",6)} / 6`;
+  $("pg2").textContent = `已完成 ${cnt("b",3)} / 3`;
+  $("pg3").textContent = `已完成 ${cnt("c",8)} / 8`;
+  $("pg4").textContent = `已完成 ${cnt("d",6)+cnt("e",1)} / 7`;
+  $("pg5").textContent = `已完成 ${cnt("f",4)} / 4`;
+  $("pg6").textContent = `已完成 ${cnt("g",4)} / 4`;
+}
+
+/* ================= 评分 ================= */
+function scoreMCQ(list, prefix){ let g=0; list.forEach((it,i)=>{ if(store[prefix+i]===it[2]) g++; }); return g; }
+function scorePick(list, prefix){ let g=0; list.forEach((it,i)=>{ if(store[prefix+i]===it[1]) g++; }); return g; }
+function medalSVG(c1,c2){
+  return `<svg class="medal" viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M32 6 L44 40 L28 46 Z" fill="${c2}" opacity=".55"></path>
+    <path d="M68 6 L56 40 L72 46 Z" fill="${c2}" opacity=".55"></path>
+    <circle cx="50" cy="62" r="30" fill="${c1}"></circle>
+    <circle cx="50" cy="62" r="23" fill="none" stroke="${c2}" stroke-width="2.5"></circle>
+    <path d="M50 47 l4.6 9.4 10.4 1.5 -7.5 7.3 1.8 10.3 -9.3 -4.9 -9.3 4.9 1.8 -10.3 -7.5 -7.3 10.4 -1.5 Z" fill="#fff"></path>
+  </svg>`;
+}
+const LABEL = {a:"一", b:"二", c:"三", d:"四A", e:"四B", f:"五", g:"六"};
+
+$("submitAll").addEventListener("click", ()=>{
+  const total = { info:6, type:3, match:8, bad:7, para:4, form:4 };
+  const got = {
+    info:  scorePick(INFO,"a"),
+    type:  scoreMCQ(TYPE,"b"),
+    match: scorePick(MATCH,"c"),
+    bad:   scorePick(BAD,"d") + scoreMCQ(BAD_Q,"e"),
+    para:  scorePick(PARA,"f"),
+    form:  scoreMCQ(FORM,"g")
+  };
+  const answerable = 32;
+  const doneCnt = cnt("a",6)+cnt("b",3)+cnt("c",8)+cnt("d",6)+cnt("e",1)+cnt("f",4)+cnt("g",4);
+  if(doneCnt < answerable){
+    if(!confirm(`还有 ${answerable-doneCnt} 题没做完，确定要提交吗？`)) return;
+  }
+  const sum = Object.values(got).reduce((a,b)=>a+b,0);
+  const max = Object.values(total).reduce((a,b)=>a+b,0);
+  const pct = Math.round(sum/max*100);
+
+  let rank, medal, line;
+  if(pct>=90){ rank="自己想得出来"; medal=medalSVG("#D9A428","#8A6410"); line="要点你想得出，也判断得出哪些是假回答。这封信不必靠任何人。"; }
+  else if(pct>=75){ rank="快要独立了"; medal=medalSVG("#8FA9C4","#3E5D7C"); line="很稳。把红色那几题再读一遍，就能自己撑住整封信。"; }
+  else if(pct>=60){ rank="还要人扶一把"; medal=medalSVG("#A8B79C","#5E7154"); line="方向对了。红色题目的解释按🔊听一遍，再重做一次。"; }
+  else { rank="从头想一遍"; medal=medalSVG("#B9A489","#7A6449"); line="别急。回到思路地图，红色题目全部听一遍解释，然后按「清空重做」。"; }
+
+  const names = { info:"任务一　挖讯息", type:"任务二　认题型", match:"任务三　想要点", bad:"任务四　辨错例", para:"任务五　写成段", form:"任务六　格式套语" };
+  const tips = {
+    info:"回到地图第 1 步。他写的每一句都有用意——不是讯息，就是问题，要不就是寒暄。",
+    type:"回到地图第 2 步。问「看法」＝立场＋理由；问「注意什么」＝针对他的问题、他做得到的建议。",
+    match:"回到地图第 3 步路线二。先列他可能遇到的四种麻烦——品质卫生、送错地址、等太久、花冤枉钱，一个麻烦倒推一条建议。",
+    bad:"回到地图第 4 步。写完每一段问三句：这是在答他问的那件事吗？我有没有讲到一半跑掉？我是不是弄错他在问什么？",
+    para:"回到地图第 5 步。过渡→要点→解释；解释要答三个问题：是什么、为什么、怎么做。少一块，段落就撑不到五行。",
+    form:"称呼、祝词、开头三步、结束语——全是能背下来的，背了就不该错。"
+  };
+  let weakest=null, weakRate=2;
+  Object.keys(total).forEach(k=>{ const r=got[k]/total[k]; if(r<weakRate){ weakRate=r; weakest=k; } });
+
+  let rows="";
+  Object.keys(total).forEach(k=>{
+    const p = Math.round(got[k]/total[k]*100);
+    rows += `<div class="bdrow"><span>${names[k]}</span><span class="v">${got[k]} / ${total[k]}</span></div><div class="bar"><span style="width:${p}%"></span></div>`;
+  });
+
+  const box = $("result");
+  box.innerHTML = `
+    <div class="medalrow">${medal}
+      <div><p class="rankname">${rank}</p><p class="rankline">${line}</p></div>
+      <div style="margin-left:auto; text-align:right"><p class="bigscore">${sum} / ${max}</p><p class="rankline">正确率 ${pct}%</p></div>
+    </div>
+    <div class="bd">${rows}</div>
+    ${weakest?`<div class="advice"><b>下一步：</b>${names[weakest].replace(/　/g,' ')}是你最需要再看一次的。${tips[weakest]}</div>`:""}
+    <div class="pending"><b>任务七（我来写）由老师另行评分</b>，不计入上面的 ${max} 分。老师看五点：要点扣题、是什么、为什么、怎么做、有没有转题。<br><b>任务八不计分</b>，但最后一条勾不下去的，今天课上重写。</div>
+    <div class="uploadbox wait" id="upBox">正在把成绩传给老师……</div>
+    <div class="actions"><button class="btn btn-line" id="copyRes">复制成绩交给老师</button><button class="btn btn-line" id="retryUp" style="display:none">重新上传</button></div>`;
+  box.classList.add("show");
+  try{ if(box.scrollIntoView) box.scrollIntoView({behavior:"smooth", block:"start"}); }catch(e){}
+  store.finalScore = sum+"/"+max; save();
+
+  function buildDetail(){
+    const out = [];
+    const mcq = (list,p)=>list.forEach((it,i)=>{
+      const my = store[p+i];
+      out.push([LABEL[p]+(i+1), my===undefined?"未答":"ABCD"[my], "ABCD"[it[2]], my===it[2]?1:0]);
+    });
+    const pick = (list,p,labels)=>{
+      const dd={}; labels.forEach(([k,t])=>dd[k]=t);
+      list.forEach((it,i)=>{
+        const my = store[p+i];
+        out.push([LABEL[p]+(i+1), my===undefined?"未答":dd[my], dd[it[1]], my===it[1]?1:0]);
+      });
+    };
+    pick(INFO,"a",INFO_LABELS);
+    mcq(TYPE,"b");
+    pick(MATCH,"c",MATCH_LABELS);
+    pick(BAD,"d",BAD_LABELS); mcq(BAD_Q,"e");
+    pick(PARA,"f",PARA_LABELS);
+    mcq(FORM,"g");
+    return out;
+  }
+  async function doUpload(){
+    const upBox = $("upBox"), retry = $("retryUp");
+    if(!CONFIG.API){
+      upBox.className = "uploadbox bad";
+      upBox.textContent = "这份学习单没有连上老师的成绩表，请按下面的「复制成绩交给老师」。";
+      return;
+    }
+    upBox.className = "uploadbox wait"; upBox.textContent = "正在把成绩传给老师……";
+    retry.style.display = "none";
+    const res = await callAPI({
+      a:"submit", lesson:CONFIG.LESSON,
+      cls: store.class||"", sid: store.sid||"", name: store.name||"", grp: store.group||"",
+      sc: sum, mx: max, pct: pct, parts: got,
+      stance: "", reason: store.para||"",
+      detail: buildDetail()
+    });
+    if(res && res.ok){
+      upBox.className = "uploadbox ok";
+      upBox.textContent = "✓ 成绩已经交给老师了，不用再做别的。";
+    }else{
+      upBox.className = "uploadbox bad";
+      upBox.textContent = "✗ 上传失败（" + ((res&&res.err)||"未知原因") + "）。请按「重新上传」；还是不行就按「复制成绩交给老师」。";
+      retry.style.display = "inline-block";
+      retry.onclick = doUpload;
+    }
+  }
+  doUpload();
+
+  $("copyRes").addEventListener("click", async ()=>{
+    const t = `私人电邮·网上订餐　学习单成绩
+姓名：${store.name||"（未填）"}　班级：${store.class||"（未填）"}　组别：${store.group||"（未填）"}
+等级：${rank}　总分：${sum}/${max}（${pct}%）
+${Object.keys(total).map(k=>names[k].replace(/　/g," ")+"："+got[k]+"/"+total[k]).join("\n")}
+任务七 我写的一段：${store.para||"（未写）"}`;
+    try{
+      await navigator.clipboard.writeText(t);
+      const b = $("copyRes");
+      b.textContent = "已复制 ✓";
+      setTimeout(()=>b.textContent="复制成绩交给老师", 1800);
+    }catch(e){ window.prompt("按 Ctrl/Cmd + C 复制：", t); }
+  });
+});
+
+$("clearAll").addEventListener("click", async ()=>{
+  if(!confirm("清空所有作答，重新开始？")) return;
+  store = {};
+  await S.del(KEY);
+  location.reload();
+});
+
+/* ================= 进度标尺（装饰性，不支持就跳过） ================= */
+try{
+  if(window.IntersectionObserver){
+    const rails = document.querySelectorAll(".rail-item");
+    const obs = new IntersectionObserver(es=>{
+      es.forEach(e=>{ if(e.isIntersecting) rails.forEach(r=>r.classList.toggle("on", r.dataset.rail===e.target.id)); });
+    }, {rootMargin:"-45% 0px -45% 0px"});
+    ["s0","s1","s2","s3","s4","s5","s6","s7","s8","s9"].forEach(id=>{ const el=$(id); if(el) obs.observe(el); });
+  }
+}catch(e){}
+
+/* ================= 启动 ================= */
+(async function init(){
+  const raw = await S.get(KEY);
+  if(raw){ try{ store = JSON.parse(raw); }catch(e){ store = {}; } }
+  renderPick($("qa"), INFO, "a", INFO_LABELS);
+  renderMCQ($("qb"), TYPE, "b", {letters:true});
+  renderPick($("qc"), MATCH, "c", MATCH_LABELS);
+  renderPick($("qd"), BAD, "d", BAD_LABELS);
+  renderMCQ($("qe"), BAD_Q, "e", {letters:true});
+  renderPick($("qf"), PARA, "f", PARA_LABELS);
+  renderMCQ($("qg"), FORM, "g");
+  renderFanwen($("fwlist"));
+  $("fwAll").addEventListener("click", ()=>{
+    document.querySelectorAll("#fwlist .fw").forEach((d,i)=>{
+      d.classList.add("open"); d.querySelector(".fwask").textContent = "收起"; store["fw"+i] = 1;
+    });
+    save();
+  });
+  $("fwNone").addEventListener("click", ()=>{
+    document.querySelectorAll("#fwlist .fw").forEach((d,i)=>{
+      d.classList.remove("open"); d.querySelector(".fwask").textContent = "这一段在写什么？"; store["fw"+i] = 0;
+    });
+    save();
+  });
+  document.querySelectorAll("[data-save]").forEach(el=>{ if(store[el.dataset.save]) el.value = store[el.dataset.save]; autoGrow(el); });
+  document.querySelectorAll("#selfcheck button, #finalcheck button").forEach(b=>{
+    if(store["chk_"+b.dataset.c]) b.classList.add("on");
+  });
+  updateProgress();
+})();
+</script>
+</body>
+</html>
