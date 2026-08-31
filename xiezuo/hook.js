@@ -1,6 +1,6 @@
 /* ============================================================
    华文通 · 作文审题区  平台挂钩 hook.js
-   ① 学生完成后自动把「审题卡」上传到 Google 表格
+   ① 学生完成后自动把「审题卡 ＋ 每一题的正误」上传到 Google 表格
    ② 右下角加一个「AI 审题诊断」按钮
    不改动各套作文网页原有的程序；出问题时删掉页尾那一行 <script> 即可复原。
    ============================================================ */
@@ -135,14 +135,21 @@
     };
   }
 
-  /* 只挑「答错的题」上传：对的题不必逐笔记录，用交卷人数减一减就知道 */
-  function wrongItems() {
+  /* 逐题上传：每一题都记，老师才看得到每个学生每道题的正误。
+     items 每一笔 = [题号, 类型, 对错(1/0), 学生选的, 正确答案]
+     wrong 仍保留，旧版后台不改也不会出错。 */
+  function allItems() {
     var L = window.XZ_LOG || [];
-    var w = [];
+    var items = [], w = [], right = 0;
     for (var i = 0; i < L.length; i++) {
-      if (!L[i].ok) w.push([L[i].q, L[i].tag, L[i].pick, L[i].right]);
+      var it = L[i];
+      items.push([it.q, it.tag, it.ok ? 1 : 0,
+                  String(it.pick || "").slice(0, 60),
+                  String(it.right || "").slice(0, 60)]);
+      if (it.ok) right++; else w.push([it.q, it.tag, it.pick, it.right]);
     }
-    return { wrong: w, answered: L.length, wrongCount: w.length };
+    return { items: items, wrong: w, answered: L.length,
+             rightCount: right, wrongCount: w.length };
   }
 
   function stats() {
@@ -178,7 +185,7 @@
     sent = true;
     var s = stats();
     var sc = scoreInfo();
-    var wi = wrongItems();
+    var wi = allItems();
     if (sc.total !== "") {
       f.unshift({ label: "总分", text: sc.total + (sc.max !== "" ? " / " + sc.max : "") + (sc.grade ? "（" + sc.grade + "）" : "") });
     }
@@ -190,7 +197,8 @@
         a: "submit", topic: ME.id, title: ME.meta.title, page: ME.page,
         cls: u.cls, name: u.name,
         total: sc.total, max: sc.max, grade: sc.grade,
-        answered: wi.answered, wrongCount: wi.wrongCount, wrong: wi.wrong,
+        answered: wi.answered, rightCount: wi.rightCount,
+        wrongCount: wi.wrongCount, wrong: wi.wrong, items: wi.items,
         percent: (sc.total !== "" && sc.max) ? Math.round(sc.total / sc.max * 100) : "",
         first: s.first, revised: s.revised, revealed: s.revealed, fields: f
       })
