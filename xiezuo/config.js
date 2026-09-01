@@ -7,7 +7,7 @@ window.XIEZUO = {
   /* 【第 1 处】Google 表格成绩后台网址
      从 Apps Script「部署 → 新建部署 → 网页应用」拿到，以 /exec 结尾。
      还没做好后台就留空字符串 ""，网页照样能用，只是不上传。          */
-  API: "https://script.google.com/macros/s/AKfycbxny-P_pxBlk-_iM3ObuYhM68lfy1DMVGMbC9sd6o9nFylRoPJLmWbK_WLW-7KBwiLhBw/exec",
+  API: "https://script.google.com/macros/s/AKfycbyFMq6ilgaGVO1rA85q7k_61zYKu0Of6Q90M0nGDbc_sEswbYVN-HTSLCighpuXBPea_g/exec",
 
   /* 【第 2 处】AI 批改代理网址（你现成的 hwt-ai-proxy）
      留空则 AI 按钮不出现，网页仍可离线使用。                        */
