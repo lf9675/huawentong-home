@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>组屋 · 阅读任务单</title>
+<style>
+:root{
+  --ink:#1A2118; --ink-soft:#556052;
+  --paper:#FFFFFF; --tint:#F0F5EC; --line:#DAE5D2;
+  --green:#3E7C4F; --green-deep:#2A5738;
+  --brick:#B5623A; --brick-tint:#F8ECE4;
+  --amber:#C0851A; --amber-tint:#FBF3DF;
+  --good:#3E7C4F; --good-tint:#E6F2E4;
+  --miss:#B24338; --miss-tint:#FAEAE8;
+  --r:14px;
+  --shadow:0 2px 4px rgba(26,33,24,.05), 0 12px 28px rgba(26,33,24,.10);
+  --display:"Noto Serif SC","Songti SC","Source Han Serif SC","SimSun",serif;
+  --body:"Noto Sans SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:var(--body); color:var(--ink); line-height:1.75;
+  background:linear-gradient(180deg,#F6F3EC 0%,#E7E2D4 22%,#CFCBB4 44%,
+    #A9B394 64%,#7E9270 82%,#556B48 100%);
+}
+
+.rail{position:fixed; left:24px; top:50%; transform:translateY(-50%); z-index:50}
+.rail-item{display:flex; align-items:center; gap:10px; height:58px; position:relative}
+.rail-item::before{content:""; position:absolute; left:5px; top:50%; width:2px; height:58px; background:rgba(42,60,38,.28)}
+.rail-item:last-child::before{display:none}
+.rail-dot{width:12px; height:12px; border-radius:50%; background:rgba(42,60,38,.32); transition:.35s; flex:none}
+.rail-label{font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:rgba(42,60,38,.6); white-space:nowrap; transition:.35s}
+.rail-item.on .rail-dot{background:var(--brick); box-shadow:0 0 0 5px rgba(181,98,58,.2); transform:scale(1.15)}
+.rail-item.on .rail-label{color:var(--green-deep); font-weight:700}
+@media (min-width:1100px){
+  .rail-item:nth-child(n+4) .rail-label{color:rgba(255,255,255,.75)}
+  .rail-item:nth-child(n+4) .rail-dot{background:rgba(255,255,255,.5)}
+  .rail-item:nth-child(n+4)::before{background:rgba(255,255,255,.32)}
+  .rail-item.on:nth-child(n+4) .rail-label{color:#fff}
+}
+
+.wrap{max-width:840px; margin:0 auto; padding:0 22px 90px}
+
+header.hero{padding:58px 0 28px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--green-deep); margin:0 0 12px}
+h1{font-family:var(--display); font-size:clamp(32px,6vw,54px); line-height:1.14; margin:0 0 6px; font-weight:800}
+.sub{font-size:18px; color:var(--green-deep); margin:0 0 24px; font-weight:600}
+.idbar{display:flex; flex-wrap:wrap; gap:10px; background:var(--paper); border-radius:var(--r); padding:14px; box-shadow:var(--shadow)}
+.idbar label{display:flex; align-items:center; gap:8px; flex:1 1 150px; font-size:14px; color:var(--ink-soft)}
+.idbar input{flex:1; min-width:0; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-family:var(--body); font-size:15px; background:#FBFDF9; color:var(--ink)}
+.idbar input:focus{outline:2px solid var(--green); outline-offset:1px}
+
+section.task{background:var(--paper); border-radius:var(--r); padding:30px 30px 34px; margin:26px 0; box-shadow:var(--shadow); scroll-margin-top:20px}
+.tasknum{font-family:var(--mono); font-size:12px; letter-spacing:.16em; color:var(--brick); font-weight:700; margin:0 0 6px}
+h2{font-family:var(--display); font-size:26px; line-height:1.3; margin:0 0 8px; font-weight:700}
+h3{font-size:17px; margin:26px 0 12px; color:var(--green-deep); display:flex; align-items:center; gap:9px}
+h3 .n{font-family:var(--mono); font-size:12px; background:var(--green); color:#fff; border-radius:20px; padding:3px 10px; letter-spacing:.06em}
+.hint{font-size:15px; color:var(--ink-soft); margin:0 0 20px}
+.hint strong{color:var(--green-deep)}
+
+.q{border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:11px; background:#FBFDF9}
+.q.right{background:var(--good-tint); border-color:var(--good)}
+.q.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.q .stem{font-size:16px; margin:0 0 11px}
+.q .stem b{color:var(--green-deep)}
+.opts{display:flex; flex-wrap:wrap; gap:8px}
+.opts button{font-family:var(--body); font-size:14px; font-weight:600; cursor:pointer; border-radius:9px; padding:9px 15px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s}
+.opts button:hover{border-color:var(--green); color:var(--green-deep)}
+.opts button.picked{background:var(--ink); color:#fff; border-color:var(--ink)}
+.opts button:disabled{cursor:default}
+.opts button.picked:disabled{opacity:1}
+.opts button:disabled:not(.picked){opacity:.5}
+.fb{font-size:14px; font-weight:600; margin:10px 0 0; display:none}
+.q.right .fb{display:block; color:var(--good)}
+.q.wrong .fb{display:block; color:var(--miss)}
+
+/* 结构：四个小标题配对 */
+.struct-intro{background:var(--tint); border-radius:12px; padding:16px 18px; margin-bottom:18px; font-size:15px}
+.struct-intro b{color:var(--green-deep)}
+.match{display:grid; gap:10px}
+.mrow{display:grid; grid-template-columns:150px 1fr; gap:14px; align-items:center; border:1px solid var(--line); border-radius:12px; padding:12px 14px; background:#FBFDF9}
+.mrow.right{background:var(--good-tint); border-color:var(--good)}
+.mrow.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.mrow .para{font-family:var(--display); font-weight:700; font-size:16px; color:var(--brick); text-align:center; background:var(--brick-tint); border-radius:8px; padding:10px 6px}
+.mrow .picks{display:flex; flex-wrap:wrap; gap:7px}
+.mrow .picks button{font-family:var(--body); font-size:13px; font-weight:600; cursor:pointer; border-radius:9px; padding:8px 12px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s; text-align:left}
+.mrow .picks button:hover{border-color:var(--green)}
+.mrow .picks button.picked{background:var(--ink); color:#fff; border-color:var(--ink)}
+.mrow .picks button:disabled{cursor:default}
+.mrow .picks button:disabled:not(.picked){opacity:.45}
+.mrow .mfb{grid-column:1/-1; font-size:13px; font-weight:600; margin:2px 0 0; display:none}
+.mrow.right .mfb, .mrow.wrong .mfb{display:block}
+.mrow.right .mfb{color:var(--good)} .mrow.wrong .mfb{color:var(--miss)}
+
+/* 说明方法 图解 */
+.compare{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:6px 0 18px}
+.cmp{border-radius:12px; padding:16px 18px}
+.cmp.a{background:#E9F1E4}
+.cmp.b{background:#F8ECE4}
+.cmp h4{margin:0 0 4px; font-family:var(--display); font-size:19px}
+.cmp.a h4{color:var(--green-deep)}
+.cmp.b h4{color:#8A3E1D}
+.cmp .one{font-size:13px; margin:0 0 10px; color:var(--ink-soft)}
+.cmp .eg{background:rgba(255,255,255,.75); border-radius:8px; padding:10px 12px; font-size:14px; margin:0 0 8px; line-height:1.6}
+.cmp .sig{font-size:12px; margin:0; color:var(--ink-soft)}
+.cmp .sig b{background:rgba(255,255,255,.8); border-radius:5px; padding:1px 6px; margin-right:3px; display:inline-block}
+
+/* 判断说明方法：双键 */
+.method{border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:11px; background:#FBFDF9}
+.method.right{background:var(--good-tint); border-color:var(--good)}
+.method.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.method .stem{font-size:16px; margin:0 0 11px}
+.method .fb{font-size:14px; font-weight:600; margin:10px 0 0; display:none}
+.method.right .fb, .method.wrong .fb{display:block}
+.method.right .fb{color:var(--good)} .method.wrong .fb{color:var(--miss)}
+.mbtns{display:flex; gap:8px}
+.mbtns button{font-family:var(--body); font-size:14px; font-weight:700; cursor:pointer; border-radius:9px; padding:9px 20px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s}
+.mbtns button[data-a="num"]:hover{border-color:var(--green); color:var(--green-deep)}
+.mbtns button[data-a="eg"]:hover{border-color:var(--brick); color:#8A3E1D}
+.mbtns button.picked{color:#fff}
+.mbtns button.picked[data-a="num"]{background:var(--green); border-color:var(--green)}
+.mbtns button.picked[data-a="eg"]{background:var(--brick); border-color:var(--brick)}
+.mbtns button:disabled{cursor:default}
+.mbtns button:disabled:not(.picked){opacity:.45}
+
+.stances{display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:14px}
+.stances button{padding:14px 6px; font-size:15px; font-weight:700; cursor:pointer; border-radius:9px; background:#FBFDF9; border:1px solid var(--line); color:var(--ink-soft); font-family:var(--body)}
+.stances button:hover{border-color:var(--green)}
+.stances button.picked{background:var(--green-deep); color:#fff; border-color:var(--green-deep)}
+label.fieldlab{font-size:15px; font-weight:600; display:block; margin:16px 0 6px}
+textarea{width:100%; border:1px solid var(--line); border-radius:9px; padding:11px 13px; font-family:var(--body); font-size:16px; background:#FBFDF9; color:var(--ink); resize:vertical}
+textarea:focus{outline:2px solid var(--green); outline-offset:1px}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 4px}
+.chip{font-size:13px; border:1px solid var(--line); border-radius:20px; padding:6px 13px; cursor:pointer; background:#FBFDF9; color:var(--ink-soft); transition:.15s; user-select:none}
+.chip:hover{border-color:var(--green)}
+.chip.on{background:var(--green); color:#fff; border-color:var(--green)}
+
+.btn{font-family:var(--body); font-size:15px; font-weight:700; cursor:pointer; border-radius:10px; padding:13px 24px; border:1px solid transparent; transition:.18s}
+.btn-line{background:var(--paper); color:var(--green-deep); border-color:var(--green)}
+.btn-line:hover{background:var(--tint)}
+.btn-amber{background:var(--brick); color:#fff}
+.btn-amber:hover{filter:brightness(.93)}
+.actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
+button:focus-visible{outline:3px solid var(--amber); outline-offset:2px}
+.progress{font-family:var(--mono); font-size:13px; color:var(--ink-soft); background:var(--tint); border-radius:9px; padding:8px 14px; display:inline-block; margin-top:12px}
+
+.submitzone{background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.3); border-radius:var(--r); padding:26px 28px; margin-top:30px; color:#EEF3E9; backdrop-filter:blur(6px)}
+.submitzone h3{font-family:var(--display); margin:0 0 6px; font-size:22px; color:#fff; display:block}
+.submitzone p{margin:0 0 18px; font-size:14px; color:#D3DEC8}
+.saveflag{font-family:var(--mono); font-size:12px; color:#BACCA9; margin-left:4px}
+.result{display:none; background:var(--paper); border-radius:var(--r); padding:32px 30px; margin-top:18px; box-shadow:var(--shadow); color:var(--ink)}
+.result.show{display:block; animation:pop .4s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes pop{from{opacity:0; transform:scale(.96) translateY(8px)} to{opacity:1; transform:none}}
+.medalrow{display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+.medal{width:104px; height:104px; flex:none}
+.rankname{font-family:var(--display); font-size:30px; font-weight:800; margin:0}
+.rankline{font-size:15px; color:var(--ink-soft); margin:4px 0 0}
+.bigscore{font-family:var(--mono); font-size:38px; font-weight:700; color:var(--green-deep); margin:0}
+.bd{margin-top:22px}
+.bdrow{display:grid; grid-template-columns:1fr 62px; gap:12px; align-items:center; font-size:15px; margin-bottom:2px}
+.bar{grid-column:1/-1; height:8px; border-radius:6px; background:var(--tint); overflow:hidden; margin:4px 0 12px}
+.bar span{display:block; height:100%; background:var(--green); border-radius:6px; transition:width .8s ease}
+.bdrow .v{font-family:var(--mono); font-size:14px; text-align:right; color:var(--ink-soft)}
+.advice{background:var(--amber-tint); border-radius:11px; padding:14px 16px; margin-top:18px; font-size:15px}
+.advice b{color:var(--brick)}
+
+@media (max-width:1099px){ .rail{display:none} }
+@media (max-width:620px){
+  .wrap{padding:0 14px 60px}
+  section.task{padding:22px 18px 26px}
+  .compare{grid-template-columns:1fr}
+  .stances{grid-template-columns:1fr 1fr}
+  .mrow{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} html{scroll-behavior:auto} }
+@media print{ body{background:#fff} .rail,.actions,.submitzone .actions,.opts,.mbtns,.mrow .picks,.chips{display:none} section.task{box-shadow:none; border:1px solid #ccc; break-inside:avoid} }
+</style>
+</head>
+<body>
+
+<nav class="rail" aria-label="进度">
+  <div class="rail-item" data-rail="s1"><span class="rail-dot"></span><span class="rail-label">词语过关</span></div>
+  <div class="rail-item" data-rail="s2"><span class="rail-dot"></span><span class="rail-label">四个小标题</span></div>
+  <div class="rail-item" data-rail="s3"><span class="rail-dot"></span><span class="rail-label">读懂内容</span></div>
+  <div class="rail-item" data-rail="s5"><span class="rail-dot"></span><span class="rail-label">读后说</span></div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">中一高级华文 · 生活空间</p>
+  <h1>组屋：新加坡的风景线</h1>
+  <p class="sub">从简陋的住房，到驰名海内外的家园</p>
+  <div class="idbar">
+    <label>姓名 <input type="text" data-save="name" placeholder="写上你的名字"></label>
+    <label>班级 <input type="text" data-save="class" placeholder="例：1E3"></label>
+    <label>组别 <input type="text" data-save="group" placeholder="A / B / C"></label>
+  </div>
+</header>
+
+<!-- ============ 任务一：词语 ============ -->
+<section class="task" id="s1">
+  <p class="tasknum">任务一 · 开始前的训练</p>
+  <h2>词语过关：意思 · 用法</h2>
+  <p class="hint">课本上的词语练习做完了，现在换个方式再练一遍。<strong>点一下就有答案，错了也没关系，看清楚解释再往下走。</strong></p>
+
+  <h3><span class="n">A</span>这个词是什么意思？</h3>
+  <div id="vocA"></div>
+
+  <h3><span class="n">B</span>选一个词填进去</h3>
+  <div id="vocB"></div>
+
+  <h3><span class="n">C</span>哪一句用错了？</h3>
+  <div id="vocC"></div>
+
+  <p class="progress" id="pg1">已完成 0 / 14</p>
+</section>
+
+<!-- ============ 任务二：四个小标题 ============ -->
+<section class="task" id="s2">
+  <p class="tasknum">任务二</p>
+  <h2>四个小标题：政府做了什么？</h2>
+  <div class="struct-intro">
+    这篇课文用<b>四个小标题</b>，讲了组屋一路走来的四件大事。<b>先做什么，再做什么，顺序不能乱。</b>把每个小标题和它讲的内容配起来。
+  </div>
+  <div class="match" id="match"></div>
+  <div id="afterMatch" style="margin-top:16px"></div>
+  <p class="progress" id="pg2">已完成 0 / 6</p>
+</section>
+
+<!-- ============ 任务三：读懂内容 ============ -->
+<section class="task" id="s3">
+  <p class="tasknum">任务三</p>
+  <h2>读懂课文</h2>
+  <p class="hint">这些答案都藏在课文里。<strong>不确定就回去再读一遍那一段。</strong></p>
+  <div id="comp"></div>
+  <p class="progress" id="pg3">已完成 0 / 6</p>
+</section>
+
+<!-- ============ 任务四：读后说 ============ -->
+<section class="task" id="s5">
+  <p class="tasknum">任务四</p>
+  <h2>读后说：组屋为什么是"美丽的风景线"？</h2>
+  <p class="hint">课文说组屋是新加坡"一道美丽的风景线"。你觉得，让组屋"美丽"的，主要是<strong>外表</strong>，还是<strong>里面的生活</strong>？</p>
+
+  <div class="stances" id="stances">
+    <button data-v="外表美观">外表设计美观</button>
+    <button data-v="生活便利有人情味">里面的生活便利、有人情味</button>
+  </div>
+
+  <label class="fieldlab">我住的组屋区，有哪些设施让生活很方便？（点一点，也可以自己加）</label>
+  <div class="chips" id="chips"></div>
+
+  <label class="fieldlab">我的理由（结合课文或自己的生活，至少两点）</label>
+  <textarea rows="4" data-save="reason" placeholder="第一，……；第二，……"></textarea>
+</section>
+
+<div class="submitzone">
+  <h3>全部做完了吗？</h3>
+  <p>作答自动保存在这台设备上<span class="saveflag" id="saveflag"></span>。交上去就能看到分数和你的等级。</p>
+  <div class="actions" style="margin:0">
+    <button class="btn btn-amber" id="submitAll">提交，看我的成绩</button>
+    <button class="btn btn-line" onclick="window.print()">打印 / 存成 PDF</button>
+    <button class="btn btn-line" id="clearAll">清空重做</button>
+  </div>
+</div>
+
+<div class="result" id="result"></div>
+
+</div>
+
+<script>
+/* ================= 题库 ================= */
+const VOC_A = [
+  ["组屋「驰名海内外」，这里的「驰名」是说组屋——", ["名气传到了国外","建得又高又多","造价越来越昂贵","设施配套很齐全"], 0,
+   "驰名＝名声传得远。B 讲数量、C 讲价格、D 讲设施，都是组屋的特点，但都不是「驰名」的意思。"],
+  ["建国初期住房「比较简陋」，「简陋」在这里指房子——", ["样子老旧，不好看","简单粗糙，设备不齐全","地点偏远，不方便","数量太少，不够住"], 1,
+   "简陋重点在「简单、设备差」。房子少、不好看、不牢固都是问题，但不是「简陋」这个词的意思。"],
+  ["建屋局要「与时俱进」，意思是——", ["比别的国家做得快","保持原来的做法","按时完成工程","跟着时代一起改进"], 3,
+   "与时俱进＝随时代进步。B 是和别人比、C 是讲时间、D 恰恰相反。"],
+  ["市镇规划「屡次」得奖，「屡次」是说——", ["即将要得奖","差点得奖","得过好多次","得过一次大奖"], 2,
+   "屡次＝多次。B 只讲一次、C 是还没得、D 是没得到，都和「多次」不同。"],
+  ["国人生活越来越「富裕」，「富裕」形容的是——", ["生活宽裕，不缺钱","人口一年比一年多","工作一天比一天忙","房子一间比一间大"], 0,
+   "富裕讲的是钱和生活宽裕。人口、房子、工作虽然也在变化，但不是「富裕」的意思。"],
+  ["时代不断「变迁」，「变迁」的意思是——", ["从头到尾没变过","人们不停地搬家","一直在变好变新","随着时间不断变化"], 3,
+   "变迁＝（情况随时间）变化，中性词。B 把它误当成「搬家」，C 加了「变好」的意思，D 意思相反。"]
+];
+const VOC_B = [
+  ["市镇里设有邻里中心、图书馆和＿＿诊疗所，看病很方便。", ["综合","富裕","简陋"], 0,
+   "把多科合在一起的诊所＝综合诊疗所。「简陋」「富裕」都不能修饰诊疗所。"],
+  ["政府＿＿了大片土地，用来兴建组屋。", ["荣誉","开辟","规划"], 1,
+   "开出一片新土地＝开辟。「规划」是设计安排、不能直接接「土地」，「荣誉」是名词。"],
+  ["组屋区装了斜坡和电梯，为行动不便的居民减少了＿＿。", ["经济","变迁","障碍"], 2,
+   "无障碍设施＝减少行动上的障碍。「经济」「变迁」都套不进去。"],
+  ["为了确保列车安全，维修团队会＿＿检查轨道，不敢马虎。", ["简陋","屡次","驰名"], 1,
+   "多次、反复检查＝屡次。「简陋」是形容词、「驰名」是名声，都不合。"],
+  ["新加坡地方虽小，＿＿却发展得很快，成了区域中心。", ["障碍","经济","宗教"], 1,
+   "生产贸易赚钱这些活动＝经济。「宗教」「障碍」都不合语境。"],
+  ["樟宜机场服务优良，＿＿海内外，年年吸引大批旅客。", ["简陋","开辟","驰名"], 2,
+   "名声远播＝驰名。「开辟」是动词开路、「简陋」意思相反。"]
+];
+const VOC_C = [
+  ["「驰名」用得对的是哪一句？", ["这家海南鸡饭驰名全岛，天天大排长龙。","他心情不好，一整天都很驰名。","他这次考试不及格，真是驰名全班。"], 0,
+   "驰名是名声好、传得远。考试不及格、心情不好都不能用「驰名」，只有 B 用对了。"],
+  ["「理所当然」用得对的是哪一句？", ["公司靠多年努力才转亏为盈，可谓理所当然。","这道题很难，他答不出来是理所当然的意外。","父母养育了我们，我们孝顺他们是理所当然的。"], 2,
+   "理所当然＝按道理本来就该这样。A 是来之不易、C 自相矛盾（「当然」又「意外」），只有 B 对。"]
+];
+/* 四段配对：小标题 → 内容 */
+const MATCH = [
+  ["大力兴建组屋", "成立建屋发展局，推出「居者有其屋」计划",
+   ["成立建屋发展局，推出「居者有其屋」计划","市镇里设有邻里中心、图书馆、诊疗所","推出设计新颖、造型美观的新组屋","增加交流空间和无障碍设施"]],
+  ["重视市镇规划", "市镇里设有邻里中心、图书馆、诊疗所等各种设施",
+   ["以优惠价格让国人买到组屋","市镇里设有邻里中心、图书馆、诊疗所等各种设施","给组屋注入活力，造型更美观","关注环保和人口老化问题"]],
+  ["改进组屋设计", "给组屋注入更多活力，推出造型美观的新组屋",
+   ["开辟土地，兴建大量组屋","市镇里设有邻里中心、公园、小贩中心","给组屋注入更多活力，推出造型美观的新组屋","为居民提供更多交流空间"]],
+  ["打造宜居家园", "关注环保和人口老化，完善无障碍设施",
+   ["实施「居者有其屋」计划","增强社区居民的凝聚力","推出设计新颖的新组屋","关注环保和人口老化，完善无障碍设施"]]
+];
+const MATCH_AFTER = [
+  ["把四个小标题按课文顺序排，正确的是——", ["改进设计 → 兴建组屋 → 市镇规划 → 宜居家园","兴建组屋 → 市镇规划 → 改进设计 → 宜居家园","市镇规划 → 兴建组屋 → 宜居家园 → 改进设计","宜居家园 → 改进设计 → 市镇规划 → 兴建组屋"], 1,
+   "课文先讲「有房子住」，再讲「配套齐全」，然后「设计更好」，最后「住得舒适」——一层比一层进步。"],
+  ["这四个小标题的先后顺序，主要说明了——", ["组屋的发展一步步越来越好","四件事情是同时进行的","组屋越建越少越简陋","政府中途经常改变计划"], 0,
+   "从「兴建」到「宜居」，反映组屋不断进步。B、C、D 都与课文层层递进的写法不符。"]
+];
+/* 读懂内容 */
+const COMP = [
+  ["下面哪一件事发生在 1960 年？", ["建屋局推出新颖美观的组屋","政府推出「居者有其屋」计划","政府开始重视环保问题","政府成立建屋发展局"], 3,
+   "1960 年成立建屋局；「四年后」（1964）才推出居者有其屋。B 是最容易记混的干扰项。"],
+  ["「居者有其屋」计划让国人能够——", ["向政府长期租一间房","住进设计新颖的组屋","用优惠价买到自己的房子","免费分到一间新组屋"], 2,
+   "课文原句是「以优惠的价格买到属于自己的房子」——是「优惠买」，不是免费、不是租、也不是指新组屋。"],
+  ["政府兴建组屋时重视市镇规划，主要目的是——", ["方便外国游客前来参观","满足生活所需，增强居民凝聚力","逐步减少组屋的总数量","让组屋的房价卖得更贵"], 1,
+   "课文说：为了满足人民的生活所需，增强社区居民的凝聚力。其余都不是课文提到的目的。"],
+  ["组屋的设计为什么会不断改进？", ["旧组屋陈旧，都不能住了","经济发展，生活提高，要与时俱进","想参加设计比赛拿奖","居民不断投诉旧组屋太旧"], 1,
+   "课文：随着经济蓬勃发展、生活富裕，为了与时俱进才改进设计。得奖是结果，不是原因。"],
+  ["「打造宜居家园」这一段，特别关注的是——", ["环保和人口老化","治安和卫生","房价和数量","交通和教育"], 0,
+   "课文明确写：越来越关注环保和人口老化等问题。其余是没提到的干扰项。"],
+  ["这四个小标题合起来，主要想说明——", ["组屋的价格一年比一年高涨","组屋越来越难以买得到手","组屋一步步发展，成了美丽的风景线","外国的房子建得比组屋好"], 2,
+   "全文从简陋住房讲到驰名海内外，突出组屋不断进步、成为新加坡的风景线。"]
+];
+/* 读后说 chips */
+const FACILITIES = ["邻里中心","图书馆","公园","小贩中心","游乐场","综合诊疗所","民众俱乐部","巴士站"];
+
+/* ================= 存储 ================= */
+const KEY = "zuwu-worksheet-v1";
+let store = {};
+const flag = document.getElementById("saveflag");
+let saveTimer;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    try{ await window.storage.set(KEY, JSON.stringify(store));
+      flag.textContent="· 已保存"; setTimeout(()=>flag.textContent="",1500);
+    }catch(e){}
+  }, 500);
+}
+document.addEventListener("input", e=>{
+  const el = e.target.closest("[data-save]");
+  if(!el) return; store[el.dataset.save]=el.value; save();
+});
+
+/* ================= 选择题 ================= */
+function renderMCQ(host, list, prefix, opts){
+  list.forEach((item,i)=>{
+    const [stem, choices, ans, why] = item;
+    const id = prefix+i;
+    const d = document.createElement("div");
+    d.className="q";
+    d.innerHTML = `<p class="stem">${i+1}. ${stem}</p><div class="opts"></div><p class="fb"></p>`;
+    const bar = d.querySelector(".opts");
+    function lock(j){
+      bar.querySelectorAll("button").forEach(x=>x.disabled=true);
+      bar.querySelectorAll("button")[j].classList.add("picked");
+      const ok=j===ans;
+      d.classList.add(ok?"right":"wrong");
+      d.querySelector(".fb").innerHTML=(ok?"✓ 对了。":"✗ 正确答案是「"+choices[ans]+"」。")+why;
+    }
+    choices.forEach((c,j)=>{
+      const b=document.createElement("button");
+      b.textContent=(opts&&opts.letters?"ABCD"[j]+"　":"")+c;
+      b.addEventListener("click",()=>{ if(store[id]!==undefined) return; store[id]=j; save(); lock(j); updateProgress(); });
+      bar.appendChild(b);
+    });
+    host.appendChild(d);
+    if(store[id]!==undefined) lock(store[id]);
+  });
+}
+
+/* ================= 段落配对 ================= */
+function renderMatch(){
+  const host = document.getElementById("match");
+  MATCH.forEach((row,i)=>{
+    const [title, ans, picks] = row;
+    const id = "M"+i;
+    const d = document.createElement("div");
+    d.className="mrow";
+    d.innerHTML = `<div class="para">${title}</div><div class="picks"></div><p class="mfb"></p>`;
+    const bar = d.querySelector(".picks");
+    function lock(val){
+      bar.querySelectorAll("button").forEach(x=>{ x.disabled=true; if(x.dataset.v===val) x.classList.add("picked"); });
+      const ok=val===ans;
+      d.classList.add(ok?"right":"wrong");
+      d.querySelector(".mfb").textContent = ok?"✓ 对了。":"✗ 应该是：「"+ans+"」。";
+    }
+    picks.forEach(p=>{
+      const b=document.createElement("button");
+      b.textContent=p; b.dataset.v=p;
+      b.addEventListener("click",()=>{ if(store[id]!==undefined) return; store[id]=p; save(); lock(p); updateProgress(); });
+      bar.appendChild(b);
+    });
+    host.appendChild(d);
+    if(store[id]!==undefined) lock(store[id]);
+  });
+}
+
+/* ================= chips ================= */
+function renderChips(){
+  const host = document.getElementById("chips");
+  const sel = new Set(store.facil || []);
+  FACILITIES.forEach(f=>{
+    const c=document.createElement("span");
+    c.className="chip"+(sel.has(f)?" on":""); c.textContent=f;
+    c.addEventListener("click",()=>{
+      c.classList.toggle("on");
+      const s=new Set(store.facil||[]);
+      c.classList.contains("on")?s.add(f):s.delete(f);
+      store.facil=[...s]; save();
+    });
+    host.appendChild(c);
+  });
+}
+
+/* ================= 立场 ================= */
+document.querySelectorAll("#stances button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("#stances button").forEach(x=>x.classList.remove("picked"));
+    b.classList.add("picked"); store.stance=b.dataset.v; save();
+  });
+});
+
+/* ================= 进度 ================= */
+function cnt(prefix,n){ let c=0; for(let i=0;i<n;i++) if(store[prefix+i]!==undefined) c++; return c; }
+function updateProgress(){
+  document.getElementById("pg1").textContent = `已完成 ${cnt("a",6)+cnt("b",6)+cnt("c",2)} / 14`;
+  document.getElementById("pg2").textContent = `已完成 ${cnt("M",4)+cnt("m",2)} / 6`;
+  document.getElementById("pg3").textContent = `已完成 ${cnt("d",6)} / 6`;
+}
+
+/* ================= 评分 ================= */
+function score(list, prefix, ansIdx){ let g=0; list.forEach((it,i)=>{ if(store[prefix+i]===it[ansIdx]) g++; }); return g; }
+function medalSVG(c1,c2){
+  return `<svg class="medal" viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M32 6 L44 40 L28 46 Z" fill="${c2}" opacity=".55"/>
+    <path d="M68 6 L56 40 L72 46 Z" fill="${c2}" opacity=".55"/>
+    <circle cx="50" cy="62" r="30" fill="${c1}"/>
+    <circle cx="50" cy="62" r="23" fill="none" stroke="${c2}" stroke-width="2.5"/>
+    <path d="M50 47 l4.6 9.4 10.4 1.5 -7.5 7.3 1.8 10.3 -9.3 -4.9 -9.3 4.9 1.8 -10.3 -7.5 -7.3 10.4 -1.5 Z" fill="#fff"/>
+  </svg>`;
+}
+document.getElementById("submitAll").addEventListener("click", ()=>{
+  const total = { voc:14, struct:6, comp:6, talk:2 };
+  const got = {
+    voc: score(VOC_A,"a",2)+score(VOC_B,"b",2)+score(VOC_C,"c",2),
+    struct: MATCH.reduce((s,r,i)=> s+(store["M"+i]===r[1]?1:0),0) + score(MATCH_AFTER,"m",2),
+    comp: score(COMP,"d",2),
+    talk: (store.stance?1:0) + ((store.reason||"").trim().length>=10?1:0)
+  };
+  const answerable = 14+6+6+5;
+  const doneCnt = cnt("a",6)+cnt("b",6)+cnt("c",2)+cnt("M",4)+cnt("m",2)+cnt("d",6);
+  if(doneCnt<answerable){ if(!confirm(`还有 ${answerable-doneCnt} 题没做完，确定要提交吗？`)) return; }
+
+  const sum = Object.values(got).reduce((a,b)=>a+b,0);
+  const max = Object.values(total).reduce((a,b)=>a+b,0);
+  const pct = Math.round(sum/max*100);
+  let rank, medal, line;
+  if(pct>=90){ rank="金牌讲解员"; medal=medalSVG("#D9A428","#8A6410"); line="词语、结构、内容全拿下了。你把这篇课文读透了！"; }
+  else if(pct>=75){ rank="银牌讲解员"; medal=medalSVG("#9FB0BA","#5E7180"); line="很稳。把错的那几题再看一遍，就能升金牌。"; }
+  else if(pct>=60){ rank="铜牌讲解员"; medal=medalSVG("#C08B5C","#7C5227"); line="主线读懂了。回头把红色的题目再看一遍。"; }
+  else { rank="见习讲解员"; medal=medalSVG("#7FA8B8","#456374"); line="别急，把红色题目的解释读一遍，再点「清空重做」练一次。"; }
+
+  const names = { voc:"任务一　词语", struct:"任务二　四个小标题", comp:"任务三　读懂内容", talk:"任务四　读后说" };
+  const tips = {
+    voc:"回去把课本的词语练习再读一遍，注意「用错」的那两题。",
+    struct:"重读四个小标题，注意它们从「兴建」到「宜居」一步步进步的顺序。",
+    comp:"答案都在课文里，不确定就回去读那一段。"
+  };
+  let weakest=null, weakRate=2;
+  ["voc","struct","comp"].forEach(k=>{ const r=got[k]/total[k]; if(r<weakRate){weakRate=r; weakest=k;} });
+
+  let rows="";
+  Object.keys(total).forEach(k=>{
+    const p = Math.round(got[k]/total[k]*100);
+    rows += `<div class="bdrow"><span>${names[k]}</span><span class="v">${got[k]} / ${total[k]}</span></div><div class="bar"><span style="width:${p}%"></span></div>`;
+  });
+
+  const box = document.getElementById("result");
+  box.innerHTML = `
+    <div class="medalrow">${medal}
+      <div><p class="rankname">${rank}</p><p class="rankline">${line}</p></div>
+      <div style="margin-left:auto; text-align:right"><p class="bigscore">${sum} / ${max}</p><p class="rankline">正确率 ${pct}%</p></div>
+    </div>
+    <div class="bd">${rows}</div>
+    ${weakest?`<div class="advice"><b>下一步：</b>${names[weakest].replace(/　/g,' ')}是你最需要再看一次的。${tips[weakest]}</div>`:""}
+    <div class="actions"><button class="btn btn-line" id="copyRes">复制成绩交给老师</button></div>`;
+  box.classList.add("show");
+  box.scrollIntoView({behavior:"smooth", block:"start"});
+  store.finalScore = sum+"/"+max; save();
+
+  document.getElementById("copyRes").addEventListener("click", async ()=>{
+    const t = `组屋·新加坡的风景线 · 任务单成绩
+姓名：${store.name||"（未填）"}　班级：${store.class||"（未填）"}
+等级：${rank}　总分：${sum}/${max}（${pct}%）
+${Object.keys(total).map(k=>names[k].replace(/　/g," ")+"："+got[k]+"/"+total[k]).join("\n")}
+我的立场：${store.stance||"（未选）"}
+我的理由：${store.reason||"（未写）"}`;
+    try{ await navigator.clipboard.writeText(t);
+      const b=document.getElementById("copyRes"); b.textContent="已复制 ✓";
+      setTimeout(()=>b.textContent="复制成绩交给老师",1800);
+    }catch(e){ window.prompt("按 Ctrl/Cmd + C 复制：", t); }
+  });
+});
+
+document.getElementById("clearAll").addEventListener("click", async ()=>{
+  if(!confirm("清空所有作答，重新开始？")) return;
+  store={};
+  try{ await window.storage.delete(KEY); }catch(e){}
+  location.reload();
+});
+
+/* ================= 进度标尺 ================= */
+const rails=document.querySelectorAll(".rail-item");
+const obs=new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting) rails.forEach(r=>r.classList.toggle("on", r.dataset.rail===e.target.id)); }); }, {rootMargin:"-45% 0px -45% 0px"});
+["s1","s2","s3","s5"].forEach(id=>{ const el=document.getElementById(id); if(el) obs.observe(el); });
+
+/* ================= 启动 ================= */
+(async function init(){
+  try{ const r=await window.storage.get(KEY); if(r&&r.value) store=JSON.parse(r.value); }catch(e){ store={}; }
+  renderMCQ(document.getElementById("vocA"), VOC_A, "a", {letters:true});
+  renderMCQ(document.getElementById("vocB"), VOC_B, "b");
+  renderMCQ(document.getElementById("vocC"), VOC_C, "c", {letters:true});
+  renderMatch();
+  renderMCQ(document.getElementById("afterMatch"), MATCH_AFTER, "m");
+  renderMCQ(document.getElementById("comp"), COMP, "d");
+  renderChips();
+  document.querySelectorAll("[data-save]").forEach(el=>{ if(store[el.dataset.save]) el.value=store[el.dataset.save]; });
+  if(store.stance) document.querySelectorAll("#stances button").forEach(b=>b.classList.toggle("picked", b.dataset.v===store.stance));
+  updateProgress();
+})();
+</script>
+</body>
+</html>
