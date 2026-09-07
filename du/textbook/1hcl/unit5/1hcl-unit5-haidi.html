@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>海底牧场游记 · 实习导游任务单</title>
+<style>
+:root{
+  --ink:#0E2430; --ink-soft:#4C6875;
+  --paper:#FFFFFF; --tint:#F1F8FA; --line:#D5E4E9;
+  --cyan:#0F8FA3; --cyan-deep:#0B5E75;
+  --amber:#C87A15; --amber-tint:#FDF2E0;
+  --good:#1B8A6B; --good-tint:#E4F5F0;
+  --miss:#B4453A; --miss-tint:#FBEBE9;
+  --r:14px;
+  --shadow:0 2px 4px rgba(10,46,77,.05), 0 12px 28px rgba(10,46,77,.09);
+  --display:"Noto Serif SC","Songti SC","Source Han Serif SC","SimSun",serif;
+  --body:"Noto Sans SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:var(--body); color:var(--ink); line-height:1.75;
+  background:linear-gradient(180deg,#E8F4F8 0%,#CDE6EF 12%,#8FC2D6 28%,#4A8DAA 46%,
+    #1F5B7C 64%,#0E3A56 80%,#08243A 100%);
+}
+
+/* ---------- 深度标尺 ---------- */
+.rail{position:fixed; left:24px; top:50%; transform:translateY(-50%); z-index:50}
+.rail-item{display:flex; align-items:center; gap:10px; height:60px; position:relative}
+.rail-item::before{content:""; position:absolute; left:5px; top:50%; width:2px; height:60px; background:rgba(255,255,255,.35)}
+.rail-item:last-child::before{display:none}
+.rail-dot{width:12px; height:12px; border-radius:50%; background:rgba(255,255,255,.45); transition:.35s; flex:none}
+.rail-label{font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:rgba(255,255,255,.62);
+  white-space:nowrap; transition:.35s; text-shadow:0 1px 3px rgba(0,0,0,.25)}
+.rail-item.on .rail-dot{background:#FFD98A; box-shadow:0 0 0 5px rgba(255,217,138,.22); transform:scale(1.15)}
+.rail-item.on .rail-label{color:#FFF; font-weight:700}
+.rail-item:nth-child(-n+2) .rail-label{color:rgba(14,36,48,.55); text-shadow:none}
+.rail-item:nth-child(-n+2) .rail-dot{background:rgba(14,36,48,.28)}
+.rail-item:nth-child(-n+2)::before{background:rgba(14,36,48,.2)}
+.rail-item.on:nth-child(-n+2) .rail-label{color:var(--cyan-deep)}
+.rail-item.on:nth-child(-n+2) .rail-dot{background:var(--amber); box-shadow:0 0 0 5px rgba(200,122,21,.18)}
+
+.wrap{max-width:840px; margin:0 auto; padding:0 22px 90px}
+
+/* ---------- 页首 ---------- */
+header.hero{padding:60px 0 30px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--cyan-deep); margin:0 0 12px}
+h1{font-family:var(--display); font-size:clamp(36px,7vw,60px); line-height:1.1; margin:0 0 6px; font-weight:800}
+.sub{font-size:19px; color:var(--cyan-deep); margin:0 0 24px; font-weight:600}
+.idbar{display:flex; flex-wrap:wrap; gap:10px; background:var(--paper); border-radius:var(--r);
+  padding:14px; box-shadow:var(--shadow)}
+.idbar label{display:flex; align-items:center; gap:8px; flex:1 1 150px; font-size:14px; color:var(--ink-soft)}
+.idbar input{flex:1; min-width:0; border:1px solid var(--line); border-radius:8px; padding:8px 10px;
+  font-family:var(--body); font-size:15px; background:#FBFDFE; color:var(--ink)}
+.idbar input:focus{outline:2px solid var(--cyan); outline-offset:1px}
+
+/* ---------- 任务块 ---------- */
+section.task{background:var(--paper); border-radius:var(--r); padding:30px 30px 34px; margin:26px 0;
+  box-shadow:var(--shadow); scroll-margin-top:20px}
+.tasknum{font-family:var(--mono); font-size:12px; letter-spacing:.16em; color:var(--amber); font-weight:700; margin:0 0 6px}
+h2{font-family:var(--display); font-size:27px; line-height:1.3; margin:0 0 8px; font-weight:700}
+h3{font-size:17px; margin:26px 0 12px; color:var(--cyan-deep); display:flex; align-items:center; gap:9px}
+h3 .n{font-family:var(--mono); font-size:12px; background:var(--cyan); color:#fff; border-radius:20px;
+  padding:3px 10px; letter-spacing:.06em}
+.hint{font-size:15px; color:var(--ink-soft); margin:0 0 20px}
+.hint strong{color:var(--cyan-deep)}
+
+/* ---------- 通用题目卡 ---------- */
+.q{border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:11px; background:#FBFDFE}
+.q.right{background:var(--good-tint); border-color:var(--good)}
+.q.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.q .stem{font-size:16px; margin:0 0 11px}
+.q .stem b{color:var(--cyan-deep)}
+.opts{display:flex; flex-wrap:wrap; gap:8px}
+.opts button{font-family:var(--body); font-size:14px; font-weight:600; cursor:pointer; border-radius:9px;
+  padding:9px 15px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s}
+.opts button:hover{border-color:var(--cyan); color:var(--cyan-deep)}
+.opts button.picked{background:var(--ink); color:#fff; border-color:var(--ink)}
+.opts button:disabled{cursor:default; opacity:.55}
+.opts button.picked:disabled{opacity:1}
+.fb{font-size:14px; font-weight:600; margin:10px 0 0; display:none}
+.q.right .fb{display:block; color:var(--good)}
+.q.wrong .fb{display:block; color:var(--miss)}
+.blank{display:inline-block; min-width:96px; border-bottom:2px solid var(--amber); text-align:center;
+  font-weight:700; color:var(--amber); padding:0 6px}
+.blank.done{color:var(--good); border-color:var(--good)}
+.blank.miss{color:var(--miss); border-color:var(--miss)}
+
+/* ---------- 比喻 vs 拟人 图解 ---------- */
+.compare{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:6px 0 20px}
+.cmp{border-radius:12px; padding:16px 18px}
+.cmp.simile{background:#FDF2E0}
+.cmp.person{background:#E4F2F4}
+.cmp h4{margin:0 0 4px; font-family:var(--display); font-size:20px}
+.cmp.simile h4{color:#9A5A0B}
+.cmp.person h4{color:var(--cyan-deep)}
+.cmp .one{font-size:13px; margin:0 0 12px; color:var(--ink-soft)}
+.cmp svg{width:100%; height:86px; display:block; margin-bottom:10px}
+.cmp .sig{font-size:13px; margin:0; line-height:1.7}
+.cmp .sig b{background:rgba(255,255,255,.75); border-radius:5px; padding:1px 6px; margin-right:3px; display:inline-block}
+.threeway{border:1px solid var(--line); border-radius:12px; overflow:hidden; margin-bottom:8px}
+.tw{display:grid; grid-template-columns:74px 1fr; gap:12px; padding:12px 15px; font-size:16px; align-items:baseline}
+.tw + .tw{border-top:1px solid var(--line)}
+.tw .lab{font-family:var(--mono); font-size:12px; letter-spacing:.08em; font-weight:700}
+.tw.a{background:#FBFDFE} .tw.a .lab{color:var(--ink-soft)}
+.tw.b{background:#FDF2E0} .tw.b .lab{color:#9A5A0B}
+.tw.c{background:#E4F2F4} .tw.c .lab{color:var(--cyan-deep)}
+.tw em{font-style:normal; font-weight:700; border-bottom:2px solid currentColor}
+.tw.b em{color:#9A5A0B} .tw.c em{color:var(--cyan-deep)}
+
+/* ---------- 行程 ---------- */
+.leg{border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:12px; background:#FBFDFE}
+.leg.demo{background:var(--tint); border-color:var(--cyan)}
+.leg.right{background:var(--good-tint); border-color:var(--good)}
+.leg.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.leg .para{font-family:var(--mono); font-size:12px; letter-spacing:.1em; color:var(--cyan-deep); font-weight:700; margin:0 0 6px}
+.leg .text{font-size:16px; margin:0 0 12px; color:var(--ink)}
+.leg .ask{font-size:14px; font-weight:700; margin:0 0 9px; color:var(--ink-soft)}
+.seen{display:none; margin-top:12px; background:rgba(255,255,255,.75); border-radius:9px; padding:11px 14px; font-size:15px}
+.leg.right .seen, .leg.demo .seen{display:block}
+.seen b{color:var(--cyan-deep)}
+.tag{display:inline-block; font-size:11px; font-family:var(--mono); letter-spacing:.1em; background:var(--cyan);
+  color:#fff; border-radius:20px; padding:2px 9px; margin-bottom:8px}
+
+/* ---------- 动词雷达 ---------- */
+.passage{font-size:19px; line-height:2.5; background:#FBFDFE; border:1px solid var(--line);
+  border-radius:12px; padding:20px 18px}
+.tok{cursor:pointer; padding:2px 3px; border-radius:6px; transition:.15s; border-bottom:2px solid transparent}
+.tok:hover{background:var(--tint)}
+.tok.sel{background:var(--ink); color:#fff}
+.locked .tok{cursor:default}
+.locked .tok:hover{background:none}
+.locked .tok.sel{background:none; color:inherit}
+.locked .tok.core{background:var(--good); color:#fff}
+.locked .tok.ok{background:var(--good-tint); color:var(--good); border-bottom-color:var(--good)}
+.locked .tok.bad{background:var(--miss-tint); color:var(--miss); text-decoration:line-through}
+
+/* ---------- 讨论 ---------- */
+.stances{display:grid; grid-template-columns:repeat(4,1fr); gap:9px; margin-bottom:14px}
+.stances button{padding:14px 6px; font-size:14px; font-weight:700; cursor:pointer; border-radius:9px;
+  background:#FBFDFE; border:1px solid var(--line); color:var(--ink-soft); font-family:var(--body)}
+.stances button:hover{border-color:var(--cyan)}
+.stances button.picked{background:var(--cyan-deep); color:#fff; border-color:var(--cyan-deep)}
+.viewcards{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0}
+.vc{border-radius:11px; padding:12px 14px; font-size:14px; line-height:1.6}
+.vc.for{background:var(--good-tint); color:#12604B}
+.vc.against{background:var(--miss-tint); color:#8C362D}
+label.fieldlab{font-size:15px; font-weight:600; display:block; margin-bottom:6px}
+textarea{width:100%; border:1px solid var(--line); border-radius:9px; padding:11px 13px;
+  font-family:var(--body); font-size:16px; background:#FBFDFE; color:var(--ink); resize:vertical}
+textarea:focus{outline:2px solid var(--cyan); outline-offset:1px}
+
+/* ---------- 按钮 ---------- */
+button{font-family:var(--body)}
+.btn{font-size:15px; font-weight:700; cursor:pointer; border-radius:10px; padding:13px 24px; border:1px solid transparent; transition:.18s}
+.btn-line{background:var(--paper); color:var(--cyan-deep); border-color:var(--cyan)}
+.btn-line:hover{background:var(--tint)}
+.btn-solid{background:var(--cyan); color:#fff}
+.btn-solid:hover{background:var(--cyan-deep)}
+.btn-amber{background:var(--amber); color:#fff}
+.btn-amber:hover{filter:brightness(.93)}
+.actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
+button:focus-visible{outline:3px solid var(--amber); outline-offset:2px}
+.progress{font-family:var(--mono); font-size:13px; color:var(--ink-soft); background:var(--tint);
+  border-radius:9px; padding:8px 14px; display:inline-block; margin-top:12px}
+
+/* ---------- 提交 / 成绩 ---------- */
+.submitzone{background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.26); border-radius:var(--r);
+  padding:26px 28px; margin-top:30px; color:#EAF6FA; backdrop-filter:blur(6px)}
+.submitzone h3{font-family:var(--display); margin:0 0 6px; font-size:22px; color:#fff; display:block}
+.submitzone p{margin:0 0 18px; font-size:14px; color:#C6DFE9}
+.saveflag{font-family:var(--mono); font-size:12px; color:#9FC6D4; margin-left:4px}
+.result{display:none; background:var(--paper); border-radius:var(--r); padding:32px 30px; margin-top:18px;
+  box-shadow:var(--shadow); color:var(--ink)}
+.result.show{display:block; animation:pop .4s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes pop{from{opacity:0; transform:scale(.96) translateY(8px)} to{opacity:1; transform:none}}
+.medalrow{display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+.medal{width:104px; height:104px; flex:none}
+.rankname{font-family:var(--display); font-size:32px; font-weight:800; margin:0}
+.rankline{font-size:15px; color:var(--ink-soft); margin:4px 0 0}
+.bigscore{font-family:var(--mono); font-size:40px; font-weight:700; color:var(--cyan-deep); margin:0}
+.bd{margin-top:22px}
+.bdrow{display:grid; grid-template-columns:1fr 62px; gap:12px; align-items:center; font-size:15px; margin-bottom:9px}
+.bar{grid-column:1/-1; height:8px; border-radius:6px; background:var(--tint); overflow:hidden; margin:-4px 0 12px}
+.bar span{display:block; height:100%; background:var(--cyan); border-radius:6px; transition:width .8s ease}
+.bdrow .v{font-family:var(--mono); font-size:14px; text-align:right; color:var(--ink-soft)}
+.advice{background:var(--amber-tint); border-radius:11px; padding:14px 16px; margin-top:18px; font-size:15px}
+.advice b{color:var(--amber)}
+
+@media (max-width:900px){ .rail{display:none} }
+@media (max-width:620px){
+  .wrap{padding:0 14px 60px}
+  section.task{padding:22px 18px 26px}
+  .compare{grid-template-columns:1fr}
+  .stances{grid-template-columns:1fr 1fr}
+  .viewcards{grid-template-columns:1fr}
+  .passage{font-size:17px; line-height:2.3}
+  .tw{grid-template-columns:60px 1fr; font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} html{scroll-behavior:auto} }
+@media print{
+  body{background:#fff}
+  .rail,.actions,.submitzone .actions,.opts{display:none}
+  section.task{box-shadow:none; border:1px solid #ccc; break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<nav class="rail" aria-label="进度">
+  <div class="rail-item" data-rail="s1"><span class="rail-dot"></span><span class="rail-label">出发前 · 词语</span></div>
+  <div class="rail-item" data-rail="s2"><span class="rail-dot"></span><span class="rail-label">跟车看路线</span></div>
+  <div class="rail-item" data-rail="s3"><span class="rail-dot"></span><span class="rail-label">水晶宫 · 修辞</span></div>
+  <div class="rail-item" data-rail="s4"><span class="rail-dot"></span><span class="rail-label">鲨鱼来了 · 动词</span></div>
+  <div class="rail-item" data-rail="s5"><span class="rail-dot"></span><span class="rail-label">浮出海面 · 讨论</span></div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">中一高级华文 · 单元五 创新与改变</p>
+  <h1>海底牧场游记</h1>
+  <p class="sub">未来市旅行社 · 实习导游任务单</p>
+  <div class="idbar">
+    <label>姓名 <input type="text" data-save="name" placeholder="写上你的名字"></label>
+    <label>班级 <input type="text" data-save="class" placeholder="例：1E3"></label>
+    <label>组别 <input type="text" data-save="group" placeholder="A / B / C"></label>
+  </div>
+</header>
+
+<!-- ============ 任务一：词语 ============ -->
+<section class="task" id="s1">
+  <p class="tasknum">任务一 · 出发前的训练</p>
+  <h2>词语过关：意思 · 用法</h2>
+  <p class="hint">课本上的词语练习做完了，现在换个方式再练一遍。<strong>点一下就有答案，错了也没关系，看清楚解释再往下走。</strong></p>
+
+  <h3><span class="n">A</span>这个词是什么意思？</h3>
+  <div id="vocA"></div>
+
+  <h3><span class="n">B</span>选一个词填进去</h3>
+  <div id="vocB"></div>
+
+  <h3><span class="n">C</span>哪一句用错了？</h3>
+  <div id="vocC"></div>
+
+  <p class="progress" id="pg1">已完成 0 / 14</p>
+</section>
+
+<!-- ============ 任务二：行程 ============ -->
+<section class="task" id="s2">
+  <p class="tasknum">任务二</p>
+  <h2>跟车打卡：一段，一站</h2>
+  <p class="hint">这篇课文带路的不是时间，是<strong>地点</strong>。读一段，点出五用车这时候在哪里——答对了，这一站的风景就会自己冒出来。</p>
+  <div id="legs"></div>
+  <div id="routeQ"></div>
+  <p class="progress" id="pg2">已完成 0 / 6</p>
+</section>
+
+<!-- ============ 任务三：比喻 vs 拟人 ============ -->
+<section class="task" id="s3">
+  <p class="tasknum">任务三</p>
+  <h2>比喻，还是拟人？</h2>
+  <p class="hint">很多同学分不清这两个。先看下面这一组图，<strong>三十秒就能分清楚</strong>，再来做练习。</p>
+
+  <div class="threeway">
+    <div class="tw a"><span class="lab">普通</span><span>五用车钻进海里。</span></div>
+    <div class="tw b"><span class="lab">比喻</span><span>五用车<em>像一条大鱼</em>，钻进海里。</span></div>
+    <div class="tw c"><span class="lab">拟人</span><span>五用车<em>屁股一翘</em>，钻进海里。</span></div>
+  </div>
+  <p class="hint" style="margin:0 0 18px">同一件事，三种写法。差别只在中间那几个字。</p>
+
+  <div class="compare">
+    <div class="cmp simile">
+      <h4>比喻</h4>
+      <p class="one">拿两样东西比一比：A 长得像 B</p>
+      <svg viewBox="0 0 240 86" role="img" aria-label="海面像玻璃：两样东西作比较">
+        <rect x="6" y="22" width="82" height="42" rx="9" fill="#fff" stroke="#D8A55E" stroke-width="1.5"/>
+        <text x="47" y="48" font-size="15" text-anchor="middle" fill="#9A5A0B" font-family="sans-serif">海面</text>
+        <text x="120" y="40" font-size="13" text-anchor="middle" fill="#9A5A0B" font-family="sans-serif">像</text>
+        <path d="M100 48 H140" stroke="#D8A55E" stroke-width="2"/>
+        <path d="M134 43 L141 48 L134 53" fill="none" stroke="#D8A55E" stroke-width="2"/>
+        <rect x="152" y="22" width="82" height="42" rx="9" fill="#fff" stroke="#D8A55E" stroke-width="1.5"/>
+        <text x="193" y="48" font-size="15" text-anchor="middle" fill="#9A5A0B" font-family="sans-serif">玻璃</text>
+      </svg>
+      <p class="sig"><b>信号词</b>像 · 仿佛 · 好像 · 成了<br>看见这些字，先想比喻。</p>
+    </div>
+    <div class="cmp person">
+      <h4>拟人</h4>
+      <p class="one">把物当人写：它做了人才做的事</p>
+      <svg viewBox="0 0 240 86" role="img" aria-label="鱼儿从容地游过：物有了人的神态">
+        <rect x="6" y="22" width="82" height="42" rx="9" fill="#fff" stroke="#6FB3C0" stroke-width="1.5"/>
+        <text x="47" y="48" font-size="15" text-anchor="middle" fill="#0B5E75" font-family="sans-serif">鱼儿</text>
+        <path d="M100 48 H140" stroke="#6FB3C0" stroke-width="2"/>
+        <path d="M134 43 L141 48 L134 53" fill="none" stroke="#6FB3C0" stroke-width="2"/>
+        <circle cx="185" cy="30" r="9" fill="#fff" stroke="#6FB3C0" stroke-width="1.5"/>
+        <path d="M170 64 q15 -22 30 0" fill="#fff" stroke="#6FB3C0" stroke-width="1.5"/>
+        <text x="120" y="40" font-size="13" text-anchor="middle" fill="#0B5E75" font-family="sans-serif">变成人</text>
+      </svg>
+      <p class="sig"><b>信号词</b>从容 · 好奇 · 悄悄 · 打量<br>形容人的神态、感情，才算拟人。</p>
+    </div>
+  </div>
+
+  <h3><span class="n">练</span>这一句，是哪一种？</h3>
+  <div id="figs"></div>
+  <p class="progress" id="pg3">已完成 0 / 8</p>
+</section>
+
+<!-- ============ 任务四：动词雷达 ============ -->
+<section class="task" id="s4">
+  <p class="tasknum">任务四</p>
+  <h2>动词雷达：大白鲨袭击的那一秒</h2>
+  <p class="hint">点一点，圈出写<strong>「大白鲨袭击」这一刻的动作词</strong>。想好了再交卷。</p>
+  <div class="passage" id="passage"></div>
+  <div class="actions">
+    <button class="btn btn-solid" id="submitVerbs">交卷，看看圈对没有</button>
+    <button class="btn btn-line" id="resetVerbs">重新圈</button>
+  </div>
+  <div id="verbBox" class="q" style="display:none; margin-top:16px; background:var(--amber-tint); border-color:#EBD3A6">
+    <p class="stem" id="verbScore" style="font-weight:700"></p>
+    <p style="margin:0 0 10px; font-size:15px">关键的六个动作：<b>张开 · 一咬 · 震 · 断 · 一扫 · 溜走</b></p>
+    <p style="margin:0; font-size:15px"><b>★ 最重要的发现：</b>作者一次也没写「我很害怕」。他把最重要的那一秒<b>拆成一个一个动作</b>，慢慢写——读者自己就紧张起来了。这就是记叙文的「<b>行动要慢</b>」。</p>
+  </div>
+</section>
+
+<!-- ============ 任务五：读后说 ============ -->
+<section class="task" id="s5">
+  <p class="tasknum">任务五</p>
+  <h2>读后说：该不该把「羊鱼」引进新加坡？</h2>
+  <p class="hint">未来市想把「羊鱼」「牛鱼」引进新加坡，解决粮食供应问题。<strong>先站队，再说理由。</strong></p>
+
+  <div class="stances" id="stances">
+    <button data-v="非常赞成">非常赞成</button>
+    <button data-v="赞成">赞成</button>
+    <button data-v="反对">反对</button>
+    <button data-v="非常反对">非常反对</button>
+  </div>
+
+  <label class="fieldlab">我的理由（至少两点）</label>
+  <textarea rows="4" data-save="reason" placeholder="第一，……；第二，……"></textarea>
+
+  <div class="viewcards">
+    <div class="vc for">改造基因可以把不好的基因去掉，只保留好的。</div>
+    <div class="vc against">基因是自然选择的结果，不应该有人为的干预。</div>
+    <div class="vc for">基因改造后的动物，可以提供更多更好的产品。</div>
+    <div class="vc against">食用改造基因的动物，可能会危害健康。</div>
+    <div class="vc for">用基因改造动物，可以降低饲养成本。</div>
+    <div class="vc against">可能会破坏生态环境和食物链。</div>
+  </div>
+
+  <label class="fieldlab">听完别组发言后，我换立场了吗？</label>
+  <textarea rows="3" data-save="switch" placeholder="我（有／没有）换立场，因为＿＿＿＿这句话说服了我。"></textarea>
+</section>
+
+<!-- ============ 提交 ============ -->
+<div class="submitzone">
+  <h3>全部做完了吗？</h3>
+  <p>作答自动保存在这台设备上<span class="saveflag" id="saveflag"></span>。交上去就能看到分数和你的导游等级。</p>
+  <div class="actions" style="margin:0">
+    <button class="btn btn-amber" id="submitAll">提交，看我的成绩</button>
+    <button class="btn btn-line" onclick="window.print()">打印 / 存成 PDF</button>
+    <button class="btn btn-line" id="clearAll">清空重做</button>
+  </div>
+</div>
+
+<div class="result" id="result"></div>
+
+</div>
+
+<script>
+/* ================= 数据 ================= */
+const VOC_A = [
+  ["「安然无恙」的意思是——", ["平安，没有受到损害","心里很平静","生病了但不严重","安安静静地待着"], 0,
+   "「恙」是病、是损害。安然无恙＝人和东西都好好的。课文里五用车被咬了却安然无恙。"],
+  ["「欺软怕硬」形容一个人——", ["很有礼貌","欺负软弱的，害怕强硬的","做事很软弱","力气特别大"], 1,
+   "大白鲨咬不动五用车就溜走了，正是欺软怕硬。"],
+  ["「一哄而散」是说——", ["一起大笑起来","在一片哄闹声中一下子散开","慢慢地一个个离开","大吵了一架"], 1,
+   "重点在「一下子」和「一群人」。灯一开，牛羊一哄而散。"],
+  ["「流连忘返」的人，心情是——", ["舍不得离开","迷路了回不了家","忘记了要做的事","很想赶快回家"], 0,
+   "海底牧场景色优美，让我们流连忘返——是舍不得走，不是迷路。"],
+  ["「一马平川」用来形容——", ["马跑得很快","广阔平坦的大片平原","路很难走","一片大海"], 1,
+   "课文用它形容海底草原：平展展的，长满海草海带。"],
+  ["「从容」最接近哪个词？", ["匆匆忙忙","不慌不忙","害怕紧张","开开心心"], 1,
+   "鱼儿从容地游过——不慌不忙、悠闲的样子。"]
+];
+const VOC_B = [
+  ["下课铃一响，同学们＿＿，走廊一下子就空了。", ["一哄而散","流连忘返","安然无恙"], 0,
+   "一群人、一下子散开——正合「一哄而散」。"],
+  ["组屋楼下那只花猫＿＿地晒着太阳，谁走过它都不看一眼。", ["悠然自得","欺软怕硬","一马平川"], 0,
+   "悠闲舒适、不受打扰，就是「悠然自得」。"],
+  ["台上比赛时他一点也不紧张，＿＿地把稿子念完了。", ["匆忙","从容","慌张"], 1,
+   "不慌不忙＝从容。"],
+  ["巴士撞上了路边的柱子，幸好车上的人都＿＿。", ["安然无恙","流连忘返","一哄而散"], 0,
+   "人没受伤＝安然无恙。"],
+  ["滨海湾花园的夜景太美了，我们逛到关门还＿＿。", ["流连忘返","一马平川","一哄而散"], 0,
+   "舍不得离开＝流连忘返。"],
+  ["他只敢欺负低年级，见到高年级就躲开，真是＿＿。", ["安然无恙","欺软怕硬","悠然自得"], 1,
+   "这正是「欺软怕硬」的意思。"]
+];
+const VOC_C = [
+  ["哪一句「用错」了？", ["妈妈从容地把菜端上桌。","听到警报，大家从容地冲出教室。","他从容地回答了老师的问题。"], 1,
+   "「从容」是不慌不忙，和「冲出去」的紧张矛盾。这里该用「迅速地」。"],
+  ["哪一句「用错」了？", ["演唱会结束后，观众一哄而散。","下课后，同学们一哄而散。","他一哄而散地走出教室。"], 2,
+   "「一哄而散」形容一群人，不能形容一个人。"]
+];
+const LEGS = [
+  ["第 2 段", "五用车腾空而起，飞向蓝蓝的海洋。从空中往下看，金色的阳光洒满海面。", "空中",
+   "阳光洒满海面，海面风平浪静，像一块无边无际的玻璃。", true],
+  ["第 3 段", "五用车越飞越低，降落下来，激起一阵雪白的浪花。车的翅膀自动收拢，变成一艘船。", "海面",
+   "降落在海面，翅膀收拢变成一艘船，在海面上航行。", false],
+  ["第 4 段", "五用车屁股一翘，钻了进去，成了潜水艇。鱼儿从我眼前游过，我仿佛来到了水晶宫。", "海里",
+   "外壳透明，鱼虾游过像水晶宫；一条大白鲨突然发动袭击。", false],
+  ["第 5–8 段", "五用车慢慢下降，停在草原上。阳光透过海水淡淡地照着，平展展的，长满海草、海带。", "海底",
+   "机器人在放牧；牧场里有羊鱼和牛鱼；开灯把它们吓跑了。", false],
+  ["第 9 段", "五用车钻了出去，这时正好起风，大风搅起巨浪，泛起白花花的泡沫。", "海面",
+   "起风起浪，和第 2 段的风平浪静刚好相反。", false]
+];
+const ROUTE_Q = [
+  ["第 3 段只写了「降落、变成船」，可以删掉吗？", ["可以删，不重要","不可以删，空间不能跳"], 1,
+   "删掉就变成：空中 →（？）→ 海里，读者会断片。第 3 段是过渡站。写游记时，地点和地点之间要有过渡句接住。"],
+  ["第 9 段写「起风起浪」，和第 2 段的「风平浪静」放在一起，作用是什么？",
+   ["说明天气变坏了","前后对比，反衬海底世界的宁静","为了凑字数"], 1,
+   "海面这一进一出的变化，正好衬托出海底那个宁静的世界。"]
+];
+const FIGS = [
+  ["五用车屁股一翘，钻进海里。", 1, "「屁股一翘」是人／动物才做得出来的动作。"],
+  ["海面上风平浪静，像一块无边无际的玻璃。", 0, "有「像」，是拿海面和玻璃作比较——比喻。"],
+  ["鱼儿从容地从我眼前游过。", 1, "「从容」是形容人的神态。"],
+  ["金色的阳光洒满海面。", 2, "「洒」只是一般动词，既没有作比较，也没有把阳光当人。"],
+  ["我仿佛来到了水晶宫。", 0, "有「仿佛」，把海里比作水晶宫——比喻。"],
+  ["它们挤在车子周围，好奇地打量着我们。", 1, "「好奇」「打量」都是人的感情和动作。"],
+  ["五用车越飞越低，降落在海面上。", 2, "「飞」「降落」是交通工具本来就会做的事，不算拟人。"],
+  ["这家伙欺软怕硬，闪电般地溜走了。", 1, "「欺软怕硬」本来是形容人的性格，所以主要是拟人。（「闪电般地」是比喻的说法——一句话里两种都有，很常见。）"]
+];
+const FIG_OPTS = ["比喻","拟人","都不是"];
+const CORE = ["张开","一咬","震","断","一扫","溜走"];
+const OK_TOO = ["欣赏","发动","咬不动"];
+const TOKENS = ["它","张开","血盆大口，","使劲儿","一咬，","五用车","震","了一下！","大白鲨","断","了","一颗","牙齿，","五用车","却","安然无恙。","这家伙","咬不动","五用车，","就","尾巴","一扫，","闪电般地","溜走","了。"];
+
+/* ================= 存储 ================= */
+const KEY = "haidi-worksheet-v2";
+let store = {};
+const flag = document.getElementById("saveflag");
+let saveTimer;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    try{ await window.storage.set(KEY, JSON.stringify(store));
+      flag.textContent = "· 已保存"; setTimeout(()=>flag.textContent="",1500);
+    }catch(e){}
+  }, 500);
+}
+document.addEventListener("input", e=>{
+  const el = e.target.closest("[data-save]");
+  if(!el) return; store[el.dataset.save] = el.value; save();
+});
+
+/* ================= 选择题渲染器 ================= */
+function renderMCQ(host, list, prefix, opts){
+  list.forEach((item,i)=>{
+    const [stem, choices, ans, why] = item;
+    const id = prefix+i;
+    const d = document.createElement("div");
+    d.className = "q";
+    d.innerHTML = `<p class="stem">${i+1}. ${stem}</p><div class="opts"></div><p class="fb"></p>`;
+    const bar = d.querySelector(".opts");
+    choices.forEach((c,j)=>{
+      const b = document.createElement("button");
+      b.textContent = (opts && opts.letters ? "ABCD"[j]+"　" : "") + c;
+      b.addEventListener("click", ()=>{
+        if(store[id] !== undefined) return;          // 一题一次
+        store[id] = j; save();
+        bar.querySelectorAll("button").forEach(x=>x.disabled = true);
+        b.classList.add("picked");
+        const ok = j === ans;
+        d.classList.add(ok ? "right" : "wrong");
+        d.querySelector(".fb").innerHTML = (ok ? "✓ 对了。" : "✗ 正确答案是「"+choices[ans]+"」。") + why;
+        updateProgress();
+      });
+      bar.appendChild(b);
+    });
+    host.appendChild(d);
+    // 还原
+    if(store[id] !== undefined){
+      const j = store[id];
+      const bs = bar.querySelectorAll("button");
+      bs.forEach(x=>x.disabled = true);
+      bs[j].classList.add("picked");
+      const ok = j === ans;
+      d.classList.add(ok ? "right" : "wrong");
+      d.querySelector(".fb").innerHTML = (ok ? "✓ 对了。" : "✗ 正确答案是「"+choices[ans]+"」。") + why;
+    }
+  });
+}
+function renderAllMCQ(){
+  renderMCQ(document.getElementById("vocA"), VOC_A, "a", {letters:true});
+  renderMCQ(document.getElementById("vocB"), VOC_B, "b");
+  renderMCQ(document.getElementById("vocC"), VOC_C, "c", {letters:true});
+  renderMCQ(document.getElementById("figs"), FIGS.map(f=>[f[0], FIG_OPTS, f[1], f[2]]), "f");
+  renderMCQ(document.getElementById("routeQ"), ROUTE_Q, "q");
+}
+
+/* ================= 行程 ================= */
+const PLACES = ["空中","海面","海里","海底"];
+const legHost = document.getElementById("legs");
+function renderLegs(){
+LEGS.forEach((L,i)=>{
+  const [para, text, ans, seen, demo] = L;
+  const id = "L"+i;
+  const d = document.createElement("div");
+  d.className = "leg" + (demo ? " demo" : "");
+  d.innerHTML = `${demo ? '<span class="tag">老师示范</span>' : ''}
+    <p class="para">${para}</p>
+    <p class="text">${text}</p>
+    ${demo ? '' : '<p class="ask">五用车这时候在哪里？</p><div class="opts"></div><p class="fb"></p>'}
+    <div class="seen">${demo ? '' : '<b>这一站看到：</b>'}${demo ? '<b>地点：'+ans+'</b><br>'+seen : seen}</div>`;
+  if(!demo){
+    const bar = d.querySelector(".opts");
+    PLACES.forEach(p=>{
+      const b = document.createElement("button");
+      b.textContent = p;
+      b.addEventListener("click", ()=>{
+        if(store[id] !== undefined) return;
+        store[id] = p; save();
+        bar.querySelectorAll("button").forEach(x=>x.disabled = true);
+        b.classList.add("picked");
+        const ok = p === ans;
+        d.classList.add(ok ? "right" : "wrong");
+        d.querySelector(".fb").textContent = ok ? "✓ 对了，就是「"+ans+"」。" : "✗ 再读一次画线的词，答案是「"+ans+"」。";
+        if(!ok) d.querySelector(".seen").style.display = "block";
+        updateProgress();
+      });
+      bar.appendChild(b);
+    });
+    if(store[id] !== undefined){
+      const p = store[id];
+      const bs = bar.querySelectorAll("button");
+      bs.forEach(x=>{ x.disabled = true; if(x.textContent===p) x.classList.add("picked"); });
+      const ok = p === ans;
+      d.classList.add(ok ? "right" : "wrong");
+      d.querySelector(".fb").textContent = ok ? "✓ 对了，就是「"+ans+"」。" : "✗ 再读一次画线的词，答案是「"+ans+"」。";
+      if(!ok) d.querySelector(".seen").style.display = "block";
+    }
+  }
+  legHost.appendChild(d);
+});
+}
+
+/* ================= 动词雷达 ================= */
+const pass = document.getElementById("passage");
+TOKENS.forEach(t=>{
+  const sp = document.createElement("span");
+  sp.className = "tok"; sp.textContent = t;
+  sp.dataset.w = t.replace(/[，。！]/g,"");
+  sp.addEventListener("click", ()=>{ if(!pass.classList.contains("locked")) sp.classList.toggle("sel"); });
+  pass.appendChild(sp);
+});
+function gradeVerbs(){
+  pass.classList.add("locked");
+  let hit = 0, bad = 0;
+  pass.querySelectorAll(".tok").forEach(sp=>{
+    const w = sp.dataset.w, picked = sp.classList.contains("sel");
+    if(CORE.includes(w)){ sp.classList.add("core"); if(picked) hit++; }
+    else if(picked){ OK_TOO.includes(w) ? sp.classList.add("ok") : (sp.classList.add("bad"), bad++); }
+  });
+  store.verbHit = hit; store.verbDone = true;
+  store.verbSel = [...pass.querySelectorAll(".tok.sel")].map(s=>s.dataset.w);
+  save();
+  const box = document.getElementById("verbBox");
+  box.style.display = "block";
+  document.getElementById("verbScore").textContent =
+    `你圈中了 ${hit} / 6 个关键动作` + (bad ? `，另有 ${bad} 个不属于这一秒。` : "。");
+}
+document.getElementById("submitVerbs").addEventListener("click", gradeVerbs);
+document.getElementById("resetVerbs").addEventListener("click", ()=>{
+  pass.classList.remove("locked");
+  pass.querySelectorAll(".tok").forEach(sp=>sp.className="tok");
+  document.getElementById("verbBox").style.display = "none";
+  delete store.verbHit; delete store.verbDone; delete store.verbSel; save();
+});
+
+/* ================= 立场 ================= */
+document.querySelectorAll("#stances button").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll("#stances button").forEach(x=>x.classList.remove("picked"));
+    b.classList.add("picked"); store.stance = b.dataset.v; save();
+  });
+});
+
+/* ================= 进度 ================= */
+function countDone(prefix, n){
+  let c = 0; for(let i=0;i<n;i++) if(store[prefix+i] !== undefined) c++;
+  return c;
+}
+function updateProgress(){
+  const v = countDone("a",6)+countDone("b",6)+countDone("c",2);
+  document.getElementById("pg1").textContent = `已完成 ${v} / 14`;
+  let r = countDone("q",2); for(let i=1;i<5;i++) if(store["L"+i] !== undefined) r++;
+  document.getElementById("pg2").textContent = `已完成 ${r} / 6`;
+  document.getElementById("pg3").textContent = `已完成 ${countDone("f",8)} / 8`;
+}
+
+/* ================= 评分 ================= */
+function scoreOf(list, prefix){
+  let got = 0;
+  list.forEach((item,i)=>{ if(store[prefix+i] === item[2]) got++; });
+  return got;
+}
+function medalSVG(c1,c2){
+  return `<svg class="medal" viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M32 6 L44 40 L28 46 Z" fill="${c2}" opacity=".55"/>
+    <path d="M68 6 L56 40 L72 46 Z" fill="${c2}" opacity=".55"/>
+    <circle cx="50" cy="62" r="30" fill="${c1}"/>
+    <circle cx="50" cy="62" r="23" fill="none" stroke="${c2}" stroke-width="2.5"/>
+    <path d="M50 47 l4.6 9.4 10.4 1.5 -7.5 7.3 1.8 10.3 -9.3 -4.9 -9.3 4.9 1.8 -10.3 -7.5 -7.3 10.4 -1.5 Z" fill="#fff"/>
+  </svg>`;
+}
+document.getElementById("submitAll").addEventListener("click", ()=>{
+  const total = { voc:14, route:6, fig:8, verb:6, talk:2 };
+  const got = {
+    voc: scoreOf(VOC_A,"a")+scoreOf(VOC_B,"b")+scoreOf(VOC_C,"c"),
+    route: (LEGS.reduce((s,L,i)=> s + (i>0 && store["L"+i]===L[2] ? 1 : 0), 0)) + scoreOf(ROUTE_Q,"q"),
+    fig: FIGS.reduce((s,f,i)=> s + (store["f"+i]===f[1] ? 1 : 0), 0),
+    verb: store.verbHit || 0,
+    talk: (store.stance ? 1 : 0) + ((store.reason||"").trim().length >= 10 ? 1 : 0)
+  };
+  const doneCnt = countDone("a",6)+countDone("b",6)+countDone("c",2)+countDone("f",8)+countDone("q",2)
+                + [1,2,3,4].filter(i=>store["L"+i]!==undefined).length;
+  const answerable = 14+8+6;
+  if(doneCnt < answerable || !store.verbDone){
+    if(!confirm(`还有 ${answerable-doneCnt + (store.verbDone?0:1)} 项没做完，确定要提交吗？`)) return;
+  }
+  const sum = Object.values(got).reduce((a,b)=>a+b,0);
+  const max = Object.values(total).reduce((a,b)=>a+b,0);
+  const pct = Math.round(sum/max*100);
+  let rank, medal, line;
+  if(pct >= 90){ rank="金牌导游"; medal=medalSVG("#D9A428","#8A6410"); line="路线、词语、修辞全都拿下了。可以带团出发了！"; }
+  else if(pct >= 75){ rank="银牌导游"; medal=medalSVG("#9FB0BA","#5E7180"); line="很稳。再补一补错的那几题，就能升金牌。"; }
+  else if(pct >= 60){ rank="铜牌导游"; medal=medalSVG("#C08B5C","#7C5227"); line="基本路线走通了。回头把红色的题目再看一遍。"; }
+  else { rank="见习导游"; medal=medalSVG("#7FA8B8","#456374"); line="别急，把红色题目的解释读一遍，再点「清空重做」练一次。"; }
+
+  const names = { voc:"任务一　词语", route:"任务二　行程打卡", fig:"任务三　比喻与拟人",
+                  verb:"任务四　动词雷达", talk:"任务五　读后说" };
+  let weakest = null, weakRate = 2;
+  Object.keys(total).forEach(k=>{
+    if(k === "talk") return;
+    const r = got[k]/total[k];
+    if(r < weakRate){ weakRate = r; weakest = k; }
+  });
+  const tips = {
+    voc:"回去把课本上的词语练习再读一遍，特别注意「用错」的那两题。",
+    route:"重读课文，每一段先圈出地点词，再看「我」看到了什么。",
+    fig:"记住两个信号：句子里有「像／仿佛」→ 比喻；用了形容人的词 → 拟人。",
+    verb:"高潮段要一个动作一个动作地看，不要一眼扫过去。"
+  };
+
+  let rows = "";
+  Object.keys(total).forEach(k=>{
+    const p = Math.round(got[k]/total[k]*100);
+    rows += `<div class="bdrow"><span>${names[k]}</span><span class="v">${got[k]} / ${total[k]}</span></div>
+             <div class="bar"><span style="width:${p}%"></span></div>`;
+  });
+
+  const box = document.getElementById("result");
+  box.innerHTML = `
+    <div class="medalrow">
+      ${medal}
+      <div>
+        <p class="rankname">${rank}</p>
+        <p class="rankline">${line}</p>
+      </div>
+      <div style="margin-left:auto; text-align:right">
+        <p class="bigscore">${sum} / ${max}</p>
+        <p class="rankline">正确率 ${pct}%</p>
+      </div>
+    </div>
+    <div class="bd">${rows}</div>
+    ${weakest ? `<div class="advice"><b>下一步：</b>${names[weakest].replace(/　/g,' ')}是你最需要再看一次的。${tips[weakest]}</div>` : ""}
+    <div class="actions"><button class="btn btn-line" id="copyRes">复制成绩交给老师</button></div>`;
+  box.classList.add("show");
+  box.scrollIntoView({behavior:"smooth", block:"start"});
+  store.finalScore = sum + "/" + max; save();
+
+  document.getElementById("copyRes").addEventListener("click", async ()=>{
+    const t = `海底牧场游记 · 任务单成绩
+姓名：${store.name||"（未填）"}　班级：${store.class||"（未填）"}
+等级：${rank}　总分：${sum}/${max}（${pct}%）
+${Object.keys(total).map(k=>names[k].replace(/　/g," ")+"：" + got[k] + "/" + total[k]).join("\n")}
+我的立场：${store.stance||"（未选）"}
+我的理由：${store.reason||"（未写）"}`;
+    try{ await navigator.clipboard.writeText(t);
+      const b = document.getElementById("copyRes"); b.textContent = "已复制 ✓";
+      setTimeout(()=>b.textContent="复制成绩交给老师",1800);
+    }catch(e){ window.prompt("按 Ctrl/Cmd + C 复制：", t); }
+  });
+});
+
+/* ================= 清空 ================= */
+document.getElementById("clearAll").addEventListener("click", async ()=>{
+  if(!confirm("清空所有作答，重新开始？")) return;
+  store = {};
+  try{ await window.storage.delete(KEY); }catch(e){}
+  location.reload();
+});
+
+/* ================= 深度标尺 ================= */
+const rails = document.querySelectorAll(".rail-item");
+const obs = new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting) rails.forEach(r=>r.classList.toggle("on", r.dataset.rail === e.target.id)); });
+}, {rootMargin:"-45% 0px -45% 0px"});
+["s1","s2","s3","s4","s5"].forEach(id=>{ const el=document.getElementById(id); if(el) obs.observe(el); });
+
+/* ================= 启动 ================= */
+(async function init(){
+  try{
+    const r = await window.storage.get(KEY);
+    if(r && r.value){ store = JSON.parse(r.value); }
+  }catch(e){ store = {}; }
+
+  // 读到存档之后才渲染，这样答过的题会保持原样
+  renderAllMCQ();
+  renderLegs();
+
+  document.querySelectorAll("[data-save]").forEach(el=>{ if(store[el.dataset.save]) el.value = store[el.dataset.save]; });
+  if(store.stance) document.querySelectorAll("#stances button").forEach(b=>b.classList.toggle("picked", b.dataset.v===store.stance));
+  if(store.verbDone && store.verbSel){
+    store.verbSel.forEach(w=>{
+      const t = [...pass.querySelectorAll(".tok")].find(x=>x.dataset.w===w && !x.classList.contains("sel"));
+      if(t) t.classList.add("sel");
+    });
+    gradeVerbs();
+  }
+  updateProgress();
+})();
+</script>
+</body>
+</html>
