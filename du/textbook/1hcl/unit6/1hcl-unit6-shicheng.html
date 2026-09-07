@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我为狮城做贡献 · 阅读任务单</title>
+<style>
+:root{
+  --ink:#101E28; --ink-soft:#48606E;
+  --paper:#FFFFFF; --tint:#EEF5F7; --line:#D3E1E6;
+  --steel:#2C6E8F; --steel-deep:#1B4D68;
+  --amber:#C0740F; --amber-tint:#FCF1DE;
+  --good:#1B876A; --good-tint:#E2F4EE;
+  --miss:#B24338; --miss-tint:#FAEAE8;
+  --r:14px;
+  --shadow:0 2px 4px rgba(16,30,40,.05), 0 12px 28px rgba(16,30,40,.10);
+  --display:"Noto Serif SC","Songti SC","Source Han Serif SC","SimSun",serif;
+  --body:"Noto Sans SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:var(--body); color:var(--ink); line-height:1.75;
+  background:linear-gradient(180deg,#F4F7F9 0%,#DCE7EC 22%,#B4C8D2 46%,#7E9DAC 68%,
+    #4B6B7C 84%,#2B4453 100%);
+}
+
+/* 进度标尺 —— 用地铁夜班时间轴做隐喻 */
+.rail{position:fixed; left:24px; top:50%; transform:translateY(-50%); z-index:50}
+.rail-item{display:flex; align-items:center; gap:10px; height:58px; position:relative}
+.rail-item::before{content:""; position:absolute; left:5px; top:50%; width:2px; height:58px; background:rgba(43,68,83,.28)}
+.rail-item:last-child::before{display:none}
+.rail-dot{width:12px; height:12px; border-radius:50%; background:rgba(43,68,83,.32); transition:.35s; flex:none}
+.rail-label{font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:rgba(43,68,83,.6); white-space:nowrap; transition:.35s}
+.rail-item.on .rail-dot{background:var(--amber); box-shadow:0 0 0 5px rgba(192,116,15,.2); transform:scale(1.15)}
+.rail-item.on .rail-label{color:var(--steel-deep); font-weight:700}
+@media (min-width:1100px){
+  .rail-item:nth-child(n+4) .rail-label{color:rgba(255,255,255,.72)}
+  .rail-item:nth-child(n+4) .rail-dot{background:rgba(255,255,255,.5)}
+  .rail-item:nth-child(n+4)::before{background:rgba(255,255,255,.32)}
+  .rail-item.on:nth-child(n+4) .rail-label{color:#fff}
+}
+
+.wrap{max-width:840px; margin:0 auto; padding:0 22px 90px}
+
+header.hero{padding:58px 0 28px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--steel-deep); margin:0 0 12px}
+h1{font-family:var(--display); font-size:clamp(32px,6vw,54px); line-height:1.14; margin:0 0 6px; font-weight:800}
+.sub{font-size:18px; color:var(--steel-deep); margin:0 0 24px; font-weight:600}
+.idbar{display:flex; flex-wrap:wrap; gap:10px; background:var(--paper); border-radius:var(--r); padding:14px; box-shadow:var(--shadow)}
+.idbar label{display:flex; align-items:center; gap:8px; flex:1 1 150px; font-size:14px; color:var(--ink-soft)}
+.idbar input{flex:1; min-width:0; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-family:var(--body); font-size:15px; background:#FBFDFE; color:var(--ink)}
+.idbar input:focus{outline:2px solid var(--steel); outline-offset:1px}
+
+section.task{background:var(--paper); border-radius:var(--r); padding:30px 30px 34px; margin:26px 0; box-shadow:var(--shadow); scroll-margin-top:20px}
+.tasknum{font-family:var(--mono); font-size:12px; letter-spacing:.16em; color:var(--amber); font-weight:700; margin:0 0 6px}
+h2{font-family:var(--display); font-size:26px; line-height:1.3; margin:0 0 8px; font-weight:700}
+h3{font-size:17px; margin:26px 0 12px; color:var(--steel-deep); display:flex; align-items:center; gap:9px}
+h3 .n{font-family:var(--mono); font-size:12px; background:var(--steel); color:#fff; border-radius:20px; padding:3px 10px; letter-spacing:.06em}
+.hint{font-size:15px; color:var(--ink-soft); margin:0 0 20px}
+.hint strong{color:var(--steel-deep)}
+
+.q{border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:11px; background:#FBFDFE}
+.q.right{background:var(--good-tint); border-color:var(--good)}
+.q.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.q .stem{font-size:16px; margin:0 0 11px}
+.q .stem b{color:var(--steel-deep)}
+.opts{display:flex; flex-wrap:wrap; gap:8px}
+.opts button{font-family:var(--body); font-size:14px; font-weight:600; cursor:pointer; border-radius:9px; padding:9px 15px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s}
+.opts button:hover{border-color:var(--steel); color:var(--steel-deep)}
+.opts button.picked{background:var(--ink); color:#fff; border-color:var(--ink)}
+.opts button:disabled{cursor:default}
+.opts button.picked:disabled{opacity:1}
+.opts button:disabled:not(.picked){opacity:.5}
+.fb{font-size:14px; font-weight:600; margin:10px 0 0; display:none}
+.q.right .fb{display:block; color:var(--good)}
+.q.wrong .fb{display:block; color:var(--miss)}
+
+/* 事实 vs 意见 图解 */
+.compare{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:6px 0 18px}
+.cmp{border-radius:12px; padding:16px 18px}
+.cmp.fact{background:#E8F1F4}
+.cmp.opin{background:#FCF1DE}
+.cmp h4{margin:0 0 4px; font-family:var(--display); font-size:20px}
+.cmp.fact h4{color:var(--steel-deep)}
+.cmp.opin h4{color:#96590A}
+.cmp .one{font-size:13px; margin:0 0 12px; color:var(--ink-soft)}
+.cmp svg{width:100%; height:76px; display:block; margin-bottom:10px}
+.cmp .sig{font-size:13px; margin:0; line-height:1.75}
+.cmp .sig b{background:rgba(255,255,255,.8); border-radius:5px; padding:1px 6px; margin-right:3px; display:inline-block}
+.threeway{border:1px solid var(--line); border-radius:12px; overflow:hidden; margin-bottom:16px}
+.tw{display:grid; grid-template-columns:64px 1fr; gap:12px; padding:12px 15px; font-size:16px; align-items:baseline}
+.tw + .tw{border-top:1px solid var(--line)}
+.tw .lab{font-family:var(--mono); font-size:12px; letter-spacing:.06em; font-weight:700}
+.tw.f{background:#E8F1F4} .tw.f .lab{color:var(--steel-deep)}
+.tw.o{background:#FCF1DE} .tw.o .lab{color:#96590A}
+.tw em{font-style:normal; font-weight:700; border-bottom:2px solid currentColor}
+.tw.f em{color:var(--steel-deep)} .tw.o em{color:#96590A}
+
+/* 时间轴配对 */
+.timeline{display:grid; gap:10px; margin-bottom:6px}
+.tl{display:grid; grid-template-columns:118px 1fr; gap:14px; align-items:center; border:1px solid var(--line); border-radius:12px; padding:12px 14px; background:#FBFDFE}
+.tl.right{background:var(--good-tint); border-color:var(--good)}
+.tl.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.tl .clock{font-family:var(--mono); font-size:15px; font-weight:700; color:var(--steel-deep); text-align:center; background:var(--tint); border-radius:8px; padding:8px 4px}
+.tl .picks{display:flex; flex-wrap:wrap; gap:7px}
+.tl .picks button{font-family:var(--body); font-size:13px; font-weight:600; cursor:pointer; border-radius:9px; padding:8px 12px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s; text-align:left}
+.tl .picks button:hover{border-color:var(--steel)}
+.tl .picks button.picked{background:var(--ink); color:#fff; border-color:var(--ink)}
+.tl .picks button:disabled{cursor:default}
+.tl .picks button:disabled:not(.picked){opacity:.45}
+.tl .tlfb{grid-column:1/-1; font-size:13px; font-weight:600; margin:2px 0 0; display:none}
+.tl.right .tlfb, .tl.wrong .tlfb{display:block}
+.tl.right .tlfb{color:var(--good)} .tl.wrong .tlfb{color:var(--miss)}
+
+/* 判断句 · 双键 */
+.judge{border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:11px; background:#FBFDFE}
+.judge.right{background:var(--good-tint); border-color:var(--good)}
+.judge.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.judge .stem{font-size:16px; margin:0 0 11px}
+.judge .fb{font-size:14px; font-weight:600; margin:10px 0 0; display:none}
+.judge.right .fb, .judge.wrong .fb{display:block}
+.judge.right .fb{color:var(--good)} .judge.wrong .fb{color:var(--miss)}
+.jbtns{display:flex; gap:8px}
+.jbtns button{flex:0 0 auto; font-family:var(--body); font-size:14px; font-weight:700; cursor:pointer; border-radius:9px; padding:9px 22px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s}
+.jbtns button[data-a="fact"]:hover{border-color:var(--steel); color:var(--steel-deep)}
+.jbtns button[data-a="opin"]:hover{border-color:var(--amber); color:#96590A}
+.jbtns button.picked{color:#fff}
+.jbtns button.picked[data-a="fact"]{background:var(--steel); border-color:var(--steel)}
+.jbtns button.picked[data-a="opin"]{background:var(--amber); border-color:var(--amber)}
+.jbtns button:disabled{cursor:default}
+.jbtns button:disabled:not(.picked){opacity:.45}
+
+/* 讨论 */
+.stances{display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:14px}
+.stances button{padding:14px 6px; font-size:15px; font-weight:700; cursor:pointer; border-radius:9px; background:#FBFDFE; border:1px solid var(--line); color:var(--ink-soft); font-family:var(--body)}
+.stances button:hover{border-color:var(--steel)}
+.stances button.picked{background:var(--steel-deep); color:#fff; border-color:var(--steel-deep)}
+label.fieldlab{font-size:15px; font-weight:600; display:block; margin:16px 0 6px}
+textarea{width:100%; border:1px solid var(--line); border-radius:9px; padding:11px 13px; font-family:var(--body); font-size:16px; background:#FBFDFE; color:var(--ink); resize:vertical}
+textarea:focus{outline:2px solid var(--steel); outline-offset:1px}
+.viewcards{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:6px 0}
+.vc{border-radius:11px; padding:12px 14px; font-size:14px; line-height:1.6}
+.vc.yes{background:var(--good-tint); color:#12604B}
+.vc.no{background:var(--amber-tint); color:#8A560C}
+
+.btn{font-family:var(--body); font-size:15px; font-weight:700; cursor:pointer; border-radius:10px; padding:13px 24px; border:1px solid transparent; transition:.18s}
+.btn-line{background:var(--paper); color:var(--steel-deep); border-color:var(--steel)}
+.btn-line:hover{background:var(--tint)}
+.btn-amber{background:var(--amber); color:#fff}
+.btn-amber:hover{filter:brightness(.93)}
+.actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
+button:focus-visible{outline:3px solid var(--amber); outline-offset:2px}
+.progress{font-family:var(--mono); font-size:13px; color:var(--ink-soft); background:var(--tint); border-radius:9px; padding:8px 14px; display:inline-block; margin-top:12px}
+
+.submitzone{background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.3); border-radius:var(--r); padding:26px 28px; margin-top:30px; color:#EBF3F6; backdrop-filter:blur(6px)}
+.submitzone h3{font-family:var(--display); margin:0 0 6px; font-size:22px; color:#fff; display:block}
+.submitzone p{margin:0 0 18px; font-size:14px; color:#CBDDE4}
+.saveflag{font-family:var(--mono); font-size:12px; color:#A6C5D0; margin-left:4px}
+.result{display:none; background:var(--paper); border-radius:var(--r); padding:32px 30px; margin-top:18px; box-shadow:var(--shadow); color:var(--ink)}
+.result.show{display:block; animation:pop .4s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes pop{from{opacity:0; transform:scale(.96) translateY(8px)} to{opacity:1; transform:none}}
+.medalrow{display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+.medal{width:104px; height:104px; flex:none}
+.rankname{font-family:var(--display); font-size:30px; font-weight:800; margin:0}
+.rankline{font-size:15px; color:var(--ink-soft); margin:4px 0 0}
+.bigscore{font-family:var(--mono); font-size:38px; font-weight:700; color:var(--steel-deep); margin:0}
+.bd{margin-top:22px}
+.bdrow{display:grid; grid-template-columns:1fr 62px; gap:12px; align-items:center; font-size:15px; margin-bottom:2px}
+.bar{grid-column:1/-1; height:8px; border-radius:6px; background:var(--tint); overflow:hidden; margin:4px 0 12px}
+.bar span{display:block; height:100%; background:var(--steel); border-radius:6px; transition:width .8s ease}
+.bdrow .v{font-family:var(--mono); font-size:14px; text-align:right; color:var(--ink-soft)}
+.advice{background:var(--amber-tint); border-radius:11px; padding:14px 16px; margin-top:18px; font-size:15px}
+.advice b{color:var(--amber)}
+
+@media (max-width:1099px){ .rail{display:none} }
+@media (max-width:620px){
+  .wrap{padding:0 14px 60px}
+  section.task{padding:22px 18px 26px}
+  .compare{grid-template-columns:1fr}
+  .stances,.viewcards{grid-template-columns:1fr}
+  .tw{grid-template-columns:54px 1fr; font-size:15px}
+  .tl{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} html{scroll-behavior:auto} }
+@media print{ body{background:#fff} .rail,.actions,.submitzone .actions,.opts,.jbtns,.tl .picks{display:none} section.task{box-shadow:none; border:1px solid #ccc; break-inside:avoid} }
+</style>
+</head>
+<body>
+
+<nav class="rail" aria-label="进度">
+  <div class="rail-item" data-rail="s1"><span class="rail-dot"></span><span class="rail-label">上工前 · 词语</span></div>
+  <div class="rail-item" data-rail="s2"><span class="rail-dot"></span><span class="rail-label">10:30 夜班开始</span></div>
+  <div class="rail-item" data-rail="s3"><span class="rail-dot"></span><span class="rail-label">事实 or 意见</span></div>
+  <div class="rail-item" data-rail="s4"><span class="rail-dot"></span><span class="rail-label">幕后英雄</span></div>
+  <div class="rail-item" data-rail="s5"><span class="rail-dot"></span><span class="rail-label">读后说</span></div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">中二高级华文 · 我为狮城做贡献</p>
+  <h1>走访地铁维修人员</h1>
+  <p class="sub">一篇新闻报道，一群夜里工作的幕后英雄</p>
+  <div class="idbar">
+    <label>姓名 <input type="text" data-save="name" placeholder="写上你的名字"></label>
+    <label>班级 <input type="text" data-save="class" placeholder="例：2E3"></label>
+    <label>组别 <input type="text" data-save="group" placeholder="A / B / C"></label>
+  </div>
+</header>
+
+<!-- ============ 任务一：词语 ============ -->
+<section class="task" id="s1">
+  <p class="tasknum">任务一 · 上工前的训练</p>
+  <h2>词语过关：意思 · 用法</h2>
+  <p class="hint">课本上的词语练习做完了，现在换个方式再练一遍。<strong>点一下就有答案，错了也没关系，看清楚解释再往下走。</strong></p>
+
+  <h3><span class="n">A</span>这个词是什么意思？</h3>
+  <div id="vocA"></div>
+
+  <h3><span class="n">B</span>选一个词填进去</h3>
+  <div id="vocB"></div>
+
+  <h3><span class="n">C</span>哪一句用错了？</h3>
+  <div id="vocC"></div>
+
+  <p class="progress" id="pg1">已完成 0 / 14</p>
+</section>
+
+<!-- ============ 任务二：时间轴 ============ -->
+<section class="task" id="s2">
+  <p class="tasknum">任务二</p>
+  <h2>张少华的一夜：谁在什么时候做什么</h2>
+  <p class="hint">别人睡觉的时候，正是张少华上工的时候。读第 3、4 段，把<strong>每个时间点</strong>和<strong>那时候做的事</strong>配起来。</p>
+  <div class="timeline" id="timeline"></div>
+  <div id="afterTL" style="margin-top:16px"></div>
+  <p class="progress" id="pg2">已完成 0 / 6</p>
+</section>
+
+<!-- ============ 任务三：事实 vs 意见 ============ -->
+<section class="task" id="s3">
+  <p class="tasknum">任务三 · 本课重点</p>
+  <h2>这句话，是事实还是意见？</h2>
+  <p class="hint">读新闻，要分得清哪些是<strong>真的发生、可以查证</strong>的事，哪些只是<strong>某个人的看法</strong>。先看下面的对照，再来判断。</p>
+
+  <div class="threeway">
+    <div class="tw f"><span class="lab">事实</span><span>地铁列车平均每行驶约 <em>140 万公里</em>，只出现一次延误。</span></div>
+    <div class="tw o"><span class="lab">意见</span><span>李小平<em>觉得</em>这些幕后英雄应该得到公众的支持。</span></div>
+  </div>
+
+  <div class="compare">
+    <div class="cmp fact">
+      <h4>事实</h4>
+      <p class="one">真的发生了、可以查证</p>
+      <svg viewBox="0 0 240 76" role="img" aria-label="事实：有数据、可核实">
+        <rect x="10" y="16" width="220" height="44" rx="9" fill="#fff" stroke="#6FA0B5" stroke-width="1.5"/>
+        <text x="120" y="37" font-size="14" text-anchor="middle" fill="#1B4D68" font-family="sans-serif">140 万公里 · 截至 6 月</text>
+        <text x="120" y="53" font-size="11" text-anchor="middle" fill="#48606E" font-family="sans-serif">查得到、有数据</text>
+      </svg>
+      <p class="sig"><b>信号词</b>根据 · 数据 · 据统计 · 截至<br>说得出证据，就是事实。</p>
+    </div>
+    <div class="cmp opin">
+      <h4>意见</h4>
+      <p class="one">某个人心里的看法</p>
+      <svg viewBox="0 0 240 76" role="img" aria-label="意见：个人看法">
+        <circle cx="42" cy="30" r="11" fill="#fff" stroke="#D8A55E" stroke-width="1.5"/>
+        <path d="M26 60 q16 -22 32 0" fill="#fff" stroke="#D8A55E" stroke-width="1.5"/>
+        <path d="M64 30 q10 -12 22 -4" fill="none" stroke="#D8A55E" stroke-width="1.5"/>
+        <rect x="92" y="14" width="138" height="46" rx="10" fill="#fff" stroke="#D8A55E" stroke-width="1.5"/>
+        <text x="161" y="42" font-size="13" text-anchor="middle" fill="#96590A" font-family="sans-serif">我觉得应该……</text>
+      </svg>
+      <p class="sig"><b>信号词</b>我觉得 · 我认为 · 应该 · 希望<br>换个人可能就不同意。</p>
+    </div>
+  </div>
+
+  <h3><span class="n">练</span>点「事实」或「意见」</h3>
+  <div id="judge"></div>
+  <p class="progress" id="pg3">已完成 0 / 8</p>
+</section>
+
+<!-- ============ 任务四：幕后英雄 ============ -->
+<section class="task" id="s4">
+  <p class="tasknum">任务四</p>
+  <h2>读懂"幕后英雄"</h2>
+  <p class="hint">这篇报道不只是讲一份工作，还想让我们<strong>换个眼光</strong>看身边默默付出的人。</p>
+  <div id="hero"></div>
+  <p class="progress" id="pg4">已完成 0 / 5</p>
+</section>
+
+<!-- ============ 任务五：读后说 ============ -->
+<section class="task" id="s5">
+  <p class="tasknum">任务五</p>
+  <h2>读后说：把简单的事做好，就是不简单？</h2>
+  <p class="hint">有人说：<strong>"把简单的事做好，就是不简单。"</strong> 你同意吗？先站队，再说理由。</p>
+
+  <div class="stances" id="stances">
+    <button data-v="同意">同意</button>
+    <button data-v="不完全同意">不完全同意</button>
+  </div>
+
+  <div class="viewcards">
+    <div class="vc yes">检查轨道、清洗隧道每天都一样，但要做到零差错，其实很难。</div>
+    <div class="vc no">简单的事就是简单，把它说成"不简单"是夸大了。</div>
+    <div class="vc yes">卖油翁把油从钱孔倒进去不沾湿，靠的是千百次的熟练。</div>
+    <div class="vc no">"做好"要看有没有创意，只是重复做，算不上不简单。</div>
+  </div>
+
+  <label class="fieldlab">我的理由（结合课文或生活，至少两点）</label>
+  <textarea rows="4" data-save="reason" placeholder="第一，……；第二，……"></textarea>
+
+  <label class="fieldlab">生活里，谁也是这样的"幕后英雄"？</label>
+  <textarea rows="3" data-save="hero_life" placeholder="例：组屋楼下的清洁工、学校的……"></textarea>
+</section>
+
+<div class="submitzone">
+  <h3>全部做完了吗？</h3>
+  <p>作答自动保存在这台设备上<span class="saveflag" id="saveflag"></span>。交上去就能看到分数和你的等级。</p>
+  <div class="actions" style="margin:0">
+    <button class="btn btn-amber" id="submitAll">提交，看我的成绩</button>
+    <button class="btn btn-line" onclick="window.print()">打印 / 存成 PDF</button>
+    <button class="btn btn-line" id="clearAll">清空重做</button>
+  </div>
+</div>
+
+<div class="result" id="result"></div>
+
+</div>
+
+<script>
+/* ================= 题库 ================= */
+const VOC_A = [
+  ["「全力以赴」的意思是——", ["用尽全部的力量去做","慢慢地把事情做完","只出一点点力","半途放弃"], 0,
+   "赴＝奔向。张少华和团队全力以赴，把全部力气都用上。"],
+  ["「理所当然」是说——", ["按道理本来就该这样","出乎意料的事","不合理的要求","偶然发生的事"], 0,
+   "李小平以前觉得地铁正常运行是理所当然的——本来就该这样，不值得感激。"],
+  ["「奉献」最接近哪个词？", ["索取","付出","休息","抱怨"], 1,
+   "无私奉献＝不求回报地付出。"],
+  ["「假以时日」的意思是——", ["再过一段时间","立刻马上","浪费时间","按时完成"], 0,
+   "张少华希望假以时日，地铁服务能大大改善——再给一段时间。"],
+  ["「明知山有虎，偏向虎山行」形容一个人——", ["明知有危险仍勇往直前","喜欢登山打猎","做事不动脑筋","害怕困难而退缩"], 0,
+   "课文用它形容张少华不怕困难、迎难而上。"],
+  ["「就绪」是说——", ["准备好了","出问题了","开始休息","刚刚开始"], 0,
+   "1 点 30 分，一切准备就绪后，维修团队准时开工。"]
+];
+const VOC_B = [
+  ["昨晚地铁信号系统出现＿＿，多趟列车延误了。", ["故障","奉献","季度"], 0,
+   "机器出问题＝故障。"],
+  ["这条隧道每天凌晨都有维修团队进去，确保列车行驶＿＿。", ["顺畅","延误","漏夜"], 0,
+   "没有阻碍、通行无阻＝顺畅。"],
+  ["为了赶在首班车之前完工，工人们＿＿地工作到天亮。", ["漏夜","就绪","截至","理所当然"], 0,
+   "漏夜＝深夜通宵。（本题四选一）"],
+  ["清洁工人天天打扫组屋楼道，几十年如一日坚守＿＿。", ["岗位","延误","季度"], 0,
+   "坚守岗位＝守住自己的工作位置。"],
+  ["＿＿今年六月，本地已经建成了多条新地铁线。", ["截至","归功于","协调"], 0,
+   "截至＝到某个时间为止。"],
+  ["球队能夺冠，＿＿全体队员平时的刻苦训练。", ["归功于","理所当然","全力以赴"], 0,
+   "把好结果的原因归到某处＝归功于。"]
+];
+const VOC_C = [
+  ["哪一句「用错」了？", ["他做事总是全力以赴，从不马虎。","比赛只剩最后一秒，他全力以赴地睡着了。","为了这次演出，大家都全力以赴地排练。"], 1,
+   "「全力以赴」是拼尽全力做事，和「睡着了」矛盾。"],
+  ["哪一句「用错」了？", ["经过多年努力，公司终于扭亏为盈，可谓理所当然。","父母把我们养大，我们孝顺他们是理所当然的。","地铁正常运行，很多人以为是理所当然的。"], 0,
+   "「理所当然」指本来就该如此；公司靠努力才转亏为盈，是来之不易，不是理所当然。"]
+];
+/* 时间轴配对：clock → 正确工作 */
+const TL = [
+  ["晚上 10:30", "漏夜工作的开始", ["漏夜工作的开始","末班车收车回厂","维修团队准时开工"]],
+  ["晚上 11:00", "和四个车厂的同事协调，检查维修机车", ["驾驶机车出发到各轨道","和四个车厂的同事协调，检查维修机车","清洗隧道、更换轨道"]],
+  ["凌晨 1:15", "末班车已收车，团队再次检查机车", ["漏夜工作的开始","末班车已收车，团队再次检查机车","地铁开始载客"]],
+  ["凌晨 1:30", "一切就绪，准时开工", ["下班回家休息","一切就绪，准时开工","首班列车投入服务"]]
+];
+const TL_AFTER = [
+  ["整个维修团队必须在多长时间内完成工作？", ["三小时","一整晚","五分钟"], 0,
+   "课文说：必须在短短的三小时内完成多项工作。"],
+  ["下面哪一项「不是」他们那三小时里要做的事？", ["清洗隧道","检查电路、更换有裂痕的轨道","把乘客送回家"], 2,
+   "他们的工作是清洗隧道、检查电路、扫描更换轨道——都是为了列车安全，不包括载客。"]
+];
+/* 事实/意见判断：true=事实 */
+const JUDGE = [
+  ["根据陆路交通管理局公布的数据，地铁只出现一次超过五分钟的延误。", true,
+   "有「根据……数据」，是可以查证的事实。"],
+  ["张少华今年 38 岁，两年前加入地铁公司。", true,
+   "年龄和入职时间是可核实的事实。"],
+  ["张少华说，这份职业给他们带来最大的乐趣和成就感。", false,
+   "「乐趣」「成就感」是张少华个人的感受，属于意见。"],
+  ["维修团队要在三小时内完成清洗隧道、检查电路等工作。", true,
+   "这是他们实际的工作内容和时限，是事实。"],
+  ["李小平觉得，地铁正常运行是理所当然的，并不是件难事。", false,
+   "「觉得」两个字点明这是李小平的看法，是意见。"],
+  ["李小平认为这些默默无闻的小人物应该得到公众的理解和支持。", false,
+   "「认为」「应该」是李小平的主张，属于意见。"],
+  ["第一季度地铁运行的可靠度有所提升。", true,
+   "这是依据前面的数据得出的结论，可以查证，是事实。"],
+  ["希望假以时日，地铁的可靠度会越来越高。", false,
+   "「希望」是一种期望和愿望，是意见，不是已经发生的事。"]
+];
+const HERO = [
+  ["李小平对地铁服务的态度，前后有什么不同？", 
+   ["一直都很满意","从抱怨，变成理解和支持","从支持，变成抱怨","始终觉得理所当然"], 1,
+   "以前地铁一坏他就抱怨；后来从新闻里了解到幕后英雄的付出，转为理解和支持。"],
+  ["李小平的态度为什么会转变？",
+   ["地铁再也没坏过","他从新闻报道中了解到幕后英雄的付出","他自己去当了维修员","票价降低了"], 1,
+   "是新闻报道让他看见了平时看不见的那群人。"],
+  ["第 6 段主要写乘客李小平的看法。这一段可以删掉吗？",
+   ["可以，和张少华没关系","不可以，从乘客角度更能突出幕后英雄的伟大","可以，内容重复了"], 1,
+   "换一个角度（乘客）来看，更能衬托出这群幕后英雄值得尊敬。答案合理即可接受。"],
+  ["让张少华和团队努力工作的动力是什么？",
+   ["赚更多的钱","希望地铁服务变好，从中得到乐趣和成就感","上司的命令","想上新闻"], 1,
+   "课文原句：这是这份职业给他们带来的最大乐趣和成就感。"],
+  ["这篇报道为什么把张少华他们称为「幕后英雄」？",
+   ["他们在电视台后台工作","他们默默付出，乘客平时看不见，却撑起了地铁的正常运行","他们戴着面具","他们力气很大"], 1,
+   "「幕后」＝在看不见的地方；「英雄」＝做了了不起的贡献。"]
+];
+
+/* ================= 存储 ================= */
+const KEY = "shicheng-worksheet-v1";
+let store = {};
+const flag = document.getElementById("saveflag");
+let saveTimer;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    try{ await window.storage.set(KEY, JSON.stringify(store));
+      flag.textContent="· 已保存"; setTimeout(()=>flag.textContent="",1500);
+    }catch(e){}
+  }, 500);
+}
+document.addEventListener("input", e=>{
+  const el = e.target.closest("[data-save]");
+  if(!el) return; store[el.dataset.save] = el.value; save();
+});
+
+/* ================= 选择题 ================= */
+function renderMCQ(host, list, prefix, opts){
+  list.forEach((item,i)=>{
+    const [stem, choices, ans, why] = item;
+    const id = prefix+i;
+    const d = document.createElement("div");
+    d.className="q";
+    d.innerHTML = `<p class="stem">${i+1}. ${stem}</p><div class="opts"></div><p class="fb"></p>`;
+    const bar = d.querySelector(".opts");
+    function lock(j){
+      bar.querySelectorAll("button").forEach(x=>x.disabled=true);
+      bar.querySelectorAll("button")[j].classList.add("picked");
+      const ok = j===ans;
+      d.classList.add(ok?"right":"wrong");
+      d.querySelector(".fb").innerHTML = (ok?"✓ 对了。":"✗ 正确答案是「"+choices[ans]+"」。")+why;
+    }
+    choices.forEach((c,j)=>{
+      const b=document.createElement("button");
+      b.textContent = (opts&&opts.letters?"ABCD"[j]+"　":"")+c;
+      b.addEventListener("click",()=>{ if(store[id]!==undefined) return; store[id]=j; save(); lock(j); updateProgress(); });
+      bar.appendChild(b);
+    });
+    host.appendChild(d);
+    if(store[id]!==undefined) lock(store[id]);
+  });
+}
+
+/* ================= 时间轴配对 ================= */
+function renderTL(){
+  const host = document.getElementById("timeline");
+  TL.forEach((row,i)=>{
+    const [clock, ans, picks] = row;
+    const id = "T"+i;
+    const d = document.createElement("div");
+    d.className="tl";
+    d.innerHTML = `<div class="clock">${clock}</div><div class="picks"></div><p class="tlfb"></p>`;
+    const bar = d.querySelector(".picks");
+    function lock(val){
+      bar.querySelectorAll("button").forEach(x=>{ x.disabled=true; if(x.dataset.v===val) x.classList.add("picked"); });
+      const ok = val===ans;
+      d.classList.add(ok?"right":"wrong");
+      d.querySelector(".tlfb").textContent = ok?"✓ 对了。":"✗ 正确答案是：「"+ans+"」。";
+    }
+    picks.forEach(p=>{
+      const b=document.createElement("button");
+      b.textContent=p; b.dataset.v=p;
+      b.addEventListener("click",()=>{ if(store[id]!==undefined) return; store[id]=p; save(); lock(p); updateProgress(); });
+      bar.appendChild(b);
+    });
+    host.appendChild(d);
+    if(store[id]!==undefined) lock(store[id]);
+  });
+}
+
+/* ================= 事实/意见 ================= */
+function renderJudge(){
+  const host = document.getElementById("judge");
+  JUDGE.forEach((row,i)=>{
+    const [stem, isFact, why] = row;
+    const id="J"+i;
+    const d=document.createElement("div");
+    d.className="judge";
+    d.innerHTML = `<p class="stem">${i+1}. ${stem}</p>
+      <div class="jbtns"><button data-a="fact">事实</button><button data-a="opin">意见</button></div>
+      <p class="fb"></p>`;
+    function lock(val){
+      d.querySelectorAll(".jbtns button").forEach(x=>{ x.disabled=true; if(x.dataset.a===val) x.classList.add("picked"); });
+      const ok = (val==="fact")===isFact;
+      d.classList.add(ok?"right":"wrong");
+      d.querySelector(".fb").innerHTML = (ok?"✓ 对了。":"✗ 这是"+(isFact?"事实":"意见")+"。")+why;
+    }
+    d.querySelectorAll(".jbtns button").forEach(b=>{
+      b.addEventListener("click",()=>{ if(store[id]!==undefined) return; store[id]=b.dataset.a; save(); lock(b.dataset.a); updateProgress(); });
+    });
+    host.appendChild(d);
+    if(store[id]!==undefined) lock(store[id]);
+  });
+}
+
+/* ================= 立场 ================= */
+document.querySelectorAll("#stances button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("#stances button").forEach(x=>x.classList.remove("picked"));
+    b.classList.add("picked"); store.stance=b.dataset.v; save();
+  });
+});
+
+/* ================= 进度 ================= */
+function cnt(prefix,n){ let c=0; for(let i=0;i<n;i++) if(store[prefix+i]!==undefined) c++; return c; }
+function updateProgress(){
+  document.getElementById("pg1").textContent = `已完成 ${cnt("a",6)+cnt("b",6)+cnt("c",2)} / 14`;
+  document.getElementById("pg2").textContent = `已完成 ${cnt("T",4)+cnt("t",2)} / 6`;
+  document.getElementById("pg3").textContent = `已完成 ${cnt("J",8)} / 8`;
+  document.getElementById("pg4").textContent = `已完成 ${cnt("h",5)} / 5`;
+}
+
+/* ================= 评分 ================= */
+function score(list, prefix, ansIdx){
+  let g=0; list.forEach((it,i)=>{ if(store[prefix+i]===it[ansIdx]) g++; }); return g;
+}
+function medalSVG(c1,c2){
+  return `<svg class="medal" viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M32 6 L44 40 L28 46 Z" fill="${c2}" opacity=".55"/>
+    <path d="M68 6 L56 40 L72 46 Z" fill="${c2}" opacity=".55"/>
+    <circle cx="50" cy="62" r="30" fill="${c1}"/>
+    <circle cx="50" cy="62" r="23" fill="none" stroke="${c2}" stroke-width="2.5"/>
+    <path d="M50 47 l4.6 9.4 10.4 1.5 -7.5 7.3 1.8 10.3 -9.3 -4.9 -9.3 4.9 1.8 -10.3 -7.5 -7.3 10.4 -1.5 Z" fill="#fff"/>
+  </svg>`;
+}
+document.getElementById("submitAll").addEventListener("click", ()=>{
+  const total = { voc:14, night:6, fj:8, hero:5, talk:2 };
+  const got = {
+    voc: score(VOC_A,"a",2)+score(VOC_B,"b",2)+score(VOC_C,"c",2),
+    night: TL.reduce((s,r,i)=> s+(store["T"+i]===r[1]?1:0),0) + score(TL_AFTER,"t",2),
+    fj: JUDGE.reduce((s,r,i)=> s+((store["J"+i]==="fact")===r[1] && store["J"+i]!==undefined?1:0),0),
+    hero: score(HERO,"h",2),
+    talk: (store.stance?1:0) + ((store.reason||"").trim().length>=10?1:0)
+  };
+  const answerable = 14+6+8+5;
+  const doneCnt = cnt("a",6)+cnt("b",6)+cnt("c",2)+cnt("T",4)+cnt("t",2)+cnt("J",8)+cnt("h",5);
+  if(doneCnt<answerable){ if(!confirm(`还有 ${answerable-doneCnt} 题没做完，确定要提交吗？`)) return; }
+
+  const sum = Object.values(got).reduce((a,b)=>a+b,0);
+  const max = Object.values(total).reduce((a,b)=>a+b,0);
+  const pct = Math.round(sum/max*100);
+  let rank, medal, line;
+  if(pct>=90){ rank="金牌记者"; medal=medalSVG("#D9A428","#8A6410"); line="词语、时间线、事实意见全拿下了。这篇报道你读透了！"; }
+  else if(pct>=75){ rank="银牌记者"; medal=medalSVG("#9FB0BA","#5E7180"); line="很稳。把错的那几题再看一遍，就能升金牌。"; }
+  else if(pct>=60){ rank="铜牌记者"; medal=medalSVG("#C08B5C","#7C5227"); line="主线读懂了。回头把红色的题目再看一遍。"; }
+  else { rank="见习记者"; medal=medalSVG("#7FA8B8","#456374"); line="别急，把红色题目的解释读一遍，再点「清空重做」练一次。"; }
+
+  const names = { voc:"任务一　词语", night:"任务二　张少华的一夜", fj:"任务三　事实与意见", hero:"任务四　幕后英雄", talk:"任务五　读后说" };
+  const tips = {
+    voc:"回去把课本的词语练习再读一遍，注意「用错」的那两题。",
+    night:"重读第 3、4 段，把每个时间点后面做的事画出来。",
+    fj:"记住：说得出「根据、数据」的是事实；带「觉得、认为、应该、希望」的是意见。",
+    hero:"重读第 6 段，注意李小平态度前后的变化。"
+  };
+  let weakest=null, weakRate=2;
+  ["voc","night","fj","hero"].forEach(k=>{ const r=got[k]/total[k]; if(r<weakRate){weakRate=r; weakest=k;} });
+
+  let rows="";
+  Object.keys(total).forEach(k=>{
+    const p = Math.round(got[k]/total[k]*100);
+    rows += `<div class="bdrow"><span>${names[k]}</span><span class="v">${got[k]} / ${total[k]}</span></div><div class="bar"><span style="width:${p}%"></span></div>`;
+  });
+
+  const box = document.getElementById("result");
+  box.innerHTML = `
+    <div class="medalrow">${medal}
+      <div><p class="rankname">${rank}</p><p class="rankline">${line}</p></div>
+      <div style="margin-left:auto; text-align:right"><p class="bigscore">${sum} / ${max}</p><p class="rankline">正确率 ${pct}%</p></div>
+    </div>
+    <div class="bd">${rows}</div>
+    ${weakest?`<div class="advice"><b>下一步：</b>${names[weakest].replace(/　/g,' ')}是你最需要再看一次的。${tips[weakest]}</div>`:""}
+    <div class="actions"><button class="btn btn-line" id="copyRes">复制成绩交给老师</button></div>`;
+  box.classList.add("show");
+  box.scrollIntoView({behavior:"smooth", block:"start"});
+  store.finalScore = sum+"/"+max; save();
+
+  document.getElementById("copyRes").addEventListener("click", async ()=>{
+    const t = `我为狮城做贡献 · 任务单成绩
+姓名：${store.name||"（未填）"}　班级：${store.class||"（未填）"}
+等级：${rank}　总分：${sum}/${max}（${pct}%）
+${Object.keys(total).map(k=>names[k].replace(/　/g," ")+"："+got[k]+"/"+total[k]).join("\n")}
+我的立场：${store.stance||"（未选）"}
+我的理由：${store.reason||"（未写）"}`;
+    try{ await navigator.clipboard.writeText(t);
+      const b=document.getElementById("copyRes"); b.textContent="已复制 ✓";
+      setTimeout(()=>b.textContent="复制成绩交给老师",1800);
+    }catch(e){ window.prompt("按 Ctrl/Cmd + C 复制：", t); }
+  });
+});
+
+document.getElementById("clearAll").addEventListener("click", async ()=>{
+  if(!confirm("清空所有作答，重新开始？")) return;
+  store={};
+  try{ await window.storage.delete(KEY); }catch(e){}
+  location.reload();
+});
+
+/* ================= 进度标尺 ================= */
+const rails=document.querySelectorAll(".rail-item");
+const obs=new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting) rails.forEach(r=>r.classList.toggle("on", r.dataset.rail===e.target.id)); }); }, {rootMargin:"-45% 0px -45% 0px"});
+["s1","s2","s3","s4","s5"].forEach(id=>{ const el=document.getElementById(id); if(el) obs.observe(el); });
+
+/* ================= 启动 ================= */
+(async function init(){
+  try{ const r=await window.storage.get(KEY); if(r&&r.value) store=JSON.parse(r.value); }catch(e){ store={}; }
+  renderMCQ(document.getElementById("vocA"), VOC_A, "a", {letters:true});
+  renderMCQ(document.getElementById("vocB"), VOC_B, "b");
+  renderMCQ(document.getElementById("vocC"), VOC_C, "c", {letters:true});
+  renderTL();
+  renderMCQ(document.getElementById("afterTL"), TL_AFTER, "t");
+  renderJudge();
+  renderMCQ(document.getElementById("hero"), HERO, "h");
+  document.querySelectorAll("[data-save]").forEach(el=>{ if(store[el.dataset.save]) el.value=store[el.dataset.save]; });
+  if(store.stance) document.querySelectorAll("#stances button").forEach(b=>b.classList.toggle("picked", b.dataset.v===store.stance));
+  updateProgress();
+})();
+</script>
+</body>
+</html>
