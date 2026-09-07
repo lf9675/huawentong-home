@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>如果走散了 · 阅读任务单</title>
+<style>
+:root{
+  --ink:#241C1A; --ink-soft:#5B4A45;
+  --paper:#FFFFFF; --tint:#FBF1E8; --line:#EBDCD0;
+  --sail:#C0392B; --sail-deep:#8E2A20;
+  --dusk:#D9853F; --dusk-tint:#FDF0E2;
+  --sea:#2E5A6B; --sea-tint:#E5EEF1;
+  --good:#2F6B45; --good-tint:#E5F2E8;
+  --miss:#B24338; --miss-tint:#FAEAE8;
+  --red:#C0272D;
+  --r:14px;
+  --shadow:0 2px 4px rgba(36,28,26,.05), 0 12px 28px rgba(36,28,26,.10);
+  --display:"Noto Serif SC","Songti SC","Source Han Serif SC","SimSun",serif;
+  --body:"Noto Sans SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:var(--body); color:var(--ink); line-height:1.75;
+  background:linear-gradient(180deg,#FDF9F4 0%,#FBEFE1 15%,#F6DDC4 30%,
+    #E9BC97 47%,#C99274 62%,#8B7180 78%,#3B4A5C 100%);
+}
+
+/* 进度标尺 —— 从出门到回家 */
+.rail{position:fixed; left:24px; top:50%; transform:translateY(-50%); z-index:50}
+.rail-item{display:flex; align-items:center; gap:10px; height:58px; position:relative}
+.rail-item::before{content:""; position:absolute; left:5px; top:50%; width:2px; height:58px; background:rgba(59,74,92,.28)}
+.rail-item:last-child::before{display:none}
+.rail-dot{width:12px; height:12px; border-radius:50%; background:rgba(59,74,92,.32); transition:.35s; flex:none}
+.rail-label{font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:rgba(59,74,92,.62); white-space:nowrap; transition:.35s}
+.rail-item.on .rail-dot{background:var(--sail); box-shadow:0 0 0 5px rgba(192,57,43,.18); transform:scale(1.15)}
+.rail-item.on .rail-label{color:var(--sail-deep); font-weight:700}
+@media (min-width:1100px){
+  .rail-item:nth-child(n+4) .rail-label{color:rgba(255,255,255,.74)}
+  .rail-item:nth-child(n+4) .rail-dot{background:rgba(255,255,255,.5)}
+  .rail-item:nth-child(n+4)::before{background:rgba(255,255,255,.32)}
+  .rail-item.on:nth-child(n+4) .rail-label{color:#fff}
+}
+
+.wrap{max-width:840px; margin:0 auto; padding:0 22px 90px}
+
+header.hero{padding:58px 0 28px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--sail-deep); margin:0 0 12px}
+h1{font-family:var(--display); font-size:clamp(32px,6vw,54px); line-height:1.14; margin:0 0 6px; font-weight:800}
+.sub{font-size:18px; color:var(--sail-deep); margin:0 0 24px; font-weight:600}
+.idbox{background:var(--paper); border-radius:var(--r); padding:18px 18px 20px; box-shadow:var(--shadow)}
+.idask{font-size:15px; font-weight:700; color:var(--sail-deep); margin:0 0 12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.idloading{font-size:15px; color:var(--ink-soft); margin:0}
+.grid{display:flex; flex-wrap:wrap; gap:8px}
+.grid button{font-family:var(--body); font-size:16px; font-weight:700; cursor:pointer; min-width:64px; min-height:48px; padding:8px 14px; border-radius:10px; border:1px solid var(--line); background:#FFFCF9; color:var(--ink); transition:.15s; line-height:1.25}
+.grid button:hover{border-color:var(--dusk); background:var(--tint)}
+.grid button small{display:block; font-size:11.5px; font-weight:500; color:var(--ink-soft)}
+.mini{font-family:var(--body); font-size:13px; font-weight:600; cursor:pointer; border-radius:8px; padding:6px 12px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft)}
+.mini:hover{border-color:var(--dusk); color:var(--sail-deep)}
+.hi{font-family:var(--display); font-size:22px; font-weight:800; margin:0 0 4px}
+.hi span{color:var(--sail)}
+.mates{font-size:14.5px; color:var(--ink-soft); margin:0 0 12px}
+.manualrow{display:flex; flex-wrap:wrap; gap:10px}
+.manualrow label{display:flex; align-items:center; gap:8px; flex:1 1 150px; font-size:14px; color:var(--ink-soft)}
+.manualrow input{flex:1; min-width:0; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-family:var(--body); font-size:15px; background:#FFFCF9; color:var(--ink)}
+.manualrow input:focus{outline:2px solid var(--dusk); outline-offset:1px}
+.uploadbox{border-radius:11px; padding:12px 16px; margin-top:14px; font-size:14.5px; font-weight:600}
+.uploadbox.ok{background:var(--good-tint); color:#1D5236}
+.uploadbox.bad{background:var(--miss-tint); color:#8A2F27}
+.uploadbox.wait{background:var(--tint); color:var(--ink-soft)}
+
+section.task{background:var(--paper); border-radius:var(--r); padding:30px 30px 34px; margin:26px 0; box-shadow:var(--shadow); scroll-margin-top:20px}
+.tasknum{font-family:var(--mono); font-size:12px; letter-spacing:.16em; color:var(--sail); font-weight:700; margin:0 0 6px}
+h2{font-family:var(--display); font-size:26px; line-height:1.3; margin:0 0 8px; font-weight:700}
+h3{font-size:17px; margin:26px 0 12px; color:var(--sail-deep); display:flex; align-items:center; gap:9px}
+h3 .n{font-family:var(--mono); font-size:12px; background:var(--sea); color:#fff; border-radius:20px; padding:3px 10px; letter-spacing:.06em}
+.hint{font-size:15px; color:var(--ink-soft); margin:0 0 20px}
+.hint strong{color:var(--sail-deep)}
+.key{color:var(--red); font-weight:700}
+
+.q{border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:11px; background:#FFFCF9}
+.q.right{background:var(--good-tint); border-color:var(--good)}
+.q.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.q .stem{font-size:16px; margin:0 0 11px}
+.q .stem b{color:var(--sail-deep)}
+.opts{display:flex; flex-wrap:wrap; gap:8px}
+.opts button{font-family:var(--body); font-size:14px; font-weight:600; cursor:pointer; border-radius:9px; padding:9px 15px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s; text-align:left}
+.opts button:hover{border-color:var(--dusk); color:var(--sail-deep)}
+.opts button.picked{background:var(--ink); color:#fff; border-color:var(--ink)}
+.opts button:disabled{cursor:default}
+.opts button.picked:disabled{opacity:1}
+.opts button:disabled:not(.picked){opacity:.5}
+.fb{font-size:14px; font-weight:600; margin:10px 0 0; display:none}
+.q.right .fb{display:block; color:var(--good)}
+.q.wrong .fb{display:block; color:var(--miss)}
+
+/* 分类题 */
+.pick{border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:11px; background:#FFFCF9}
+.pick.right{background:var(--good-tint); border-color:var(--good)}
+.pick.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.pick .stem{font-size:16px; margin:0 0 11px}
+.pick .fb{font-size:14px; font-weight:600; margin:10px 0 0; display:none}
+.pick.right .fb, .pick.wrong .fb{display:block}
+.pick.right .fb{color:var(--good)} .pick.wrong .fb{color:var(--miss)}
+.pbtns{display:flex; gap:8px; flex-wrap:wrap}
+.pbtns button{flex:0 0 auto; font-family:var(--body); font-size:14px; font-weight:700; cursor:pointer; border-radius:9px; padding:9px 18px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s}
+.pbtns button:hover{border-color:var(--dusk); color:var(--sail-deep)}
+.pbtns button.picked{background:var(--sea); color:#fff; border-color:var(--sea)}
+.pbtns button:disabled{cursor:default}
+.pbtns button:disabled:not(.picked){opacity:.45}
+
+/* 概念图解卡 */
+.quad{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:6px 0 20px}
+.trio{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:6px 0 20px}
+.tcard{border-radius:12px; padding:14px 15px}
+.tcard h4{margin:0 0 4px; font-family:var(--display); font-size:18px}
+.tcard .one{font-size:12.5px; margin:0 0 9px; color:var(--ink-soft)}
+.tcard svg{width:100%; height:58px; display:block; margin-bottom:8px}
+.tcard .eg{font-size:13px; margin:0; line-height:1.65; background:rgba(255,255,255,.78); border-radius:7px; padding:7px 9px}
+.tcard.shape{background:#E7EEF1} .tcard.shape h4{color:var(--sea)}
+.tcard.color{background:#FBE9E7} .tcard.color h4{color:var(--sail)}
+.tcard.sound{background:#FBF0E0} .tcard.sound h4{color:#9A6A22}
+.tcard.act{background:#EAF0E7} .tcard.act h4{color:#4A6B3C}
+.tcard.fu{background:#E7EEF1} .tcard.fu h4{color:var(--sea)}
+.tcard.zhao{background:#FBE9E7} .tcard.zhao h4{color:var(--sail)}
+.tcard.bi{background:#FBF0E0} .tcard.bi h4{color:#9A6A22}
+
+.stances{display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:14px}
+.stances button{padding:14px 8px; font-size:15px; font-weight:700; cursor:pointer; border-radius:9px; background:#FFFCF9; border:1px solid var(--line); color:var(--ink-soft); font-family:var(--body); text-align:left}
+.stances button:hover{border-color:var(--dusk)}
+.stances button.picked{background:var(--sea); color:#fff; border-color:var(--sea)}
+label.fieldlab{font-size:15px; font-weight:600; display:block; margin:16px 0 6px}
+textarea{width:100%; border:1px solid var(--line); border-radius:9px; padding:11px 13px; font-family:var(--body); font-size:16px; background:#FFFCF9; color:var(--ink); resize:vertical}
+textarea:focus{outline:2px solid var(--dusk); outline-offset:1px}
+.viewcards{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:6px 0}
+.vc{border-radius:11px; padding:12px 14px; font-size:14px; line-height:1.6}
+.vc.a{background:var(--sea-tint); color:#22434F}
+.vc.b{background:var(--dusk-tint); color:#8A5220}
+.note{font-size:13.5px; color:var(--ink-soft); background:var(--tint); border-radius:9px; padding:11px 13px; margin-top:14px}
+.frame{border:1px dashed var(--dusk); border-radius:10px; padding:11px 14px; font-size:14.5px; background:var(--dusk-tint); color:#8A5220; margin:10px 0 0}
+.frame b{color:var(--sail-deep)}
+
+.btn{font-family:var(--body); font-size:15px; font-weight:700; cursor:pointer; border-radius:10px; padding:13px 24px; border:1px solid transparent; transition:.18s}
+.btn-line{background:var(--paper); color:var(--sail-deep); border-color:var(--dusk)}
+.btn-line:hover{background:var(--tint)}
+.btn-rose{background:var(--sail); color:#fff}
+.btn-rose:hover{filter:brightness(.93)}
+.actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
+button:focus-visible{outline:3px solid var(--dusk); outline-offset:2px}
+.progress{font-family:var(--mono); font-size:13px; color:var(--ink-soft); background:var(--tint); border-radius:9px; padding:8px 14px; display:inline-block; margin-top:12px}
+
+.submitzone{background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.32); border-radius:var(--r); padding:26px 28px; margin-top:30px; color:#F2ECE6; backdrop-filter:blur(6px)}
+.submitzone h3{font-family:var(--display); margin:0 0 6px; font-size:22px; color:#fff; display:block}
+.submitzone p{margin:0 0 18px; font-size:14px; color:#DCD3CB}
+.saveflag{font-family:var(--mono); font-size:12px; color:#C4BAB2; margin-left:4px}
+.result{display:none; background:var(--paper); border-radius:var(--r); padding:32px 30px; margin-top:18px; box-shadow:var(--shadow); color:var(--ink)}
+.result.show{display:block; animation:pop .4s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes pop{from{opacity:0; transform:scale(.96) translateY(8px)} to{opacity:1; transform:none}}
+.medalrow{display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+.medal{width:104px; height:104px; flex:none}
+.rankname{font-family:var(--display); font-size:30px; font-weight:800; margin:0}
+.rankline{font-size:15px; color:var(--ink-soft); margin:4px 0 0}
+.bigscore{font-family:var(--mono); font-size:38px; font-weight:700; color:var(--sail-deep); margin:0}
+.bd{margin-top:22px}
+.bdrow{display:grid; grid-template-columns:1fr 62px; gap:12px; align-items:center; font-size:15px; margin-bottom:2px}
+.bar{grid-column:1/-1; height:8px; border-radius:6px; background:var(--tint); overflow:hidden; margin:4px 0 12px}
+.bar span{display:block; height:100%; background:var(--sea); border-radius:6px; transition:width .8s ease}
+.bdrow .v{font-family:var(--mono); font-size:14px; text-align:right; color:var(--ink-soft)}
+.advice{background:var(--dusk-tint); border-radius:11px; padding:14px 16px; margin-top:18px; font-size:15px}
+.advice b{color:var(--sail)}
+.pending{background:var(--sea-tint); border-radius:11px; padding:12px 16px; margin-top:12px; font-size:14px; color:#22434F}
+
+@media (max-width:1099px){ .rail{display:none} }
+@media (max-width:880px){ .quad{grid-template-columns:1fr 1fr} }
+@media (max-width:620px){
+  .wrap{padding:0 14px 60px}
+  section.task{padding:22px 18px 26px}
+  .quad,.trio{grid-template-columns:1fr}
+  .stances,.viewcards{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} html{scroll-behavior:auto} }
+@media print{ body{background:#fff} .rail,.actions,.submitzone .actions,.opts,.pbtns{display:none} section.task{box-shadow:none; border:1px solid #ccc; break-inside:avoid} }
+</style>
+</head>
+<body>
+
+<nav class="rail" aria-label="进度">
+  <div class="rail-item" data-rail="s1"><span class="rail-dot"></span><span class="rail-label">词语过关</span></div>
+  <div class="rail-item" data-rail="s2"><span class="rail-dot"></span><span class="rail-label">看见游乐场</span></div>
+  <div class="rail-item" data-rail="s3"><span class="rail-dot"></span><span class="rail-label">作者的心思</span></div>
+  <div class="rail-item" data-rail="s4"><span class="rail-dot"></span><span class="rail-label">读懂这份牵挂</span></div>
+  <div class="rail-item" data-rail="s5"><span class="rail-dot"></span><span class="rail-label">读后说</span></div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">中二高级华文 · 单元五第三课</p>
+  <h1>如果走散了</h1>
+  <p class="sub">走散的是人，没有走散的是牵挂</p>
+  <div class="idbox">
+    <p class="idloading" id="idLoading">正在连接班级名单……</p>
+
+    <div id="idPickCls" style="display:none">
+      <p class="idask">第一步：点你的班级</p>
+      <div class="grid" id="clsGrid"></div>
+    </div>
+
+    <div id="idPickSid" style="display:none">
+      <p class="idask">第二步：点你的学号 <button class="mini" id="backCls">换班级</button></p>
+      <div class="grid" id="sidGrid"></div>
+    </div>
+
+    <div id="idCard" style="display:none">
+      <p class="hi" id="hiLine"></p>
+      <p class="mates" id="mateLine"></p>
+      <button class="mini" id="notMe">不是我，重新选</button>
+    </div>
+
+    <div id="idManual" style="display:none">
+      <p class="idask">暂时连不上班级名单，请自己填写</p>
+      <div class="manualrow">
+        <label>姓名 <input type="text" data-save="name" placeholder="写上你的名字"></label>
+        <label>班级 <input type="text" data-save="class" placeholder="例：205"></label>
+        <label>组别 <input type="text" data-save="group" placeholder="第几组"></label>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 任务一：词语 ============ -->
+<section class="task" id="s1">
+  <p class="tasknum">任务一</p>
+  <h2>词语过关：放对地方才算会</h2>
+  <p class="hint">词语的意思课上已经讲过，这里只考<strong>你会不会用</strong>。每题只能点一次，点了就锁住，<strong>看清楚解释再往下走</strong>。</p>
+
+  <h3><span class="n">A</span>放回课文里，它是什么意思？</h3>
+  <div id="vocA"></div>
+
+  <h3><span class="n">B</span>选一个词填进去</h3>
+  <div id="vocB"></div>
+
+  <h3><span class="n">C</span>火眼金睛</h3>
+  <div id="vocC"></div>
+
+  <p class="progress" id="pg1">已完成 0 / 12</p>
+</section>
+
+<!-- ============ 任务二：场景描写四个角度 ============ -->
+<section class="task" id="s2">
+  <p class="tasknum">任务二 · 阅读技能</p>
+  <h2>看见游乐场：形态 · 色彩 · 声音 · 人的活动</h2>
+  <p class="hint">上一课《雨树》学过：写景物要从<span class="key">形态</span>、<span class="key">色彩</span>、<span class="key">声音</span>三个角度下手。这一课第 13 段又多了一样——<span class="key">人的活动</span>。有了人在动，场景才不像一张照片。先看清四者的分别，再判断。</p>
+
+  <div class="quad">
+    <div class="tcard shape">
+      <h4>形态</h4>
+      <p class="one">它长成什么样子</p>
+      <svg viewBox="0 0 200 58" role="img" aria-label="形态：大船与桅杆的轮廓">
+        <path d="M46 40 h108 l-14 12 H60 Z" fill="none" stroke="#3E6E82" stroke-width="2"/>
+        <path d="M100 40 V10" stroke="#3E6E82" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M100 12 q26 8 0 18 Z" fill="none" stroke="#3E6E82" stroke-width="2"/>
+      </svg>
+      <p class="eg">气派十足的大船 · 高高的桅杆</p>
+    </div>
+    <div class="tcard color">
+      <h4>色彩</h4>
+      <p class="one">它是什么颜色</p>
+      <svg viewBox="0 0 200 58" role="img" aria-label="色彩：红色与褪色的对照">
+        <circle cx="72" cy="29" r="18" fill="#D6564A"/>
+        <circle cx="128" cy="29" r="18" fill="#D6564A" opacity=".35"/>
+      </svg>
+      <p class="eg">俏皮的红色船帆 · 不如往日鲜艳</p>
+    </div>
+    <div class="tcard sound">
+      <h4>声音</h4>
+      <p class="one">在那里听见什么</p>
+      <svg viewBox="0 0 200 58" role="img" aria-label="声音：来回摆动的声波">
+        <path d="M48 29 q13-15 26 0 q13 15 26 0 q13-15 26 0 q13 15 26 0" fill="none" stroke="#C08A2E" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <p class="eg">秋千发出咿咿呀呀的声音</p>
+    </div>
+    <div class="tcard act">
+      <h4>人的活动</h4>
+      <p class="one">谁在那里做什么</p>
+      <svg viewBox="0 0 200 58" role="img" aria-label="人的活动：孩子在奔跑">
+        <circle cx="80" cy="16" r="6" fill="none" stroke="#5A7F49" stroke-width="2"/>
+        <path d="M80 22 v14 M80 26 l-10 6 M80 26 l10 6 M80 36 l-9 12 M80 36 l9 12" fill="none" stroke="#5A7F49" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="128" cy="18" r="5" fill="none" stroke="#5A7F49" stroke-width="2"/>
+        <path d="M128 23 v12 M128 35 l-7 11 M128 35 l7 11" fill="none" stroke="#5A7F49" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <p class="eg">你追我赶 · 坐在长椅上聊天</p>
+    </div>
+  </div>
+
+  <h3><span class="n">A</span>这一句，主要写的是哪一样？</h3>
+  <div id="scene"></div>
+
+  <h3><span class="n">B</span>作者为什么要这样写？</h3>
+  <div id="sceneQ"></div>
+
+  <p class="progress" id="pg2">已完成 0 / 8</p>
+</section>
+
+<!-- ============ 任务三：铺垫·照应·对比 ============ -->
+<section class="task" id="s3">
+  <p class="tasknum">任务三 · 本课重点</p>
+  <h2>作者的心思：为什么这一句非写不可</h2>
+  <p class="hint">记叙文里有些句子看起来「顺便提一下」，其实<strong>动不得</strong>。作者常用三种安排——先看清三者的分别，再判断。</p>
+
+  <div class="trio">
+    <div class="tcard fu">
+      <h4>铺垫</h4>
+      <p class="one">前面先埋，后面才说得通</p>
+      <svg viewBox="0 0 200 58" role="img" aria-label="铺垫：前面埋线，后面接上">
+        <circle cx="46" cy="29" r="7" fill="#3E6E82"/>
+        <path d="M53 29 H150" stroke="#3E6E82" stroke-width="2" stroke-dasharray="6 5"/>
+        <path d="M143 22 l9 7 -9 7" fill="none" stroke="#3E6E82" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <p class="eg">先写母亲患了失智症，后面走失才不突然。</p>
+    </div>
+    <div class="tcard zhao">
+      <h4>照应</h4>
+      <p class="one">后面回过头去对上前面</p>
+      <svg viewBox="0 0 200 58" role="img" aria-label="照应：前后互相呼应">
+        <circle cx="50" cy="34" r="7" fill="#D6564A"/>
+        <circle cx="150" cy="34" r="7" fill="#D6564A"/>
+        <path d="M50 30 q50-26 100 0" fill="none" stroke="#D6564A" stroke-width="2"/>
+      </svg>
+      <p class="eg">前面写母亲坐长椅，后面又出现坐长椅的妈妈。</p>
+    </div>
+    <div class="tcard bi">
+      <h4>对比</h4>
+      <p class="one">两样相反的摆在一起</p>
+      <svg viewBox="0 0 200 58" role="img" aria-label="对比：两边相反">
+        <rect x="46" y="14" width="44" height="30" rx="5" fill="#C08A2E"/>
+        <rect x="110" y="14" width="44" height="30" rx="5" fill="#C08A2E" opacity=".3"/>
+        <path d="M100 12 V46" stroke="#C08A2E" stroke-width="2" stroke-dasharray="4 4"/>
+      </svg>
+      <p class="eg">从前鲜艳，现在褪色；先前烦躁，后来平静。</p>
+    </div>
+  </div>
+
+  <h3><span class="n">A</span>这一句是哪一种安排？</h3>
+  <div id="struct"></div>
+
+  <h3><span class="n">B</span>删掉行不行？</h3>
+  <div id="structQ"></div>
+
+  <p class="progress" id="pg3">已完成 0 / 8</p>
+</section>
+
+<!-- ============ 任务四：读懂内容与情感 ============ -->
+<section class="task" id="s4">
+  <p class="tasknum">任务四</p>
+  <h2>读懂这份牵挂</h2>
+  <p class="hint">这篇文章表面在写一次<strong>找人</strong>，其实句句都在写<strong>亲情</strong>。下面几题要回到课文里找根据，不能凭印象猜。</p>
+  <div id="comp"></div>
+  <p class="progress" id="pg4">已完成 0 / 6</p>
+</section>
+
+<!-- ============ 任务五：读后说 ============ -->
+<section class="task" id="s5">
+  <p class="tasknum">任务五 · 读后说</p>
+  <h2>有人说：社区的人情味比居住环境更重要。你同意吗？</h2>
+  <p class="hint">这一题<strong>没有标准答案</strong>，但光说「我同意」不算数——要说出<span class="key">课文哪里看得出来</span>，再说<span class="key">你自己的组屋区、邻里的例子</span>。</p>
+
+  <div class="stances" id="stances">
+    <button data-v="同意 · 邻居认得你">同意：邻居认得你，走失了才有人帮得上忙</button>
+    <button data-v="同意 · 住得再好也孤单">同意：住得再新再好，没有人情味一样孤单</button>
+    <button data-v="不同意 · 环境是基础">不同意：环境安全整洁，生活才有基本保障</button>
+    <button data-v="不同意 · 环境带出交往">不同意：有了好的公共空间，居民才愿意走出家门</button>
+  </div>
+
+  <div class="viewcards">
+    <div class="vc a">课文第 7 段：方阿姨在网上看到寻人启事，马上打电话来说母亲回到了旧组屋区。</div>
+    <div class="vc b">课文第 12 段：方阿姨买了咖喱卜，母亲特地留着，要给「我们」吃。</div>
+  </div>
+
+  <label class="fieldlab">我的说明（先写立场和课文根据，最后一句用下面的句式收尾）</label>
+  <textarea rows="5" data-save="reason" placeholder="我（同意／不同意）这个说法。课文第＿段写……，这说明……。在我住的组屋区，……。"></textarea>
+  <p class="frame">最后一句请套上这个句式：<b>虽然……，但……，也……</b>　例：虽然新组屋的设施样样齐全，但邻居见了面不打招呼，也没有人会在你走失时认出你。</p>
+
+  <p class="note">这一题由<strong>老师另行评分</strong>，不会自动批改。提交后你先看到其他四项的分数。</p>
+</section>
+
+<div class="submitzone">
+  <h3>全部做完了吗？</h3>
+  <p>作答自动保存在这台设备上<span class="saveflag" id="saveflag"></span>。交上去就能看到分数和你的等级。</p>
+  <div class="actions" style="margin:0">
+    <button class="btn btn-rose" id="submitAll">提交，看我的成绩</button>
+    <button class="btn btn-line" onclick="window.print()">打印 / 存成 PDF</button>
+    <button class="btn btn-line" id="clearAll">清空重做</button>
+  </div>
+</div>
+
+<div class="result" id="result"></div>
+
+</div>
+<script>
+/* ==========================================================
+   ①　设置区　—— 老师只需要改这里
+   ========================================================== */
+const CONFIG = {
+  // 把 Google Apps Script 部署后拿到的网址贴在下面这对引号中间
+  // 例：https://script.google.com/macros/s/AKfy....../exec
+  API: "https://script.google.com/macros/s/AKfycbx7eswQp_uV-lSfK9xWhgvEUVdlotqbRSQPL0hiR8_m2CZZ4xkLJjOEo-SeHLYNS_n0/exec",
+  LESSON: "如果走散了"
+};
+/* ========================================================== */
+
+/* ================= 题库 ================= */
+
+/* A · 放回课文语境推词义（4 题） */
+const VOC_A = [
+  ["课文：「母亲去年<b>患</b>上了失智症，不适合独居。」这里的「患」是说母亲——",
+   ["开始担心这种病，心里十分害怕","被送进医院，接受了长期治疗","得了这种病，身体出了状况","知道有这种病，从此格外小心"], 2,
+   "「患」就是得了某种病。看到「患」想成「担心」（如「患得患失」），是望文生义。"],
+  ["课文：「随着时间的<b>流逝</b>，我的心情也越来越沉重。」「流逝」是说时间——",
+   ["一分一秒地过去，再也回不来","像水那样被白白浪费掉，很可惜","过得特别慢，让人等得心里发慌","被别人耽误了，白白错过了机会"], 0,
+   "「逝」是过去、消失。「流逝」只说时间一直往前走，不含浪费或耽误的意思。"],
+  ["课文：「以前和妹妹在游乐场<b>嬉戏</b>的画面。」「嬉戏」是说两人——",
+   ["互相开玩笑，说话很不正经","一边玩一边吵，谁也不肯让谁","做游戏比输赢，争着要拿第一","快快乐乐地玩耍，追来追去"], 3,
+   "「嬉」是玩乐。「嬉戏」是玩得开心，不带开玩笑、争输赢或吵架的意思。"],
+  ["课文：「两位妈妈坐在那里聊天……显得轻松而<b>惬意</b>。」「惬意」是说她们——",
+   ["事情做完了，感到十分轻松，没有负担","心里很满足，觉得舒服自在","想做什么就做什么，一点也不受管束","心情很激动，兴奋得一直说个不停"], 1,
+   "「惬意」是心里满足、舒服。放松跟兴奋不一样，孩子在旁边玩，妈妈是安心，不是激动。"]
+];
+
+/* B · 选词填空（6 题，干扰项限中一至本课已学词语） */
+const VOC_B = [
+  ["出门前，妈妈总是＿＿我们过马路要看两边，回家前一定要打个电话。",
+   ["催促","叮嘱","哀求"], 1,
+   "「叮嘱」是不放心地反复交代。「催促」是叫人快一点，「哀求」是低声下气地求人，语气都不同。"],
+  ["巴士等了半个小时还不来，他越来越＿＿，一直低头看手表。",
+   ["沮丧","拘束","烦躁"], 2,
+   "「烦躁」是心里烦、坐不住。「沮丧」是失望没劲，「拘束」是放不开，都不是等车时的状态。"],
+  ["弟弟对着镜头眨眨眼，做了一个＿＿的鬼脸，把全家人都逗笑了。",
+   ["俏皮","诡异","嘈杂"], 0,
+   "「俏皮」是活泼可爱、带点小机灵。「诡异」是奇怪得让人发毛，用在这里气氛完全反了。"],
+  ["周末午后，爷爷坐在组屋楼下的树荫里泡茶看报，日子过得十分＿＿。",
+   ["忙碌","惬意","富裕"], 1,
+   "「惬意」说的是心里舒服自在。「富裕」说的是钱多，不能拿来形容一个下午。"],
+  ["时间在不知不觉中＿＿，转眼间我们已经升上中二了。",
+   ["流逝","变迁","松懈"], 0,
+   "时间过去用「流逝」。「变迁」说的是事物起了变化（如社会变迁），主语不能是时间本身。"],
+  ["走失的小狗终于回来了，一家人＿＿了整整两天，这才放下心来。",
+   ["探索","发掘","寻找"], 2,
+   "找人找东西用「寻找」。「探索」是研究未知的事，「发掘」是把埋着的东西挖出来。"]
+];
+
+/* C · 火眼金睛（2 题） */
+const VOC_C = [
+  ["下面哪一句<b>用错</b>了？",
+   ["考试成绩迟迟不公布，他等得十分烦躁。","作业一题也不会做，他烦躁地把笔一扔。","听到得奖的消息，她烦躁得跳了起来。"], 2,
+   "「烦躁」只用在心烦、静不下来的时候。得奖是高兴，应该说「兴奋」。把「烦躁」当成情绪强烈的通称，是最常见的错。"],
+  ["下面哪一句用得<b>对</b>？",
+   ["老师叮嘱我们，明天的比赛要早半个小时到。","他叮嘱同学不要吵，声音大得全班都听见。","她叮嘱我把课本借给她，我一时不知怎么办。"], 0,
+   "「叮嘱」是长辈或负责的人不放心地交代。第二句是大声喝止，第三句是向人请求，都不能叫叮嘱。"]
+];
+
+/* 任务二 A · 形态 / 色彩 / 声音 / 人的活动（6 题） */
+const SCENE = [
+  ["依然是那艘气派十足的大船，上面耸立着高高的桅杆。", "shape",
+   "写的是大船和桅杆长什么样子，属于形态。"],
+  ["虽然大船显得有些老旧，但桅杆上仍然挂着俏皮的红色船帆。", "color",
+   "这一句的重点落在「红色」上——全段最亮的一笔颜色就在这里，属于色彩。"],
+  ["两个孩子围着波浪滑梯，你追我赶。", "act",
+   "写的是孩子在做什么，属于人的活动。滑梯本身没有被描写。"],
+  ["随着他们的一起一落，秋千发出咿咿呀呀的声音。", "sound",
+   "「咿咿呀呀」是耳朵听见的，属于声音。"],
+  ["不远处有一条长椅，两位妈妈坐在那里聊天。", "act",
+   "长椅只是交代地点，真正写的是两位妈妈在做什么，属于人的活动。"],
+  ["虽然游乐场的色彩已经不如往日鲜艳……", "color",
+   "「色彩」「鲜艳」都是说颜色。这里写的是颜色淡了，仍然属于色彩。"]
+];
+const SCENE_LABELS = [["shape","形态"],["color","色彩"],["sound","声音"],["act","人的活动"]];
+
+const SCENE_Q = [
+  ["第 13 段写游乐场，作者不但写了大船、滑梯、秋千，还写了孩子你追我赶、妈妈坐着聊天。这样写的好处是——",
+   ["让读者知道这个游乐场一共有多少种设施","场景里有了人的活动，画面就有了生气","说明这个游乐场的管理比从前做得更好","强调「我」和妹妹已经没有地方可以玩了"], 1,
+   "只写物，场景像一张照片；写上人在做什么，场景才动起来。这也是你写作文写景时最容易漏掉的一步。"],
+  ["「随着他们的一起一落，秋千发出咿咿呀呀的声音。」这一句写声音的作用是——",
+   ["说明这个秋千已经很旧了，应该马上更换","说明当时游乐场很安静，只有秋千的声音","让人仿佛听见了童年，画面变得更真切","告诉读者那两个孩子荡得比「我们」还高"], 2,
+   "加上声音，读者就像真的站在游乐场边。只写形态和色彩，画面是没有声音的。"]
+];
+
+/* 任务三 A · 铺垫 / 照应 / 对比（6 题） */
+const STRUCT = [
+  ["第 3 段：「母亲去年患上了失智症，不适合独居。」", "fu",
+   "先交代母亲有失智症，后面她一个人走失、说糊涂话才不会显得突然。这是为后文埋下的线索。"],
+  ["第 5 段：「妹妹还在社交媒体上发了寻人启事。」", "fu",
+   "有了这一句，第 7 段方阿姨才会说「我在网上看到你在找妈妈」。前面不埋，后面那通电话就来得莫名其妙。"],
+  ["第 12 段母亲说：「还好你们记得来游乐场会合。」", "zhao",
+   "这句话回过头去对上了第 10 段母亲当年的叮嘱——「如果走散了，就到游乐场会合」。前后对上，就是照应。"],
+  ["第 13 段：「不远处有一条长椅，两位妈妈坐在那里聊天。」", "zhao",
+   "对上第 10 段「母亲常会坐在游乐场边的长椅上……和邻居话家常」。同一个画面隔了几十年再出现一次。"],
+  ["第 15 段：「之前因焦虑而产生的一丝烦躁早已消散无踪。」", "bi",
+   "跟第 6 段「我的心情也越来越沉重」正好相反。把找人时的焦躁和找到后的平静摆在一起，是对比。"],
+  ["第 14 段：「虽然游乐场的色彩已经不如往日鲜艳，但它仍然承载着我们的快乐。」", "bi",
+   "往日鲜艳／今天褪色，两样相反的摆在同一句里，是对比。褪的是颜色，没褪的是回忆。"]
+];
+const STRUCT_LABELS = [["fu","铺垫"],["zhao","照应"],["bi","对比"]];
+
+const STRUCT_Q = [
+  ["第 10 段最后一句：「那时候，母亲常会坐在游乐场边的长椅上，一边看我们玩耍，一边和邻居话家常。」把这一句删掉行不行？",
+   ["行，删了以后故事反而更紧凑，读起来更痛快","不行，它跟后文两位妈妈坐长椅的画面对上","行，它写的是从前的事，跟找母亲没有关系","不行，它说明母亲当年很喜欢跟邻居聊闲话"], 1,
+   "这一句一头连着后文两位妈妈坐长椅的画面（照应），一头交代了母亲为什么把这个游乐场记得那么牢（铺垫）。删了，第 13 段那一笔就落空了。"],
+  ["第 13 段：「桅杆上仍然挂着俏皮的红色船帆。」把「俏皮」两个字去掉，影响是——",
+   ["内容会变得不完整，读者看不懂在写什么","句子会变成病句，读起来不通顺也不合语法","气氛会变得没那么欢快，画面不再活泼","红色船帆会变成另一种颜色，前后就矛盾了"], 2,
+   "去掉「俏皮」，句子照样通、意思照样懂，但那份轻快的童年气氛就淡了。所以保留比较好——这就是一个形容词的分量。"]
+];
+
+/* 任务四 · 读懂内容与情感（6 题） */
+const COMP = [
+  ["第 3 段：「原以为一切安排得很周全，没想到还是出了问题。」「出了问题」指的是——",
+   ["女佣在照顾母亲的时候，自己也生病倒下了","母亲一个人离开了家，家人找不到她","妻子跟女佣为了照顾母亲的事吵了起来","母亲的病情忽然加重，被送进医院去了"], 1,
+   "上一句妻子在电话里喊「妈妈不见了」，「出了问题」指的就是这件事：安排了女佣，母亲还是走失了。"],
+  ["第 6 段：「随着时间的流逝，我的心情也越来越沉重。」最主要的原因是——",
+   ["找了这么久还是没找到，他越来越担心","妹妹和妻子一直在旁边，让他觉得很有压力","他还没报警，怕警察怪他没有照顾好母亲","他想起自己当初不该把母亲接过来一起住"], 0,
+   "时间越拖越久，母亲又有失智症，在外面越久越危险——沉重的是对母亲安危的担心。"],
+  ["第 8 段妹妹突然说「妈妈一定是去了那个游乐场」，她的根据是——",
+   ["因为母亲一向最喜欢看小孩子在那里玩耍","因为方阿姨在电话里说母亲正在那里等着","母亲从前叮嘱过，走散了就到那里会合","因为那个游乐场离从前的家最近，最好找"], 2,
+   "第 10 段妹妹自己说明了：小时候上巴刹，母亲总叮嘱走散了就到游乐场会合。方阿姨只说母亲回到了旧组屋区，并没有说游乐场。"],
+  ["第 12 段母亲说：「阿达、阿妹，你们刚刚跑去哪里了？」这句话最能说明——",
+   ["母亲怪他们不该丢下自己一个人走开","母亲把眼前的儿女当成了小时候的孩子","母亲其实很清醒，只是故意跟他们开玩笑","母亲连自己的儿女是谁都已经认不出了"], 1,
+   "她记得名字、记得咖喱卜、记得会合的约定，可是把长大的儿女当成了当年的小孩——这正是失智症的记忆错乱。"],
+  ["第 15 段妹妹「转过头去迎着晚风，似乎想让风吹干眼角的泪痕」，是因为——",
+   ["她被晚风吹得眼睛发酸，忍不住流下眼泪","她怪哥哥没有照顾好母亲，心里很委屈","她太累了，找了一整天终于可以休息了","她心里既感动又心酸，又不想让家人看见"], 3,
+   "母亲病成这样还记得留咖喱卜给儿女，妹妹又感动又难过。「转过头去」这个动作，写的正是她不想让人看见眼泪。"],
+  ["本文以《如果走散了》为题，最主要的用意是——",
+   ["人虽然走散了，母亲心里的牵挂没有走散","提醒读者出门在外要小心，别跟家人走失","说明失智症病人很容易在组屋区里迷路","记录一次寻人的经过，让读者学会怎么找人"], 0,
+   "题目来自母亲当年的那句叮嘱。母亲忘了很多事，却没忘记这个约定——走散的是人，没有走散的是那份牵挂。"]
+];
+
+/* ================= 存储（优先用平台存储，离线时退回浏览器本地） ================= */
+const KEY = "zousan-worksheet-v1";
+const S = {
+  async get(k){
+    try{ if(window.storage){ const r = await window.storage.get(k); if(r && r.value) return r.value; } }catch(e){}
+    try{ return localStorage.getItem(k); }catch(e){ return null; }
+  },
+  async set(k,v){
+    try{ if(window.storage){ await window.storage.set(k,v); return; } }catch(e){}
+    try{ localStorage.setItem(k,v); }catch(e){}
+  },
+  async del(k){
+    try{ if(window.storage){ await window.storage.delete(k); } }catch(e){}
+    try{ localStorage.removeItem(k); }catch(e){}
+  }
+};
+let store = {};
+const flag = document.getElementById("saveflag");
+let saveTimer;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    await S.set(KEY, JSON.stringify(store));
+    flag.textContent = "· 已保存";
+    setTimeout(()=>flag.textContent="", 1500);
+  }, 500);
+}
+document.addEventListener("input", e=>{
+  const el = e.target.closest("[data-save]");
+  if(!el) return; store[el.dataset.save] = el.value; save();
+});
+
+/* ================= 联网工具 ================= */
+function jsonp(url, params){
+  return new Promise(resolve=>{
+    const cb = "cb" + Date.now() + Math.floor(Math.random()*10000);
+    const q = Object.keys(params).map(k=>{
+      const v = params[k];
+      return encodeURIComponent(k) + "=" + encodeURIComponent(typeof v === "object" ? JSON.stringify(v) : v);
+    }).join("&");
+    const s = document.createElement("script");
+    const timer = setTimeout(()=>{ done({ok:false, err:"连线超时"}); }, 15000);
+    function done(d){ clearTimeout(timer); try{ delete window[cb]; }catch(e){} if(s.parentNode) s.parentNode.removeChild(s); resolve(d); }
+    window[cb] = d => done(d);
+    s.onerror = () => done({ok:false, err:"连不上服务器"});
+    s.src = url + (url.indexOf("?")>-1 ? "&" : "?") + q + "&callback=" + cb;
+    document.body.appendChild(s);
+  });
+}
+async function callAPI(params){
+  if(!CONFIG.API) return {ok:false, err:"老师还没填上传网址"};
+  try{
+    const r = await fetch(CONFIG.API, {
+      method:"POST",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify(params),
+      redirect:"follow"
+    });
+    const j = await r.json();
+    if(j && j.ok !== undefined) return j;
+  }catch(e){}
+  const light = Object.assign({}, params);
+  if(light.reason) light.reason = String(light.reason).slice(0,80);
+  return await jsonp(CONFIG.API, light);
+}
+
+/* ================= 名单与学号点选 ================= */
+let ROSTER = [];
+const $ = id => document.getElementById(id);
+
+function showManual(){
+  $("idLoading").style.display = "none";
+  $("idPickCls").style.display = "none";
+  $("idPickSid").style.display = "none";
+  $("idCard").style.display = "none";
+  $("idManual").style.display = "block";
+  document.querySelectorAll("#idManual [data-save]").forEach(el=>{ if(store[el.dataset.save]) el.value = store[el.dataset.save]; });
+}
+function showCard(){
+  const me = ROSTER.find(r => r.cls===store.class && r.sid===store.sid);
+  if(!me){ showPickCls(); return; }
+  store.name = me.name || ("学号 " + me.sid);
+  store.group = me.grp;
+  save();
+  const mates = ROSTER.filter(r => r.cls===me.cls && r.grp===me.grp && r.sid!==me.sid)
+                      .map(r => r.name || ("学号 "+r.sid));
+  $("idLoading").style.display = "none";
+  $("idPickCls").style.display = "none";
+  $("idPickSid").style.display = "none";
+  $("idManual").style.display = "none";
+  $("idCard").style.display = "block";
+  $("hiLine").innerHTML = `你好，${store.name}　<span>${me.cls} 班 · 第 ${me.grp} 组</span>`;
+  $("mateLine").textContent = mates.length ? ("同组组员：" + mates.join("、")) : "这一组目前只有你一个人。";
+}
+function showPickCls(){
+  const classes = [...new Set(ROSTER.map(r=>r.cls))];
+  if(classes.length === 1){ store.class = classes[0]; save(); showPickSid(); return; }
+  const g = $("clsGrid"); g.innerHTML = "";
+  classes.forEach(c=>{
+    const b = document.createElement("button");
+    b.textContent = c + " 班";
+    b.addEventListener("click", ()=>{ store.class = c; store.sid = undefined; save(); showPickSid(); });
+    g.appendChild(b);
+  });
+  $("idLoading").style.display = "none";
+  $("idCard").style.display = "none";
+  $("idPickSid").style.display = "none";
+  $("idManual").style.display = "none";
+  $("idPickCls").style.display = "block";
+}
+function showPickSid(){
+  const list = ROSTER.filter(r => r.cls === store.class)
+                     .sort((a,b)=> (parseInt(a.sid,10)||0) - (parseInt(b.sid,10)||0));
+  const g = $("sidGrid"); g.innerHTML = "";
+  list.forEach(r=>{
+    const b = document.createElement("button");
+    b.innerHTML = r.sid + (r.name ? `<small>${r.name}</small>` : "");
+    b.addEventListener("click", ()=>{ store.sid = r.sid; save(); showCard(); });
+    g.appendChild(b);
+  });
+  $("idLoading").style.display = "none";
+  $("idPickCls").style.display = "none";
+  $("idCard").style.display = "none";
+  $("idManual").style.display = "none";
+  $("idPickSid").style.display = "block";
+}
+$("backCls").addEventListener("click", ()=>{ store.sid = undefined; save(); showPickCls(); });
+$("notMe").addEventListener("click", ()=>{ store.sid = undefined; save(); showPickCls(); });
+
+async function loadRoster(){
+  if(!CONFIG.API){ showManual(); return; }
+  const r = await jsonp(CONFIG.API, {a:"roster"});
+  if(!r || !r.ok || !Array.isArray(r.roster) || !r.roster.length){ showManual(); return; }
+  ROSTER = r.roster.map(x=>({cls:String(x.cls), sid:String(x.sid), name:String(x.name||""), grp:String(x.grp)}));
+  if(store.class && store.sid) showCard();
+  else if(store.class) showPickSid();
+  else showPickCls();
+}
+
+/* ================= 选择题 ================= */
+function renderMCQ(host, list, prefix, opts){
+  list.forEach((item,i)=>{
+    const [stem, choices, ans, why] = item;
+    const id = prefix+i;
+    const d = document.createElement("div");
+    d.className = "q";
+    d.innerHTML = `<p class="stem">${i+1}. ${stem}</p><div class="opts"></div><p class="fb"></p>`;
+    const bar = d.querySelector(".opts");
+    function lock(j){
+      bar.querySelectorAll("button").forEach(x=>x.disabled=true);
+      bar.querySelectorAll("button")[j].classList.add("picked");
+      const ok = j===ans;
+      d.classList.add(ok?"right":"wrong");
+      d.querySelector(".fb").innerHTML = (ok ? "✓ 对了。" : "✗ 正确答案是「"+choices[ans]+"」。") + why;
+    }
+    choices.forEach((c,j)=>{
+      const b = document.createElement("button");
+      b.textContent = (opts && opts.letters ? "ABCD"[j]+"　" : "") + c;
+      b.addEventListener("click", ()=>{ if(store[id]!==undefined) return; store[id]=j; save(); lock(j); updateProgress(); });
+      bar.appendChild(b);
+    });
+    host.appendChild(d);
+    if(store[id]!==undefined) lock(store[id]);
+  });
+}
+
+/* ================= 分类题 ================= */
+function renderPick(host, list, prefix, labels){
+  const dict = {}; labels.forEach(([k,t])=>dict[k]=t);
+  list.forEach((row,i)=>{
+    const [stem, ansKey, why] = row;
+    const id = prefix+i;
+    const d = document.createElement("div");
+    d.className = "pick";
+    d.innerHTML = `<p class="stem">${i+1}. ${stem}</p><div class="pbtns"></div><p class="fb"></p>`;
+    const bar = d.querySelector(".pbtns");
+    function lock(val){
+      bar.querySelectorAll("button").forEach(x=>{ x.disabled=true; if(x.dataset.k===val) x.classList.add("picked"); });
+      const ok = val===ansKey;
+      d.classList.add(ok?"right":"wrong");
+      d.querySelector(".fb").innerHTML = (ok ? "✓ 对了。" : "✗ 这一句是「"+dict[ansKey]+"」。") + why;
+    }
+    labels.forEach(([k,t])=>{
+      const b = document.createElement("button");
+      b.textContent = t; b.dataset.k = k;
+      b.addEventListener("click", ()=>{ if(store[id]!==undefined) return; store[id]=k; save(); lock(k); updateProgress(); });
+      bar.appendChild(b);
+    });
+    host.appendChild(d);
+    if(store[id]!==undefined) lock(store[id]);
+  });
+}
+
+/* ================= 立场 ================= */
+document.querySelectorAll("#stances button").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll("#stances button").forEach(x=>x.classList.remove("picked"));
+    b.classList.add("picked"); store.stance = b.dataset.v; save();
+  });
+});
+
+/* ================= 进度 ================= */
+function cnt(prefix,n){ let c=0; for(let i=0;i<n;i++) if(store[prefix+i]!==undefined) c++; return c; }
+function updateProgress(){
+  document.getElementById("pg1").textContent = `已完成 ${cnt("a",4)+cnt("b",6)+cnt("c",2)} / 12`;
+  document.getElementById("pg2").textContent = `已完成 ${cnt("s",6)+cnt("q",2)} / 8`;
+  document.getElementById("pg3").textContent = `已完成 ${cnt("f",6)+cnt("g",2)} / 8`;
+  document.getElementById("pg4").textContent = `已完成 ${cnt("m",6)} / 6`;
+}
+
+/* ================= 评分 ================= */
+function scoreMCQ(list, prefix){
+  let g=0; list.forEach((it,i)=>{ if(store[prefix+i]===it[2]) g++; }); return g;
+}
+function scorePick(list, prefix){
+  let g=0; list.forEach((it,i)=>{ if(store[prefix+i]===it[1]) g++; }); return g;
+}
+function medalSVG(c1,c2){
+  return `<svg class="medal" viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M32 6 L44 40 L28 46 Z" fill="${c2}" opacity=".55"/>
+    <path d="M68 6 L56 40 L72 46 Z" fill="${c2}" opacity=".55"/>
+    <circle cx="50" cy="62" r="30" fill="${c1}"/>
+    <circle cx="50" cy="62" r="23" fill="none" stroke="${c2}" stroke-width="2.5"/>
+    <path d="M50 47 l4.6 9.4 10.4 1.5 -7.5 7.3 1.8 10.3 -9.3 -4.9 -9.3 4.9 1.8 -10.3 -7.5 -7.3 10.4 -1.5 Z" fill="#fff"/>
+  </svg>`;
+}
+
+document.getElementById("submitAll").addEventListener("click", ()=>{
+  const total = { voc:12, scene:8, struct:8, comp:6 };
+  const got = {
+    voc:    scoreMCQ(VOC_A,"a") + scoreMCQ(VOC_B,"b") + scoreMCQ(VOC_C,"c"),
+    scene:  scorePick(SCENE,"s") + scoreMCQ(SCENE_Q,"q"),
+    struct: scorePick(STRUCT,"f") + scoreMCQ(STRUCT_Q,"g"),
+    comp:   scoreMCQ(COMP,"m")
+  };
+  const answerable = 12+8+8+6;
+  const doneCnt = cnt("a",4)+cnt("b",6)+cnt("c",2)+cnt("s",6)+cnt("q",2)+cnt("f",6)+cnt("g",2)+cnt("m",6);
+  if(doneCnt < answerable){
+    if(!confirm(`还有 ${answerable-doneCnt} 题没做完，确定要提交吗？`)) return;
+  }
+
+  const sum = Object.values(got).reduce((a,b)=>a+b,0);
+  const max = Object.values(total).reduce((a,b)=>a+b,0);
+  const pct = Math.round(sum/max*100);
+
+  let rank, medal, line;
+  if(pct>=90){ rank="牵着母亲的手"; medal=medalSVG("#D9A428","#8A6410"); line="词语、写法、感情全读透了。这份牵挂你真的读懂了。"; }
+  else if(pct>=75){ rank="找到游乐场"; medal=medalSVG("#C4645A","#8E2A20"); line="很稳。把红色的那几题再看一遍，就能升到最高一级。"; }
+  else if(pct>=60){ rank="走在回家路上"; medal=medalSVG("#B79A7C","#6E5540"); line="主要意思读懂了。回头把红色题目的解释读完再走。"; }
+  else { rank="刚刚出发"; medal=medalSVG("#A7A29B","#6B6660"); line="别急。把红色题目的解释读一遍，再点「清空重做」练一次。"; }
+
+  const names = { voc:"任务一　词语过关", scene:"任务二　看见游乐场", struct:"任务三　作者的心思", comp:"任务四　读懂这份牵挂" };
+  const tips = {
+    voc:"重看 C 部分那两题——「烦躁」和「叮嘱」都是用错场合最容易出事的词。",
+    scene:"重读第 13 段，用四支笔分别圈出写形态、写色彩、写声音、写人的活动的句子。写作文时四样都要有。",
+    struct:"记住分辨的窍门：前面先埋、后面才用得上＝铺垫；后面回头对上前面＝照应；两样相反摆一起＝对比。",
+    comp:"重读第 10、12、15 段，注意母亲忘了什么、又记得什么——文章的重点全在这个对比上。"
+  };
+  let weakest=null, weakRate=2;
+  Object.keys(total).forEach(k=>{ const r=got[k]/total[k]; if(r<weakRate){ weakRate=r; weakest=k; } });
+
+  let rows="";
+  Object.keys(total).forEach(k=>{
+    const p = Math.round(got[k]/total[k]*100);
+    rows += `<div class="bdrow"><span>${names[k]}</span><span class="v">${got[k]} / ${total[k]}</span></div><div class="bar"><span style="width:${p}%"></span></div>`;
+  });
+
+  const box = document.getElementById("result");
+  box.innerHTML = `
+    <div class="medalrow">${medal}
+      <div><p class="rankname">${rank}</p><p class="rankline">${line}</p></div>
+      <div style="margin-left:auto; text-align:right"><p class="bigscore">${sum} / ${max}</p><p class="rankline">正确率 ${pct}%</p></div>
+    </div>
+    <div class="bd">${rows}</div>
+    ${weakest?`<div class="advice"><b>下一步：</b>${names[weakest].replace(/　/g,' ')}是你最需要再看一次的。${tips[weakest]}</div>`:""}
+    <div class="pending"><b>任务五（读后说）由老师另行评分</b>，不计入上面的 ${max} 分。老师会看你有没有写出「课文根据」「自己的例子」，以及最后一句有没有用上「虽然……但……也……」。</div>
+    <div class="uploadbox wait" id="upBox">正在把成绩传给老师……</div>
+    <div class="actions"><button class="btn btn-line" id="copyRes">复制成绩交给老师</button><button class="btn btn-line" id="retryUp" style="display:none">重新上传</button></div>`;
+  box.classList.add("show");
+  box.scrollIntoView({behavior:"smooth", block:"start"});
+  store.finalScore = sum+"/"+max; save();
+
+  /* —— 上传成绩 —— */
+  const LABEL = {a:"一A", b:"一B", c:"一C", s:"二A", q:"二B", f:"三A", g:"三B", m:"四"};
+  function buildDetail(){
+    const out = [];
+    const mcq = (list,p)=>list.forEach((it,i)=>{
+      const my = store[p+i];
+      out.push([LABEL[p]+(i+1), my===undefined?"未答":"ABCD"[my], "ABCD"[it[2]], my===it[2]?1:0]);
+    });
+    const pick = (list,p,labels)=>{
+      const d={}; labels.forEach(([k,t])=>d[k]=t);
+      list.forEach((it,i)=>{
+        const my = store[p+i];
+        out.push([LABEL[p]+(i+1), my===undefined?"未答":d[my], d[it[1]], my===it[1]?1:0]);
+      });
+    };
+    mcq(VOC_A,"a"); mcq(VOC_B,"b"); mcq(VOC_C,"c");
+    pick(SCENE,"s",SCENE_LABELS); mcq(SCENE_Q,"q");
+    pick(STRUCT,"f",STRUCT_LABELS); mcq(STRUCT_Q,"g");
+    mcq(COMP,"m");
+    return out;
+  }
+  async function doUpload(){
+    const upBox = document.getElementById("upBox");
+    const retry = document.getElementById("retryUp");
+    if(!CONFIG.API){
+      upBox.className = "uploadbox bad";
+      upBox.textContent = "这份学习单没有连上老师的成绩表，请按下面的「复制成绩交给老师」。";
+      return;
+    }
+    upBox.className = "uploadbox wait"; upBox.textContent = "正在把成绩传给老师……";
+    retry.style.display = "none";
+    const res = await callAPI({
+      a:"submit", lesson:CONFIG.LESSON,
+      cls: store.class||"", sid: store.sid||"", name: store.name||"", grp: store.group||"",
+      sc: sum, mx: max, pct: pct, parts: got,
+      stance: store.stance||"", reason: store.reason||"",
+      detail: buildDetail()
+    });
+    if(res && res.ok){
+      upBox.className = "uploadbox ok";
+      upBox.textContent = "✓ 成绩已经交给老师了，不用再做别的。";
+    }else{
+      upBox.className = "uploadbox bad";
+      upBox.textContent = "✗ 上传失败（" + ((res&&res.err)||"未知原因") + "）。请按「重新上传」；还是不行就按「复制成绩交给老师」。";
+      retry.style.display = "inline-block";
+      retry.onclick = doUpload;
+    }
+  }
+  doUpload();
+
+  document.getElementById("copyRes").addEventListener("click", async ()=>{
+    const t = `如果走散了 · 阅读任务单成绩
+姓名：${store.name||"（未填）"}　班级：${store.class||"（未填）"}　组别：${store.group||"（未填）"}
+等级：${rank}　总分：${sum}/${max}（${pct}%）
+${Object.keys(total).map(k=>names[k].replace(/　/g," ")+"："+got[k]+"/"+total[k]).join("\n")}
+读后说 · 我选的是：${store.stance||"（未选）"}
+读后说 · 我的说明：${store.reason||"（未写）"}`;
+    try{
+      await navigator.clipboard.writeText(t);
+      const b = document.getElementById("copyRes");
+      b.textContent = "已复制 ✓";
+      setTimeout(()=>b.textContent="复制成绩交给老师", 1800);
+    }catch(e){ window.prompt("按 Ctrl/Cmd + C 复制：", t); }
+  });
+});
+
+document.getElementById("clearAll").addEventListener("click", async ()=>{
+  if(!confirm("清空所有作答，重新开始？")) return;
+  store = {};
+  await S.del(KEY);
+  location.reload();
+});
+
+/* ================= 进度标尺 ================= */
+const rails = document.querySelectorAll(".rail-item");
+const obs = new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting) rails.forEach(r=>r.classList.toggle("on", r.dataset.rail===e.target.id)); });
+}, {rootMargin:"-45% 0px -45% 0px"});
+["s1","s2","s3","s4","s5"].forEach(id=>{ const el=document.getElementById(id); if(el) obs.observe(el); });
+
+/* ================= 启动 ================= */
+(async function init(){
+  const raw = await S.get(KEY);
+  if(raw){ try{ store = JSON.parse(raw); }catch(e){ store = {}; } }
+  renderMCQ(document.getElementById("vocA"), VOC_A, "a", {letters:true});
+  renderMCQ(document.getElementById("vocB"), VOC_B, "b");
+  renderMCQ(document.getElementById("vocC"), VOC_C, "c", {letters:true});
+  renderPick(document.getElementById("scene"), SCENE, "s", SCENE_LABELS);
+  renderMCQ(document.getElementById("sceneQ"), SCENE_Q, "q");
+  renderPick(document.getElementById("struct"), STRUCT, "f", STRUCT_LABELS);
+  renderMCQ(document.getElementById("structQ"), STRUCT_Q, "g");
+  renderMCQ(document.getElementById("comp"), COMP, "m");
+  document.querySelectorAll("[data-save]").forEach(el=>{ if(store[el.dataset.save]) el.value = store[el.dataset.save]; });
+  if(store.stance) document.querySelectorAll("#stances button").forEach(b=>b.classList.toggle("picked", b.dataset.v===store.stance));
+  updateProgress();
+  loadRoster();
+})();
+</script>
+</body>
+</html>
