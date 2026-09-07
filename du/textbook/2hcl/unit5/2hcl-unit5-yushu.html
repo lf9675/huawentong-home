@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>雨树 · 阅读任务单</title>
+<style>
+:root{
+  --ink:#1C2A21; --ink-soft:#4E6154;
+  --paper:#FFFFFF; --tint:#EEF5EF; --line:#D7E4D9;
+  --leaf:#2F6B45; --leaf-deep:#1E4A2E;
+  --blossom:#BC4B76; --blossom-tint:#FBEDF2;
+  --bark:#8A5A34; --bark-tint:#F6EEE5;
+  --good:#2F6B45; --good-tint:#E5F2E8;
+  --miss:#B24338; --miss-tint:#FAEAE8;
+  --red:#C0272D;
+  --r:14px;
+  --shadow:0 2px 4px rgba(28,42,33,.05), 0 12px 28px rgba(28,42,33,.10);
+  --display:"Noto Serif SC","Songti SC","Source Han Serif SC","SimSun",serif;
+  --body:"Noto Sans SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:var(--body); color:var(--ink); line-height:1.75;
+  background:linear-gradient(180deg,#F7F4EE 0%,#F3E6EA 18%,#EBD9E0 32%,
+    #CFDCC9 52%,#9BB894 70%,#5F8A62 86%,#33573A 100%);
+}
+
+/* 进度标尺 —— 从树梢到树根 */
+.rail{position:fixed; left:24px; top:50%; transform:translateY(-50%); z-index:50}
+.rail-item{display:flex; align-items:center; gap:10px; height:58px; position:relative}
+.rail-item::before{content:""; position:absolute; left:5px; top:50%; width:2px; height:58px; background:rgba(51,87,58,.28)}
+.rail-item:last-child::before{display:none}
+.rail-dot{width:12px; height:12px; border-radius:50%; background:rgba(51,87,58,.32); transition:.35s; flex:none}
+.rail-label{font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:rgba(51,87,58,.62); white-space:nowrap; transition:.35s}
+.rail-item.on .rail-dot{background:var(--blossom); box-shadow:0 0 0 5px rgba(188,75,118,.18); transform:scale(1.15)}
+.rail-item.on .rail-label{color:var(--leaf-deep); font-weight:700}
+@media (min-width:1100px){
+  .rail-item:nth-child(n+4) .rail-label{color:rgba(255,255,255,.74)}
+  .rail-item:nth-child(n+4) .rail-dot{background:rgba(255,255,255,.5)}
+  .rail-item:nth-child(n+4)::before{background:rgba(255,255,255,.32)}
+  .rail-item.on:nth-child(n+4) .rail-label{color:#fff}
+}
+
+.wrap{max-width:840px; margin:0 auto; padding:0 22px 90px}
+
+header.hero{padding:58px 0 28px}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--leaf-deep); margin:0 0 12px}
+h1{font-family:var(--display); font-size:clamp(32px,6vw,54px); line-height:1.14; margin:0 0 6px; font-weight:800}
+.sub{font-size:18px; color:var(--leaf-deep); margin:0 0 24px; font-weight:600}
+.idbox{background:var(--paper); border-radius:var(--r); padding:18px 18px 20px; box-shadow:var(--shadow)}
+.idask{font-size:15px; font-weight:700; color:var(--leaf-deep); margin:0 0 12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.idloading{font-size:15px; color:var(--ink-soft); margin:0}
+.grid{display:flex; flex-wrap:wrap; gap:8px}
+.grid button{font-family:var(--body); font-size:16px; font-weight:700; cursor:pointer; min-width:64px; min-height:48px; padding:8px 14px; border-radius:10px; border:1px solid var(--line); background:#FBFDFB; color:var(--ink); transition:.15s; line-height:1.25}
+.grid button:hover{border-color:var(--leaf); background:var(--tint)}
+.grid button small{display:block; font-size:11.5px; font-weight:500; color:var(--ink-soft)}
+.mini{font-family:var(--body); font-size:13px; font-weight:600; cursor:pointer; border-radius:8px; padding:6px 12px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft)}
+.mini:hover{border-color:var(--leaf); color:var(--leaf-deep)}
+.hi{font-family:var(--display); font-size:22px; font-weight:800; margin:0 0 4px}
+.hi span{color:var(--blossom)}
+.mates{font-size:14.5px; color:var(--ink-soft); margin:0 0 12px}
+.manualrow{display:flex; flex-wrap:wrap; gap:10px}
+.manualrow label{display:flex; align-items:center; gap:8px; flex:1 1 150px; font-size:14px; color:var(--ink-soft)}
+.manualrow input{flex:1; min-width:0; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-family:var(--body); font-size:15px; background:#FBFDFB; color:var(--ink)}
+.manualrow input:focus{outline:2px solid var(--leaf); outline-offset:1px}
+.uploadbox{border-radius:11px; padding:12px 16px; margin-top:14px; font-size:14.5px; font-weight:600}
+.uploadbox.ok{background:var(--good-tint); color:#1D5236}
+.uploadbox.bad{background:var(--miss-tint); color:#8A2F27}
+.uploadbox.wait{background:var(--tint); color:var(--ink-soft)}
+
+section.task{background:var(--paper); border-radius:var(--r); padding:30px 30px 34px; margin:26px 0; box-shadow:var(--shadow); scroll-margin-top:20px}
+.tasknum{font-family:var(--mono); font-size:12px; letter-spacing:.16em; color:var(--blossom); font-weight:700; margin:0 0 6px}
+h2{font-family:var(--display); font-size:26px; line-height:1.3; margin:0 0 8px; font-weight:700}
+h3{font-size:17px; margin:26px 0 12px; color:var(--leaf-deep); display:flex; align-items:center; gap:9px}
+h3 .n{font-family:var(--mono); font-size:12px; background:var(--leaf); color:#fff; border-radius:20px; padding:3px 10px; letter-spacing:.06em}
+.hint{font-size:15px; color:var(--ink-soft); margin:0 0 20px}
+.hint strong{color:var(--leaf-deep)}
+.key{color:var(--red); font-weight:700}
+
+.q{border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:11px; background:#FBFDFB}
+.q.right{background:var(--good-tint); border-color:var(--good)}
+.q.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.q .stem{font-size:16px; margin:0 0 11px}
+.q .stem b{color:var(--leaf-deep)}
+.opts{display:flex; flex-wrap:wrap; gap:8px}
+.opts button{font-family:var(--body); font-size:14px; font-weight:600; cursor:pointer; border-radius:9px; padding:9px 15px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s; text-align:left}
+.opts button:hover{border-color:var(--leaf); color:var(--leaf-deep)}
+.opts button.picked{background:var(--ink); color:#fff; border-color:var(--ink)}
+.opts button:disabled{cursor:default}
+.opts button.picked:disabled{opacity:1}
+.opts button:disabled:not(.picked){opacity:.5}
+.fb{font-size:14px; font-weight:600; margin:10px 0 0; display:none}
+.q.right .fb{display:block; color:var(--good)}
+.q.wrong .fb{display:block; color:var(--miss)}
+
+/* 分类题（三键） */
+.pick{border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:11px; background:#FBFDFB}
+.pick.right{background:var(--good-tint); border-color:var(--good)}
+.pick.wrong{background:var(--miss-tint); border-color:var(--miss)}
+.pick .stem{font-size:16px; margin:0 0 11px}
+.pick .fb{font-size:14px; font-weight:600; margin:10px 0 0; display:none}
+.pick.right .fb, .pick.wrong .fb{display:block}
+.pick.right .fb{color:var(--good)} .pick.wrong .fb{color:var(--miss)}
+.pbtns{display:flex; gap:8px; flex-wrap:wrap}
+.pbtns button{flex:0 0 auto; font-family:var(--body); font-size:14px; font-weight:700; cursor:pointer; border-radius:9px; padding:9px 20px; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft); transition:.15s}
+.pbtns button:hover{border-color:var(--leaf); color:var(--leaf-deep)}
+.pbtns button.picked{background:var(--leaf-deep); color:#fff; border-color:var(--leaf-deep)}
+.pbtns button:disabled{cursor:default}
+.pbtns button:disabled:not(.picked){opacity:.45}
+
+/* 概念图解 */
+.trio{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:6px 0 20px}
+.tcard{border-radius:12px; padding:15px 16px}
+.tcard h4{margin:0 0 4px; font-family:var(--display); font-size:19px}
+.tcard .one{font-size:13px; margin:0 0 10px; color:var(--ink-soft)}
+.tcard svg{width:100%; height:62px; display:block; margin-bottom:9px}
+.tcard .eg{font-size:13.5px; margin:0; line-height:1.7; background:rgba(255,255,255,.75); border-radius:7px; padding:7px 9px}
+.tcard.shape{background:#E7F0E7} .tcard.shape h4{color:var(--leaf-deep)}
+.tcard.color{background:#FBEDF2} .tcard.color h4{color:var(--blossom)}
+.tcard.sound{background:#F6EEE5} .tcard.sound h4{color:var(--bark)}
+
+.ladder{border:1px solid var(--line); border-radius:12px; overflow:hidden; margin:6px 0 20px}
+.rung{display:grid; grid-template-columns:74px 1fr; gap:12px; padding:12px 15px; font-size:16px; align-items:baseline}
+.rung + .rung{border-top:1px solid var(--line)}
+.rung .lab{font-family:var(--mono); font-size:12px; letter-spacing:.06em; font-weight:700; text-align:center; border-radius:6px; padding:3px 0}
+.rung.r0{background:#F4F5F3} .rung.r0 .lab{color:#6B7A6E; background:#E4E8E3}
+.rung.r1{background:#E7F0E7} .rung.r1 .lab{color:#fff; background:var(--leaf)}
+.rung.r2{background:#FBEDF2} .rung.r2 .lab{color:#fff; background:var(--blossom)}
+.rung.r3{background:#F6EEE5} .rung.r3 .lab{color:#fff; background:var(--bark)}
+.rung em{font-style:normal; font-weight:700; border-bottom:2px solid currentColor}
+.rung small{display:block; font-size:12.5px; color:var(--ink-soft); margin-top:2px; border:0}
+
+.stances{display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:14px}
+.stances button{padding:14px 6px; font-size:15px; font-weight:700; cursor:pointer; border-radius:9px; background:#FBFDFB; border:1px solid var(--line); color:var(--ink-soft); font-family:var(--body)}
+.stances button:hover{border-color:var(--leaf)}
+.stances button.picked{background:var(--leaf-deep); color:#fff; border-color:var(--leaf-deep)}
+label.fieldlab{font-size:15px; font-weight:600; display:block; margin:16px 0 6px}
+textarea{width:100%; border:1px solid var(--line); border-radius:9px; padding:11px 13px; font-family:var(--body); font-size:16px; background:#FBFDFB; color:var(--ink); resize:vertical}
+textarea:focus{outline:2px solid var(--leaf); outline-offset:1px}
+.viewcards{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:6px 0}
+.vc{border-radius:11px; padding:12px 14px; font-size:14px; line-height:1.6}
+.vc.a{background:var(--good-tint); color:#1D5236}
+.vc.b{background:var(--blossom-tint); color:#8C2F52}
+.note{font-size:13.5px; color:var(--ink-soft); background:var(--tint); border-radius:9px; padding:11px 13px; margin-top:14px}
+
+.btn{font-family:var(--body); font-size:15px; font-weight:700; cursor:pointer; border-radius:10px; padding:13px 24px; border:1px solid transparent; transition:.18s}
+.btn-line{background:var(--paper); color:var(--leaf-deep); border-color:var(--leaf)}
+.btn-line:hover{background:var(--tint)}
+.btn-rose{background:var(--blossom); color:#fff}
+.btn-rose:hover{filter:brightness(.93)}
+.actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
+button:focus-visible{outline:3px solid var(--blossom); outline-offset:2px}
+.progress{font-family:var(--mono); font-size:13px; color:var(--ink-soft); background:var(--tint); border-radius:9px; padding:8px 14px; display:inline-block; margin-top:12px}
+
+.submitzone{background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.32); border-radius:var(--r); padding:26px 28px; margin-top:30px; color:#EEF4EC; backdrop-filter:blur(6px)}
+.submitzone h3{font-family:var(--display); margin:0 0 6px; font-size:22px; color:#fff; display:block}
+.submitzone p{margin:0 0 18px; font-size:14px; color:#D2E1CE}
+.saveflag{font-family:var(--mono); font-size:12px; color:#B5CDB1; margin-left:4px}
+.result{display:none; background:var(--paper); border-radius:var(--r); padding:32px 30px; margin-top:18px; box-shadow:var(--shadow); color:var(--ink)}
+.result.show{display:block; animation:pop .4s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes pop{from{opacity:0; transform:scale(.96) translateY(8px)} to{opacity:1; transform:none}}
+.medalrow{display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+.medal{width:104px; height:104px; flex:none}
+.rankname{font-family:var(--display); font-size:30px; font-weight:800; margin:0}
+.rankline{font-size:15px; color:var(--ink-soft); margin:4px 0 0}
+.bigscore{font-family:var(--mono); font-size:38px; font-weight:700; color:var(--leaf-deep); margin:0}
+.bd{margin-top:22px}
+.bdrow{display:grid; grid-template-columns:1fr 62px; gap:12px; align-items:center; font-size:15px; margin-bottom:2px}
+.bar{grid-column:1/-1; height:8px; border-radius:6px; background:var(--tint); overflow:hidden; margin:4px 0 12px}
+.bar span{display:block; height:100%; background:var(--leaf); border-radius:6px; transition:width .8s ease}
+.bdrow .v{font-family:var(--mono); font-size:14px; text-align:right; color:var(--ink-soft)}
+.advice{background:var(--blossom-tint); border-radius:11px; padding:14px 16px; margin-top:18px; font-size:15px}
+.advice b{color:var(--blossom)}
+.pending{background:var(--bark-tint); border-radius:11px; padding:12px 16px; margin-top:12px; font-size:14px; color:#6E4522}
+
+@media (max-width:1099px){ .rail{display:none} }
+@media (max-width:620px){
+  .wrap{padding:0 14px 60px}
+  section.task{padding:22px 18px 26px}
+  .trio{grid-template-columns:1fr}
+  .stances,.viewcards{grid-template-columns:1fr}
+  .rung{grid-template-columns:60px 1fr; font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} html{scroll-behavior:auto} }
+@media print{ body{background:#fff} .rail,.actions,.submitzone .actions,.opts,.pbtns{display:none} section.task{box-shadow:none; border:1px solid #ccc; break-inside:avoid} }
+</style>
+</head>
+<body>
+
+<nav class="rail" aria-label="进度">
+  <div class="rail-item" data-rail="s1"><span class="rail-dot"></span><span class="rail-label">词语过关</span></div>
+  <div class="rail-item" data-rail="s2"><span class="rail-dot"></span><span class="rail-label">三看雨树</span></div>
+  <div class="rail-item" data-rail="s3"><span class="rail-dot"></span><span class="rail-label">她的写法</span></div>
+  <div class="rail-item" data-rail="s4"><span class="rail-dot"></span><span class="rail-label">读懂她的心</span></div>
+  <div class="rail-item" data-rail="s5"><span class="rail-dot"></span><span class="rail-label">读后说</span></div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">中二高级华文 · 单元五第二课</p>
+  <h1>雨树</h1>
+  <p class="sub">我们的树，我们无处不在的风景</p>
+  <div class="idbox">
+    <p class="idloading" id="idLoading">正在连接班级名单……</p>
+
+    <div id="idPickCls" style="display:none">
+      <p class="idask">第一步：点你的班级</p>
+      <div class="grid" id="clsGrid"></div>
+    </div>
+
+    <div id="idPickSid" style="display:none">
+      <p class="idask">第二步：点你的学号 <button class="mini" id="backCls">换班级</button></p>
+      <div class="grid" id="sidGrid"></div>
+    </div>
+
+    <div id="idCard" style="display:none">
+      <p class="hi" id="hiLine"></p>
+      <p class="mates" id="mateLine"></p>
+      <button class="mini" id="notMe">不是我，重新选</button>
+    </div>
+
+    <div id="idManual" style="display:none">
+      <p class="idask">暂时连不上班级名单，请自己填写</p>
+      <div class="manualrow">
+        <label>姓名 <input type="text" data-save="name" placeholder="写上你的名字"></label>
+        <label>班级 <input type="text" data-save="class" placeholder="例：201"></label>
+        <label>组别 <input type="text" data-save="group" placeholder="第几组"></label>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 任务一：词语 ============ -->
+<section class="task" id="s1">
+  <p class="tasknum">任务一</p>
+  <h2>词语过关：意思 · 用法</h2>
+  <p class="hint">词语的意思课上已经讲过，这里只考<strong>你会不会用</strong>。每题只能点一次，点了就锁住，<strong>看清楚解释再往下走</strong>。</p>
+
+  <h3><span class="n">A</span>放回课文里，它是什么意思？</h3>
+  <div id="vocA"></div>
+
+  <h3><span class="n">B</span>选一个词填进去</h3>
+  <div id="vocB"></div>
+
+  <h3><span class="n">C</span>火眼金睛</h3>
+  <div id="vocC"></div>
+
+  <p class="progress" id="pg1">已完成 0 / 14</p>
+</section>
+
+<!-- ============ 任务二：景物描写三个角度 ============ -->
+<section class="task" id="s2">
+  <p class="tasknum">任务二 · 阅读技能</p>
+  <h2>三看雨树：形态 · 色彩 · 声音</h2>
+  <p class="hint">写景物，不能只写「很美」。作者是从三个角度写雨树的——<span class="key">形态</span>（长什么样）、<span class="key">色彩</span>（什么颜色）、<span class="key">声音</span>（听见什么）。先看清楚三者的分别，再判断。</p>
+
+  <div class="trio">
+    <div class="tcard shape">
+      <h4>形态</h4>
+      <p class="one">她长成什么样子</p>
+      <svg viewBox="0 0 200 62" role="img" aria-label="形态：树的外形轮廓">
+        <path d="M100 14 q46 8 46 26 H54 q0-18 46-26Z" fill="#fff" stroke="#5D8F6B" stroke-width="1.6"/>
+        <path d="M100 40 v16" stroke="#5D8F6B" stroke-width="3" stroke-linecap="round"/>
+        <path d="M100 56 q-12 2 -18 4 M100 56 q12 2 18 4" stroke="#5D8F6B" stroke-width="1.6" fill="none"/>
+      </svg>
+      <p class="eg">像一把大伞 · 犹如千手观音</p>
+    </div>
+    <div class="tcard color">
+      <h4>色彩</h4>
+      <p class="one">她是什么颜色</p>
+      <svg viewBox="0 0 200 62" role="img" aria-label="色彩：粉红与翠绿">
+        <circle cx="66" cy="31" r="19" fill="#E9A9C0"/>
+        <circle cx="100" cy="31" r="19" fill="#9CC79F" opacity=".9"/>
+        <circle cx="134" cy="31" r="19" fill="#C79A72" opacity=".85"/>
+      </svg>
+      <p class="eg">翠绿的叶子 · 粉红的花海 · 褐色的根</p>
+    </div>
+    <div class="tcard sound">
+      <h4>声音</h4>
+      <p class="one">在她身边听见什么</p>
+      <svg viewBox="0 0 200 62" role="img" aria-label="声音：沙沙的声响">
+        <path d="M52 31 q14-16 28 0 q14 16 28 0 q14-16 28 0 q14 16 28 0" fill="none" stroke="#B98A5E" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <p class="eg">叶子发出的沙沙声响</p>
+    </div>
+  </div>
+
+  <h3><span class="n">A</span>这一句，主要写的是哪一样？</h3>
+  <div id="sense"></div>
+
+  <h3><span class="n">B</span>作者为什么要这样写？</h3>
+  <div id="senseQ"></div>
+
+  <p class="progress" id="pg2">已完成 0 / 6</p>
+</section>
+
+<!-- ============ 任务三：修辞 ============ -->
+<section class="task" id="s3">
+  <p class="tasknum">任务三 · 本课重点</p>
+  <h2>同一棵雨树，四种写法</h2>
+  <p class="hint">下面四句都在写雨树，意思差不多，<strong>写法完全不同</strong>。先把四种写法看清楚，再做判断题。</p>
+
+  <div class="ladder">
+    <div class="rung r0"><span class="lab">直说</span><span>雨树给人们带来很多好处。<small>说清楚了，可是读起来没有画面。</small></span></div>
+    <div class="rung r1"><span class="lab">比喻</span><span>她<em>像一把大伞</em>，静静地为人们遮阳挡雨。<small>把雨树说成另一样东西（伞）——两者本来不是同类。</small></span></div>
+    <div class="rung r2"><span class="lab">拟人</span><span>她把<em>疲惫的</em>叶子<em>轻轻合上</em>。<small>树本来不会累、不会合叶子——把树当成人来写。</small></span></div>
+    <div class="rung r3"><span class="lab">排比</span><span>只为给我们<em>一路风景，一程舒适，一生温暖</em>。<small>三个（或三个以上）结构相似的句子并排，一口气说下去。</small></span></div>
+  </div>
+
+  <h3><span class="n">A</span>这一句用了哪一种修辞？</h3>
+  <div id="fig"></div>
+
+  <h3><span class="n">B</span>这样写好在哪里？</h3>
+  <div id="figQ"></div>
+
+  <p class="progress" id="pg3">已完成 0 / 8</p>
+</section>
+
+<!-- ============ 任务四：读懂内容与情感 ============ -->
+<section class="task" id="s4">
+  <p class="tasknum">任务四</p>
+  <h2>读懂她的心</h2>
+  <p class="hint">这篇文章表面在写一棵树，其实句句都在写<strong>人的感情</strong>。下面几题要回到课文里找根据，不能凭印象猜。</p>
+  <div id="comp"></div>
+  <p class="progress" id="pg4">已完成 0 / 6</p>
+</section>
+
+<!-- ============ 任务五：读后说 ============ -->
+<section class="task" id="s5">
+  <p class="tasknum">任务五 · 读后说</p>
+  <h2>雨树有哪些值得我们学习的地方？</h2>
+  <p class="hint">这一题<strong>没有标准答案</strong>，但光说「她很好」不算数——要说出<span class="key">课文哪里看得出来</span>，以及<span class="key">为什么值得学</span>。</p>
+
+  <div class="stances" id="stances">
+    <button data-v="包容">包容：让许多植物长在自己身上</button>
+    <button data-v="奉献">奉献：无怨无悔地为别人遮阳挡雨</button>
+    <button data-v="默默无闻">默默无闻：从不要求别人感谢她</button>
+    <button data-v="坚强">坚强：承受风吹日晒雨淋也不喊苦</button>
+  </div>
+
+  <div class="viewcards">
+    <div class="vc a">课文第 7 段：她大方地让许许多多的植物长在身上，彼此同甘共苦。</div>
+    <div class="vc b">课文第 8 段：她无怨无悔地承受着风吹日晒雨淋，只为给我们一路风景。</div>
+  </div>
+
+  <label class="fieldlab">我的说明（先写课文哪里看得出来，再写为什么值得学习）</label>
+  <textarea rows="4" data-save="reason" placeholder="我认为雨树的……值得学习。课文第＿段写……，这说明……，所以值得我们学习。"></textarea>
+
+  <p class="note">这一题由<strong>老师另行评分</strong>，不会自动批改。提交后你先看到其他四项的分数。</p>
+</section>
+
+<div class="submitzone">
+  <h3>全部做完了吗？</h3>
+  <p>作答自动保存在这台设备上<span class="saveflag" id="saveflag"></span>。交上去就能看到分数和你的等级。</p>
+  <div class="actions" style="margin:0">
+    <button class="btn btn-rose" id="submitAll">提交，看我的成绩</button>
+    <button class="btn btn-line" onclick="window.print()">打印 / 存成 PDF</button>
+    <button class="btn btn-line" id="clearAll">清空重做</button>
+  </div>
+</div>
+
+<div class="result" id="result"></div>
+
+</div>
+
+<script>
+/* ==========================================================
+   ①　设置区　—— 老师只需要改这里
+   ========================================================== */
+const CONFIG = {
+  // 把 Google Apps Script 部署后拿到的网址贴在下面这对引号中间
+  // 例：https://script.google.com/macros/s/AKfy....../exec
+  API: "https://script.google.com/macros/s/AKfycbx7eswQp_uV-lSfK9xWhgvEUVdlotqbRSQPL0hiR8_m2CZZ4xkLJjOEo-SeHLYNS_n0/exec",
+  LESSON: "雨树"
+};
+/* ========================================================== */
+
+/* ================= 题库 ================= */
+
+/* A · 放回课文语境推词义 */
+const VOC_A = [
+  ["课文：「我站在树下，出神地看着她<b>粗糙</b>的枝干。」这里的「粗糙」是说枝干——",
+   ["表面不光滑，摸上去有点扎手","颜色暗淡发黑，看起来很不好看","长得歪歪斜斜，一点也不整齐","又干又硬，看样子快要枯死了"], 0,
+   "「粗糙」说的是表面不平滑。写字乱要用「潦草」，样子难看要用「难看」，不能都说成「粗糙」。"],
+  ["课文：「她竟然变成了姿态<b>婆娑</b>的舞蹈员。」「婆娑」是——",
+   ["站得笔直、一动不动的样子","满脸皱纹、年纪很大的样子","舞动时姿态轻柔美好的样子","身材高大、力气很大的样子"], 2,
+   "看到「婆」就想成老婆婆，是望文生义。「婆娑」形容轻柔摆动的美好姿态，正好配「舞蹈员」。"],
+  ["课文：「像顽童一般跟<b>翱翔</b>的鸟儿玩捉迷藏。」「翱翔」是说鸟儿——",
+   ["停在树枝上休息、梳理羽毛","一群一群聚在一起叫个不停","张开翅膀快速往下俯冲觅食","在高空自由自在地盘旋飞行"], 3,
+   "「翱」和「翔」都带「羽」，都跟飞有关。「翱翔」强调在高空自在地飞，不是停着，也不是往下冲。"],
+  ["课文：花儿摇摆成一波波粉红之浪，「令人<b>心旷神怡</b>」。这是说人——",
+   ["看得入迷，连时间都忘了","心情开阔舒畅，精神很愉快","十分惊讶，一句话也说不出","心里发慌，感到有点害怕"], 1,
+   "旷＝开阔，怡＝愉快。看得入迷忘了时间是「流连忘返」，两个词不一样。"],
+  ["课文：「许许多多的植物生长在她的身上，彼此<b>同甘共苦</b>。」这里强调的是——",
+   ["甜的和苦的东西都要尝一尝","快乐和艰难都在一起承担","一方付出，另一方享受成果","谁的本事大谁就先得到好处"], 1,
+   "甘＝甜，比喻快乐。「同甘共苦」是双方一起，不是一方付出、一方享受。"],
+  ["课文：「总在身后依依地<b>叮咛</b>：『出国在外，自己保重！』」「叮咛」是——",
+   ["大声地责备，警告对方不要再犯","亲切地问候，跟对方打个招呼","反复地嘱咐，要对方注意","小声地商量，跟对方讨论办法"], 2,
+   "「叮咛」是一遍又一遍地嘱咐，带着不放心。只是打招呼、问好，不能叫叮咛。"]
+];
+
+/* B · 选词填空（干扰项用中一及中二已学词语） */
+const VOC_B = [
+  ["中午的操场上一点遮阳的地方也没有，同学们在烈日下＿＿了半个小时，个个满头大汗。",
+   ["接触","曝晒","耸立"], 1,
+   "曝＝晒。被强烈的阳光长时间晒着，就是「曝晒」。"],
+  ["组屋楼下那几棵小树苗，在居民的照顾下＿＿成长，如今已经比三楼还高了。",
+   ["翠绿","婆娑","茁壮"], 2,
+   "「茁壮」指长得健壮有力，配「成长」。「翠绿」是颜色，「婆娑」是姿态，都不能说成长。"],
+  ["从樟宜机场出来，公路两旁的大树枝叶连成一片，形成一条长长的＿＿。",
+   ["风景线","康庄大道","林荫大道"], 2,
+   "两旁成排的树遮出一片阴凉的路，才叫「林荫大道」。「康庄大道」指宽阔平坦的大路，多用来比喻光明的前途；「风景线」泛指美丽的景色，都不专指有树的路。"],
+  ["新同学刚转来我们班，大家很快就＿＿了他，还邀他一起加入篮球社。",
+   ["接触","接纳","欣赏"], 1,
+   "「接纳」是接受他、让他成为自己人；「接触」只是有来往，还谈不上接受。（近义词混淆）"],
+  ["从东海岸公园大道望过去，一栋栋高楼＿＿在海边，十分壮观。",
+   ["开辟","变迁","耸立"], 2,
+   "「耸立」指又高又直地立着，只用在高大的东西上。"],
+  ["妈妈把客厅重新布置了一番，还点上一盏暖黄的小灯，屋子里显得格外＿＿。",
+   ["温馨","热闹","富裕"], 0,
+   "「温馨」是温暖而让人心里觉得舒服；「热闹」是人多、声音大，两者不同。"]
+];
+
+/* C · 火眼金睛 */
+const VOC_C = [
+  ["下面哪一句<b>用错</b>了？",
+   ["妹妹作文本上的字迹很粗糙，老师直摇头。","这张木桌没有打磨过，桌面摸起来很粗糙。","爷爷的手掌又厚又粗糙，一看就常干活。"], 0,
+   "字写得乱要说「潦草」。「粗糙」只用来说东西表面不光滑。（近义词混淆）"],
+  ["下面哪一句用得<b>对</b>？",
+   ["他这次数学考砸了，心里十分心旷神怡。","海风轻轻吹来，站在海边令人心旷神怡。","听说明天要考试，他心旷神怡地翻课本。"], 1,
+   "「心旷神怡」要在开阔美好的景色里才用得上。考砸、临考翻书都是紧张的场面，用了就前后矛盾。"]
+];
+
+/* 任务二 A · 形态 / 色彩 / 声音 */
+const SENSE = [
+  ["不论何时，当你从远处看她，她都像一把大伞。", "shape",
+   "「像一把大伞」写的是雨树整体的样子，属于形态。"],
+  ["你居高临下，可以看到大片粉红的花海。", "color",
+   "「粉红」是颜色，写的是色彩。"],
+  ["随着叶子发出的沙沙声响……", "sound",
+   "「沙沙」是耳朵听见的，写的是声音。"],
+  ["下雨前，她便从容地把翠绿的叶子「关」上。", "color",
+   "这一句里写颜色的是「翠绿」——全文写叶子的色彩，就靠这两个字。"]
+];
+const SENSE_LABELS = [["shape","形态"],["color","色彩"],["sound","声音"]];
+
+const SENSE_Q = [
+  ["写花季时，作者先写「大片粉红的花海」，再写「一波波诗意的粉红之浪」。这样写的好处是——",
+   ["让读者知道雨树的花可以拿来做什么","把不动的花海写活，像水波一样流动","说明雨树的花期比其他树种长得多","强调作者住的地方比雨树高很多"], 1,
+   "「海」写的是花开得多而广，「浪」写的是花被风吹动的样子——从静写到动，画面就活了。"],
+  ["作者写雨树，为什么还要写到「沙沙声响」？",
+   ["因为雨树的叶子特别多，风一吹就很吵","说明当时正在下雨，雨点打在叶子上","不只让人看见雨树，还能听见她的声音","因为作者站得远，只能听见声音看不见树"], 2,
+   "写景加上声音，读者就像真的站在树下。只写颜色和样子，画面是安静的。"]
+];
+
+/* 任务三 A · 比喻 / 拟人 / 排比 */
+const FIG = [
+  ["每天早上，她把休息了一夜的叶子逐一展开。", "person",
+   "「休息了一夜」是人才会做的事——把树当人写，是拟人。"],
+  ["她主干上那些伸展的分枝，犹如千手观音似的。", "simile",
+   "有「犹如……似的」，把分枝说成千手观音——两者不同类，是比喻。"],
+  ["只为给我们一路风景，一程舒适，一生温暖。", "parallel",
+   "三个结构相同的短语并排（一路……一程……一生……），是排比。"],
+  ["在清风里，花儿晃动成一波波诗意的粉红之浪。", "simile",
+   "把成片摆动的花说成「浪」，是比喻。虽然没有「像」字，喻体（浪）还是出现了。"],
+  ["她总在身后依依地叮咛：「出国在外，自己保重！」", "person",
+   "树不会说话、不会叮咛——这是拟人。"],
+  ["她为汽车遮阳；她把炎阳遮挡成凉意；她合拢成美丽的林荫大道。", "parallel",
+   "三个句子结构相似、一口气排下来，是排比。"]
+];
+const FIG_LABELS = [["simile","比喻"],["person","拟人"],["parallel","排比"]];
+
+const FIG_Q = [
+  ["全文一直用「她」来称呼雨树，最主要的作用是——",
+   ["雨树是雌性的树，所以要用「她」","把雨树当成人来写，感情更容易抒发","「她」比「它」少见，读起来比较特别","因为下文写到雨树像母亲一样照顾人"], 1,
+   "用「她」等于一开始就把雨树当人看，后面写她叮咛、张开双臂才顺理成章。选「像母亲」的同学要注意：那是这样写之后的效果，不是原因。"],
+  ["第 6 段连用「或似……或如……或像……」，好处是——",
+   ["一口气写出多种姿态，读起来有气势","说明雨树的枝干长得杂乱、很不好看","让读者知道雨树一共只有三种姿势","因为作者一时想不出更好的形容词语"], 0,
+   "排比的作用是气势强、内容多。写三种只是举例，不等于雨树只有三种姿态。"]
+];
+
+/* 任务四 · 读懂内容与情感 */
+const COMP = [
+  ["第 2 段写雨树「从容地把翠绿的叶子『关』上」。用「关」而不用「合」，主要因为——",
+   ["「合」是错别字，不能用在这里","「关」比「合」更常见，学生容易懂","像人下雨前关窗一样，更形象温馨","说明雨树的叶子真的能锁起来"], 2,
+   "前面是「下雨前」，后面是「等待风雨的来临」——「关」正好配上人下雨前关窗的动作，画面更生动、更有人情味。「合」意思也通，但没有这层味道。"],
+  ["第 3 段的「花海」和「粉红之浪」，指的是——",
+   ["雨树的旁边真的有一片大海","海边种满了粉红色的雨树","花瓣被风吹落到海面上了","雨树的花朵成片盛开的景象"], 3,
+   "这里的「海」和「浪」都是比喻，写的是花开得又多又广、随风起伏的景象，不是真的海。"],
+  ["作者每次出国，为什么会觉得雨树在「叮咛」自己？",
+   ["雨树真的会说话，作者亲耳听见了","作者把对家乡的感情寄托在雨树上","作者每次出国前都去和雨树道别","风吹叶子发出的声音很像人说话"], 1,
+   "去机场的路上天天见到雨树，她就成了家乡的代表。人心里舍不得，才会觉得树在叮咛自己。"],
+  ["第 7 段把雨树和长在她身上的植物，比作新加坡和新移民。作者想说的是——",
+   ["新移民像植物一样离不开泥土","新加坡的植物大多数是从外国来的","大家彼此包容接纳，共同建设家园","雨树身上的植物会抢走它的养分"], 2,
+   "课文说彼此「同甘共苦，茁壮成长」——重点在包容、接纳、齐心、奉献，一起把家园变美。"],
+  ["「我们无处不在的风景」这句话在文中出现了好几次，作用是——",
+   ["作者在写文章时不小心重复了几次","说明新加坡的树木种类不够多","提醒读者这篇文章快要结束了","反复强调雨树随处可见、十分重要"], 3,
+   "开头、第 4 段、结尾都出现，前后呼应，一次比一次强调雨树在我们生活中有多普遍、多重要。"],
+  ["本文表面上写雨树，实际上要表达的是——",
+   ["对园艺工作者辛勤付出的感谢","对新加坡这个家园的热爱与自豪","对雨树这个树种的详细科学介绍","对城市里树木越来越少的担忧"], 1,
+   "这是本单元「心系家园」的写法：借一样身边的事物，写出对家园的感情。全文没有一句科学说明，也没有责怪谁。"]
+];
+
+/* ================= 存储（优先用平台存储，离线时退回浏览器本地） ================= */
+const KEY = "yushu-worksheet-v1";
+const S = {
+  async get(k){
+    try{ if(window.storage){ const r = await window.storage.get(k); if(r && r.value) return r.value; } }catch(e){}
+    try{ return localStorage.getItem(k); }catch(e){ return null; }
+  },
+  async set(k,v){
+    try{ if(window.storage){ await window.storage.set(k,v); return; } }catch(e){}
+    try{ localStorage.setItem(k,v); }catch(e){}
+  },
+  async del(k){
+    try{ if(window.storage){ await window.storage.delete(k); } }catch(e){}
+    try{ localStorage.removeItem(k); }catch(e){}
+  }
+};
+let store = {};
+const flag = document.getElementById("saveflag");
+let saveTimer;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    await S.set(KEY, JSON.stringify(store));
+    flag.textContent = "· 已保存";
+    setTimeout(()=>flag.textContent="", 1500);
+  }, 500);
+}
+document.addEventListener("input", e=>{
+  const el = e.target.closest("[data-save]");
+  if(!el) return; store[el.dataset.save] = el.value; save();
+});
+
+/* ================= 联网工具 ================= */
+function jsonp(url, params){
+  return new Promise(resolve=>{
+    const cb = "cb" + Date.now() + Math.floor(Math.random()*10000);
+    const q = Object.keys(params).map(k=>{
+      const v = params[k];
+      return encodeURIComponent(k) + "=" + encodeURIComponent(typeof v === "object" ? JSON.stringify(v) : v);
+    }).join("&");
+    const s = document.createElement("script");
+    const timer = setTimeout(()=>{ done({ok:false, err:"连线超时"}); }, 15000);
+    function done(d){ clearTimeout(timer); try{ delete window[cb]; }catch(e){} if(s.parentNode) s.parentNode.removeChild(s); resolve(d); }
+    window[cb] = d => done(d);
+    s.onerror = () => done({ok:false, err:"连不上服务器"});
+    s.src = url + (url.indexOf("?")>-1 ? "&" : "?") + q + "&callback=" + cb;
+    document.body.appendChild(s);
+  });
+}
+async function callAPI(params){
+  if(!CONFIG.API) return {ok:false, err:"老师还没填上传网址"};
+  try{
+    const r = await fetch(CONFIG.API, {
+      method:"POST",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify(params),
+      redirect:"follow"
+    });
+    const j = await r.json();
+    if(j && j.ok !== undefined) return j;
+  }catch(e){}
+  const light = Object.assign({}, params);
+  if(light.reason) light.reason = String(light.reason).slice(0,80);
+  return await jsonp(CONFIG.API, light);
+}
+
+/* ================= 名单与学号点选 ================= */
+let ROSTER = [];
+const $ = id => document.getElementById(id);
+
+function showManual(){
+  $("idLoading").style.display = "none";
+  $("idPickCls").style.display = "none";
+  $("idPickSid").style.display = "none";
+  $("idCard").style.display = "none";
+  $("idManual").style.display = "block";
+  document.querySelectorAll("#idManual [data-save]").forEach(el=>{ if(store[el.dataset.save]) el.value = store[el.dataset.save]; });
+}
+function showCard(){
+  const me = ROSTER.find(r => r.cls===store.class && r.sid===store.sid);
+  if(!me){ showPickCls(); return; }
+  store.name = me.name || ("学号 " + me.sid);
+  store.group = me.grp;
+  save();
+  const mates = ROSTER.filter(r => r.cls===me.cls && r.grp===me.grp && r.sid!==me.sid)
+                      .map(r => r.name || ("学号 "+r.sid));
+  $("idLoading").style.display = "none";
+  $("idPickCls").style.display = "none";
+  $("idPickSid").style.display = "none";
+  $("idManual").style.display = "none";
+  $("idCard").style.display = "block";
+  $("hiLine").innerHTML = `你好，${store.name}　<span>${me.cls} 班 · 第 ${me.grp} 组</span>`;
+  $("mateLine").textContent = mates.length ? ("同组组员：" + mates.join("、")) : "这一组目前只有你一个人。";
+}
+function showPickCls(){
+  const classes = [...new Set(ROSTER.map(r=>r.cls))];
+  if(classes.length === 1){ store.class = classes[0]; save(); showPickSid(); return; }
+  const g = $("clsGrid"); g.innerHTML = "";
+  classes.forEach(c=>{
+    const b = document.createElement("button");
+    b.textContent = c + " 班";
+    b.addEventListener("click", ()=>{ store.class = c; store.sid = undefined; save(); showPickSid(); });
+    g.appendChild(b);
+  });
+  $("idLoading").style.display = "none";
+  $("idCard").style.display = "none";
+  $("idPickSid").style.display = "none";
+  $("idManual").style.display = "none";
+  $("idPickCls").style.display = "block";
+}
+function showPickSid(){
+  const list = ROSTER.filter(r => r.cls === store.class)
+                     .sort((a,b)=> (parseInt(a.sid,10)||0) - (parseInt(b.sid,10)||0));
+  const g = $("sidGrid"); g.innerHTML = "";
+  list.forEach(r=>{
+    const b = document.createElement("button");
+    b.innerHTML = r.sid + (r.name ? `<small>${r.name}</small>` : "");
+    b.addEventListener("click", ()=>{ store.sid = r.sid; save(); showCard(); });
+    g.appendChild(b);
+  });
+  $("idLoading").style.display = "none";
+  $("idPickCls").style.display = "none";
+  $("idCard").style.display = "none";
+  $("idManual").style.display = "none";
+  $("idPickSid").style.display = "block";
+}
+$("backCls").addEventListener("click", ()=>{ store.sid = undefined; save(); showPickCls(); });
+$("notMe").addEventListener("click", ()=>{ store.sid = undefined; save(); showPickCls(); });
+
+async function loadRoster(){
+  if(!CONFIG.API){ showManual(); return; }
+  const r = await jsonp(CONFIG.API, {a:"roster"});
+  if(!r || !r.ok || !Array.isArray(r.roster) || !r.roster.length){ showManual(); return; }
+  ROSTER = r.roster.map(x=>({cls:String(x.cls), sid:String(x.sid), name:String(x.name||""), grp:String(x.grp)}));
+  if(store.class && store.sid) showCard();
+  else if(store.class) showPickSid();
+  else showPickCls();
+}
+
+/* ================= 选择题 ================= */
+function renderMCQ(host, list, prefix, opts){
+  list.forEach((item,i)=>{
+    const [stem, choices, ans, why] = item;
+    const id = prefix+i;
+    const d = document.createElement("div");
+    d.className = "q";
+    d.innerHTML = `<p class="stem">${i+1}. ${stem}</p><div class="opts"></div><p class="fb"></p>`;
+    const bar = d.querySelector(".opts");
+    function lock(j){
+      bar.querySelectorAll("button").forEach(x=>x.disabled=true);
+      bar.querySelectorAll("button")[j].classList.add("picked");
+      const ok = j===ans;
+      d.classList.add(ok?"right":"wrong");
+      d.querySelector(".fb").innerHTML = (ok ? "✓ 对了。" : "✗ 正确答案是「"+choices[ans]+"」。") + why;
+    }
+    choices.forEach((c,j)=>{
+      const b = document.createElement("button");
+      b.textContent = (opts && opts.letters ? "ABCD"[j]+"　" : "") + c;
+      b.addEventListener("click", ()=>{ if(store[id]!==undefined) return; store[id]=j; save(); lock(j); updateProgress(); });
+      bar.appendChild(b);
+    });
+    host.appendChild(d);
+    if(store[id]!==undefined) lock(store[id]);
+  });
+}
+
+/* ================= 分类题（形态色彩声音 / 比喻拟人排比） ================= */
+function renderPick(host, list, prefix, labels){
+  const dict = {}; labels.forEach(([k,t])=>dict[k]=t);
+  list.forEach((row,i)=>{
+    const [stem, ansKey, why] = row;
+    const id = prefix+i;
+    const d = document.createElement("div");
+    d.className = "pick";
+    d.innerHTML = `<p class="stem">${i+1}. ${stem}</p><div class="pbtns"></div><p class="fb"></p>`;
+    const bar = d.querySelector(".pbtns");
+    function lock(val){
+      bar.querySelectorAll("button").forEach(x=>{ x.disabled=true; if(x.dataset.k===val) x.classList.add("picked"); });
+      const ok = val===ansKey;
+      d.classList.add(ok?"right":"wrong");
+      d.querySelector(".fb").innerHTML = (ok ? "✓ 对了。" : "✗ 这一句是「"+dict[ansKey]+"」。") + why;
+    }
+    labels.forEach(([k,t])=>{
+      const b = document.createElement("button");
+      b.textContent = t; b.dataset.k = k;
+      b.addEventListener("click", ()=>{ if(store[id]!==undefined) return; store[id]=k; save(); lock(k); updateProgress(); });
+      bar.appendChild(b);
+    });
+    host.appendChild(d);
+    if(store[id]!==undefined) lock(store[id]);
+  });
+}
+
+/* ================= 立场 ================= */
+document.querySelectorAll("#stances button").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll("#stances button").forEach(x=>x.classList.remove("picked"));
+    b.classList.add("picked"); store.stance = b.dataset.v; save();
+  });
+});
+
+/* ================= 进度 ================= */
+function cnt(prefix,n){ let c=0; for(let i=0;i<n;i++) if(store[prefix+i]!==undefined) c++; return c; }
+function updateProgress(){
+  document.getElementById("pg1").textContent = `已完成 ${cnt("a",6)+cnt("b",6)+cnt("c",2)} / 14`;
+  document.getElementById("pg2").textContent = `已完成 ${cnt("s",4)+cnt("q",2)} / 6`;
+  document.getElementById("pg3").textContent = `已完成 ${cnt("f",6)+cnt("g",2)} / 8`;
+  document.getElementById("pg4").textContent = `已完成 ${cnt("m",6)} / 6`;
+}
+
+/* ================= 评分 ================= */
+function scoreMCQ(list, prefix){
+  let g=0; list.forEach((it,i)=>{ if(store[prefix+i]===it[2]) g++; }); return g;
+}
+function scorePick(list, prefix){
+  let g=0; list.forEach((it,i)=>{ if(store[prefix+i]===it[1]) g++; }); return g;
+}
+function medalSVG(c1,c2){
+  return `<svg class="medal" viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M32 6 L44 40 L28 46 Z" fill="${c2}" opacity=".55"/>
+    <path d="M68 6 L56 40 L72 46 Z" fill="${c2}" opacity=".55"/>
+    <circle cx="50" cy="62" r="30" fill="${c1}"/>
+    <circle cx="50" cy="62" r="23" fill="none" stroke="${c2}" stroke-width="2.5"/>
+    <path d="M50 47 l4.6 9.4 10.4 1.5 -7.5 7.3 1.8 10.3 -9.3 -4.9 -9.3 4.9 1.8 -10.3 -7.5 -7.3 10.4 -1.5 Z" fill="#fff"/>
+  </svg>`;
+}
+
+document.getElementById("submitAll").addEventListener("click", ()=>{
+  const total = { voc:14, sense:6, fig:8, comp:6 };
+  const got = {
+    voc:   scoreMCQ(VOC_A,"a") + scoreMCQ(VOC_B,"b") + scoreMCQ(VOC_C,"c"),
+    sense: scorePick(SENSE,"s") + scoreMCQ(SENSE_Q,"q"),
+    fig:   scorePick(FIG,"f") + scoreMCQ(FIG_Q,"g"),
+    comp:  scoreMCQ(COMP,"m")
+  };
+  const answerable = 14+6+8+6;
+  const doneCnt = cnt("a",6)+cnt("b",6)+cnt("c",2)+cnt("s",4)+cnt("q",2)+cnt("f",6)+cnt("g",2)+cnt("m",6);
+  if(doneCnt < answerable){
+    if(!confirm(`还有 ${answerable-doneCnt} 题没做完，确定要提交吗？`)) return;
+  }
+
+  const sum = Object.values(got).reduce((a,b)=>a+b,0);
+  const max = Object.values(total).reduce((a,b)=>a+b,0);
+  const pct = Math.round(sum/max*100);
+
+  let rank, medal, line;
+  if(pct>=90){ rank="雨树守护者"; medal=medalSVG("#D9A428","#8A6410"); line="词语、写法、感情全读透了。你真的看懂了这棵树。"; }
+  else if(pct>=75){ rank="花海观赏家"; medal=medalSVG("#C9899F","#8C4A62"); line="很稳。把红色的那几题再看一遍，就能升到最高一级。"; }
+  else if(pct>=60){ rank="树下漫步者"; medal=medalSVG("#A8B79C","#5E7154"); line="主要意思读懂了。回头把红色题目的解释读完再走。"; }
+  else { rank="初次相遇"; medal=medalSVG("#B9A489","#7A6449"); line="别急。把红色题目的解释读一遍，再点「清空重做」练一次。"; }
+
+  const names = { voc:"任务一　词语过关", sense:"任务二　形态色彩声音", fig:"任务三　比喻拟人排比", comp:"任务四　读懂她的心" };
+  const tips = {
+    voc:"回去看看 C 部分那两题——「粗糙」和「心旷神怡」都是用错场合最容易出事的词。",
+    sense:"重读第 2、3 段，用三支笔分别圈出写形态、写色彩、写声音的词。",
+    fig:"记住分辨的窍门：出现另一样东西（伞、观音、浪）＝比喻；树做了人的事（休息、叮咛、张开双臂）＝拟人；三句排开＝排比。",
+    comp:"重读第 7 段和最后一段，注意作者写的其实不是树，是家园。"
+  };
+  let weakest=null, weakRate=2;
+  Object.keys(total).forEach(k=>{ const r=got[k]/total[k]; if(r<weakRate){ weakRate=r; weakest=k; } });
+
+  let rows="";
+  Object.keys(total).forEach(k=>{
+    const p = Math.round(got[k]/total[k]*100);
+    rows += `<div class="bdrow"><span>${names[k]}</span><span class="v">${got[k]} / ${total[k]}</span></div><div class="bar"><span style="width:${p}%"></span></div>`;
+  });
+
+  const box = document.getElementById("result");
+  box.innerHTML = `
+    <div class="medalrow">${medal}
+      <div><p class="rankname">${rank}</p><p class="rankline">${line}</p></div>
+      <div style="margin-left:auto; text-align:right"><p class="bigscore">${sum} / ${max}</p><p class="rankline">正确率 ${pct}%</p></div>
+    </div>
+    <div class="bd">${rows}</div>
+    ${weakest?`<div class="advice"><b>下一步：</b>${names[weakest].replace(/　/g,' ')}是你最需要再看一次的。${tips[weakest]}</div>`:""}
+    <div class="pending"><b>任务五（读后说）由老师另行评分</b>，不计入上面的 ${max} 分。老师会看你有没有写出「课文哪里看得出来」和「为什么值得学习」两点。</div>
+    <div class="uploadbox wait" id="upBox">正在把成绩传给老师……</div>
+    <div class="actions"><button class="btn btn-line" id="copyRes">复制成绩交给老师</button><button class="btn btn-line" id="retryUp" style="display:none">重新上传</button></div>`;
+  box.classList.add("show");
+  box.scrollIntoView({behavior:"smooth", block:"start"});
+  store.finalScore = sum+"/"+max; save();
+
+  /* —— 上传成绩 —— */
+  const LABEL = {a:"一A", b:"一B", c:"一C", s:"二A", q:"二B", f:"三A", g:"三B", m:"四"};
+  function buildDetail(){
+    const out = [];
+    const mcq = (list,p)=>list.forEach((it,i)=>{
+      const my = store[p+i];
+      out.push([LABEL[p]+(i+1), my===undefined?"未答":"ABCD"[my], "ABCD"[it[2]], my===it[2]?1:0]);
+    });
+    const pick = (list,p,labels)=>{
+      const d={}; labels.forEach(([k,t])=>d[k]=t);
+      list.forEach((it,i)=>{
+        const my = store[p+i];
+        out.push([LABEL[p]+(i+1), my===undefined?"未答":d[my], d[it[1]], my===it[1]?1:0]);
+      });
+    };
+    mcq(VOC_A,"a"); mcq(VOC_B,"b"); mcq(VOC_C,"c");
+    pick(SENSE,"s",SENSE_LABELS); mcq(SENSE_Q,"q");
+    pick(FIG,"f",FIG_LABELS); mcq(FIG_Q,"g");
+    mcq(COMP,"m");
+    return out;
+  }
+  async function doUpload(){
+    const upBox = document.getElementById("upBox");
+    const retry = document.getElementById("retryUp");
+    if(!CONFIG.API){
+      upBox.className = "uploadbox bad";
+      upBox.textContent = "这份学习单没有连上老师的成绩表，请按下面的「复制成绩交给老师」。";
+      return;
+    }
+    upBox.className = "uploadbox wait"; upBox.textContent = "正在把成绩传给老师……";
+    retry.style.display = "none";
+    const res = await callAPI({
+      a:"submit", lesson:CONFIG.LESSON,
+      cls: store.class||"", sid: store.sid||"", name: store.name||"", grp: store.group||"",
+      sc: sum, mx: max, pct: pct, parts: got,
+      stance: store.stance||"", reason: store.reason||"",
+      detail: buildDetail()
+    });
+    if(res && res.ok){
+      upBox.className = "uploadbox ok";
+      upBox.textContent = "✓ 成绩已经交给老师了，不用再做别的。";
+    }else{
+      upBox.className = "uploadbox bad";
+      upBox.textContent = "✗ 上传失败（" + ((res&&res.err)||"未知原因") + "）。请按「重新上传」；还是不行就按「复制成绩交给老师」。";
+      retry.style.display = "inline-block";
+      retry.onclick = doUpload;
+    }
+  }
+  doUpload();
+
+  document.getElementById("copyRes").addEventListener("click", async ()=>{
+    const t = `雨树 · 阅读任务单成绩
+姓名：${store.name||"（未填）"}　班级：${store.class||"（未填）"}　组别：${store.group||"（未填）"}
+等级：${rank}　总分：${sum}/${max}（${pct}%）
+${Object.keys(total).map(k=>names[k].replace(/　/g," ")+"："+got[k]+"/"+total[k]).join("\n")}
+读后说 · 我选的是：${store.stance||"（未选）"}
+读后说 · 我的说明：${store.reason||"（未写）"}`;
+    try{
+      await navigator.clipboard.writeText(t);
+      const b = document.getElementById("copyRes");
+      b.textContent = "已复制 ✓";
+      setTimeout(()=>b.textContent="复制成绩交给老师", 1800);
+    }catch(e){ window.prompt("按 Ctrl/Cmd + C 复制：", t); }
+  });
+});
+
+document.getElementById("clearAll").addEventListener("click", async ()=>{
+  if(!confirm("清空所有作答，重新开始？")) return;
+  store = {};
+  await S.del(KEY);
+  location.reload();
+});
+
+/* ================= 进度标尺 ================= */
+const rails = document.querySelectorAll(".rail-item");
+const obs = new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting) rails.forEach(r=>r.classList.toggle("on", r.dataset.rail===e.target.id)); });
+}, {rootMargin:"-45% 0px -45% 0px"});
+["s1","s2","s3","s4","s5"].forEach(id=>{ const el=document.getElementById(id); if(el) obs.observe(el); });
+
+/* ================= 启动 ================= */
+(async function init(){
+  const raw = await S.get(KEY);
+  if(raw){ try{ store = JSON.parse(raw); }catch(e){ store = {}; } }
+  renderMCQ(document.getElementById("vocA"), VOC_A, "a", {letters:true});
+  renderMCQ(document.getElementById("vocB"), VOC_B, "b");
+  renderMCQ(document.getElementById("vocC"), VOC_C, "c", {letters:true});
+  renderPick(document.getElementById("sense"), SENSE, "s", SENSE_LABELS);
+  renderMCQ(document.getElementById("senseQ"), SENSE_Q, "q");
+  renderPick(document.getElementById("fig"), FIG, "f", FIG_LABELS);
+  renderMCQ(document.getElementById("figQ"), FIG_Q, "g");
+  renderMCQ(document.getElementById("comp"), COMP, "m");
+  document.querySelectorAll("[data-save]").forEach(el=>{ if(store[el.dataset.save]) el.value = store[el.dataset.save]; });
+  if(store.stance) document.querySelectorAll("#stances button").forEach(b=>b.classList.toggle("picked", b.dataset.v===store.stance));
+  updateProgress();
+  loadRoster();
+})();
+</script>
+</body>
+</html>
