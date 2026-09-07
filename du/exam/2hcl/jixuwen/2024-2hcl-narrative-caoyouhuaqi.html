@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HCL 阅读 Workshop｜每棵草都有自己的花期</title>
+<style>
+:root{
+  --ink:#24303a;--muted:#6b7280;--paper:#fffdf8;--bg:#f5f2ea;--line:#ded8cb;
+  --green:#315e45;--green2:#eaf4ed;--red:#c62828;--blue:#2459a6;--blue2:#eaf2ff;
+  --orange:#9a5a00;--orange2:#fff2dd;--purple:#6948a6;--purple2:#f2edfb;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(#f7f4ee,#f1eee7);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;line-height:1.75}
+button,textarea,input{font:inherit}
+button{cursor:pointer}
+.kaiti{font-family:"STKaiti","KaiTi","楷体",serif}
+.song{font-family:"SimSun","Songti SC","STSong",serif}
+.top{position:sticky;top:0;z-index:20;background:rgba(255,253,248,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(9px)}
+.topin{max-width:1180px;margin:auto;padding:9px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:800;color:#263d30;margin-right:auto}.prog{font-size:13px;color:var(--muted)}
+.bar{width:150px;height:8px;border-radius:999px;background:#ece8df;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--green);transition:.25s}
+.btn{border:1px solid #cfc8bb;background:white;color:#344054;border-radius:10px;padding:8px 12px;min-height:40px}
+.btn:hover{background:#f8faf8}.btn.primary{background:var(--green);color:#fff;border-color:var(--green)}
+.btn.soft{background:var(--green2);color:var(--green);border-color:#bfd5c6}
+.wrap{max-width:1180px;margin:auto;padding:20px 16px 70px}
+.hero,.panel{background:var(--paper);border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 24px rgba(45,38,24,.06)}
+.hero{padding:24px}.hero h1{margin:3px 0 8px;font-size:31px;color:#253a2e}.hero p{margin:4px 0;color:#56616a}
+.kicker{font-size:12px;letter-spacing:.12em;color:var(--green);font-weight:900}
+.legend{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:800}
+.direct{background:var(--blue2);color:var(--blue)}.infer{background:var(--orange2);color:var(--orange)}.skill{background:var(--purple2);color:var(--purple)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:15px}.step{border:1px solid var(--line);border-radius:13px;padding:11px;background:white}.step b{color:#304b3a}.step small{color:#6b7280;display:block;line-height:1.4}
+.layout{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(340px,.88fr);gap:18px;margin-top:18px;align-items:start}
+.panel{padding:20px}.panel h2{margin:0 0 12px;color:#294332;font-size:22px}
+.article{font-size:18px;line-height:2.05}.para{position:relative;padding:10px 10px 10px 44px;border-radius:12px}.para:hover{background:#fffaf0}.pno{position:absolute;left:8px;top:14px;width:25px;height:25px;border-radius:50%;background:#e9efe9;color:#3d5b47;display:grid;place-items:center;font-family:Arial;font-size:12px;font-weight:800}
+.vocab{border:0;border-bottom:1.5px dashed #8f7250;background:transparent;padding:0;color:inherit}.vocab:hover{color:#7b4b13}
+.pop{display:none;background:#fff7e8;border:1px solid #e5d3b5;border-radius:10px;padding:9px 11px;margin:5px 0 8px;font-family:"Microsoft YaHei","PingFang SC",sans-serif;font-size:13.5px;line-height:1.55}.pop.show{display:block}.en{display:block;color:#667085;font-size:12.5px;margin-top:3px}.speak{border:0;background:#efe8dc;border-radius:7px;padding:3px 7px;margin-left:5px}
+.nav{position:sticky;top:70px}.nav a{display:block;text-decoration:none;color:#344054;border:1px solid var(--line);background:white;border-radius:10px;padding:9px 11px;margin:7px 0}.nav a:hover{background:#f5faf6}
+.note{background:#f5f7f5;border-left:4px solid #8ca596;border-radius:7px;padding:9px 11px;color:#58636c;font-size:13.5px}
+.sec{margin-top:18px;scroll-margin-top:75px}.head{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}.num{width:36px;height:36px;border-radius:11px;background:var(--green);color:white;display:grid;place-items:center;font-weight:900}.head h2{margin:0;font-size:22px}.subtitle{font-size:12.5px;color:#6b7280}
+.task{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff;margin:11px 0}.task h3{font-size:16px;margin:0 0 8px}.opt{display:flex;gap:8px;border:1px solid #e5e0d6;border-radius:9px;padding:8px 10px;margin:7px 0;align-items:flex-start}.opt input{margin-top:7px;transform:scale(1.15)}
+.fb{display:none;margin-top:8px;padding:8px 10px;border-radius:9px;font-size:13px}.fb.show{display:block}.good{background:#eaf7ef;color:#255c3e}.bad{background:#fff0ef;color:#9d3028}
+.orderrow{display:grid;grid-template-columns:30px 1fr auto;gap:7px;align-items:center;border:1px solid var(--line);border-radius:9px;padding:8px;margin:6px 0;background:white}.orderrow.sel{outline:2px solid #6f927b;background:#f4f8f5}.seq{width:24px;height:24px;border-radius:50%;background:#edf2ee;display:grid;place-items:center;font-weight:800;font-size:12px}.tiny{font-size:11px;color:#84908a}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bucket{min-height:100px;border:2px dashed #cfc8bb;border-radius:10px;padding:8px;background:#fbfaf7}.chip{border:1px solid #d8d1c5;background:white;border-radius:9px;padding:8px 10px;margin:5px;width:calc(50% - 12px);text-align:left}.chip.active{outline:2px solid #6f927b;background:#f4f8f5}.bucket .chip{width:100%;margin:4px 0}
+.q{border:1px solid #d9d3c7;border-radius:16px;padding:17px;margin:13px 0;background:white}.qtop{display:flex;justify-content:space-between;gap:10px}.qnum{font-weight:900;font-size:19px;color:#2c503a}.marks{font-size:12px;background:#edf2ee;color:#365745;border-radius:999px;padding:4px 8px;height:max-content}.stem{font-size:18px;font-weight:700;margin:8px 0;line-height:1.65}.red{color:var(--red);font-weight:900}
+.scaffold{background:#f7f5ef;border-radius:10px;padding:10px 12px;color:#535f68;font-size:13.5px;margin:9px 0}.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.evidence{border:1px solid #e1dbd0;border-radius:11px;padding:9px;background:#fcfbf8}.evidence h4{margin:0 0 6px;font-size:13px;color:#52605a}.ev{border:1px solid #ddd6ca;background:white;border-radius:8px;padding:7px 8px;margin:5px 0;font-family:"STKaiti","KaiTi","楷体",serif;text-align:left;width:100%}.ev.selected{background:#edf5ef;border-color:#88a894}.tray{min-height:62px;border:2px dashed #c9c2b6;border-radius:9px;padding:7px;font-size:13px;color:#666;background:#fff}
+textarea.answer{width:100%;min-height:128px;border:1.5px solid #bfb8ac;border-radius:10px;padding:11px 12px;resize:vertical;outline:none;font-size:17px;line-height:1.85;background:repeating-linear-gradient(to bottom,#fff 0,#fff 33px,#eee9df 34px,#fff 35px);font-family:"STKaiti","KaiTi","楷体",serif}
+textarea.answer:focus{border-color:#65866f;box-shadow:0 0 0 3px rgba(101,134,111,.12)}
+.stage{display:none;margin-top:11px;border-top:1px dashed #d4cec2;padding-top:11px}.stage.show{display:block}.model{background:#fffaf0;border:1px solid #e9dbc2;border-radius:10px;padding:10px 12px;font-family:"STKaiti","KaiTi","楷体",serif;font-size:17px;line-height:1.85}.explain{font-family:"SimSun","Songti SC","STSong",serif;font-size:14px;color:#44515b}.explain li{margin:6px 0}.score{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}.score span{background:#f7f6f2;border:1px solid #e5dfd4;border-radius:8px;padding:6px;font-size:12px;text-align:center}
+.self{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.self label{display:flex;gap:6px;align-items:flex-start;border:1px solid #dfd8cc;border-radius:8px;padding:7px 9px;background:#fff;font-size:13px}.self input{margin-top:4px}
+.review{display:grid;grid-template-columns:1fr 1fr;gap:8px}.check{display:flex;gap:8px;border:1px solid var(--line);border-radius:10px;padding:9px;background:white;font-size:13.5px}.check input{margin-top:5px;transform:scale(1.15)}
+.done{display:flex;justify-content:flex-end;margin-top:10px}.donebtn.on{background:var(--green);color:white}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.nav{position:static}.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.wrap{padding:12px 9px 55px}.hero,.panel{padding:14px;border-radius:15px}.hero h1{font-size:26px}.steps,.cols,.qgrid,.review,.score{grid-template-columns:1fr}.article{font-size:17px}.qtop{flex-direction:column}.chip{width:100%;margin:4px 0}.bar{width:95px}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="topin">
+    <div class="brand">HCL 阅读 Workshop</div>
+    <div class="prog">完成 <b id="doneN">0</b>/4</div><div class="bar"><i id="bar"></i></div>
+    <button class="btn" id="reset">重置练习</button>
+  </div>
+</div>
+
+<main class="wrap">
+<section class="hero">
+  <div class="kicker">BUILD-HCL-READING-WORKSHOP</div>
+  <h1 class="kaiti">每棵草都有自己的花期</h1>
+  <p>目标：不是“找到答案”就结束，而是学会看清 <b>题目要求 → 文本证据 → 必要推断 → 得分点表达</b>。</p>
+  <div class="legend"><span class="tag direct">Direct Info｜篇章直接信息</span><span class="tag infer">Inference｜合理推断</span><span class="tag skill">Reading Skill｜答题方法</span></div>
+  <div class="steps">
+    <div class="step"><b>1 逐段读懂</b><small>Who? What happened?<br>每段真正写什么？</small></div>
+    <div class="step"><b>2 连接全文</b><small>How are ideas connected?<br>草和男孩怎样连起来？</small></div>
+    <div class="step"><b>3 审题作答</b><small>What does the question require?<br>范围、数量、关系、证据。</small></div>
+    <div class="step"><b>4 检查</b><small>Have I earned every mark?<br>逐个评分点核对。</small></div>
+  </div>
+</section>
+
+<div class="layout">
+<section class="panel">
+<h2>篇章</h2>
+<div class="note">篇章、问题、学生答案和参考答案采用楷体。点虚线词语查看简短中英解释，并可点击 🔊 听词语。</div>
+<div class="article kaiti">
+  <div class="para"><span class="pno">1</span>和母亲走在乡间的小路上，我惊奇地发现，一种叫<button class="vocab" data-pop="v1">牛耳朵</button>的草，开着细小的黄花。我说：“怎么草也开花？”母亲笑着，淡淡地说：“每一棵草，都会开花的。”我愣住了，细想，还真是这样。蒲公英开的花，就像白白的绒球，轻轻一吹，满天飞花。狗尾巴草开的花，就像一条狗尾巴，成片绽放，美不胜收……就没见过不开花的草。<div class="pop" id="v1"><b>牛耳朵</b>：一种不起眼的野草；文中强调它也会开花。<span class="en">A common wild plant; here it suggests that even something ordinary can bloom.</span><button class="speak" data-word="牛耳朵">🔊</button></div></div>
+  <div class="para"><span class="pno">2</span>这让我想到一位同学，很不出众。他个子不高，皮肤黑黄且身形瘦削。不管何时何地，一双泛黄的白色运动鞋和粗布背包都是他出行的标配。他天生有些耳聋，虽然上课时格外认真，但成绩却始终不太好。长此以往，他似乎成了班上的<button class="vocab" data-pop="v2">透明人</button>，几乎所有竞赛都与他无缘。<div class="pop" id="v2"><b>透明人</b>：比喻没有存在感、常被忽略的人。<span class="en">A figurative description of someone who is barely noticed or often overlooked.</span><button class="speak" data-word="透明人">🔊</button></div></div>
+  <div class="para"><span class="pno">3</span>学期要结束的时候，学校组织学生手工竞赛，要选出最优秀的作品来代表学校比赛。这关系到学校的声誉，所以每个班级都很重视，但学生们的手工水平，实在有限。老师们收上来的作品，很令人失望。这时，却<button class="vocab" data-pop="v3">爆出冷门</button>。有个学生送去了一组手工泥娃娃，制作特别用心，每个泥娃娃，都各具特色，或嬉笑，或遐想。活泼、纯真、美好，让人惊叹。这部作品被选中代表学校参赛，最终夺得特等奖，全校轰动。<div class="pop" id="v3"><b>爆出冷门</b>：突然出现大家事先没有料到的好结果。<span class="en">An unexpected and surprising result appears.</span><button class="speak" data-word="爆出冷门">🔊</button></div></div>
+  <div class="para"><span class="pno">4</span>学校为此举行了颁奖典礼，在热烈的掌声中走上台的，竟是那个同学！他神情看上去<button class="vocab" data-pop="v4">局促不安</button>，只是低了头，羞涩地笑。让他谈获奖体会，他<button class="vocab" data-pop="v5">嗫嚅</button>半天才说：“我想，只要我努力，我总会做成一件事的。”刹那间，台下一片静，然后掌声雷动。<div class="pop" id="v4"><b>局促不安</b>：拘束、不自然，感到不自在。<span class="en">Awkward, restrained and uneasy.</span><button class="speak" data-word="局促不安">🔊</button></div><div class="pop" id="v5"><b>嗫嚅</b>：想说又不敢痛快地说，吞吞吐吐。<span class="en">To speak hesitantly or haltingly.</span><button class="speak" data-word="嗫嚅">🔊</button></div></div>
+  <div class="para"><span class="pno">5</span>他让我想起乡间小路上的那些草，每棵草都有每棵草的花期，哪怕是最不起眼的牛耳朵，也会把黄的花，藏在叶间，开得细小而<button class="vocab" data-pop="v6">执着</button>。<div class="pop" id="v6"><b>执着</b>：坚持、不轻易放弃。<span class="en">Persistent; continuing without easily giving up.</span><button class="speak" data-word="执着">🔊</button></div></div>
+</div>
+</section>
+
+<aside class="panel nav">
+<h2>学习路线</h2>
+<a href="#s1"><b>① 逐段理解</b><br><small>先把文章读懂</small></a>
+<a href="#s2"><b>② 连接全文</b><br><small>看见“草—男孩”的类比</small></a>
+<a href="#s3"><b>③ Q46–Q49</b><br><small>完整考试式书面作答</small></a>
+<a href="#s4"><b>④ 最后检查</b><br><small>逐个评分点核对</small></a>
+<div class="note" style="margin-top:12px">核心线索：<b>不起眼的小草也会开花</b> ↔ <b>被忽略的男孩也有自己的闪光点和“花期”</b>。</div>
+</aside>
+</div>
+
+<section class="panel sec" id="s1">
+<div class="head"><div class="num">1</div><div><h2>逐段理解</h2><div class="subtitle">第一次答错只给方向；第二次仍错才给更明确提示。</div></div></div>
+<div id="mcqs"></div>
+<div class="done"><button class="btn donebtn" data-step="1">本步完成</button></div>
+</section>
+
+<section class="panel sec" id="s2">
+<div class="head"><div class="num">2</div><div><h2>连接全文</h2><div class="subtitle">把事件发展和“草—男孩”关系连起来。</div></div></div>
+<div class="task">
+<h3>A. 排全文发展顺序：点两张卡片交换</h3>
+<div id="orderBox"></div><button class="btn soft" id="checkOrder">检查顺序</button><div class="fb" id="orderFb"></div>
+</div>
+<div class="task">
+<h3>B. 把信息分到“小草”与“男孩”</h3>
+<div class="note">iPad：先点一张卡片，再点下面对应的框；不用拖拽也能完成。</div>
+<div id="pool"></div>
+<div class="cols">
+  <div><b>🌱 小草</b><div class="bucket" id="grass"></div></div>
+  <div><b>👦 男孩</b><div class="bucket" id="boy"></div></div>
+</div>
+<button class="btn soft" id="checkMap">检查对应</button><div class="fb" id="mapFb"></div>
+</div>
+<div class="done"><button class="btn donebtn" data-step="2">本步完成</button></div>
+</section>
+
+<section class="panel sec" id="s3">
+<div class="head"><div class="num">3</div><div><h2>审题定位＋完整作答</h2><div class="subtitle">开放题不做不可靠的关键词自动判分；先写，再自检，再看参考答案。</div></div></div>
+
+<article class="q" id="q46">
+<div class="qtop"><div class="qnum">Q46</div><div class="marks">4分</div></div>
+<div class="stem kaiti">文章第二段采用了什么<span class="red">人物描写方法</span>？请<span class="red">找出相关的句子</span>并<span class="red">说明其作用</span>。</div>
+<div class="scaffold"><b>审题拆分：</b>方法（1）＋相关句子①（1）＋相关句子②（1）＋具体作用（1）。</div>
+<div class="qgrid">
+<div class="evidence"><h4>点选第二段证据</h4>
+<button class="ev" data-tray="t46">他个子不高，皮肤黑黄且身形瘦削。</button>
+<button class="ev" data-tray="t46">一双泛黄的白色运动鞋和粗布背包都是他出行的标配。</button>
+<button class="ev" data-tray="t46">他天生有些耳聋。</button>
+<button class="ev" data-tray="t46">上课时格外认真。</button>
+</div>
+<div><div style="font-size:13px;font-weight:700;margin-bottom:5px">我的证据篮</div><div class="tray kaiti" id="t46">还没有选证据。</div></div>
+</div>
+<textarea class="answer" placeholder="请写完整答案……"></textarea>
+<div class="self"><label><input type="checkbox">我写了描写方法</label><label><input type="checkbox">我写了两处原文</label><label><input type="checkbox">我写了具体作用</label></div>
+<button class="btn primary reveal" data-target="a46">我已作答，分层查看解析</button>
+<div class="stage" id="a46">
+  <div class="model"><span class="tag infer">Inference</span> 文章第二段采用了<span class="red">外貌／肖像描写</span>的方法。<br><span class="tag direct">Direct Info</span> “他个子不高，皮肤黑黄且身形瘦削。”<br><span class="tag direct">Direct Info</span> “不管何时何地，一双泛黄的白色运动鞋和粗布背包都是他出行的标配。”<br><span class="tag infer">Inference</span> 这些描写表现了他很普通、很不出众。</div>
+  <div class="explain"><ul>
+    <li><b>为什么是外貌／肖像描写？</b> 身高、皮肤、身形、鞋子、背包都属于人物外在样貌与穿着。<span class="en">These details describe the boy's physical appearance and clothing, so the method is portrait/physical description.</span></li>
+    <li><b>为什么“作用”不是 Direct Info？</b> 原文没有直接写“这些描写表现他很普通”；这是从多个外貌细节归纳出来的。<span class="en">The effect is inferred from several details; the text does not directly state it.</span></li>
+    <li><b>常见失分：</b>只写“使人物形象更生动”太空泛，没有结合这个男孩的具体形象。<span class="en">A generic effect such as “makes the character vivid” is too vague.</span></li>
+  </ul><button class="speak explainSpeak" data-word="这题先判断人物描写方法，再找出两处外貌描写的原句，最后根据这些细节概括作用：表现男孩普通、不出众。">🔊 听中文解析</button></div>
+  <div class="score"><span>方法 1分</span><span>句子① 1分</span><span>句子② 1分</span><span>作用 1分</span></div>
+</div>
+</article>
+
+<article class="q" id="q47">
+<div class="qtop"><div class="qnum">Q47</div><div class="marks">4分</div></div>
+<div class="stem kaiti">请<span class="red">结合上下文</span>的内容<span class="red">解释短句的意思</span>。</div>
+
+<div class="task">
+<div class="stem kaiti">（a）<span class="red">长此以往</span>，他似乎成了班上的<span class="red">透明人</span>。</div>
+<div class="scaffold">先解释时间词，再解释“透明人”的语境义。不能按字面写成“看不见的人”。</div>
+<textarea class="answer" style="min-height:105px" placeholder="（a）完整解释……"></textarea>
+</div>
+<div class="task">
+<div class="stem kaiti">（b）<span class="red">这时</span>，却<span class="red">爆出冷门</span>。</div>
+<div class="scaffold">“这时”要回看前文，“冷门”要联系后文。答案必须把前后文接起来。</div>
+<textarea class="answer" style="min-height:105px" placeholder="（b）完整解释……"></textarea>
+</div>
+<button class="btn primary reveal" data-target="a47">我已作答，分层查看解析</button>
+<div class="stage" id="a47">
+  <div style="font-weight:800;margin-bottom:4px">（a）参考答案</div>
+  <div class="model"><span class="tag direct">Direct Info</span> 长期发展下去／持续了一段时间后／渐渐地，<br><span class="tag infer">Inference</span> 他好像成了班上被忽略、没有什么存在感的人。</div>
+  <div class="explain"><ul>
+    <li>“长此以往”先说明这种处境持续了相当长时间。<span class="en">First explain that the situation continued for a long time.</span></li>
+    <li>“透明人”是比喻。结合“几乎所有竞赛都与他无缘”，应解释为“被忽略／没有存在感”。<span class="en">“Transparent person” is figurative: he was overlooked and had little presence in class.</span></li>
+    <li><b>不接受：</b>“好像看不见他／被忘记了／不认识他／不理他”。这些解释过于字面或过头。<span class="en">Avoid literal or exaggerated interpretations.</span></li>
+  </ul></div>
+  <div style="font-weight:800;margin:10px 0 4px">（b）参考答案</div>
+  <div class="model"><span class="tag direct">Direct Info</span> 就在老师们／大家对收到的作品很失望、不抱希望时，<br><span class="tag infer">Inference</span> 却突然出现了一份令人意想不到的优秀作品。</div>
+  <div class="explain"><ul>
+    <li>“这时”回指前文“老师们收上来的作品，很令人失望”。<span class="en">“At this moment” points back to the teachers' disappointment.</span></li>
+    <li>“爆出冷门”要联系后文的优秀泥娃娃作品，解释成“突然出现意料之外的好作品”。<span class="en">The later clay-doll entry was unexpectedly excellent.</span></li>
+  </ul><button class="speak explainSpeak" data-word="解释词句不能只解释字面。透明人要结合上下文解释成长期被忽略、没有存在感；爆出冷门要把前文的失望和后文突然出现的优秀作品连起来。">🔊 听中文解析</button></div>
+  <div class="score"><span>（a）时间 1分</span><span>（a）语境义 1分</span><span>（b）前文情境 1分</span><span>（b）意外结果 1分</span></div>
+</div>
+</article>
+
+<article class="q" id="q48">
+<div class="qtop"><div class="qnum">Q48</div><div class="marks">4分</div></div>
+<div class="stem kaiti">你认为文中的男孩是个<span class="red">怎样的人</span>？写出<span class="red">两个性格特点</span>并<span class="red">举例说明</span>。</div>
+<div class="scaffold">结构：特点①＋证据①；特点②＋证据②。两个特点必须是不同方面。</div>
+<div class="qgrid">
+<div class="evidence"><h4>可点选的行为／语言证据</h4>
+<button class="ev" data-tray="t48">上课时格外认真。</button>
+<button class="ev" data-tray="t48">泥娃娃制作特别用心。</button>
+<button class="ev" data-tray="t48">“只要我努力，我总会做成一件事的。”</button>
+<button class="ev" data-tray="t48">颁奖时局促不安，低头羞涩地笑。</button>
+</div>
+<div><div style="font-size:13px;font-weight:700;margin-bottom:5px">我的证据篮</div><div class="tray kaiti" id="t48">还没有选证据。</div></div>
+</div>
+<textarea class="answer" placeholder="1. 性格特点＋文章依据&#10;2. 性格特点＋文章依据"></textarea>
+<button class="btn primary reveal" data-target="a48">我已作答，分层查看解析</button>
+<div class="stage" id="a48">
+  <div class="model">① <span class="tag infer">Inference</span> 男孩<span class="red">努力、认真、用心</span>。<span class="tag direct">Direct Info</span> 他上课时格外认真，也认真制作手工作品参加比赛。<br><br>② <span class="tag infer">Inference</span> 男孩<span class="red">执着、心态积极向上</span>。<span class="tag direct">Direct Info</span> 他虽然耳聋、成绩不太好，却没有放弃，并相信“只要我努力，我总会做成一件事的”。</div>
+  <div class="explain"><ul>
+    <li><b>特点＝Inference：</b>“努力、认真、执着”不是文章直接替你下的标签，而是从行为和语言归纳出来。<span class="en">Character traits are inferred from the boy's actions and words.</span></li>
+    <li><b>例子＝Direct Info：</b>必须用文章写明的事情来证明特点。<span class="en">Evidence should come directly from what he did or said.</span></li>
+    <li><b>两个特点要不同：</b>“努力＋认真”可以视为同一方面；第二点最好写“执着／积极向上”等另一层品质。<span class="en">Choose two genuinely different traits rather than near-synonyms.</span></li>
+    <li><b>其他可接受：</b>害羞／羞涩（颁奖时局促不安）；自信、乐观、双手灵巧，只要有恰当依据。<span class="en">Other acceptable traits need matching textual evidence.</span></li>
+    <li><b>不接受：</b>细心、懂事、有创意、自豪、不自大、不骄傲。<span class="en">These are not accepted as standard answers for this item.</span></li>
+  </ul><button class="speak explainSpeak" data-word="人物性格题要先从行为概括特点，再用文章事实证明。两个特点必须不同，不要只写两个意思差不多的形容词。">🔊 听中文解析</button></div>
+  <div class="score"><span>特点① 1分</span><span>证据① 1分</span><span>特点② 1分</span><span>证据② 1分</span></div>
+</div>
+</article>
+
+<article class="q" id="q49">
+<div class="qtop"><div class="qnum">Q49</div><div class="marks">4分</div></div>
+<div class="stem kaiti">为什么这个学生会让作者“<span class="red">想起乡间小路上的那些草</span>”？请<span class="red">结合文章内容</span>加以说明。</div>
+<div class="scaffold">这是“类比关系”题：必须同时写 <b>小草怎样＋男孩怎样＋两者相似在哪里</b>。</div>
+<div class="qgrid">
+<div class="evidence"><h4>小草证据</h4>
+<button class="ev" data-tray="t49">每一棵草，都会开花的。</button>
+<button class="ev" data-tray="t49">最不起眼的牛耳朵也会把黄花藏在叶间，开得细小而执着。</button>
+</div>
+<div class="evidence"><h4>男孩证据</h4>
+<button class="ev" data-tray="t49">他很不出众，又有些耳聋，成绩始终不太好。</button>
+<button class="ev" data-tray="t49">他的泥娃娃获特等奖；他说只要努力，总会做成一件事。</button>
+</div>
+</div>
+<div style="font-size:13px;font-weight:700;margin:7px 0 5px">我的证据篮</div><div class="tray kaiti" id="t49">还没有选证据。</div>
+<textarea class="answer" placeholder="先写小草，再写男孩，最后说明两者的相似点……"></textarea>
+<button class="btn primary reveal" data-target="a49">我已作答，分层查看解析</button>
+<div class="stage" id="a49">
+  <div class="model"><span class="tag direct">Direct Info</span> 乡间小路上的草虽然看起来不起眼，也会开花。<br><span class="tag direct">Direct Info</span> 这位学生虽然很普通／自身有缺陷，但他凭努力取得了自己的成功。<br><span class="tag infer">Inference</span> 这位学生和乡间的小草一样：他们都很普通、不起眼，却都很努力、执着，也都有属于自己的<span class="red">闪光点／“花期”</span>。</div>
+  <div class="explain"><ul>
+    <li>第一步写草：原文直接写明“不起眼的草也会开花”。<span class="en">The text directly states that even ordinary grass can bloom.</span></li>
+    <li>第二步写男孩：原文直接写他的不足，也写他凭手工作品获奖。<span class="en">The text directly gives both his disadvantages and his achievement.</span></li>
+    <li>第三步建立类比：“开花”对应“展现价值／取得成功”，“不起眼的小草”对应“长期被忽略的男孩”。<span class="en">The analogy links blooming with showing one's value and unnoticed grass with the overlooked boy.</span></li>
+    <li><b>常见失分：</b>只说“因为男孩很努力”不够，必须把“小草—男孩—共同点”三部分写全。<span class="en">A complete answer must cover both sides of the comparison and their shared meaning.</span></li>
+  </ul><button class="speak explainSpeak" data-word="这一题是类比题。先写不起眼的小草也会开花，再写普通、有缺陷的男孩也凭努力获得成功，最后说明两者都不起眼，却有自己的闪光点和花期。">🔊 听中文解析</button></div>
+  <div class="score"><span>小草 1分</span><span>男孩 1分</span><span>相似关系 1分</span><span>共同品质／闪光点 1分</span></div>
+</div>
+</article>
+<div class="done"><button class="btn donebtn" data-step="3">本步完成</button></div>
+</section>
+
+<section class="panel sec" id="s4">
+<div class="head"><div class="num">4</div><div><h2>最后检查</h2><div class="subtitle">不奖励速度，只检查答案有没有真正满足题意。</div></div></div>
+<div class="review">
+<label class="check"><input type="checkbox"><span><b>Q46</b> 我写了方法＋两处相关句子＋具体作用。</span></label>
+<label class="check"><input type="checkbox"><span><b>Q47</b> 我结合前后文解释，没有只解释字面。</span></label>
+<label class="check"><input type="checkbox"><span><b>Q48</b> 我写两个不同特点，而且每一点都有文章依据。</span></label>
+<label class="check"><input type="checkbox"><span><b>Q49</b> 我同时写“小草＋男孩＋两者相似点”。</span></label>
+</div>
+<div class="task"><b>Direct Info 与 Inference 再分清：</b><p><span class="tag direct">Direct Info</span> 可以直接在篇章中找到、引用或改写的事实。</p><p><span class="tag infer">Inference</span> 文章没有直接说，需要根据证据归纳人物特点、作用、关系或深层意思。</p></div>
+<div class="done"><button class="btn donebtn" data-step="4">本步完成</button></div>
+</section>
+</main>
+
+<script>
+(function(){
+  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const done=new Set();
+  function update(){ $('#doneN').textContent=done.size; $('#bar').style.width=(done.size/4*100)+'%'; }
+  $$('.donebtn').forEach(b=>b.addEventListener('click',()=>{const n=b.dataset.step;if(done.has(n)){done.delete(n);b.classList.remove('on');b.textContent='本步完成'}else{done.add(n);b.classList.add('on');b.textContent='✓ 本步已完成'}update()}));
+  $('#reset').addEventListener('click',()=>{ if(!confirm('确定重置所有互动状态和作答吗？'))return; location.reload(); });
+
+  $$('.vocab').forEach(b=>b.addEventListener('click',()=>{const p=$('#'+b.dataset.pop);if(p)p.classList.toggle('show')}));
+  $$('.speak').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();if('speechSynthesis' in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(b.dataset.word||'');u.lang='zh-CN';u.rate=.82;speechSynthesis.speak(u)}}));
+
+  const qs=[
+    {q:'第1段主要写什么？',a:1,opts:['作者和母亲专门研究各种野草的名称。','作者发现不起眼的小草也会开花，并从母亲的话中得到启发。','作者认为只有蒲公英和狗尾巴草会开花。'],h1:'先找这一段的“发现＋得到的启发”。',h2:'重点不是草的名称，而是“每一棵草都会开花”。'},
+    {q:'第2段主要突出男孩怎样的处境？',a:1,opts:['成绩不好，所以他不愿意认真上课。','普通、有听力缺陷、成绩不佳，长期被忽略。','穿着特别，因此常成为全班焦点。'],h1:'把“外在情况＋学习处境＋班级位置”一起看。',h2:'注意“很不出众”“耳聋”“成绩不太好”“透明人”。'},
+    {q:'第3段为什么说“爆出冷门”？',a:2,opts:['学校临时取消了手工比赛。','老师亲自制作泥娃娃参赛。','大家本来失望，却突然出现意料之外的优秀作品。'],h1:'先看“这时”前面，再看后面出现什么。',h2:'前文是“作品令人失望”，后文突然出现优秀泥娃娃。'},
+    {q:'第5段为什么重新写“小草”？',a:0,opts:['把男孩与小草联系起来，照应开头并点明含义。','补充牛耳朵的植物知识。','说明作者以后想参加手工比赛。'],h1:'想一想第1段和第5段有什么重复意象。',h2:'“草会开花”与男孩后来“获得成功”形成对应。'}
+  ];
+  const mc=$('#mcqs');
+  qs.forEach((x,i)=>{
+    const d=document.createElement('div');d.className='task';d.dataset.tries='0';
+    d.innerHTML='<h3>'+(i+1)+'. '+x.q+'</h3>'+x.opts.map((o,j)=>'<label class="opt"><input type="radio" name="m'+i+'" value="'+j+'"><span>'+o+'</span></label>').join('')+'<button class="btn soft mcbtn">检查</button><div class="fb"></div>';
+    const btn=d.querySelector('.mcbtn'),fb=d.querySelector('.fb');
+    btn.addEventListener('click',()=>{const p=d.querySelector('input:checked');if(!p){fb.className='fb show bad';fb.textContent='请先选择。';return}let t=Number(d.dataset.tries);if(Number(p.value)===x.a){fb.className='fb show good';fb.innerHTML='✓ 正确。<span class="en">Correct — you have identified the main idea.</span>';btn.disabled=true;return}t++;d.dataset.tries=t;fb.className='fb show bad';if(t===1)fb.innerHTML='第一次提示：'+x.h1+'<span class="en">First hint: return to the paragraph and locate its main focus.</span>';else{fb.innerHTML='第二次提示：'+x.h2+'<span class="en">Second hint: use these specific textual clues, then try again.</span>'}});
+    mc.appendChild(d);
+  });
+
+  const ot=['发现不起眼的小草也会开花','想到班里一位长期被忽略的同学','学校手工比赛出现意外的优秀作品','获奖者竟是那位同学，他说出自己的信念','作者再次写小草，把“开花”与男孩的成功联系起来'];
+  let order=[2,0,4,1,3],sel=null,orderTry=0;
+  function drawOrder(){const box=$('#orderBox');box.innerHTML='';order.forEach((v,p)=>{const r=document.createElement('div');r.className='orderrow'+(sel===p?' sel':'');r.innerHTML='<span class="seq">'+(p+1)+'</span><span>'+ot[v]+'</span><span class="tiny">点两张交换</span>';r.addEventListener('click',()=>{if(sel===null)sel=p;else if(sel===p)sel=null;else{[order[sel],order[p]]=[order[p],order[sel]];sel=null}drawOrder()});box.appendChild(r)})}
+  drawOrder();
+  $('#checkOrder').addEventListener('click',()=>{const ok=order.every((v,i)=>v===i),fb=$('#orderFb');if(ok){fb.className='fb show good';fb.innerHTML='✓ 正确：写景启发 → 想到同学 → 比赛转折 → 颁奖揭晓 → 回扣小草。'}else{orderTry++;fb.className='fb show bad';fb.textContent=orderTry===1?'提示：先找到“这让我想到一位同学”这个转接点。':'再提示：比赛一定在颁奖之前；最后一段重新写回小草。'}});
+
+  const cards=[{id:'g1',t:'看起来很不起眼',b:'grass'},{id:'g2',t:'也有自己的花期，会开花',b:'grass'},{id:'b1',t:'普通、有缺陷，长期被忽略',b:'boy'},{id:'b2',t:'凭努力取得成功，展现价值',b:'boy'}];
+  let loc={g1:'pool',g2:'pool',b1:'pool',b2:'pool'},active=null,mapTry=0;
+  function renderCards(){['pool','grass','boy'].forEach(id=>$('#'+id).innerHTML='');cards.forEach(c=>{const b=document.createElement('button');b.type='button';b.className='chip'+(active===c.id?' active':'');b.textContent=c.t;b.addEventListener('click',e=>{e.stopPropagation();active=active===c.id?null:c.id;renderCards()});$('#'+loc[c.id]).appendChild(b)})}
+  ['grass','boy'].forEach(id=>$('#'+id).addEventListener('click',()=>{if(active){loc[active]=id;active=null;renderCards()}}));
+  $('#pool').addEventListener('click',()=>{if(active){loc[active]='pool';active=null;renderCards()}});
+  renderCards();
+  $('#checkMap').addEventListener('click',()=>{const ok=cards.every(c=>loc[c.id]===c.b),fb=$('#mapFb');if(ok){fb.className='fb show good';fb.innerHTML='✓ 正确。下一步把两边合成一句：都不起眼，却都有自己的价值和“花期”。'}else{mapTry++;fb.className='fb show bad';fb.textContent=mapTry===1?'提示：先分清哪些句子是写植物，哪些是写男孩。':'再提示：“会开花”属于小草；“凭努力获奖”属于男孩。'}});
+
+  $$('.ev').forEach(b=>b.addEventListener('click',()=>{b.classList.toggle('selected');const id=b.dataset.tray;const items=$$('.ev[data-tray="'+id+'"].selected').map(x=>x.textContent);$('#'+id).innerHTML=items.length?items.map(x=>'• '+x).join('<br>'):'还没有选证据。'}));
+  $$('.reveal').forEach(b=>b.addEventListener('click',()=>{const a=$('#'+b.dataset.target);a.classList.toggle('show');b.textContent=a.classList.contains('show')?'收起解析':'我已作答，分层查看解析'}));
+  update();
+})();
+</script>
+</body>
+</html>
