@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>随堂作答 ·《别上假信息的当》</title>
+<style>
+:root{
+  --ink:#10202b; --sea:#0a3d62; --teal:#1b7b8c; --spice:#d97904;
+  --sand:#fbf3e7; --paper:#eef3f5; --line:#c9d8de; --ok:#1f7a5a; --no:#b23a2f; --muted:#5b6770;
+  --body:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:19px;line-height:1.7;
+  padding:0 0 40px;-webkit-user-select:none;user-select:none}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+header{background:var(--sea);color:#fff;padding:14px 0;border-radius:0 0 20px 20px}
+header .wrap{display:flex;justify-content:space-between;align-items:center;font-size:17px}
+header b{font-size:20px}
+.card{background:#fff;border-radius:16px;padding:18px;margin:16px 0;box-shadow:0 1px 3px rgba(16,32,43,.1)}
+
+/* 登记 */
+.numgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin:8px 0 4px}
+.numgrid button{aspect-ratio:1;border:2px solid var(--line);background:#fff;border-radius:12px;
+  font:inherit;font-weight:700;font-size:18px;cursor:pointer;min-height:44px}
+.numgrid button.on{background:var(--sea);border-color:var(--sea);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{border:2px solid var(--line);background:#fff;border-radius:999px;padding:11px 20px;
+  font:inherit;cursor:pointer;min-height:50px}
+.chips button.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn{display:block;width:100%;background:var(--spice);color:#fff;border:0;border-radius:14px;padding:16px;
+  font:inherit;font-weight:700;font-size:20px;cursor:pointer;min-height:58px}
+.btn:disabled{background:#b8c4ca}
+label.lbl{display:block;font-weight:600;margin:16px 0 4px}
+
+/* 等待 */
+.wait{text-align:center;padding:52px 10px}
+.pulse{width:16px;height:16px;border-radius:50%;background:var(--spice);margin:0 auto 16px;
+  animation:bp 1.4s ease-in-out infinite}
+@keyframes bp{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.8);opacity:.35}}
+.big{font-size:26px;font-weight:700;color:var(--sea);margin:0 0 6px}
+.hint{color:var(--muted);font-size:16px}
+
+/* 题目 */
+.tag{color:var(--spice);font-weight:700;font-size:15px;margin:0 0 4px}
+.stem{font-size:21px;font-weight:700;color:var(--sea);line-height:1.55;margin:0 0 14px}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;
+  padding:14px 16px;margin:9px 0;font:inherit;color:inherit;cursor:pointer;min-height:56px}
+.opt .k{display:inline-block;width:30px;height:30px;line-height:30px;text-align:center;border-radius:50%;
+  background:var(--paper);color:var(--sea);font-weight:700;margin-right:10px;font-size:15px}
+.opt.mine{border-color:var(--sea);background:#eef4f7}
+.opt.mine .k{background:var(--sea);color:#fff}
+.opt.right{border-color:var(--ok);background:#eaf6f0}
+.opt.wrongpick{border-color:var(--no);background:#fceeec}
+.opt[disabled]{opacity:.95;cursor:default}
+.seq{min-height:56px;background:var(--sand);border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:8px;
+  align-items:center;margin:8px 0}
+.seq:empty::before{content:"点上面的选项，按时间先后排进来";color:var(--muted);font-size:15px}
+.pill{background:var(--sea);color:#fff;border-radius:10px;padding:9px 13px;font-size:17px}
+.pill i{font-style:normal;opacity:.7;margin-right:5px}
+.mrow{margin:12px 0}
+.mrow p{margin:0 0 6px;font-weight:700}
+.mrow .chips button{flex:1;min-width:0;padding:12px 8px}
+textarea,input.tin{width:100%;font:inherit;padding:14px;border:2px solid var(--line);border-radius:12px;
+  -webkit-user-select:text;user-select:text}
+textarea{min-height:110px;line-height:1.8;resize:vertical}
+.fb{border-radius:12px;padding:13px 15px;margin-top:12px;font-size:17px}
+.fb.good{background:#eaf6f0;border-left:5px solid var(--ok)}
+.fb.bad{background:#fceeec;border-left:5px solid var(--no)}
+.fb.plain{background:var(--sand);border-left:5px solid var(--spice)}
+.fb b{display:block;margin-bottom:2px}
+.tbar{height:10px;border-radius:999px;background:#e4ecef;overflow:hidden;margin:12px 0 2px}
+.tbar i{display:block;height:100%;background:var(--spice);transition:width 1s linear}
+.tbar.up i{background:var(--no)}
+.tsec{color:var(--muted);font-size:15px;margin:0}
+.hidden{display:none}
+/* 成绩条：只显示「我的分／我们组的分／小组排名」，不显示个人排名 */
+.sbar{display:flex;gap:10px;margin:14px 0 0}
+.sbar div{flex:1;background:#fff;border-radius:14px;padding:10px 8px;text-align:center;
+  box-shadow:0 1px 3px rgba(16,32,43,.1)}
+.sbar b{display:block;font-size:24px;color:var(--sea);line-height:1.2}
+.sbar span{font-size:14px;color:var(--muted)}
+/* 分组结果 */
+.grpbox{background:var(--sand);border-radius:14px;padding:14px 16px;margin:10px 0 0}
+.grpbox b{color:var(--sea);font-size:21px}
+.grpbox span{display:block;color:var(--muted);font-size:16px;margin-top:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header><div class="wrap">
+  <b>随堂作答</b><span id="me"></span>
+</div></header>
+
+<main class="wrap">
+  <div class="sbar hidden" id="sbar"></div>
+  <section id="gate">
+    <div class="card">
+      <p class="big" style="margin:0 0 12px">先登记</p>
+      <label class="lbl">你的学号</label>
+      <div class="numgrid" id="nos"></div>
+      <p class="hint" id="rosternote" style="margin:2px 0 0"></p>
+      <div id="grpwrap">
+        <label class="lbl">你的小组</label>
+        <div class="chips" id="grps"></div>
+      </div>
+      <div id="grpauto" class="grpbox hidden"></div>
+      <p style="margin:20px 0 0"><button class="btn" id="go">进入课堂</button></p>
+      <p class="hint" id="err" style="color:var(--no)"></p>
+    </div>
+  </section>
+  <section id="body"></section>
+</main>
+
+<script src="core-questions.js"></script>
+<script>
+const QS = window.CORE_QS, $ = s => document.querySelector(s);
+let no=0, grp=0, seq=-1, st=null, sent={}, myAns={}, timer=null, poller=null, curInterval=0;
+let ROSTER=null, GROUPS={}, BOARD=null;
+
+/* ---------- 先拉一次名单，再渲染学号格 ---------- */
+async function loadRoster(){
+  try{
+    const s = await (await fetch("/api/live")).json();
+    ROSTER = (s && Array.isArray(s.roster) && s.roster.length) ? s.roster : null;
+    GROUPS = (s && s.groups) || {};
+  }catch(e){ ROSTER=null; }
+  buildNos();
+}
+function buildNos(){
+  const nos=$("#nos"); nos.innerHTML="";
+  const list = ROSTER || Array.from({length:40},(_,i)=>i+1);
+  if(!ROSTER){
+    $("#rosternote").textContent = "老师还没设定名单，先按你的学号登记即可。";
+  } else {
+    $("#rosternote").textContent = "老师设定的名单共 " + ROSTER.length
+      + " 人，只显示本班高华学生的学号。找不到你的学号？请举手告诉老师。";
+  }
+  list.forEach(i=>{
+    const b=document.createElement("button"); b.textContent=i;
+    b.onclick=()=>{[...nos.children].forEach(c=>c.classList.remove("on"));b.classList.add("on");no=i;showMyGroup();};
+    nos.appendChild(b);
+  });
+}
+loadRoster();
+const grps=$("#grps");
+for(let i=1;i<=8;i++){
+  const b=document.createElement("button"); b.textContent="第 "+i+" 组";
+  b.onclick=()=>{[...grps.children].forEach(c=>c.classList.remove("on"));b.classList.add("on");grp=i;};
+  grps.appendChild(b);
+}
+/* 老师已经自动分组时，学生不必自己选组：点学号就知道自己在第几组、组员是谁 */
+function showMyGroup(){
+  const g = GROUPS[no];
+  if(!g){ $("#grpwrap").classList.remove("hidden"); $("#grpauto").classList.add("hidden"); return; }
+  grp = g;
+  const mates = Object.keys(GROUPS).map(Number).filter(n=>GROUPS[n]===g && n!==no).sort((a,b)=>a-b);
+  $("#grpwrap").classList.add("hidden");
+  $("#grpauto").classList.remove("hidden");
+  $("#grpauto").innerHTML = '<b>你在第 '+g+' 组</b><span>组员：'
+    + (mates.length ? mates.join("、") : "暂时只有你") + '</span>';
+}
+
+$("#go").onclick=async()=>{
+  if(!no){$("#err").textContent="请点你的学号。";return;}
+  if(!grp){$("#err").textContent="请点你的小组。";return;}
+  $("#gate").classList.add("hidden");
+  $("#me").textContent="学号 "+no+"　第 "+grp+" 组";
+  try{ await post({action:"join"}); }catch(e){}
+  await pull(); setPoll(5000);
+  timer=setInterval(tickTimer,1000);
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden) pull(); });
+};
+
+function setPoll(ms){
+  if(curInterval===ms) return;
+  curInterval=ms; if(poller) clearInterval(poller);
+  poller=setInterval(pull, ms);
+}
+async function post(extra){
+  return fetch("/api/answer",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(Object.assign({no,grp},extra))});
+}
+async function pull(){
+  let s=null;
+  try{ s=await (await fetch("/api/live")).json(); }catch(e){}
+  if(!s){ draw(null); return; }
+  if(s.groups && s.groups[no] && s.groups[no]!==grp) grp = s.groups[no];   // 老师中途重新分组
+  BOARD = s.board || null; renderScore();
+  // 作答与讨论时勤问，讲课时少问——省流量
+  setPoll(s.pollMs || (s.phase==="vote"||s.phase==="discuss" ? 2000 : 5000));
+  if(s.seq!==seq){ seq=s.seq; st=s; draw(s); }
+  else if(s.phase==="vote"){ st=s; }
+}
+
+/* 成绩条：分数由老师端在揭晓时结算后推下来，作答途中不会跳动 */
+function renderScore(){
+  const bar=$("#sbar");
+  if(!BOARD || !no){ bar.classList.add("hidden"); return; }
+  const mine = BOARD.p && BOARD.p[no]!==undefined ? BOARD.p[no] : 0;
+  const list = BOARD.g || [];
+  const idx = list.findIndex(x=>x.g===grp);
+  const mygrp = idx>=0 ? list[idx] : null;
+  bar.classList.remove("hidden");
+  bar.innerHTML =
+      '<div><b>'+mine+'</b><span>我的分</span></div>'
+    + '<div><b>'+(mygrp?mygrp.avg:0)+'</b><span>第 '+grp+' 组</span></div>'
+    + '<div><b>'+(idx>=0?(idx+1)+" / "+list.length:"—")+'</b><span>小组排名</span></div>';
+}
+
+/* ---------- 画面 ---------- */
+function draw(s){
+  const el=$("#body");
+  if(!s){ el.innerHTML='<div class="card wait"><p class="big">连不上课堂</p><p class="hint">请举手告诉老师。</p></div>'; return; }
+  if(s.phase==="slide"||s.phase==="idle"||!s.qid){
+    el.innerHTML='<div class="card wait"><div class="pulse"></div><p class="big">看白板</p>'
+      +'<p class="hint">老师出题时，这里会自动亮起来。</p></div>'; return; }
+  const q=QS.find(x=>x.id===s.qid);
+  if(!q){ el.innerHTML='<div class="card wait"><p class="big">看白板</p></div>'; return; }
+  const key=q.id+"_"+s.round, my=myAns[key];
+
+  if(s.phase==="discuss"){
+    el.innerHTML='<div class="card"><p class="tag">'+esc(q.tag)+'</p><p class="stem">'+q.stem+'</p>'
+      +'<div class="fb plain"><b>现在和旁边的同学讨论一分钟。</b>'
+      +(my!==undefined?'你刚才选的是 '+ansLabel(q,my)+'。想清楚了，等一下再投一次。':'你刚才没作答。')
+      +'</div></div>'; return;
+  }
+  if(s.phase==="reveal"){ el.innerHTML=revealHTML(q,s,my); return; }
+  el.innerHTML='<div class="card" id="qc"></div>';
+  voteHTML(q,s,key,my);
+}
+
+/* ★ 防邻座抄答案：shuffle 的题，每台 iPad 的选项顺序都不一样。
+   种子＝学号＋题号＋轮次，所以同一个学生刷新页面顺序不变（不会看花眼），
+   不同学生顺序不同（「我选B」对旁边的人毫无意义）。
+   ★ 回传的仍然是「原始选项编号」，老师端的分布图和计分完全不受影响。 */
+function permFor(q, round){
+  const n = q.opts ? q.opts.length : 0;
+  const idx = Array.from({length:n},(_,i)=>i);
+  if (!q.shuffle) return idx;
+  let h = 2166136261;
+  const seed = no + "|" + q.id + "|" + round;
+  for (let i=0;i<seed.length;i++){ h ^= seed.charCodeAt(i); h = Math.imul(h, 16777619); }
+  const rnd = () => { h ^= h<<13; h ^= h>>>17; h ^= h<<5; h |= 0; return (h>>>0) / 4294967296; };
+  for (let i=n-1;i>0;i--){ const j = Math.floor(rnd()*(i+1)); const t=idx[i]; idx[i]=idx[j]; idx[j]=t; }
+  return idx;
+}
+
+function voteHTML(q,s,key,my){
+  // ★ 倒计时归零不锁题（读得慢的学生不该因此被扣分），只有老师收卷才锁。
+  const c=$("#qc"); const locked = my!==undefined || !!s.closed;
+  let h='<p class="tag">'+esc(q.tag)+(q.rounds===2?"　第 "+s.round+" 次投票":"")+'</p>'
+    +'<p class="stem">'+q.stem+'</p>';
+  c.innerHTML=h;
+
+  if(q.type==="choice"){
+    permFor(q, s.round).forEach((oi,pos)=>{
+      const b=document.createElement("button");
+      b.className="opt"+(my===oi?" mine":""); b.disabled=locked;
+      b.innerHTML='<span class="k">'+"ABCD"[pos]+'</span>'+q.opts[oi];
+      b.onclick=()=>submit(q,key,String(oi),oi);
+      c.appendChild(b);
+    });
+  }
+  else if(q.type==="order"){
+    const pool=document.createElement("div"); pool.className="chips";
+    const box=document.createElement("div"); box.className="seq";
+    const picked=[];
+    const redraw=()=>{ box.innerHTML=picked.map((v,i)=>'<span class="pill"><i>'+(i+1)+'.</i>'+esc(q.items[v])+'</span>').join(""); };
+    q.items.forEach((it,idx)=>{
+      const b=document.createElement("button"); b.textContent=it; b.disabled=locked;
+      b.onclick=()=>{ if(picked.includes(idx))return; picked.push(idx); b.disabled=true; b.style.opacity=.4; redraw();
+        if(picked.length===q.items.length) submit(q,key,picked.join(""),picked.join("")); };
+      pool.appendChild(b);
+    });
+    const undo=document.createElement("button"); undo.textContent="↺ 重排"; undo.disabled=locked;
+    undo.onclick=()=>{ picked.length=0; redraw(); [...pool.children].forEach(b=>{b.disabled=false;b.style.opacity=1;}); };
+    pool.appendChild(undo);
+    c.appendChild(pool); c.appendChild(box);
+  }
+  else if(q.type==="match"){
+    const pick=[];
+    q.left.forEach((l,i)=>{
+      const row=document.createElement("div"); row.className="mrow";
+      row.innerHTML='<p>'+esc(l)+'</p>';
+      const ch=document.createElement("div"); ch.className="chips";
+      q.right.forEach((r,j)=>{
+        const b=document.createElement("button"); b.textContent=r; b.disabled=locked;
+        b.onclick=()=>{ [...ch.children].forEach(x=>x.classList.remove("on")); b.classList.add("on"); pick[i]=j;
+          if(pick.filter(v=>v!==undefined).length===q.left.length) submit(q,key,pick.join(""),pick.join("")); };
+        ch.appendChild(b);
+      });
+      row.appendChild(ch); c.appendChild(row);
+    });
+  }
+  else if(q.type==="text"){
+    const short=q.maxlen<=8;
+    const inp=document.createElement(short?"input":"textarea");
+    if(short){ inp.className="tin"; inp.type="text"; }
+    inp.placeholder=q.placeholder||""; inp.maxLength=q.maxlen||80; inp.disabled=locked;
+    c.appendChild(inp);
+    const b=document.createElement("button"); b.className="btn"; b.style.marginTop="12px";
+    b.textContent="提交"; b.disabled=locked;
+    b.onclick=()=>{
+      const t=inp.value.trim(); if(!t){ inp.focus(); return; }
+      const code = q.auto===false ? "9" : ((q.accept||[]).some(a=>t.includes(a)) ? "1" : "0");
+      submit(q,key,code,t,t);
+    };
+    c.appendChild(b);
+  }
+
+  const bar=document.createElement("div"); bar.className="tbar"; bar.id="tb"; bar.innerHTML="<i></i>";
+  const sec=document.createElement("p"); sec.className="tsec"; sec.id="ts";
+  c.appendChild(bar); c.appendChild(sec);
+  const note=document.createElement("p"); note.className="hint"; note.style.marginTop="8px";
+  note.textContent = my!==undefined ? "已提交，不能改。等全班答完，看白板。"
+    : locked ? "老师已经收卷，这题不能再作答了。"
+    : "点了就算提交，不能改，想好再点。答错不扣分，不答才扣分。";
+  c.appendChild(note);
+  tickTimer();
+}
+
+async function submit(q,key,code,mine,text){
+  if(myAns[key]!==undefined) return;
+  myAns[key]=mine; draw(st);
+  try{ await post(text!==undefined ? {qid:q.id,round:st.round,code,text} : {qid:q.id,round:st.round,code}); }catch(e){}
+}
+
+function revealHTML(q,s,my){
+  let h='<div class="card"><p class="tag">'+esc(q.tag)+'</p><p class="stem">'+q.stem+'</p>';
+  if(q.hold){
+    h+='<div class="fb plain"><b>先不公布答案。</b>记住你选的是 '+(my!==undefined?ansLabel(q,my):"（没作答）")
+      +'，下课前我们回来看这一题。</div></div>'; return h;
+  }
+  if(q.type==="choice"){
+    permFor(q, s.round).forEach((oi,pos)=>{
+      const cls = oi===q.ans ? " right" : (my===oi ? " wrongpick" : "");
+      h+='<div class="opt'+cls+'"><span class="k">'+"ABCD"[pos]+'</span>'+q.opts[oi]+'</div>';
+    });
+  } else if(q.type==="order"){
+    h+='<div class="fb plain"><b>正确顺序</b>'+esc(q.ans.map((v,i)=>(i+1)+". "+q.items[v]).join("　→　"))+'</div>';
+  } else if(q.type==="match"){
+    h+='<div class="fb plain"><b>正确配对</b>'+esc(q.left.map((l,i)=>l+" — "+q.right[q.ans[i]]).join("　·　"))+'</div>';
+  } else if(q.type==="text"){
+    h+='<div class="fb plain"><b>你写的</b>'+esc(my===undefined?"（没作答）":my)+'</div>';
+  }
+  let right=null;
+  if(my!==undefined){
+    if(q.type==="choice") right = my===q.ans;
+    else if(q.type==="order"||q.type==="match") right = my===q.ans.join("");
+    else if(q.type==="text"&&q.auto) right = (q.accept||[]).some(a=>String(my).includes(a));
+  }
+  h+='<div class="fb '+(right===null?"plain":right?"good":"bad")+'"><b>'
+    + (my===undefined ? "这题你没作答（扣 5 分）"
+       : right===null ? "已收到，等老师讲评"
+       : right ? "答对了" : "答错了——不扣分，看清楚为什么")
+    + '</b>'+esc(q.why)+'</div></div>';
+  return h;
+}
+function ansLabel(q,my){
+  // 打乱过的题不能报字母（每个人的 B 不是同一句），直接把句子显示出来
+  if(q.type==="choice") return q.shuffle ? "「"+q.opts[my]+"」" : "ABCD"[my];
+  return String(my);
+}
+function tickTimer(){
+  const bar=document.getElementById("tb"), sec=document.getElementById("ts");
+  if(!bar||!st||st.phase!=="vote"||!st.deadline){ if(bar)bar.style.display="none"; if(sec)sec.textContent=""; return; }
+  const left=Math.max(0, st.deadline-Date.now());
+  const q=QS.find(x=>x.id===st.qid); const total=q?q.secs*1000:30000;
+  bar.style.display="block";
+  bar.querySelector("i").style.width=Math.min(100,left/total*100)+"%";
+  bar.className="tbar"+(left<=0?" up":"");
+  sec.textContent = left>0 ? "还有 "+Math.ceil(left/1000)+" 秒" : "时间到了，快点，老师随时收卷";
+}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+</script>
+</body>
+</html>
