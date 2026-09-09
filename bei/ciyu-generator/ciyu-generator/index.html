@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>华文通｜词语学习单生成器</title>
+  <style>
+    :root{--blue:#173b66;--pale:#f4f8fc;--line:#d9e3ef;--green:#087f5b;--red:#b42318}
+    *{box-sizing:border-box}body{margin:0;background:var(--pale);color:#18324d;font-family:Arial,"Noto Sans SC",sans-serif;line-height:1.6}
+    .wrap{max-width:1120px;margin:auto;padding:28px 18px 60px}.top{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 8px 24px #173b6610}
+    h1,h2{color:var(--blue);margin:0 0 8px}h1{font-size:28px}.sub{color:#58708a;margin:0 0 22px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}label{font-weight:700;color:var(--blue)}input,textarea,select{font:inherit;border:1px solid #b8c9da;border-radius:10px;padding:10px 12px;background:#fff}textarea{min-height:150px;resize:vertical}
+    .hint{font-size:13px;color:#687f95}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.btn{border:0;border-radius:10px;padding:11px 16px;font-weight:700;cursor:pointer;background:var(--blue);color:#fff}.btn.secondary{background:#e8f0f8;color:var(--blue)}.btn.green{background:var(--green)}.btn:disabled{opacity:.5;cursor:not-allowed}
+    .status{margin-top:14px;padding:10px 12px;border-radius:10px;background:#eef5fb;color:#42627f;white-space:pre-wrap}.status.error{background:#fff0ef;color:var(--red)}.status.ok{background:#eaf8f2;color:var(--green)}
+    .preview{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}.preview iframe{width:100%;height:560px;border:1px solid var(--line);border-radius:10px;background:#fff}.tabs{display:flex;gap:8px;margin:14px 0}.tab.active{background:var(--blue);color:white}.tab{border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:#fff;cursor:pointer}
+    .note{font-size:13px;background:#fff9e8;border:1px solid #f0d58a;border-radius:10px;padding:11px 13px;margin-top:16px}.small{font-size:12px;color:#66809a}.hidden{display:none!important}
+    @media(max-width:700px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.wrap{padding:16px 10px}.top{padding:18px}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <section class="top">
+    <h1>华文通｜词语学习单生成器</h1>
+    <p class="sub">Teacher preparation tool · Generate a student worksheet and a teacher guide.</p>
+    <div class="grid">
+      <div class="field"><label for="grade">年级</label><select id="grade"><option value="中一">中一</option><option value="中二">中二</option></select></div>
+      <div class="field"><label for="unit">单元</label><input id="unit" placeholder="例如：单元四" /></div>
+      <div class="field full"><label for="title">课文／主题</label><input id="title" placeholder="例如：培养好习惯" /></div>
+      <div class="field full"><label for="words">词语清单</label><textarea id="words" placeholder="每行一个词语，也可以用逗号分隔。例如：&#10;坚持&#10;诱惑&#10;自律"></textarea><span class="hint">建议一次输入 5–15 个词语。生成后请教师检查内容。</span></div>
+      <div class="field full"><label for="goal">教学重点（可选）</label><textarea id="goal" placeholder="例如：学生能理解词义，并能根据语境选择正确用法。"></textarea></div>
+      <div class="field full"><label for="key">DeepSeek API Key</label><input id="key" type="password" placeholder="只在本机本次使用，不会写入代码" /><span class="hint">现有 hwt-ai-proxy 需要此 Key。不要把 Key 写进 GitHub 文件。</span></div>
+    </div>
+    <div class="actions"><button class="btn" id="generate">生成学习单</button><button class="btn secondary" id="clear">清空</button></div>
+    <div id="status" class="status">请填写资料，然后点击“生成学习单”。</div>
+    <div class="note">本工具只负责生成和下载文件，不会自动发布到学生总站。确认内容无误后，把学生版命名为 <b>index.html</b>，上传到 huawentong-home/du/ciyu/ 对应目录。</div>
+  </section>
+
+  <section class="preview hidden" id="result">
+    <h2>预览</h2>
+    <div class="tabs"><button class="tab active" data-view="student">学生版</button><button class="tab" data-view="teacher">教师版</button></div>
+    <iframe id="frame" title="生成页面预览"></iframe>
+    <div class="actions"><button class="btn green" id="downloadStudent">下载学生版 index.html</button><button class="btn green" id="downloadTeacher">下载教师版 teacher.html</button><button class="btn secondary" id="downloadJson">下载 data.json</button></div>
+  </section>
+</main>
+<script>
+const PROXY_URL="https://hwt-ai-proxy.lyqlym2015.workers.dev/";
+let generated={student:"",teacher:"",data:null};
+const $=id=>document.getElementById(id);
+function setStatus(msg,type=""){const el=$("status");el.textContent=msg;el.className="status "+type}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function words(){return $("words").value.split(/[\n,，、]+/).map(x=>x.trim()).filter(Boolean)}
+function download(name,text,type="text/html"){const blob=new Blob([text],{type});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function parseJson(text){let s=text.trim().replace(/^```(?:json)?/i," ").replace(/```$/," ").trim();const a=s.indexOf("{");const b=s.lastIndexOf("}");if(a>=0&&b>a)s=s.slice(a,b+1);return JSON.parse(s)}
+function buildStudent(d){const qs=(d.questions||[]).map((q,i)=>`<section class="q"><div class="num">${i+1}</div><h2>${esc(q.word||"")}：${esc(q.question||"")}</h2><div class="options">${(q.options||[]).map((o,j)=>`<button data-correct="${j===q.answer}" onclick="answer(this)">${esc(o)}</button>`).join("")}</div><div class="feedback" aria-live="polite"></div><details><summary>查看提示 / Hint</summary><p>${esc(q.english||"")}</p></details></section>`).join("");return `<!doctype html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(d.title||"词语学习单")}</title><style>${studentCss()}</style></head><body><main><p class="eyebrow">${esc(d.grade||"")} · ${esc(d.unit||"")}</p><h1>${esc(d.title||"词语学习单")}</h1><p>请先独立思考，再选择答案。答错后请重新作答。</p><div id="progress"></div>${qs}</main><script>let n=0;function answer(b){const q=b.closest('.q'),f=q.querySelector('.feedback');q.querySelectorAll('button').forEach(x=>x.disabled=true);if(b.dataset.correct==='true'){b.classList.add('ok');f.textContent='正确。Good thinking!';n++;}else{b.classList.add('bad');f.textContent='再想一想。Try again with the context clue.';q.querySelectorAll('button').forEach(x=>x.disabled=false);b.disabled=true;}document.querySelector('#progress').textContent='完成进度：'+n+'/'+document.querySelectorAll('.q').length;}</script></body></html>`}
+function studentCss(){return `body{font-family:Arial,"Noto Sans SC",sans-serif;background:#f4f8fc;color:#18324d;margin:0;padding:24px}main{max-width:850px;margin:auto;background:white;padding:24px;border-radius:16px}.eyebrow{color:#087f5b;font-weight:bold}h1{color:#173b66}.q{border:1px solid #d9e3ef;border-radius:12px;padding:16px;margin:16px 0}.num{color:#087f5b;font-weight:bold}.options{display:grid;gap:8px}.options button{padding:10px;text-align:left;border:1px solid #b8c9da;border-radius:8px;background:#fff;cursor:pointer;font-size:16px}.options button.ok{background:#eaf8f2;border-color:#087f5b}.options button.bad{background:#fff0ef;border-color:#b42318}.feedback{font-weight:bold;margin-top:10px}.q details{margin-top:10px;color:#58708a}`}
+function buildTeacher(d){const rows=(d.questions||[]).map((q,i)=>`<tr><td>${i+1}</td><td>${esc(q.word||"")}</td><td>${esc(q.question||"")}</td><td>${esc((q.options||[])[q.answer]||"")}</td><td>${esc(q.explanation||"")}<br><small>${esc(q.english||"")}</small></td></tr>`).join("");return `<!doctype html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(d.title||"")}｜教师版</title><style>body{font-family:Arial,"Noto Sans SC",sans-serif;max-width:1100px;margin:30px auto;padding:0 20px;color:#18324d}h1,h2{color:#173b66}table{border-collapse:collapse;width:100%}th,td{border:1px solid #b8c9da;padding:10px;text-align:left;vertical-align:top}th{background:#eef5fb}small{color:#58708a}</style></head><body><h1>${esc(d.title||"")}｜教师参考</h1><p>年级：${esc(d.grade||"")}　单元：${esc(d.unit||"")}</p><p><b>教学重点：</b>${esc(d.goal||"未填写")}</p><table><thead><tr><th>题号</th><th>词语</th><th>题目</th><th>答案</th><th>解析</th></tr></thead><tbody>${rows}</tbody></table></body></html>`}
+function prompt(){return `你是新加坡中学高级华文教师。请根据资料生成词语学习单。学生程度较弱，题目要清楚、短、互相排斥；不要编造课文没有提供的事实。每个词语至少生成一道题，题型可为词义、语境选择或正确用法。输出只能是合法JSON，不要Markdown，不要解释。JSON格式：{"questions":[{"word":"词语","question":"中文题目","options":["选项1","选项2","选项3","选项4"],"answer":0,"explanation":"简洁中文解析","english":"Short English hint"}]}`}
+$("generate").onclick=async()=>{const key=$("key").value.trim(),ws=words();if(!key)return setStatus("请先输入 DeepSeek API Key。", "error");if(!$("title").value.trim()||ws.length<1)return setStatus("请填写课文／主题和至少一个词语。","error");setStatus("正在生成，请稍候……");$("generate").disabled=true;const payload={model:"deepseek-chat",temperature:0.3,messages:[{role:"system",content:prompt()},{role:"user",content:JSON.stringify({grade:$("grade").value,unit:$("unit").value,title:$("title").value,words:ws,goal:$("goal").value})}]};try{const res=await fetch(PROXY_URL,{method:"POST",headers:{"Content-Type":"application/json","x-deepseek-key":key},body:JSON.stringify(payload)});const raw=await res.text();if(!res.ok)throw new Error(raw);const api=JSON.parse(raw);const d=parseJson(api.choices?.[0]?.message?.content||"");d.grade=$("grade").value;d.unit=$("unit").value;d.title=$("title").value;d.goal=$("goal").value;generated={data:d,student:buildStudent(d),teacher:buildTeacher(d)};$("result").classList.remove("hidden");show("student");setStatus("生成完成。请先检查学生版和教师版，再下载。","ok")}catch(e){setStatus("生成失败：\n"+e.message,"error")}finally{$("generate").disabled=false}};
+function show(v){$("frame").srcdoc=generated[v];document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.view===v))}document.querySelectorAll(".tab").forEach(x=>x.onclick=()=>show(x.dataset.view));$("downloadStudent").onclick=()=>download("index.html",generated.student);$("downloadTeacher").onclick=()=>download("teacher.html",generated.teacher);$("downloadJson").onclick=()=>download("data.json",JSON.stringify(generated.data,null,2),"application/json");$("clear").onclick=()=>{["unit","title","words","goal","key"].forEach(id=>$(id).value="");$("result").classList.add("hidden");setStatus("请填写资料，然后点击“生成学习单”。")};
+</script>
+</body>
+</html>
