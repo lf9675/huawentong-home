@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="zh-Hans-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>情境记叙文写前指导 · 社区的温情</title>
+<style>
+:root{
+  --ink:#20211f; --muted:#6e716b; --cream:#f8f5ee; --line:#ddd6c8;
+  --zhu:#a5372b; --zhu2:#fbeceb;
+  --green:#2f6f55; --green2:#e6f2ec;
+  --gold:#9b6b22; --gold2:#fcf3df;
+  --blue:#356987; --blue2:#e8f0f5;
+  --purple:#6f5490; --purple2:#f2ecf8;
+  --r:16px; --shadow:0 10px 28px rgba(50,44,36,.10);
+  --serif:"Noto Serif SC","Songti SC","STSong",serif;
+  --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;overflow-y:auto;background:var(--cream);color:var(--ink);
+     font-family:var(--sans);line-height:1.75;font-size:17px;padding-bottom:90px}
+button,input,textarea,select{font:inherit}
+
+/* ---------- 顶栏 ---------- */
+.top{position:sticky;top:0;z-index:30;background:rgba(248,245,238,.96);
+     backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topin{max-width:900px;margin:auto;padding:9px 16px;display:flex;align-items:center;gap:10px}
+.brand{font-weight:900;color:var(--zhu);white-space:nowrap;font-size:15px}
+.bar{flex:1;height:9px;background:#e8e3d8;border-radius:20px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--zhu),#d0705f);transition:.35s}
+.pct{font-weight:900;font-size:13px;color:var(--muted);min-width:38px;text-align:right}
+
+.wrap{max-width:900px;margin:auto;padding:20px 16px}
+
+/* ---------- 通用 ---------- */
+h1{font-family:var(--serif);font-size:clamp(26px,5vw,38px);line-height:1.25;margin:6px 0 4px}
+h2{font-family:var(--serif);font-size:23px;margin:4px 0 4px}
+h3{font-size:17px;margin:16px 0 6px}
+.sub{color:var(--muted);margin:0 0 14px;font-size:15px}
+.en{color:var(--muted);font-size:13.5px;font-style:italic;margin-top:2px}
+.topic{background:#fff;border:1px solid var(--line);border-left:6px solid var(--zhu);
+       border-radius:12px;padding:14px 16px;font-family:var(--serif);font-size:18px;line-height:1.95;margin:14px 0}
+.stage{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px 20px;
+       margin:18px 0;box-shadow:var(--shadow);scroll-margin-top:70px}
+.stage.lock{opacity:.45;pointer-events:none;filter:grayscale(.3);position:relative}
+.stage.lock:after{content:"完成上一关才会打开";position:absolute;inset:0;background:rgba(248,245,238,.75);
+       display:grid;place-items:center;border-radius:var(--r);font-weight:900;color:#8a8478}
+.tag{display:inline-block;font-size:12px;font-weight:900;letter-spacing:.1em;color:#fff;
+     background:var(--zhu);border-radius:20px;padding:3px 11px;margin-bottom:6px}
+.hint{background:var(--gold2);border:1px solid #e6cf9c;border-radius:11px;padding:10px 13px;margin:12px 0;font-size:15.5px}
+.hint b{color:var(--gold)}
+.key{color:var(--zhu);font-weight:900}
+.btn{border:none;border-radius:10px;padding:11px 18px;font-weight:800;cursor:pointer;font-size:16px}
+.btn.main{background:var(--zhu);color:#fff}
+.btn.blue{background:var(--blue);color:#fff}
+.btn.line{background:#fff;border:1.5px solid var(--zhu);color:var(--zhu)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.acts{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.spk{border:1px solid var(--line);background:#fff;border-radius:20px;padding:3px 11px;
+     font-size:14px;cursor:pointer;color:var(--muted)}
+.hidden{display:none!important}
+.fb{display:none;margin-top:10px;border-radius:10px;padding:10px 13px;font-size:15.5px}
+.fb.show{display:block}
+.fb.ok{background:var(--green2);color:#25563f;border:1px solid #a9cdb9}
+.fb.no{background:var(--gold2);color:#71501c;border:1px solid #e6cf9c}
+
+/* ---------- 靶心 ---------- */
+.target{margin:14px 0;background:#faf7f0;border:2px solid var(--line);border-radius:18px;padding:12px}
+.ring{border-radius:14px;padding:10px 10px 12px;position:relative}
+.r3{border:2px dashed #b9b1a1;background:#fdfcf8}
+.r2{border:2px solid var(--gold);background:var(--gold2);margin-top:8px}
+.r1{border:2px solid var(--zhu);background:var(--zhu2);margin-top:8px}
+.rlab{display:block;font-size:13px;font-weight:900;margin-bottom:6px}
+.r3 .rlab{color:#7d7768}.r2 .rlab{color:var(--gold)}.r1 .rlab{color:var(--zhu)}
+.dz{min-height:44px;display:flex;flex-wrap:wrap;gap:7px;align-items:flex-start}
+.pool{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:8px 13px;
+      cursor:pointer;font-weight:700;transition:.15s}
+.chip.on{border-color:var(--blue);background:var(--blue2);box-shadow:0 0 0 3px rgba(53,105,135,.15)}
+.chip.set{cursor:default;border-color:var(--green);background:var(--green2);color:#25563f}
+.chip.shake{animation:sk .3s}
+@keyframes sk{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* ---------- 选择题 ---------- */
+.q{border:1px solid var(--line);border-radius:12px;background:#fdfcf9;padding:14px;margin:12px 0}
+.stem{font-weight:800;margin-bottom:9px}
+.opts{display:grid;gap:8px}
+.opts button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:11px 13px;
+             text-align:left;cursor:pointer;line-height:1.6}
+.opts button.good{background:var(--green2);border-color:var(--green);color:#25563f;font-weight:800}
+.opts button.bad{background:var(--zhu2);border-color:var(--zhu);color:#8b3428}
+
+/* ---------- 素材卡 ---------- */
+.mats{display:grid;gap:10px}
+.mat{border:1.5px solid var(--line);border-radius:12px;padding:12px 13px;background:#fff}
+.mat p{margin:0 0 9px;font-size:16px}
+.mat .no{font-weight:900;color:var(--muted);font-size:13px}
+.judge{display:flex;gap:7px;flex-wrap:wrap}
+.judge button{border:1.5px solid var(--line);background:#fff;border-radius:20px;padding:7px 14px;cursor:pointer;font-weight:800;font-size:15px}
+.judge button.pick{background:var(--blue2);border-color:var(--blue)}
+.mat.done{background:#fbfaf6}
+.mline{font-size:14.5px;margin-top:8px;padding:8px 10px;border-radius:9px}
+.mline.g{background:var(--green2);color:#25563f}
+.mline.b{background:var(--gold2);color:#71501c}
+
+/* ---------- 表格 ---------- */
+.tbl{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;background:#fff}
+.tbl th,.tbl td{border:1px solid var(--line);padding:8px 9px;text-align:left;vertical-align:top}
+.tbl th{background:#f2ede3;font-size:13.5px}
+.tbl td.c{text-align:center;font-size:17px}
+.tbl tr.hi td{background:var(--green2)}
+.tbl tr.lo td{background:var(--zhu2)}
+.scroll{overflow-x:auto}
+
+/* ---------- 生活地图 ---------- */
+.map{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0}
+.spot{border:1.5px solid var(--line);border-radius:12px;padding:11px;background:#fff;cursor:pointer;text-align:center}
+.spot b{display:block;font-size:15px}
+.spot span{font-size:13px;color:var(--muted)}
+.spot.on{border-color:var(--zhu);background:var(--zhu2)}
+
+/* ---------- 详略 ---------- */
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.box{border:2px solid var(--line);border-radius:13px;padding:11px;min-height:120px}
+.box.slow{border-color:var(--zhu);background:var(--zhu2)}
+.box.fast{border-color:var(--blue);background:var(--blue2)}
+.box .bl{font-weight:900;font-size:14.5px;display:block;margin-bottom:7px}
+.box.slow .bl{color:var(--zhu)}.box.fast .bl{color:var(--blue)}
+.card{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:8px 11px;margin-bottom:7px;cursor:pointer;font-size:15.5px}
+.card.on{border-color:var(--blue);box-shadow:0 0 0 3px rgba(53,105,135,.15)}
+.card.set{cursor:default;border-color:var(--green)}
+
+/* ---------- 四诀 ---------- */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.cmp>div{border:1.5px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+.cmp .bad{border-color:#d9b3ae;background:var(--zhu2)}
+.m1{background:#e6f2ec;border-bottom:2px solid var(--green)}
+.m2{background:var(--gold2);border-bottom:2px solid var(--gold)}
+.m3{background:var(--purple2);border-bottom:2px solid var(--purple)}
+.m4{background:var(--blue2);border-bottom:2px solid var(--blue)}
+.legend{display:flex;gap:7px;flex-wrap:wrap;font-size:14px;margin:8px 0}
+.legend span{padding:3px 9px;border-radius:7px;font-weight:800}
+.sent{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.sent p{margin:0 0 8px;font-size:15.5px}
+.pick4{display:flex;gap:6px;flex-wrap:wrap}
+.pick4 button{border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:6px 11px;cursor:pointer;font-size:14.5px;font-weight:700}
+.write{border:1.5px dashed var(--zhu);border-radius:12px;padding:13px;background:#fffdfa;margin:12px 0}
+.write textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;min-height:80px;margin-top:8px;font-size:16px}
+.chk{display:block;margin:6px 0;font-size:15px}
+.chk input{margin-right:7px;transform:scale(1.2)}
+.demo{background:var(--green2);border:1px solid #a9cdb9;border-radius:10px;padding:10px 12px;margin-top:9px;font-size:15.5px}
+
+/* ---------- 路线卡 ---------- */
+.finalcard{background:#fff;border:2.5px solid var(--zhu);border-radius:16px;padding:18px;margin-top:16px}
+.row{display:grid;grid-template-columns:104px 1fr;gap:10px;border-bottom:1px dashed var(--line);padding:9px 0}
+.row:last-of-type{border:0}
+.row .k{font-weight:900;color:var(--zhu);font-size:15px}
+.score{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.sbox{background:#faf7f0;border:1px solid var(--line);border-radius:11px;padding:9px 14px;text-align:center}
+.sbox b{font-size:24px;color:var(--zhu);display:block}
+.sbox span{font-size:13px;color:var(--muted)}
+.ck li{margin:5px 0}
+
+.namebar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.namebar input{border:1.5px solid var(--line);border-radius:9px;padding:9px 11px;width:150px}
+
+@media(max-width:700px){
+  .boxes,.cmp,.map{grid-template-columns:1fr}
+  .map{grid-template-columns:repeat(2,1fr)}
+  .stage{padding:18px 14px}
+  .row{grid-template-columns:1fr;gap:2px}
+  body{font-size:16px}
+}
+@media print{.top,.acts,.btn,.spk,.stage{display:none!important}
+  .finalcard{display:block!important;box-shadow:none}
+  #cardStage{display:block!important;opacity:1!important;filter:none!important;border:0;box-shadow:none;padding:0}
+  #cardStage:after{display:none}
+}
+</style>
+<script src="../config.js"></script>
+<script>window.XIEZUO_PAGE={id:"shequ-wenqing",page:1};</script>
+</head>
+<body>
+
+<div class="top"><div class="topin">
+  <div class="brand">写前指导 · 社区的温情</div>
+  <div class="bar"><i id="pbar"></i></div>
+  <div class="pct" id="pct">0%</div>
+</div></div>
+
+<div class="wrap">
+
+<h1>写好情境记叙文的五道门</h1>
+<p class="sub">一关一关走完，你会拿到一张自己的写作路线卡，照着它写作文。</p>
+
+<div class="topic">
+  你是一个<b>不太热衷</b>参与社区活动的人，但在<b>一次</b>邻里活动中，你<b>感受到</b>了<b>社区的温情</b>。试写出事情的经过以及你的感受。
+  <button class="spk" onclick="say('你是一个不太热衷参与社区活动的人，但在一次邻里活动中，你感受到了社区的温情。试写出事情的经过以及你的感受。')">🔊 听题目</button>
+</div>
+
+<div class="namebar">
+  <input id="nm" placeholder="姓名">
+  <input id="cl" placeholder="班级／组别" style="width:130px">
+  <button class="btn main" id="start">开始</button>
+</div>
+
+<!-- ==================== 第一关 ==================== -->
+<section class="stage lock" id="s1">
+  <span class="tag">第一关</span>
+  <h2>关键词是哪几个？</h2>
+  <p class="sub">关键词＝这篇作文<b>要写的重点</b>，不是把题目里的词全圈一遍。<br>
+     <span class="en">Key words = what you must write about.</span></p>
+
+  <div class="hint"><b>怎么分？</b>把词删掉试试看：<br>题目就<span class="key">不知道要写什么</span> → 中心／关键词；题目还在，只是<span class="key">不可以那样写</span> → 题目的规定。<button class="spk" onclick="say('把词删掉试试看。题目就不知道要写什么，那是中心和关键词。题目还在，只是不可以那样写，那是题目的规定。')">🔊</button></div>
+
+  <p style="font-weight:800;margin-bottom:6px">① 先点一个词，② 再点它该进哪一圈。</p>
+  <div class="pool" id="pool"></div>
+
+  <div class="target">
+    <div class="ring r3" data-b="3"><span class="rlab">最外圈 · 题目的规定（不可以怎样）</span>
+      <div class="ring r2" data-b="2"><span class="rlab">中圈 · 关键词（要写最多的）</span>
+        <div class="ring r1" data-b="1"><span class="rlab">靶心 · 中心（全文围绕它）</span>
+          <div class="dz" id="dz1"></div>
+        </div>
+        <div class="dz" id="dz2" style="margin-top:8px"></div>
+      </div>
+      <div class="dz" id="dz3" style="margin-top:8px"></div>
+    </div>
+  </div>
+  <div class="fb" id="fb1"></div>
+
+  <div id="q1wrap" class="hidden">
+    <h3>再问自己三个问题</h3>
+    <div class="q" id="q1a"><div class="stem">1. 把「社区的温情」删掉，这个题目还写得下去吗？</div>
+      <div class="opts">
+        <button data-v="1">不行了，因为不知道要写什么</button>
+        <button data-v="0">还可以，只是短了一点</button>
+      </div><div class="fb" id="f1a"></div></div>
+
+    <div class="q" id="q1b"><div class="stem">2. 那把「一次」删掉呢？</div>
+      <div class="opts">
+        <button data-v="0">题目就写不下去了</button>
+        <button data-v="1">题目还在，但写两件事就拿不到高分</button>
+      </div><div class="fb" id="f1b"></div></div>
+
+    <div class="q" id="q1c"><div class="stem">3. 我全程站在旁边看邻居互相帮忙，算不算「感受到」？</div>
+      <div class="opts">
+        <button data-v="0">算，看见了就是感受到了</button>
+        <button data-v="1">不算，我必须自己参与、被别人关心过</button>
+      </div><div class="fb" id="f1c"></div></div>
+  </div>
+
+  <div class="hint hidden" id="sum1"><b>记住：</b><span class="key">中心是「社区温情」，所以全文最长的一段，必须写「温情」是怎么发生的。</span><br>
+    <button class="spk" onclick="say('中心是社区温情，所以全文最长的一段，必须写温情是怎么发生的。')">🔊</button></div>
+
+  <div class="acts"><button class="btn main hidden" id="n1">下一关 · 选材 →</button></div>
+</section>
+
+<!-- ==================== 第二关 ==================== -->
+<section class="stage lock" id="s2">
+  <span class="tag">第二关</span>
+  <h2>哪些材料能写？哪些写了就低分？</h2>
+  <p class="sub">每张材料给一个判断：❌ 不能用 ／ △ 能用但普通 ／ ✅ 好材料。<br></p>
+  <div class="mats" id="mats"></div>
+  <div class="fb" id="fb2"></div>
+
+  <div id="tblWrap" class="hidden">
+    <h3>八个材料，哪个好哪个差</h3>
+    <p class="sub">三样都要有 ✓，少一样就差一级。想知道为什么，点 🔊。<br><span class="en">Three tests: people? me? change?</span></p>
+    <div class="scroll"><table class="tbl" id="rankTbl"></table></div>
+    <div class="hint"><b>一句话：</b><span class="key">温情来自「人」，不是来自奖品、食物、节目。</span>
+      <button class="spk" onclick="say('温情来自人，不是来自奖品、食物、节目。')">🔊</button></div>
+  </div>
+
+  <div id="mapWrap" class="hidden">
+    <h3>想不到可以写什么？去这些地方找</h3>
+    <div class="hint">① 谁需要帮忙？② 谁在合作？③ 我什么时候加入？④ 谁对我好？<button class="spk" onclick="say('谁需要帮忙？谁在合作？我什么时候加入？谁对我好？')">🔊</button></div>
+    <div class="map" id="map"></div>
+    <p class="sub" style="margin-top:8px">选一个你要写的场景（点一下就好）。</p>
+    <div class="fb" id="fb2b"></div>
+  </div>
+
+  <div id="pickMat" class="hidden">
+    <h3>最后：选定你要写的那一件事</h3>
+    <p class="sub">只能选一件（题目说了「一次」）。</p>
+    <div class="mats" id="goodMats"></div>
+    <div class="fb" id="fb2c"></div>
+  </div>
+
+  <div class="acts"><button class="btn main hidden" id="n2">下一关 · 详略 →</button></div>
+</section>
+
+<!-- ==================== 第三关 ==================== -->
+<section class="stage lock" id="s3">
+  <span class="tag">第三关</span>
+  <h2>哪一段要慢下来写？</h2>
+  <p class="sub">① 点一张内容卡，② 再点它该进哪个框。<br></p>
+  <div class="boxes">
+    <div class="box slow" data-k="slow"><span class="bl">🐢 慢镜头 · 详写</span><div id="bslow"></div></div>
+    <div class="box fast" data-k="fast"><span class="bl">🐇 快镜头 · 略写</span><div id="bfast"></div></div>
+  </div>
+  <div id="cardpool" style="margin-top:8px"></div>
+  <div class="fb" id="fb3"></div>
+
+  <div id="ratioWrap" class="hidden">
+    <h3>篇幅长这样才对</h3>
+    <div id="svgRatio"></div>
+    <div class="hint"><b>口诀：</b><span class="key">关键词在哪里发生，镜头就停在哪里。</span>
+      <span class="en">The camera stops where the key word happens.</span>
+      <button class="spk" onclick="say('关键词在哪里发生，镜头就停在哪里。')">🔊</button></div>
+    <div class="q" id="q3"><div class="stem">一段内容要不要详写，看什么？</div>
+      <div class="opts">
+        <button data-v="0">看写起来顺不顺手</button>
+        <button data-v="1">看它能不能证明「社区温情」</button>
+        <button data-v="0">看有没有漂亮的形容词</button>
+      </div><div class="fb" id="f3q"></div></div>
+  </div>
+
+  <div class="acts"><button class="btn main hidden" id="n3">下一关 · 怎么详写 →</button></div>
+</section>
+
+<!-- ==================== 第四关 ==================== -->
+<section class="stage lock" id="s4">
+  <span class="tag">第四关</span>
+  <h2>详写＝把一句话拉成一个场面</h2>
+  <p class="sub">用<span class="key">核心情节详写四诀</span>：发现要细 · 分歧要响 · 心理要真 · 行动要慢</p>
+
+  <p class="en" style="margin:0 0 6px">Four questions: see / say / think / do.
+    <button class="spk" onclick="say('发现要细，我看见什么。分歧要响，谁说了什么。心理要真，我心里怎么想。行动要慢，我做了哪几步。')">🔊</button></p>
+  <table class="tbl">
+    <tr><th style="width:96px">四诀</th><th>就问自己一句</th></tr>
+    <tr><td><b>发现要细</b></td><td>我看见什么？</td></tr>
+    <tr><td><b>分歧要响</b></td><td>谁说了什么？</td></tr>
+    <tr><td><b>心理要真</b></td><td>我心里怎么想？</td></tr>
+    <tr><td><b>行动要慢</b></td><td>我做了哪几步？</td></tr>
+  </table>
+
+  <h3>我做：同一件事，两种写法</h3>
+  <div class="cmp">
+    <div class="bad"><b style="color:var(--zhu)">✗ 一句话</b>
+      <p style="margin:8px 0 0">大家互相帮助，我很感动。</p>
+      <p class="sub" style="margin-top:8px;font-size:14.5px">读者什么也看不见。</p></div>
+    <div><b style="color:var(--green)">✓ 一个场面</b>
+      <p style="margin:8px 0 0;line-height:2.1" id="demoPara"></p></div>
+  </div>
+  <div class="legend">
+    <span class="m1">发现要细</span><span class="m2">分歧要响</span><span class="m3">心理要真</span><span class="m4">行动要慢</span>
+    <button class="spk" onclick="sayDemo()">🔊 听示范</button>
+  </div>
+
+  <h3>我们做：这句用了哪一诀？</h3>
+  <div id="sents"></div>
+  <div class="fb" id="fb4"></div>
+
+  <div id="writeWrap" class="hidden">
+    <h3>你做：写两句最难的</h3>
+    <div class="write">
+      <b>① 心理要真</b>
+      <p class="sub" style="margin:4px 0 0;font-size:14.5px">我要不要走过去帮忙？心里在想什么？</p>
+      <textarea id="w1" placeholder="例：我站在两米外，脚像被黏住……"></textarea>
+      <div id="w1warn" class="fb"></div>
+      <label class="chk"><input type="checkbox"> 我写出了具体的想法或疑问，不只是「我很紧张」</label>
+      <label class="chk"><input type="checkbox"> 我写出了当时的身体感觉</label>
+      <label class="chk"><input type="checkbox"> 我没有用「感动、温暖、有爱」这类词</label>
+      <div class="demo hidden" id="d1"></div>
+    </div>
+    <div class="write">
+      <b>② 行动要慢</b>
+      <p class="sub" style="margin:4px 0 0;font-size:14.5px">我最后怎么做的？拆成至少三步。</p>
+      <textarea id="w2" placeholder="例：我把书包甩到背后，弯下腰……"></textarea>
+      <div id="w2warn" class="fb"></div>
+      <label class="chk"><input type="checkbox"> 我把动作拆成了至少三步</label>
+      <label class="chk"><input type="checkbox"> 我加了停顿或身体感觉</label>
+      <label class="chk"><input type="checkbox"> 每一个动作读者都看得见</label>
+      <div class="demo hidden" id="d2"></div>
+    </div>
+    <div class="acts"><button class="btn blue" id="chkWrite">交上去，看示范答案</button></div>
+    <div class="fb" id="fbW"></div>
+  </div>
+
+  <div class="acts"><button class="btn main hidden" id="n4">最后一关 · 结尾 →</button></div>
+</section>
+
+<!-- ==================== 第五关 ==================== -->
+<section class="stage lock" id="s5">
+  <span class="tag">第五关</span>
+  <h2>结尾：抒情议论三层结构</h2>
+  <p class="sub">提那件事 → 我变了 → 讲道理。点一下，把三句话配到对的一层。<br><span class="en">Recall it → I changed → What it taught me.</span></p>
+  <div id="endWrap"></div>
+  <div class="fb" id="fb5"></div>
+
+  <div class="q hidden" id="q5"><div class="stem">试试看：把结尾「我感受到了社区的温情」这句删掉，读者还看得出中心吗？</div>
+    <div class="opts">
+      <button data-v="1">看得出，因为故事里已经有互助、我的参与和别人的回应</button>
+      <button data-v="0">看不出，所以要在结尾多写三次「很温暖」</button>
+    </div><div class="fb" id="f5q"></div></div>
+
+  <div class="acts"><button class="btn main hidden" id="n5">生成我的写作路线卡 →</button></div>
+</section>
+
+<!-- ==================== 路线卡 ==================== -->
+<section class="stage lock" id="cardStage">
+  <span class="tag">路线卡</span>
+  <h2>我的《社区的温情》写作路线卡</h2>
+  <div class="score">
+    <div class="sbox"><b id="scTotal">0</b><span>总分 / 42</span></div>
+    <div class="sbox"><b id="scGrade">—</b><span>等级</span></div>
+  </div>
+  <div class="fb ok show" id="advice"></div>
+  <div class="finalcard">
+    <div class="row"><span class="k">姓名班级</span><span id="cName">—</span></div>
+    <div class="row"><span class="k">中心</span><span>社区的温情——人与人之间真实的关心、互助、接纳</span></div>
+    <div class="row"><span class="k">关键词</span><span>不太热衷（以前的我）→ 感受到（我自己参与）→ 社区温情（中心）</span></div>
+    <div class="row"><span class="k">题目的规定</span><span>只写一件事 · 发生在邻里活动 · 用「我」来写 · 最后一定要感受到温情</span></div>
+    <div class="row"><span class="k">我的场景</span><span id="cScene">—</span></div>
+    <div class="row"><span class="k">我的材料</span><span id="cMat">—</span></div>
+    <div class="row"><span class="k">详写</span><span>邻居互助的场面 · 我心里的挣扎 · 别人对我的回应</span></div>
+    <div class="row"><span class="k">略写</span><span>我平时不参加的原因 · 怎么下楼 · 天气和布置</span></div>
+    <div class="row"><span class="k">我的心理句</span><span id="cW1">—</span></div>
+    <div class="row"><span class="k">我的动作句</span><span id="cW2">—</span></div>
+    <div class="row"><span class="k">结尾三层</span><span>回扣那场雨 → 我从前怎么想、现在怎么想 → 温情是有人愿意多走一步</span></div>
+    <div class="row"><span class="k">动笔前自检</span><span>
+      <ol class="ck" style="margin:4px 0 0;padding-left:20px">
+        <li>只写了一件事吗？</li>
+        <li>全文用「我」吗？</li>
+        <li>我自己参与了吗，不只是在旁边看？</li>
+        <li>最长的一段是「温情发生的地方」吗？</li>
+        <li>删掉「温暖、感动」，读者还感觉得到吗？</li>
+        <li>结尾三层都写了吗？</li>
+      </ol></span></div>
+  </div>
+  <div class="acts"><button class="btn line" onclick="window.print()">🖨 打印／存成 PDF</button></div>
+</section>
+
+</div>
+
+<script>
+"use strict";
+var $=function(id){return document.getElementById(id)};
+var SC={k1:0,k2:0,k3:0,k4:0,k5:0};var LOG=[],LOGOK={};var BN={1:'中心',2:'关键词',3:'题目的规定'};var QMAP={'q1a':['一B1','审题追问'],'q1b':['一B2','审题追问'],'q1c':['一B3','审题追问'],'q3':['三B1','详略判断'],'q5':['五B1','因果检验']};function log(q,tag,ok,pick,right){if(q in LOGOK)return LOGOK[q];LOGOK[q]=ok?1:0;LOG.push({q:q,tag:tag,ok:ok?1:0,pick:String(pick||'').slice(0,40),right:String(right||'').slice(0,40)});return LOGOK[q]}window.XZ_LOG=LOG;
+var TOTAL=42, doneStage=0;
+var myScene='', myMat='';
+
+/* ---------- 语音 ---------- */
+function say(t){
+  if(!window.speechSynthesis){return}
+  speechSynthesis.cancel();
+  setTimeout(function(){
+    var u=new SpeechSynthesisUtterance(t);
+    u.lang='zh-CN'; u.rate=0.9; speechSynthesis.speak(u);
+  },80);
+}
+function progress(){
+  var p=Math.round(doneStage/5*100);
+  $('pbar').style.width=p+'%'; $('pct').textContent=p+'%';
+}
+function unlock(id){var e=$(id);e.classList.remove('lock');
+  try{if(e.scrollIntoView)e.scrollIntoView({behavior:'smooth',block:'start'})}catch(err){}}
+function finish(n,next){doneStage=Math.max(doneStage,n);progress();if(next)unlock(next)}
+
+/* 通用单选：correct 为正确项的 data-v 值（用 1 表示对） */
+function mcq(box,fbEl,okMsg,noMsg,after){
+  var btns=box.querySelectorAll('.opts button'); var tries=0;
+  var right=''; btns.forEach(function(x){if(x.dataset.v==='1')right=x.textContent});
+  btns.forEach(function(b){
+    b.onclick=function(){
+      if(b.disabled)return; tries++;
+      var qq=QMAP[box.id]||[box.id,'选择题'];
+      log(qq[0],qq[1],b.dataset.v==='1',b.textContent,right);
+      if(b.dataset.v==='1'){
+        b.classList.add('good');
+        btns.forEach(function(x){x.disabled=true});
+        fbEl.className='fb show ok';
+        fbEl.innerHTML=(tries===1?'✓ ':'✓ 改对了。')+okMsg;
+        if(after)after(tries);
+      }else{
+        b.classList.add('bad'); b.disabled=true;
+        fbEl.className='fb show no'; fbEl.innerHTML='△ '+noMsg;
+      }
+    };
+  });
+}
+
+$('start').onclick=function(){
+  if(!$('nm').value.trim()){alert('先填姓名');return}
+  $('start').disabled=true; $('nm').disabled=true; $('cl').disabled=true;
+  unlock('s1');
+};
+
+/* ==================== 第一关 ==================== */
+var KW=[
+ {t:'社区的温情',b:1,w:'这是中心。删掉它，就不知道要写什么了。'},
+ {t:'不太热衷',b:2,w:'这是「以前的我」，要跟后来的改变有差别。'},
+ {t:'感受到',b:2,w:'必须我自己经历过，只在旁边看不算。'},
+ {t:'一次',b:3,w:'只能写一件事，写两件就拿不到高分。'},
+ {t:'邻里活动',b:3,w:'故事要发生在邻里活动里，不能改成学校。'},
+ {t:'用「我」来写',b:3,w:'全文用「我」，写成「小明」就拿不到高分。'}
+];
+var sel1=null, placed1=0;
+(function(){
+  var arr=KW.slice().sort(function(){return Math.random()-0.5});
+  arr.forEach(function(k){
+    var b=document.createElement('button');
+    b.className='chip'; b.textContent=k.t; b.dataset.b=k.b; b.dataset.w=k.w;
+    b.dataset.n=String(KW.indexOf(k)+1);
+    b.onclick=function(){
+      if(b.classList.contains('set'))return;
+      document.querySelectorAll('#pool .chip').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on'); sel1=b;
+    };
+    $('pool').appendChild(b);
+  });
+})();
+[['r3','3'],['r2','2'],['r1','1']].forEach(function(p){
+  var ring=document.querySelector('.'+p[0]);
+  ring.addEventListener('click',function(e){
+    e.stopPropagation();
+    if(!sel1)return;
+    var _k=log('一A'+(sel1.dataset.n||'?'),'关键词分类｜'+sel1.textContent,sel1.dataset.b===p[1],BN[+p[1]],BN[+sel1.dataset.b]);
+    if(sel1.dataset.b===p[1]){
+      sel1.classList.remove('on'); sel1.classList.add('set');
+      $('dz'+p[1]).appendChild(sel1);
+      $('fb1').className='fb show ok'; $('fb1').innerHTML='✓ '+sel1.dataset.w;
+      if(_k)SC.k1++;
+      sel1=null; placed1++;
+      if(placed1===6){$('q1wrap').classList.remove('hidden');
+        $('fb1').innerHTML='✓ 六个词都归位了。<b>只有中圈和靶心里的词，才是你要详写的东西。</b>';}
+    }else{
+      sel1.classList.add('shake'); sel1.dataset.err='1';
+      var s=sel1; setTimeout(function(){s.classList.remove('shake')},320);
+      $('fb1').className='fb show no';
+      $('fb1').innerHTML='△ 再试一次。把这个词删掉：题目还知道要写什么 → 题目的规定；不知道要写什么 → 中心／关键词。';
+    }
+  });
+});
+var q1n=0;
+function q1done(){q1n++;if(q1n===3){$('sum1').classList.remove('hidden');$('n1').classList.remove('hidden')}}
+mcq($('q1a'),$('f1a'),'删掉就不知道要写什么 ⇒ 它是<b>中心</b>，全文围绕它写。','再想：没有「社区的温情」，你知道要写什么吗？',function(t){if(t===1)SC.k1++;q1done()});
+mcq($('q1b'),$('f1b'),'题目还在 ⇒ 它管的是「<b>不可以怎样</b>」，不是「<b>要写什么</b>」。','「一次」拿掉，题目照样看得懂，所以它不是中心。',function(t){if(t===1)SC.k1++;q1done()});
+mcq($('q1c'),$('f1c'),'「感受到」＝我要<b>亲身参与</b>，还要被别人关心过。','只在旁边看，写不出「我感受到」，这是最常见的失分。',function(t){if(t===1)SC.k1++;q1done()});
+$('n1').onclick=function(){finish(1,'s2')};
+
+/* ==================== 第二关 ==================== */
+var MAT=[
+ {id:1,short:'中奖玩游戏',flag:'快乐来自奖品',t:'社区嘉年华，我玩游戏中了奖，还吃了很多东西，觉得很开心。',lv:0,
+  a:'✗',b:'✗',c:'✗',why:'开心来自奖品和食物。把邻居换成陌生工作人员，故事一样成立。',rank:7},
+ {id:2,short:'看节目拍照',flag:'只是看表演',t:'舞台节目很精彩，大家一起鼓掌，我拍了很多照片。',lv:0,
+  a:'✗',b:'✗',c:'✗',why:'这是看表演，没有人和人之间的关心。',rank:8},
+ {id:3,short:'帮拿东西',flag:'事情太小',t:'我在楼下看见一位老人拿重物，就帮他拿了一下，他说了谢谢。',lv:1,
+  a:'✓',b:'✓',c:'✗',why:'有互助，但事情太小，改变不了我。',rank:5},
+ {id:4,short:'派水就回家',flag:'没有真互动',t:'邻里节我负责派水，派完就回家了。',lv:1,
+  a:'✗',b:'✓',c:'✗',why:'我只是做完自己的事，没有跟邻居真正来往。',rank:6},
+ {id:5,short:'大雨互助',flag:'三样全齐',t:'邻里活动突然下大雨，邻居们分工照顾陈奶奶，我也跑去帮忙；忙完阿姨递毛巾给我，招呼我一起坐。',lv:2,
+  a:'✓',b:'✓',c:'✓',why:'真的有人需要帮忙，我也去帮了，最后邻居还把我当自己人。',rank:1},
+ {id:6,short:'清洁日',flag:'前后差别大',t:'社区清洁日，我本来嫌脏不想去；看到年长居民和小孩互相递工具、替对方分担，我也加入，最后被邀请一起吃早餐。',lv:2,
+  a:'✓',b:'✓',c:'✓',why:'前后差别最大：从「嫌脏」到「一起吃早餐」，看法真的变了。',rank:2},
+ {id:7,short:'电梯坏了',flag:'互相帮忙',t:'组屋电梯坏了，我和邻居一起帮住高楼的陈奶奶提东西上楼；后来邻居也常常帮我家收衣服。',lv:2,
+  a:'✓',b:'✓',c:'✓',why:'我帮他、他也帮我，有来有往，读者会相信。',rank:3},
+ {id:8,short:'陪伴长者',flag:'从任务变真心',t:'关怀长者活动，我本来只想拿服务时数；后来发现邻居一直记得老人的口味和吃药时间，我第一次真正陪老人聊天。',lv:2,
+  a:'✓',b:'✓',c:'✓',why:'别人一直记挂着老人，我也从「拿时数」变成真心去陪他。',rank:4}
+];
+var LVN=['❌ 不能用','△ 能用但普通','✅ 好材料'];
+var judged=0;
+MAT.forEach(function(m){
+  var d=document.createElement('div'); d.className='mat';
+  d.innerHTML='<div class="no">材料 '+m.id+'</div><p>'+m.t+'</p>'+
+    '<div class="judge">'+
+    '<button data-v="0">❌ 不能用</button>'+
+    '<button data-v="1">△ 能用但普通</button>'+
+    '<button data-v="2">✅ 好材料</button></div>'+
+    '<div class="mline hidden"></div>';
+  var line=d.querySelector('.mline');
+  d.querySelectorAll('.judge button').forEach(function(b){
+    b.onclick=function(){
+      if(d.classList.contains('done'))return;
+      d.classList.add('done');
+      d.querySelectorAll('.judge button').forEach(function(x){
+        x.disabled=true;
+        if(+x.dataset.v===m.lv)x.classList.add('pick');
+      });
+      line.classList.remove('hidden');
+      var spk=' <button class="spk" onclick="sayWhy('+m.id+')">🔊</button>';
+      log('二'+m.id,'选材判断｜'+m.short,+b.dataset.v===m.lv,LVN[+b.dataset.v],LVN[m.lv]);
+      if(+b.dataset.v===m.lv){SC.k2++;line.className='mline g';line.innerHTML='✓ 对，是「'+LVN[m.lv]+'」。'+m.why+spk;}
+      else{line.className='mline b';line.innerHTML='△ 正确是「'+LVN[m.lv]+'」。'+m.why+spk;}
+      judged++;
+      if(judged===8){buildTable();$('tblWrap').classList.remove('hidden');$('mapWrap').classList.remove('hidden');
+        $('fb2').className='fb show ok';$('fb2').innerHTML='八个都判断完了。下面这张表，把它们从好到差排出来。';}
+    };
+  });
+  $('mats').appendChild(d);
+});
+function sayWhy(i){var m=MAT.filter(function(x){return x.id===i})[0];if(m)say(m.why)}
+function buildTable(){
+  var s=MAT.slice().sort(function(x,y){return x.rank-y.rank});
+  var h='<tr><th style="width:34px">名次</th><th style="width:88px">材料</th><th style="width:56px">有人关心我？</th><th style="width:52px">我做了事？</th><th style="width:52px">我变了？</th><th>判定</th></tr>';
+  s.forEach(function(m){
+    var cls=m.lv===2?'hi':(m.lv===0?'lo':'');
+    h+='<tr class="'+cls+'"><td class="c"><b>'+m.rank+'</b></td><td>'+m.id+'. '+m.short+'</td>'+
+       '<td class="c">'+m.a+'</td><td class="c">'+m.b+'</td><td class="c">'+m.c+'</td>'+
+       '<td>'+m.flag+' <button class="spk" onclick="sayWhy('+m.id+')">🔊</button></td></tr>';
+  });
+  $('rankTbl').innerHTML=h;
+}
+var SPOTS=[
+ ['组屋楼下','中秋灯会、义卖、健身角'],
+ ['电梯与走廊','故障、搬东西、邻居照应'],
+ ['邻里中心／民众俱乐部','活动、课程、义工'],
+ ['巴刹与小贩中心','摊主与街坊、帮忙提东西'],
+ ['社区清洁日／园艺','分工、递工具、一起流汗'],
+ ['关怀独居长者','送餐、陪聊、记得他的需要']
+];
+SPOTS.forEach(function(s){
+  var d=document.createElement('div'); d.className='spot';
+  d.innerHTML='<b>'+s[0]+'</b><span>'+s[1]+'</span>';
+  d.onclick=function(){
+    document.querySelectorAll('#map .spot').forEach(function(x){x.classList.remove('on')});
+    d.classList.add('on'); myScene=s[0];
+    $('fb2b').className='fb show ok';
+    $('fb2b').innerHTML='✓ 你的场景是「'+s[0]+'」。接下来问自己：这里会出现什么<b>真实的需要</b>？谁会帮谁？我在哪一刻加入？';
+    $('pickMat').classList.remove('hidden');
+  };
+  $('map').appendChild(d);
+});
+MAT.filter(function(m){return m.lv===2}).forEach(function(m){
+  var d=document.createElement('div'); d.className='mat'; d.style.cursor='pointer';
+  d.innerHTML='<p>'+m.t+'</p>';
+  d.onclick=function(){
+    document.querySelectorAll('#goodMats .mat').forEach(function(x){x.style.borderColor='';x.style.background='#fff'});
+    d.style.borderColor='#a5372b'; d.style.background='#fbeceb';
+    myMat=m.t;
+    $('fb2c').className='fb show ok';
+    $('fb2c').innerHTML='✓ 就写这一件。它会写进你的路线卡。';
+    $('n2').classList.remove('hidden');
+  };
+  $('goodMats').appendChild(d);
+});
+$('n2').onclick=function(){finish(2,'s3')};
+
+/* ==================== 第三关 ==================== */
+var PARTS=[
+ {t:'我平时为什么不参加社区活动',k:'fast',w:'这是背景，两三句交代就够。'},
+ {t:'那天我怎么被叫下楼',k:'fast',w:'起因，快点进入正题。'},
+ {t:'天气怎么样、场地怎么布置',k:'fast',w:'跟温情无关，写多了就是头重脚轻。'},
+ {t:'邻居互相帮忙的具体场面',k:'slow',w:'这里就是「温情」，全文最长的一段。'},
+ {t:'我心里的挣扎，决定加入',k:'slow',w:'「不太热衷」的我怎么改变，必须看得见。'},
+ {t:'别人怎样回应我，我的看法改变',k:'slow',w:'「感受到」落在这里，不能一句话带过。'}
+];
+var sel3=null, placed3=0;
+PARTS.slice().sort(function(){return Math.random()-0.5}).forEach(function(p){
+  var c=document.createElement('div'); c.className='card'; c.textContent=p.t;
+  c.dataset.k=p.k; c.dataset.w=p.w; c.dataset.n=String(PARTS.indexOf(p)+1);
+  c.onclick=function(){
+    if(c.classList.contains('set'))return;
+    document.querySelectorAll('#cardpool .card').forEach(function(x){x.classList.remove('on')});
+    c.classList.add('on'); sel3=c;
+  };
+  $('cardpool').appendChild(c);
+});
+document.querySelectorAll('.box').forEach(function(box){
+  box.onclick=function(){
+    if(!sel3)return;
+    var _d=log('三A'+(sel3.dataset.n||'?'),'详略安排｜'+sel3.textContent,sel3.dataset.k===box.dataset.k,box.dataset.k==='slow'?'详写':'略写',sel3.dataset.k==='slow'?'详写':'略写');
+    if(sel3.dataset.k===box.dataset.k){
+      sel3.classList.remove('on'); sel3.classList.add('set');
+      box.querySelector('div').appendChild(sel3);
+      $('fb3').className='fb show ok'; $('fb3').innerHTML='✓ '+sel3.dataset.w;
+      if(_d)SC.k3++;
+      sel3=null; placed3++;
+      if(placed3===6){drawRatio();$('ratioWrap').classList.remove('hidden');}
+    }else{
+      sel3.classList.add('shake'); sel3.dataset.err='1';
+      var s=sel3; setTimeout(function(){s.classList.remove('shake')},320);
+      $('fb3').className='fb show no';
+      $('fb3').innerHTML='△ 换个框试试。问自己：<b>这一段能不能证明「社区温情」？</b>能 → 慢镜头；不能 → 快镜头。';
+    }
+  };
+});
+function drawRatio(){
+  $('svgRatio').innerHTML=
+  '<svg viewBox="0 0 620 190" style="width:100%;height:auto">'+
+  '<text x="0" y="16" font-size="14" font-weight="700" fill="#a5372b">✗ 头重脚轻（最常见的低分作文）</text>'+
+  '<rect x="0" y="26" width="248" height="30" fill="#dfe8ef" stroke="#356987"/>'+
+  '<rect x="248" y="26" width="93" height="30" fill="#f2d3ce" stroke="#a5372b"/>'+
+  '<rect x="341" y="26" width="279" height="30" fill="#eee9de" stroke="#b9b1a1"/>'+
+  '<text x="10" y="46" font-size="13" fill="#20211f">起床·天气·下楼 40%</text>'+
+  '<text x="256" y="46" font-size="13" fill="#a5372b">温情 15%</text>'+
+  '<text x="351" y="46" font-size="13" fill="#6e716b">其他 45%</text>'+
+  '<text x="0" y="98" font-size="14" font-weight="700" fill="#2f6f55">✓ 正确：镜头停在温情发生的地方</text>'+
+  '<rect x="0" y="108" width="93" height="30" fill="#dfe8ef" stroke="#356987"/>'+
+  '<rect x="93" y="108" width="403" height="30" fill="#f2d3ce" stroke="#a5372b"/>'+
+  '<rect x="496" y="108" width="124" height="30" fill="#e6f2ec" stroke="#2f6f55"/>'+
+  '<text x="8" y="128" font-size="13" fill="#20211f">背景 15%</text>'+
+  '<text x="103" y="128" font-size="13" fill="#a5372b" font-weight="700">互助场面＋我加入＋别人回应 65%</text>'+
+  '<text x="504" y="128" font-size="13" fill="#2f6f55">结尾 20%</text>'+
+  '<text x="0" y="172" font-size="13.5" fill="#6e716b">开头不要超过全文的五分之一。</text>'+
+  '</svg>';
+}
+mcq($('q3'),$('f3q'),'详略由<b>中心</b>决定，不是由「好不好写」决定。','再想：这一段删掉，读者还感觉得到温情吗？删掉也没差 → 不必详写。',
+  function(t){if(t===1)SC.k3+=2;$('n3').classList.remove('hidden')});
+$('n3').onclick=function(){finish(3,'s4')};
+
+/* ==================== 第四关 ==================== */
+var DEMO=[
+ ['雨点砸在铁棚上，噼里啪啦响。陈奶奶的纸箱已经湿了一角，她伸手去挡，人却晃了一下。','m1'],
+ ['「先扶奶奶进去！」「纸箱呢，会淋坏的！」两个声音同时响起。','m2'],
+ ['我站在两米外，脚像被黏住。要不要过去？万一他们嫌我碍事呢？','m3'],
+ ['我把书包甩到背后，深吸一口气，弯下腰，双手托住纸箱底部，一步、两步，往屋檐下挪。','m4']
+];
+(function(){
+  var h=''; DEMO.forEach(function(d){h+='<span class="'+d[1]+'">'+d[0]+'</span>'});
+  $('demoPara').innerHTML=h;
+})();
+function sayDemo(){say(DEMO.map(function(d){return d[0]}).join(''))}
+
+var JUE=[['m1','发现要细'],['m2','分歧要响'],['m3','心理要真'],['m4','行动要慢']];
+var JUEN={m1:'发现要细',m2:'分歧要响',m3:'心理要真',m4:'行动要慢'};
+var SENTS=[
+ ['雨点砸在铁棚上，噼里啪啦，陈奶奶的纸箱已经湿了一角。','m1','写的是眼睛看见的画面和声音。'],
+ ['「先扶奶奶进去！」「不行，东西会淋坏！」两个人同时喊。','m2','两个立场用对话吵出来，冲突就响了。'],
+ ['我站在原地，脚像被黏住。要不要过去？万一他们觉得我多事呢？','m3','写的是具体的疑问，不是「我很紧张」。'],
+ ['我先把书包甩到背后，再弯下腰，双手托住纸箱底部，一步一步往屋檐挪。','m4','动作拆成四步，读者看得见。'],
+ ['我的手心全是汗，心跳得连雨声都盖不住。','m3','身体感觉也是心理，比「我很激动」有用。'],
+ ['阿姨蹲下来，把伞往奶奶那边偏，自己半边肩膀全湿了。','m1','一个具体动作，比十个形容词管用。']
+];
+var s4n=0;
+SENTS.slice().sort(function(){return Math.random()-0.5}).forEach(function(s){
+  var d=document.createElement('div'); d.className='sent';
+  var h='<p>'+s[0]+'</p><div class="pick4">';
+  JUE.forEach(function(j){h+='<button data-v="'+j[0]+'">'+j[1]+'</button>'});
+  h+='</div><div class="mline hidden"></div>';
+  d.innerHTML=h;
+  var line=d.querySelector('.mline'), btns=d.querySelectorAll('.pick4 button'), bad=false;
+  btns.forEach(function(b){
+    b.onclick=function(){
+      if(b.disabled)return;
+      var _f=log('四A'+(SENTS.indexOf(s)+1),'详写四诀',b.dataset.v===s[1],b.textContent,JUEN[s[1]]);
+      if(b.dataset.v===s[1]){
+        btns.forEach(function(x){x.disabled=true});
+        b.classList.add('pick'); if(_f)SC.k4++;
+        line.classList.remove('hidden'); line.className='mline g'; line.innerHTML='✓ '+s[2];
+        s4n++;
+        if(s4n===6){$('writeWrap').classList.remove('hidden');
+          $('fb4').className='fb show ok';$('fb4').innerHTML='六句都归好类了。轮到你写。';}
+      }else{
+        b.disabled=true; bad=true;
+        line.classList.remove('hidden'); line.className='mline b';
+        line.innerHTML='△ 再读一次：这句写的是<b>看见的</b>、<b>说出口的</b>、<b>心里想的</b>，还是<b>做出来的</b>？';
+      }
+    };
+  });
+  $('sents').appendChild(d);
+});
+var BAN=['温暖','感动','有爱','热心','温馨'];
+function banCheck(txt){var f=[];BAN.forEach(function(w){if(txt.indexOf(w)>=0)f.push(w)});return f}
+['w1','w2'].forEach(function(id){
+  $(id).addEventListener('input',function(){
+    var f=banCheck($(id).value), el=$(id+'warn');
+    if(f.length){el.className='fb show no';el.innerHTML='△ 你用了「'+f.join('、')+'」。这些是<b>结论</b>，不是<b>证据</b>。换成动作、话语或身体感觉。';}
+    else{el.className='fb';el.innerHTML='';}
+  });
+});
+$('chkWrite').onclick=function(){
+  var a=$('w1').value.trim(), b=$('w2').value.trim();
+  if(a.length<15||b.length<15){
+    $('fbW').className='fb show no';
+    $('fbW').innerHTML='△ 两句都至少写 15 个字再交。写不出来就照示范的样子改一改。';
+    return;
+  }
+  SC.k4+=6;
+  $('d1').classList.remove('hidden');
+  $('d1').innerHTML='<b>示范：</b>我站在两米外，脚像被黏住。要不要过去？他们那么熟，我一个从来不参加活动的人挤进去，会不会很奇怪？雨水顺着头发流进领口，我却一动也没动。';
+  $('d2').classList.remove('hidden');
+  $('d2').innerHTML='<b>示范：</b>我把书包甩到背后，深吸一口气，弯下腰，双手托住纸箱的底部，先挪半步，再一步一步往屋檐下走，湿透的纸箱在手里越来越软。';
+  $('fbW').className='fb show ok';
+  $('fbW').innerHTML='✓ 收到。跟示范比一比：<b>示范里每个动作都看得见，每个想法都说得出原因。</b>';
+  $('chkWrite').disabled=true;
+  $('n4').classList.remove('hidden');
+};
+$('n4').onclick=function(){finish(4,'s5')};
+
+/* ==================== 第五关 ==================== */
+var ENDS=[
+ ['那天的雨很大，可是我一点也没觉得冷。','L1','回扣事件（提那件事）'],
+ ['我从前觉得邻居只是住在同一栋楼的陌生人，那天以后，我才明白他们一直都在。','L2','内心变化（我变了）'],
+ ['原来社区的温情不在热闹的活动里，而在有人愿意为你多走一步的时候。以后我会主动参加，也做那个多走一步的人。','L3','价值升华（讲道理）']
+];
+var LAYERS=[['L1','第一层 提那件事'],['L2','第二层 我变了'],['L3','第三层 讲道理']];
+var s5n=0;
+ENDS.slice().sort(function(){return Math.random()-0.5}).forEach(function(s){
+  var d=document.createElement('div'); d.className='sent';
+  var h='<p>'+s[0]+'</p><div class="pick4">';
+  LAYERS.forEach(function(l){h+='<button data-v="'+l[0]+'">'+l[1]+'</button>'});
+  h+='</div><div class="mline hidden"></div>';
+  d.innerHTML=h;
+  var line=d.querySelector('.mline'), btns=d.querySelectorAll('.pick4 button'), bad5=false;
+  btns.forEach(function(b){
+    b.onclick=function(){
+      if(b.disabled)return;
+      var _n=log('五A'+(ENDS.indexOf(s)+1),'抒情议论三层',b.dataset.v===s[1],b.textContent,s[2]);
+      if(b.dataset.v===s[1]){
+        btns.forEach(function(x){x.disabled=true}); b.classList.add('pick'); if(_n)SC.k5++;
+        line.classList.remove('hidden'); line.className='mline g';
+        line.innerHTML='✓ 这是<b>'+s[2]+'</b>。';
+        s5n++;
+        if(s5n===3){$('q5').classList.remove('hidden');
+          $('fb5').className='fb show ok';
+          $('fb5').innerHTML='三层齐了。<b>最容易漏掉第二层</b>：写完事情就直接讲道理，中间少了「我变了」。';}
+      }else{
+        b.disabled=true; bad5=true; line.classList.remove('hidden'); line.className='mline b';
+        line.innerHTML='△ 第一层提<b>那件事</b>，第二层说<b>我怎么变</b>，第三层讲<b>道理和以后</b>。';
+      }
+    };
+  });
+  $('endWrap').appendChild(d);
+});
+mcq($('q5'),$('f5q'),'这一招叫<b>因果检验</b>：把道理删掉，故事本身还看得出中心，文章才合格。','多写几次「很温暖」不会加分。要靠故事里的<b>证据</b>。',
+  function(t){if(t===1)SC.k5+=2;$('n5').classList.remove('hidden')});
+
+$('n5').onclick=function(){
+  finish(5,'cardStage');
+  var t=SC.k1+SC.k2+SC.k3+SC.k4+SC.k5;
+  $('scTotal').textContent=t;
+  var g = t>=38?'金 · 优秀' : t>=32?'银 · 良好' : t>=26?'铜 · 及格' : '再练一次';
+  $('scGrade').textContent=g;
+  $('cName').textContent=($('nm').value||'—')+'　'+($('cl').value||'');
+  $('cScene').textContent=myScene||'（还没选，回第二关点一个）';
+  $('cMat').textContent=myMat||'从上面的场景里，找一件有人真正需要帮助的事';
+  $('cW1').textContent=$('w1').value.trim()||'—';
+  $('cW2').textContent=$('w2').value.trim()||'—';
+  var weak='k1', min=99;
+  var full={k1:9,k2:8,k3:8,k4:12,k5:5};
+  ['k1','k2','k3','k4','k5'].forEach(function(k){
+    var r=SC[k]/full[k]; if(r<min){min=r;weak=k}
+  });
+  var tips={
+    k1:'你最弱的是<b>审题</b>。动笔前先问：删掉哪个词，题目就不知道要写什么了？那个就是中心，也是你要写最长的一段。',
+    k2:'你最弱的是<b>选材</b>。记住三个标准：温情来自人吗？我参与了吗？我的看法变了吗？三个都要「是」。',
+    k3:'你最弱的是<b>详略</b>。开头不要超过全文五分之一，最长的一段一定是温情发生的地方。',
+    k4:'你最弱的是<b>详写</b>。写不出来时按四诀问：我看见什么？谁说了什么？我心里在想什么？我做了哪几步？',
+    k5:'你最弱的是<b>结尾</b>。三层缺一不可，尤其别漏掉中间那层「我从前怎么想、现在怎么想」。'
+  };
+  $('advice').innerHTML='<b>下一步：</b>'+tips[weak];
+};
+
+progress();
+</script>
+<script src="../hook.js"></script>
+</body>
+</html>
