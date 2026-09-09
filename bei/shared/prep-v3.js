@@ -126,6 +126,56 @@ const HWT = (() => {
   }
   return {esc,split,json,css,rules,schema,focus,validate,student,teacher,ppt,doc};
 })();
+// OCR runs locally in a worker; only reviewed reference text enters AI requests.
+function mountReferenceImages(reference, isGenerating) {
+  const box=document.createElement('div');
+  box.innerHTML='<p><button type="button" id="referenceUpload">上传参考书截图</button> 或点击上方参考框，按 Ctrl+V 粘贴截图（Mac：⌘V）</p><input id="referenceFiles" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden><p class="muted">支持 PNG、JPG、WebP，每次最多5张，每张不超过10MB。图片在浏览器中识别；首次需联网加载识字组件。请裁掉无关区域，保持文字清晰。</p><label for="referenceLanguage">截图文字</label><select id="referenceLanguage"><option value="chi_sim">简体中文＋英文</option><option value="chi_tra">繁体中文＋英文</option></select><div id="referencePreviews" class="row"></div><button id="referenceRecognize" type="button">识别截图文字</button><button id="referenceCancel" type="button" disabled>取消识别</button><p id="referenceStatus" class="status" role="status" aria-live="polite">截图识别后会追加到教学参考框，请核对文字和表格顺序。</p>';
+  reference.after(box);
+  const $=id=>box.querySelector('#'+id);let items=[],busy=false,worker=null,epoch=0,loader=null;
+  const say=(s,error=false)=>{$('referenceStatus').textContent=s;$('referenceStatus').className='status'+(error?' error':'');};
+  function render(){
+    $('referencePreviews').replaceChildren();
+    items.forEach(item=>{const figure=document.createElement('figure');figure.style.cssText='margin:8px 0;max-width:220px';const image=document.createElement('img');image.src=item.url;image.alt=item.file.name||'粘贴的教学参考截图';image.style.cssText='max-width:100%;max-height:180px;object-fit:contain';const label=document.createElement('figcaption');label.textContent=(item.done?'已加入文字 · ':'待识别 · ')+(item.file.name||'粘贴截图');const remove=document.createElement('button');remove.type='button';remove.textContent='移除截图';remove.disabled=busy;remove.onclick=()=>{if(busy||isGenerating())return;URL.revokeObjectURL(item.url);items=items.filter(x=>x!==item);render();say('已移除截图；已加入参考框的文字保留，可自行编辑。');};figure.append(image,label,remove);$('referencePreviews').appendChild(figure);});
+    $('referenceRecognize').disabled=busy||!items.some(x=>!x.done);$('referenceCancel').disabled=!busy;$('referenceUpload').disabled=busy;$('referenceFiles').disabled=busy;$('referenceLanguage').disabled=busy;
+  }
+  function add(files){
+    if(busy||isGenerating()){say('请等待当前任务完成后再添加截图。',true);return;}
+    const errors=[];
+    for(const file of files){if(items.length>=5){errors.push('最多保留5张截图，请先移除不需要的图片。');break;}if(!/^image\/(png|jpeg|webp)$/.test(file.type)){errors.push('不支持此图片格式，请转换为PNG或JPG。');continue;}if(file.size>10*1024*1024){errors.push('图片超过10MB，请裁剪后再上传。');continue;}items.push({file,url:URL.createObjectURL(file),done:false});}
+    render();reference.dispatchEvent(new Event('input',{bubbles:true}));say(errors.length?errors.join('\n'):'截图已添加。点击“识别截图文字”，再核对参考框中的识别结果。',!!errors.length);
+  }
+  $('referenceUpload').onclick=()=>{if(!busy&&!isGenerating())$('referenceFiles').click();};
+  $('referenceFiles').onchange=e=>{add(Array.from(e.target.files||[]));e.target.value='';};
+  reference.addEventListener('paste',e=>{const files=Array.from(e.clipboardData?.items||[]).filter(x=>x.kind==='file'&&x.type.startsWith('image/')).map(x=>x.getAsFile()).filter(Boolean);if(files.length){e.preventDefault();add(files);}});
+  function loadOCR(){
+    if(window.Tesseract)return Promise.resolve();if(loader)return loader;
+    loader=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js';const timer=setTimeout(()=>{script.remove();loader=null;reject(Error('识字组件加载超时，请检查网络后重试。'));},30000);script.onload=()=>{clearTimeout(timer);if(window.Tesseract)resolve();else{loader=null;reject(Error('识字组件未就绪。'));}};script.onerror=()=>{clearTimeout(timer);script.remove();loader=null;reject(Error('无法加载识字组件，请检查网络后重试。'));};document.head.appendChild(script);});return loader;
+  }
+  async function stop(){epoch++;busy=false;const old=worker;worker=null;if(old)old.terminate().catch(()=>{});render();}
+  $('referenceCancel').onclick=()=>{stop();say('已取消识别，已加入的文字保留。');};
+  $('referenceRecognize').onclick=async()=>{
+    if(busy||isGenerating())return;const pending=items.filter(x=>!x.done);if(!pending.length)return;
+    busy=true;const token=++epoch;render();let timeout;
+    const current=()=>token===epoch;
+    try{
+      timeout=setTimeout(()=>{if(current()){stop();say('识别超过3分钟，已停止。请裁剪截图后重试；已加入的文字保留。',true);}},180000);
+      say('正在加载中文识字组件，首次可能较慢……');await loadOCR();if(!current())return;
+      const w=await window.Tesseract.createWorker([$('referenceLanguage').value,'eng'],1,{logger:m=>{if(current()&&m.status==='recognizing text')say('正在识别截图文字：'+Math.round((m.progress||0)*100)+'%');}});
+      if(!current()){await w.terminate();return;}worker=w;
+      for(let i=0;i<pending.length;i++){
+        say('正在识别第 '+(i+1)+'/'+pending.length+' 张截图……');
+        const result=await w.recognize(pending[i].file);if(!current())return;
+        const text=String(result.data?.text||'').trim();if(!text)throw Error('本张截图未识别到文字。请裁剪文字区域或换一张更清晰的截图。');
+        reference.value+=(reference.value.trim()?'\n\n':'')+'【参考截图识别文字，请核对】\n'+text;
+        pending[i].done=true;reference.dispatchEvent(new Event('input',{bubbles:true}));
+      }
+      say('识别完成，文字已追加到上方教学参考框。请核对错字、标点和表格阅读顺序，再生成教学资料。');
+    }catch(e){if(current())say('识别未完成：'+(e.message||'请重试')+' 已成功加入的文字保留。',true);}
+    finally{clearTimeout(timeout);if(current()){const old=worker;worker=null;if(old)old.terminate().catch(()=>{});busy=false;render();}}
+  };
+  render();
+  return {check(){if(busy)throw Error('正在识别参考截图，请等待完成。');if(items.some(x=>!x.done))throw Error('参考截图尚未识别，请点击“识别截图文字”，或移除不需要的截图。');},reset(){stop();items.forEach(x=>URL.revokeObjectURL(x.url));items=[];render();say('截图已清空。');}};
+}
 if(typeof module!=='undefined')module.exports=HWT;
 if(typeof document!=='undefined' && document.getElementById('app')) {
   const $=id=>document.getElementById(id), mode=document.body.dataset.mode, names={vocab:'词语练习生成器',textbook:'课文教学生成器',writing:'作文教学生成器'};
@@ -134,7 +184,9 @@ if(typeof document!=='undefined' && document.getElementById('app')) {
   let controller=null,snapshot=null,draft=null,pkg=null,valid=false;
   const status=(s,error=false)=>{$('status').textContent=s;$('status').className='status'+(error?' error':'');};
   const download=(name,content,type='text/html')=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
+  const referenceImages=mountReferenceImages($('reference'),()=>!!controller);
   const getInput=()=>{
+    referenceImages.check();
     const input={mode,grade:$('grade').value,unit:$('unit').value.trim(),minutes:Number($('minutes').value),title:$('title').value.trim(),passage:$('passage').value.trim(),terms:HWT.split($('terms').value),known:$('known').value.trim(),reference:$('reference').value.trim(),writing:$('writing')?.value||''};
     if(!input.title)throw Error('请填写题目。');if(!Number.isInteger(input.minutes)||input.minutes<30||input.minutes>120)throw Error('课时须为30–120分钟整数。');
     if(mode==='writing'&&!input.writing)throw Error('请先选择作文课类型。');
@@ -195,6 +247,7 @@ if(typeof document!=='undefined' && document.getElementById('app')) {
     else download('core-questions.js','window.HWT_LESSON = '+HWT.json({input:snapshot,...pkg})+';','text/javascript');
   }catch(e){status(e.message,true);}finally{b.disabled=false;}});
   $('cancel').onclick=()=>controller?.abort();
+  $('clear').addEventListener('click',()=>referenceImages.reset());
   $('terms').addEventListener('input',()=>{$('termCount').textContent='已识别 '+HWT.split($('terms').value).length+' 个词语';});
   $('inputs').addEventListener('input',e=>{if(['key','direct'].includes(e.target.id))return;snapshot=null;valid=false;$('outlineBox').hidden=true;$('reviewBox').hidden=true;status('资料已修改，请重新生成大纲。');});
   $('direct').onchange=()=>{$('generate').textContent=$('direct').checked?'直接生成教学资料':'生成教学设计大纲';};
