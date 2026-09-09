@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>议论文阅读练习二</title>
+  <link rel="stylesheet" href="/jiaxinxi/reading.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <strong>议论文阅读练习二</strong>
+      <span id="studentIdentity">阅读材料：交友之道</span>
+    </div>
+    <div class="top-actions" aria-label="字体大小">
+      <button class="font-button on" type="button" data-size="20">标准</button>
+      <button class="font-button" type="button" data-size="23">放大</button>
+      <button class="font-button" type="button" data-size="26">特大</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="gate-shell" id="gate">
+      <div class="panel">
+        <h1>议论文阅读练习二</h1>
+        <p class="lede">点选自己的编号进入。系统会自动显示小组，不需要输入姓名或密码。</p>
+        <div id="gateStatus" class="status-banner">正在连接老师的课堂……</div>
+        <div id="numberGrid" class="number-grid" aria-label="学生编号"></div>
+        <button id="joinButton" class="primary-button wide" type="button" disabled>进入课堂</button>
+        <p id="gateError" class="error-text" role="alert"></p>
+      </div>
+    </section>
+
+    <section class="classroom hidden" id="classroom">
+      <article class="reading-pane" id="readingPane">
+        <div class="reading-heading">
+          <h1>交友之道</h1>
+          <span>点一句可以加上／取消黄色标记</span>
+        </div>
+        <div id="lessonText"></div>
+      </article>
+
+      <aside class="task-pane">
+        <div class="task-head">
+          <div class="stage-row">
+            <span class="stage-chip" id="skillChip">等待老师</span>
+            <span class="progress-text" id="progressText">0 / 9</span>
+          </div>
+          <div class="progress-track" aria-hidden="true"><i id="progressBar"></i></div>
+        </div>
+        <div class="task-scroll" id="taskArea"></div>
+        <div class="task-footer" id="taskFooter">相关课文和任务保持在同一屏幕。</div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="paused-cover hidden" id="pausedCover">
+    <div class="paused-card">
+      <h2>请看老师讲解</h2>
+      <p>课堂暂时停在这里。你的标记和作答已经保留。</p>
+    </div>
+  </div>
+
+  <script>
+    window.READING_CONFIG = {
+      lessonId: "ARG2R",
+      dataModule: "/practice-2/reading-data.js",
+      storageKey: "arg2-reading",
+    };
+  </script>
+  <script type="module" src="/jiaxinxi/reading-student.js"></script>
+</body>
+</html>
