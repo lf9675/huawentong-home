@@ -1,0 +1,2486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>汉字结构大乱斗 v2.1（词库校正版）</title>
+<style>
+:root{--red:#e74c3c;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;--gold:#f39c12;--bg:#fdf6e3;--text:#2c3e50;--card:#fff;--sh:0 2px 12px rgba(0,0,0,.1)}
+*{box-sizing:border-box;touch-action:manipulation;margin:0;padding:0}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);display:flex;flex-direction:column;align-items:center;min-height:100vh;overflow-y:auto;touch-action:auto;padding-bottom:72px;padding-top:57px}
+.header{width:100%;background:var(--card);padding:8px 12px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--sh);position:fixed;top:0;left:0;right:0;z-index:50}
+.select-group{display:flex;gap:6px}
+select{padding:6px 8px;border-radius:8px;font-size:14px;border:1.5px solid #ddd;font-weight:bold;background:#f8f9fa;color:var(--text);outline:none;font-family:inherit}
+.header-mid{font-size:12px;color:#95a5a6;text-align:center;flex:1;padding:0 6px}
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+.score-display{font-size:17px;font-weight:bold;color:var(--red)}
+.combo-display{font-size:11px;font-weight:bold;min-height:14px;color:var(--orange)}
+.progress-wrap{width:100%;height:5px;background:#ecf0f1;position:fixed;top:52px;left:0;right:0;z-index:49}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),#2ecc71);transition:width .5s cubic-bezier(.4,0,.2,1);width:0%}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 12px 90px}
+.modal{background:var(--card);border-radius:20px;padding:32px 24px;width:88%;max-width:360px;margin:auto;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-emoji{font-size:52px;margin-bottom:12px}
+.modal-title{font-size:22px;font-weight:bold;color:var(--text);margin-bottom:6px}
+.modal-sub{font-size:13px;color:#7f8c8d;margin-bottom:20px;line-height:1.5}
+.modal-input{width:100%;padding:13px;font-size:17px;border:2px solid #ecf0f1;border-radius:10px;text-align:center;margin-bottom:14px;font-family:inherit;outline:none;transition:border-color .2s}
+.modal-input:focus{border-color:var(--green)}
+.modal-btn{width:100%;padding:14px;font-size:16px;background:var(--green);color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-family:inherit}
+.modal-btn:active{opacity:.9;transform:scale(.98)}
+.ach-toast{position:fixed;top:62px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f39c12,#e67e22);color:#fff;padding:10px 22px;border-radius:30px;font-size:14px;font-weight:bold;z-index:400;box-shadow:0 6px 20px rgba(243,156,18,.45);animation:toastIn .35s cubic-bezier(.34,1.56,.64,1);display:none;white-space:nowrap}
+@keyframes toastIn{from{transform:translateX(-50%) translateY(-20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+.pool-container{width:95%;max-width:500px;min-height:108px;background:rgba(255,255,255,.85);border:2px dashed #b2bec3;border-radius:14px;margin:12px 0 6px;padding:12px 14px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px}
+.pool-title{width:100%;text-align:center;font-size:11px;color:#95a5a6;margin:-4px 0}
+.component{touch-action:none;width:46px;height:46px;background:var(--card);border:2px solid #2c3e50;border-radius:9px;font-size:24px;font-family:"KaiTi","楷体",serif;display:flex;align-items:center;justify-content:center;cursor:grab;user-select:none;box-shadow:2px 2px 0 #2c3e50;transition:transform .1s}
+.component:active{cursor:grabbing;transform:scale(1.12)}
+.target-info{font-size:14px;color:var(--text);font-weight:bold;text-align:center;margin-bottom:4px}
+.pinyin-display{font-size:36px;color:var(--green);font-family:Arial,sans-serif;letter-spacing:3px;display:block;margin-top:2px;font-weight:bold}
+.struct-hint{font-size:12px;color:var(--orange);margin:4px 0 10px}
+.dynamic-board{width:160px;height:160px;background:var(--red);border:4px solid var(--red);gap:2px;margin-bottom:14px;transition:transform .35s,border-color .35s,background-color .35s}
+.dynamic-board.success{transform:scale(1.06);box-shadow:0 0 24px rgba(39,174,96,.5);border-color:var(--green);background-color:var(--green)}
+.grid-cell{background:#fff;display:flex;align-items:center;justify-content:center;font-size:46px;font-family:"KaiTi","楷体",serif;color:#000}
+.grid-cell.shake{animation:cellShake .3s ease}
+/* 形近字辨认题型 */
+.look-piece{width:76px;height:76px;background:var(--card);border:2px solid #2c3e50;border-radius:10px;font-size:42px;font-family:"KaiTi","楷体",serif;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;box-shadow:2px 2px 0 #2c3e50;transition:transform .1s}
+.look-piece:active{transform:scale(1.08)}
+.look-piece.wrong{animation:cellShake .3s ease;border-color:var(--red);color:var(--red)}
+.look-piece.locked{opacity:.45;pointer-events:none}
+.look-board{width:auto;height:auto;background:transparent;border:none;display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:14px;font-family:"KaiTi","楷体",serif;font-size:52px;color:var(--text)}
+.look-board.success{transform:scale(1.06)}
+.look-blank{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border:3px dashed var(--red);border-radius:8px;color:var(--red);font-size:36px}
+.look-board.success .look-blank{border-color:var(--green);border-style:solid;color:var(--green)}
+@keyframes cellShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.layout-lr{display:grid;grid-template-columns:1fr 1fr}
+.layout-tb{display:grid;grid-template-rows:1fr 1fr}
+.layout-lmr{display:grid;grid-template-columns:1fr 1fr 1fr;font-size:36px}
+.layout-tmb{display:grid;grid-template-rows:1fr 1fr 1fr;font-size:36px}
+.layout-l-tr-br{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.layout-l-tr-br .cell-0{grid-row:1/3;grid-column:1/2}
+.layout-l-tr-br .cell-1{grid-row:1/2;grid-column:2/3;font-size:35px}
+.layout-l-tr-br .cell-2{grid-row:2/3;grid-column:2/3;font-size:35px}
+.layout-l-tmb{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr 1fr}
+.layout-l-tmb .cell-0{grid-row:1/4;grid-column:1/2}
+.layout-l-tmb .cell-1{grid-row:1/2;grid-column:2/3;font-size:25px}
+.layout-l-tmb .cell-2{grid-row:2/3;grid-column:2/3;font-size:25px}
+.layout-l-tmb .cell-3{grid-row:3/4;grid-column:2/3;font-size:25px}
+.layout-tb4{display:grid;grid-template-columns:1fr;grid-template-rows:1fr 1fr 1fr 1fr}
+.layout-tb4 .cell-0,.layout-tb4 .cell-1,.layout-tb4 .cell-2,.layout-tb4 .cell-3{font-size:25px}
+
+/* === v2.1：更精确的复合字形布局 === */
+.layout-t-lr{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.layout-t-lr .cell-0{grid-column:1/3;grid-row:1/2}
+.layout-t-lr .cell-1{grid-column:1/2;grid-row:2/3;font-size:35px}
+.layout-t-lr .cell-2{grid-column:2/3;grid-row:2/3;font-size:35px}
+
+.layout-lt-lb-r{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.layout-lt-lb-r .cell-0{grid-column:1/2;grid-row:1/2;font-size:35px}
+.layout-lt-lb-r .cell-1{grid-column:1/2;grid-row:2/3;font-size:35px}
+.layout-lt-lb-r .cell-2{grid-column:2/3;grid-row:1/3}
+
+.layout-tlr-b{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.layout-tlr-b .cell-0{grid-column:1/2;grid-row:1/2;font-size:35px}
+.layout-tlr-b .cell-1{grid-column:2/3;grid-row:1/2;font-size:35px}
+.layout-tlr-b .cell-2{grid-column:1/3;grid-row:2/3}
+
+.layout-lmmr{display:grid;grid-template-columns:1.2fr .55fr .55fr 1.2fr}
+.layout-lmmr .grid-cell{font-size:28px}
+
+.layout-semi-tr{display:block;position:relative;width:160px;height:160px;background:transparent;border:none;margin-bottom:14px}
+.layout-semi-tr.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
+.layout-semi-tr .cell-0{position:absolute;top:0;left:0;width:100%;height:100%;border-top:6px dashed #9b59b6;border-right:6px dashed #9b59b6;border-radius:0 12px 0 0;background:rgba(155,89,182,.05);font-size:42px;display:flex;align-items:flex-start;justify-content:flex-end;padding-top:8px;padding-right:8px}
+.layout-semi-tr .cell-1{position:absolute;bottom:5px;left:5px;width:100px;height:78px;border:4px dashed #1abc9c;border-radius:8px;background:rgba(26,188,156,.1);font-size:36px;display:flex;align-items:center;justify-content:center}
+
+.layout-semi-top{display:block;position:relative;width:160px;height:160px;background:transparent;border:none;margin-bottom:14px}
+.layout-semi-top.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
+.layout-semi-top .cell-0{position:absolute;top:0;left:0;width:100%;height:100%;border-top:6px dashed #9b59b6;border-left:6px dashed #9b59b6;border-right:6px dashed #9b59b6;border-radius:12px 12px 0 0;background:rgba(155,89,182,.05);font-size:42px;display:flex;align-items:flex-start;justify-content:center;padding-top:8px}
+.layout-semi-top .cell-1{position:absolute;bottom:5px;left:30px;width:100px;height:82px;border:4px dashed #1abc9c;border-radius:8px;background:rgba(26,188,156,.1);font-size:36px;display:flex;align-items:center;justify-content:center}
+
+.layout-semi-tl-tb{display:block;position:relative;width:160px;height:160px;background:transparent;border:none;margin-bottom:14px}
+.layout-semi-tl-tb.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
+.layout-semi-tl-tb .cell-0{position:absolute;top:0;left:0;width:100%;height:100%;border-left:6px dashed #9b59b6;border-top:6px dashed #9b59b6;border-radius:12px 0 0 0;background:rgba(155,89,182,.05);font-size:42px;display:flex;align-items:flex-start;padding-top:8px;padding-left:8px}
+.layout-semi-tl-tb .cell-1{position:absolute;top:5px;right:5px;width:88px;height:67px;border:4px dashed #1abc9c;border-radius:8px;background:rgba(26,188,156,.1);font-size:30px;display:flex;align-items:center;justify-content:center}
+.layout-semi-tl-tb .cell-2{position:absolute;bottom:5px;right:5px;width:88px;height:67px;border:4px dashed #1abc9c;border-radius:8px;background:rgba(26,188,156,.1);font-size:30px;display:flex;align-items:center;justify-content:center}
+
+.layout-l-tb{display:block;position:relative;width:160px;height:160px;background:transparent;border:none;margin-bottom:14px}
+.layout-l-tb.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
+.layout-l-tb .cell-0{position:absolute;top:0;left:0;width:100%;height:100%;border-top:6px dashed #9b59b6;border-left:6px dashed #9b59b6;border-bottom:6px dashed #9b59b6;border-radius:12px 0 0 12px;background:rgba(155,89,182,.05);font-size:42px;display:flex;align-items:center;padding-left:10px}
+.layout-l-tb .cell-1{position:absolute;top:50%;transform:translateY(-50%);right:5px;width:78px;height:78px;border:4px dashed #1abc9c;border-radius:8px;background:rgba(26,188,156,.1);font-size:36px;display:flex;align-items:center;justify-content:center}
+/* semi-bl: bottom-left wraps (辶/走 type) — TOP is open — inner at top-right */
+.layout-semi-bl{display:block;position:relative;width:160px;height:160px;background:transparent;border:none;margin-bottom:14px}
+.layout-semi-bl.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
+.layout-semi-bl .cell-0{position:absolute;top:0;left:0;width:100%;height:100%;border-left:6px dashed #9b59b6;border-bottom:6px dashed #9b59b6;border-radius:0 0 0 12px;background:rgba(155,89,182,.05);font-size:42px;display:flex;align-items:flex-end;padding-bottom:8px;padding-left:8px}
+.layout-semi-bl .cell-1{position:absolute;top:5px;right:5px;width:100px;height:78px;border:4px dashed #1abc9c;border-radius:8px;background:rgba(26,188,156,.1);font-size:36px;display:flex;align-items:center;justify-content:center}
+/* semi-tl: top-left wraps (厂/疒/尸/广 type) — BOTTOM is open — inner at bottom-right */
+.layout-semi-tl{display:block;position:relative;width:160px;height:160px;background:transparent;border:none;margin-bottom:14px}
+.layout-semi-tl.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
+.layout-semi-tl .cell-0{position:absolute;top:0;left:0;width:100%;height:100%;border-left:6px dashed #9b59b6;border-top:6px dashed #9b59b6;border-radius:12px 0 0 0;background:rgba(155,89,182,.05);font-size:42px;display:flex;align-items:flex-start;padding-top:8px;padding-left:8px}
+.layout-semi-tl .cell-1{position:absolute;bottom:5px;right:5px;width:100px;height:78px;border:4px dashed #1abc9c;border-radius:8px;background:rgba(26,188,156,.1);font-size:36px;display:flex;align-items:center;justify-content:center}
+
+/* v2.2: 嵌套结构——左部 + 右部半包围（用于“惬”：忄 + 匚包夹） */
+.layout-l-wrap-r{display:block;position:relative;width:160px;height:160px;background:transparent;border:none;margin-bottom:14px}
+.layout-l-wrap-r.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
+.layout-l-wrap-r .cell-0{position:absolute;left:0;top:0;width:47%;height:100%;border:3px solid var(--green);background:#fff;font-size:42px;display:flex;align-items:center;justify-content:center;z-index:3}
+.layout-l-wrap-r .cell-1{position:absolute;right:0;top:0;width:53%;height:100%;border-top:6px dashed #9b59b6;border-left:6px dashed #9b59b6;border-bottom:6px dashed #9b59b6;border-right:none;background:rgba(155,89,182,.05);font-size:36px;display:flex;align-items:flex-start;justify-content:flex-start;padding:4px;z-index:1}
+.layout-l-wrap-r .cell-2{position:absolute;right:5px;top:32px;width:66px;height:96px;border:4px dashed #1abc9c;border-radius:8px;background:#fff;font-size:36px;display:flex;align-items:center;justify-content:center;z-index:4}
+/* v2.2: 嵌套结构——左部 + 右部左下包围（用于“陋”：阝 + 𠃊包丙） */
+.layout-l-semi-bl-r{display:block;position:relative;width:160px;height:160px;background:transparent;border:none;margin-bottom:14px}
+.layout-l-semi-bl-r.success{transform:scale(1.06);filter:drop-shadow(0 0 12px rgba(39,174,96,.5))}
+.layout-l-semi-bl-r .cell-0{position:absolute;left:0;top:0;width:47%;height:100%;border:3px solid var(--green);background:#fff;font-size:42px;display:flex;align-items:center;justify-content:center;z-index:3}
+.layout-l-semi-bl-r .cell-1{position:absolute;right:0;top:0;width:53%;height:100%;border-left:6px dashed #9b59b6;border-bottom:6px dashed #9b59b6;border-top:none;border-right:none;background:rgba(155,89,182,.05);font-size:36px;display:flex;align-items:flex-end;justify-content:flex-start;padding:5px;z-index:1}
+.layout-l-semi-bl-r .cell-2{position:absolute;right:5px;top:8px;width:68px;height:102px;border:4px dashed #1abc9c;border-radius:8px;background:#fff;font-size:36px;display:flex;align-items:center;justify-content:center;z-index:4}
+.quiz-panel{width:95%;max-width:500px;background:var(--card);border-radius:14px;padding:16px;box-shadow:var(--sh);display:none;flex-direction:column;gap:9px;margin-bottom:16px;animation:slideUp .3s ease-out}
+@keyframes slideUp{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
+.quiz-title{font-size:14px;color:#34495e;text-align:center}
+.quiz-word{font-size:22px;color:var(--green);font-weight:bold;letter-spacing:2px}
+.quiz-btn{width:100%;padding:13px;font-size:14px;text-align:left;background:#f8f9fa;border:2px solid #ecf0f1;border-radius:9px;cursor:pointer;transition:all .18s;font-family:inherit}
+.quiz-btn:active{transform:scale(.98)}
+.quiz-btn.correct{background:var(--green);color:#fff;border-color:var(--green)}
+.quiz-btn.wrong{background:var(--red);color:#fff;border-color:var(--red)}
+/* === 字形切割模式 === */
+.cut-piece{padding:0!important;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fff}
+.cut-piece svg{display:block}
+.cut-board-v{display:flex;flex-direction:row;width:auto;height:160px;background:transparent;border:none;gap:0}
+.cut-board-h{display:flex;flex-direction:column;width:160px;height:auto;background:transparent;border:none;gap:0}
+.cut-cell{position:relative;border:2px dashed #b2bec3;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cut-board-v .cut-cell{width:80px;height:160px}
+.cut-board-h .cut-cell{width:160px;height:53px}
+.cut-cell[data-filled='true']{border-style:solid;border-color:var(--green)}
+.cut-ghost{position:absolute;inset:0;opacity:0.12;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.cut-ghost svg{width:100%;height:100%}
+/* === 同字词配对 === */
+.match-panel{width:95%;max-width:500px;background:var(--card);border-radius:14px;padding:16px;box-shadow:var(--sh);display:none;flex-direction:column;gap:12px;margin-bottom:16px;animation:slideUp .3s ease-out}
+.match-panel.show{display:flex}
+.match-title{font-size:14px;color:#34495e;text-align:center;line-height:1.7}
+.match-char{font-family:"KaiTi","楷体",serif;font-size:22px;color:var(--green);font-weight:bold}
+.match-sub{font-size:12px;color:#95a5a6}
+.match-area{display:flex;flex-direction:column;gap:10px}
+.match-row{display:flex;align-items:stretch;gap:10px;min-height:52px}
+.match-word{flex:0 0 96px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ebf5fb,#d6eaf8);border:2px solid var(--blue);border-radius:10px;font-size:17px;font-weight:bold;color:var(--text);cursor:grab;user-select:none;font-family:"KaiTi","楷体",serif;touch-action:none;transition:transform .12s,opacity .2s}
+.match-word:active{cursor:grabbing;transform:scale(1.06)}
+.match-word.placed{opacity:.35;pointer-events:none;border-style:dashed}
+.match-word.dragging{opacity:.7;box-shadow:0 6px 18px rgba(41,128,185,.4)}
+.match-def{flex:1;display:flex;align-items:center;gap:8px;background:#f8f9fa;border:2px dashed #cdd5db;border-radius:10px;padding:8px 12px;font-size:13px;color:var(--text);min-height:52px;transition:all .15s}
+.match-def .drop-slot{flex:0 0 90px;min-height:36px;border:2px dashed #b2bec3;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;color:#b2bec3;font-family:"KaiTi","楷体",serif}
+.match-def.over{border-color:var(--blue);background:#eaf4fb}
+.match-def.correct{border-color:var(--green);border-style:solid;background:rgba(39,174,96,.08)}
+.match-def.correct .drop-slot{border-color:var(--green);border-style:solid;color:var(--green)}
+.match-def.wrong-shake{animation:cellShake .3s ease}
+.match-def-text{flex:1}
+.match-def-en{color:#95a5a6;font-size:11px}
+.progress-label{font-size:11px;color:#b2bec3;margin-bottom:6px}
+.feedback-overlay{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);z-index:300;pointer-events:none;display:none;text-align:center;width:90%}
+.feedback-text{font-size:38px;font-weight:bold;text-shadow:0 4px 12px rgba(0,0,0,.2);animation:bounceIn .45s}
+@keyframes bounceIn{0%{transform:scale(0)}75%{transform:scale(1.12)}100%{transform:scale(1)}}
+.particle{position:fixed;pointer-events:none;z-index:350;width:9px;height:9px;border-radius:50%;animation:pFly .75s ease-out forwards}
+@keyframes pFly{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
+.bottom-nav{position:fixed;bottom:0;width:100%;max-width:600px;background:var(--card);display:flex;border-top:1px solid #ecf0f1;z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,.07)}
+.nav-btn{flex:1;padding:10px 0;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;font-family:inherit;position:relative}
+.nav-btn:active{background:#f8f9fa}
+.nav-icon{font-size:21px}
+.nav-label{font-size:10px;color:#95a5a6}
+.nav-btn.active .nav-label{color:var(--green);font-weight:bold}
+.nav-badge{position:absolute;top:6px;right:calc(50% - 18px);background:var(--red);color:#fff;font-size:9px;font-weight:bold;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px}
+.page{width:100%;max-width:500px;display:none;padding:10px 12px}
+.page.active{display:block}
+#gamePage{flex-direction:column;align-items:center}
+#gamePage.active{display:flex;flex-direction:column;align-items:center}
+.page-title{font-size:18px;font-weight:bold;color:var(--text);margin:8px 0 4px;text-align:center}
+.page-sub{font-size:12px;color:#95a5a6;text-align:center;margin-bottom:14px}
+.stats-row{display:flex;justify-content:space-around;background:var(--card);border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:var(--sh)}
+.stat-item{text-align:center}
+.stat-num{font-size:24px;font-weight:bold;color:var(--text)}
+.stat-lbl{font-size:11px;color:#95a5a6;margin-top:2px}
+.unit-hd{font-size:13px;font-weight:bold;color:var(--text);background:#ecf0f1;padding:5px 12px;border-radius:7px;margin:12px 0 8px;display:flex;justify-content:space-between;align-items:center}
+.unit-pct{font-size:11px;color:var(--green)}
+.char-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:6px}
+.char-card{aspect-ratio:1;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:"KaiTi","楷体",serif;font-size:22px;border:2px solid #ecf0f1;background:#f8f9fa;color:#bdc3c7;position:relative}
+.char-card.blue{background:linear-gradient(135deg,#ebf5fb,#d6eaf8);border-color:#2980b9;color:var(--text)}
+.char-card.gold{background:linear-gradient(135deg,#fef9e7,#fdebd0);border-color:var(--gold);color:var(--text);box-shadow:0 2px 8px rgba(243,156,18,.3)}
+.card-badge{position:absolute;top:1px;right:2px;font-size:9px}
+.error-list{display:flex;flex-direction:column;gap:9px}
+.error-item{background:var(--card);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh);border-left:4px solid var(--red)}
+.error-char{font-family:"KaiTi","楷体",serif;font-size:40px;min-width:46px;text-align:center}
+.error-info{flex:1}
+.error-word{font-size:15px;font-weight:bold;color:var(--text)}
+.error-def{font-size:12px;color:#7f8c8d;margin-top:2px}
+.error-cnt{font-size:11px;color:var(--red);margin-top:3px;font-weight:bold}
+.empty-state{text-align:center;padding:50px 20px;color:#b2bec3}
+.empty-icon{font-size:52px;margin-bottom:12px}
+.empty-txt{font-size:14px;line-height:1.6}
+.ach-list{display:flex;flex-direction:column;gap:10px}
+.ach-item{background:var(--card);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:var(--sh);opacity:.4;transition:opacity .3s}
+.ach-item.done{opacity:1}
+.ach-icon{font-size:38px;min-width:46px;text-align:center}
+.ach-info{flex:1}
+.ach-name{font-size:15px;font-weight:bold;color:var(--text)}
+.ach-desc{font-size:12px;color:#7f8c8d;margin-top:3px;line-height:1.4}
+.ach-badge{font-size:11px;padding:4px 10px;border-radius:12px;background:#ecf0f1;color:#95a5a6;white-space:nowrap}
+.ach-item.done .ach-badge{background:#d5f5e3;color:var(--green)}
+
+.teacher-card{background:var(--card);border-radius:14px;padding:16px;box-shadow:var(--sh);margin-bottom:12px}
+.teacher-card-title{font-size:14px;font-weight:bold;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.class-code{font-size:36px;font-weight:bold;letter-spacing:6px;color:var(--blue);text-align:center;padding:10px 0;font-family:monospace}
+.copy-btn{width:100%;padding:11px;background:var(--blue);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:bold;cursor:pointer;font-family:inherit;margin-top:4px}
+.copy-btn:active{opacity:.85}
+.copy-btn.green{background:var(--green)}
+.dictation-list{list-style:none;padding:0;margin:0}
+.dictation-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:14px}
+.dictation-item:last-child{border-bottom:none}
+.dictation-num{font-size:12px;color:#b2bec3;min-width:20px}
+.dictation-char{font-family:"KaiTi","楷体",serif;font-size:24px;min-width:30px}
+.dictation-py{color:#95a5a6;font-size:12px;flex:1}
+.top-errors-row{display:flex;gap:8px;flex-wrap:wrap}
+.top-err-chip{background:#fdebd0;border:1px solid #e59866;border-radius:8px;padding:6px 12px;display:flex;align-items:center;gap:6px;font-size:13px}
+.top-err-chip span{font-family:"KaiTi","楷体",serif;font-size:22px}
+.top-err-cnt{font-size:10px;color:var(--red);font-weight:bold}
+
+.unit-picker-btn{padding:5px 9px;border-radius:8px;font-size:12px;border:1.5px solid #ddd;font-weight:bold;background:#f8f9fa;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:3px;font-family:inherit;max-width:230px;overflow:hidden;white-space:nowrap}
+.unit-picker-panel{position:fixed;top:58px;left:8px;right:8px;max-width:520px;max-height:calc(100vh - 70px);max-height:calc(100dvh - 70px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:var(--card);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.22);z-index:200;padding:12px 14px 80px;display:none}
+.unit-picker-panel.open{display:block}
+.unit-check-item{display:flex;align-items:center;gap:8px;padding:6px 4px;border-radius:7px;cursor:pointer;font-size:14px}
+.unit-check-item input{width:16px;height:16px;cursor:pointer;accent-color:var(--green)}
+.unit-check-all{font-weight:bold;border-bottom:1px solid #ecf0f1;margin-bottom:3px;padding-bottom:8px}
+
+/* === Side feedback text === */
+.feedback-left-side{position:fixed;right:calc(50% + 90px);top:38%;writing-mode:vertical-rl;text-orientation:mixed;font-size:30px;font-weight:900;color:#e74c3c;pointer-events:none;z-index:310;display:none;text-shadow:0 3px 10px rgba(231,76,60,.4);letter-spacing:4px}
+.feedback-right-side{position:fixed;left:calc(50% + 90px);top:34%;writing-mode:vertical-rl;text-orientation:mixed;font-size:22px;font-weight:900;color:#e74c3c;pointer-events:none;z-index:310;display:none;text-shadow:0 3px 10px rgba(231,76,60,.4);letter-spacing:3px}
+.feedback-side-anim{animation:sideIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes sideIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+
+/* ===== v3 新增：登录点选 / 课文多选 / 结算卡 / 老师页 ===== */
+.login-hint{font-size:15px;font-weight:700;color:#2d3436;margin:10px 0 8px}
+.pick-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:4px}
+.pick-btn{min-width:88px;padding:12px 14px;border:2px solid #dfe6e9;border-radius:12px;background:#fff;font-size:16px;font-weight:700;color:#2d3436;cursor:pointer;line-height:1.3}
+.pick-btn:active{transform:scale(.96)}
+.pick-btn .sid-num{display:block;font-size:20px;color:#0984e3}
+.pick-btn .sid-name{display:block;font-size:13px;color:#636e72;font-weight:500}
+.confirm-card{background:#f1f9ff;border:2px solid #74b9ff;border-radius:14px;padding:16px;margin:10px 0;font-size:17px;font-weight:700;color:#2d3436;line-height:1.7}
+.confirm-card .cc-sub{font-size:14px;font-weight:500;color:#636e72;margin-top:6px}
+.modal-btn.ghost{background:#fff;color:#636e72;border:2px solid #dfe6e9;font-weight:600;margin-top:8px}
+.offline-note{background:#fff5e6;border:2px solid #fdcb6e;border-radius:12px;padding:12px;font-size:13px;color:#8d6a1a;line-height:1.6;margin-bottom:10px;text-align:left}
+.lp-unit{margin-bottom:10px}
+.lp-unit-hd{display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:700;color:#2d3436;padding:4px 2px;border-bottom:1px solid #eef1f2;margin-bottom:6px}
+.lp-mini{font-size:12px;padding:3px 9px;border:1px solid #b2bec3;border-radius:999px;background:#fff;color:#636e72;cursor:pointer}
+.lp-lessons{display:flex;flex-wrap:wrap;gap:6px}
+.lp-chip{font-size:13px;padding:7px 12px;border:2px solid #dfe6e9;border-radius:999px;background:#fff;color:#2d3436;cursor:pointer;user-select:none}
+.lp-chip.on{background:#0984e3;border-color:#0984e3;color:#fff;font-weight:700}
+.lp-foot{position:sticky;bottom:0;background:#fff;border-top:1px solid #eef1f2;padding-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.lp-count{flex:1;font-size:13px;color:#636e72;font-weight:700}
+.lp-go{padding:8px 16px;border:none;border-radius:10px;background:#00b894;color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+.lp-go:disabled{background:#b2bec3;cursor:not-allowed}
+.round-card{text-align:left;width:100%}
+.rc-big{font-size:34px;font-weight:900;color:#0984e3;text-align:center;line-height:1.1}
+.rc-line{font-size:15px;color:#2d3436;margin:6px 0}
+.rc-wrong{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.rc-w{font-size:18px;padding:4px 10px;border:2px solid #ff7675;border-radius:8px;color:#d63031;background:#fff5f5}
+.rc-up{font-size:13px;margin-top:10px;padding:8px;border-radius:8px;text-align:center;font-weight:700}
+.rc-up.ok{background:#e8f8f1;color:#00875a}.rc-up.bad{background:#fff5e6;color:#8d6a1a}.rc-up.wait{background:#eef3f8;color:#636e72}
+.pin-box{text-align:center;padding:24px 12px}
+.pin-in{width:160px;font-size:24px;text-align:center;letter-spacing:8px;padding:10px;border:2px solid #dfe6e9;border-radius:10px}
+.t-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.t-tbl th,.t-tbl td{border-bottom:1px solid #eef1f2;padding:6px 4px;text-align:left}
+.t-tbl th{color:#636e72;font-weight:700;font-size:12px}
+.t-miss{color:#d63031;font-weight:700}
+</style>
+</head>
+<body>
+<div class="overlay" id="nameModal">
+<div class="modal" id="loginModal">
+<div class="modal-emoji">🎮</div>
+<div class="modal-title">汉字大乱斗</div>
+<div class="modal-sub" id="loginSub">正在连接老师的名单……</div>
+<div id="loginStep1" style="display:none">
+  <div class="login-hint">① 点一下你的班级</div>
+  <div class="pick-grid" id="clsGrid"></div>
+</div>
+<div id="loginStep2" style="display:none">
+  <div class="login-hint">② 点一下你的学号</div>
+  <div class="pick-grid sid" id="sidGrid"></div>
+  <button class="modal-btn ghost" onclick="loginBack(1)">← 换班级</button>
+</div>
+<div id="loginStep3" style="display:none">
+  <div class="confirm-card" id="confirmCard"></div>
+  <button class="modal-btn" onclick="loginConfirm()">是我，开始游戏 🚀</button>
+  <button class="modal-btn ghost" onclick="loginBack(2)">← 点错了，重选</button>
+</div>
+<div id="loginOffline" style="display:none">
+  <div class="offline-note">⚠️ 连不上老师的名单（可能是网络不稳，或老师还没上传名单）。<br>先自己填，成绩会先存在这台机器上，联网后自动补交给老师。</div>
+  <input class="modal-input" id="classInput" placeholder="班级（例如：201）" maxlength="12" type="text">
+  <input class="modal-input" id="nameInput" placeholder="姓名（例如：小明）" maxlength="8" type="text">
+  <button class="modal-btn" onclick="savePlayerName()">开始游戏 🚀</button>
+</div>
+<button class="modal-btn ghost" id="offlineBtn" style="display:none" onclick="showOfflineLogin()">名单里没有我 / 连不上</button>
+</div>
+</div>
+<div class="ach-toast" id="achToast"></div>
+<div class="header">
+<div class="select-group">
+<select id="gradeSelect" onchange="updateUnits()"><option value="S1">中一</option><option value="S2">中二</option></select>
+<button class="unit-picker-btn" id="unitPickerBtn" onclick="toggleUnitPicker()">📚 <span id="unitPickerLabel">加载中...</span> ▾</button>
+</div>
+<div class="header-mid" id="playerLabel"></div>
+<div class="header-right">
+<div class="score-display">积分: <span id="scoreVal">0</span></div>
+<div class="combo-display" id="comboDisplay"></div>
+</div>
+</div>
+<div class="unit-picker-panel" id="unitPickerPanel"></div>
+<div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+<div class="feedback-left-side" id="feedbackLeft"></div>
+<div class="feedback-right-side" id="feedbackRight"></div>
+<div class="feedback-overlay" id="feedbackMsg"><div class="feedback-text" id="fbText"></div></div>
+<div class="page active" id="gamePage">
+<div class="pool-container" id="pool"><div class="pool-title">请从下方找出正确的偏旁部首，拖入红框中</div></div>
+<div class="target-info">请根据读音拼出汉字：<span id="pinyinHint" class="pinyin-display"></span><div id="structHint" class="struct-hint"></div></div>
+<div id="board" class="dynamic-board layout-lr"></div>
+<div class="quiz-panel" id="quizPanel">
+<div class="quiz-title">拼写成功！请选出 <span class="quiz-word" id="qw">-</span> 的正确解释：</div>
+<div id="optionsContainer"></div>
+</div>
+<div class="match-panel" id="matchPanel">
+<div class="match-title">太棒了！「<span class="match-char" id="matchChar">-</span>」还能组成这些词<br><span class="match-sub">把左边的词语拖到右边正确的解释上</span></div>
+<div class="match-area" id="matchArea"></div>
+</div>
+<div class="progress-label" id="progressLabel">第 1/5 字</div>
+</div>
+<div class="page" id="collectionPage">
+<div class="page-title">📖 我的汉字收藏册</div>
+<div class="stats-row">
+<div class="stat-item"><div class="stat-num" id="sTotalDone">0</div><div class="stat-lbl">练习过</div></div>
+<div class="stat-item"><div class="stat-num" style="color:var(--blue)" id="sBlue">0</div><div class="stat-lbl">🔵 蓝卡</div></div>
+<div class="stat-item"><div class="stat-num" style="color:var(--gold)" id="sGold">0</div><div class="stat-lbl">🥇 金卡</div></div>
+</div>
+<div id="collectionBody"></div>
+</div>
+<div class="page" id="errorPage">
+<div class="page-title">❌ 我的错字本</div>
+<div class="page-sub">坚持练习，让错字变成金卡！</div>
+<div id="errorBody"></div>
+</div>
+<div class="page" id="achPage">
+<div class="page-title">🏅 成就</div>
+<div class="page-sub" id="achSub">已解锁 0 / 6</div>
+<div class="ach-list" id="achList"></div>
+</div>
+
+<div class="page" id="teacherPage">
+<div class="page-title">👩‍🏫 老师</div>
+
+<div id="pinGate" class="teacher-card">
+  <div class="pin-box">
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px">请输入教师密码</div>
+    <input class="pin-in" id="pinIn" type="password" inputmode="numeric" maxlength="8" placeholder="····">
+    <div style="margin-top:12px"><button class="copy-btn green" onclick="teacherLogin()">进入</button></div>
+    <div id="pinMsg" style="font-size:13px;color:#d63031;margin-top:8px"></div>
+  </div>
+</div>
+
+<div id="teacherBody" style="display:none">
+  <div class="teacher-card">
+    <div class="teacher-card-title">📊 今日练习情况</div>
+    <div style="margin-bottom:8px"><select id="tClsSel" onchange="renderBoard()" style="padding:6px 10px;border-radius:8px;border:1px solid #dfe6e9;font-size:14px"></select>
+    <button class="copy-btn" style="display:inline-block;width:auto;padding:6px 12px;margin-left:6px" onclick="loadBoard()">🔄 刷新</button></div>
+    <div style="margin-bottom:8px">
+      <select id="tRangeSel" onchange="renderBoard()" style="padding:6px 10px;border-radius:8px;border:1px solid #dfe6e9;font-size:14px"></select>
+      <select id="tDaySel" onchange="renderBoard()" style="padding:6px 10px;border-radius:8px;border:1px solid #dfe6e9;font-size:14px;margin-left:6px">
+        <option value="today">只看今天</option>
+        <option value="7">最近 7 天</option>
+        <option value="all">不限日期</option>
+      </select>
+    </div>
+    <div id="tSummary" style="font-size:14px;color:#636e72">点「刷新」读取全班数据</div>
+    <div id="tMissing" style="font-size:13px;margin-top:8px"></div>
+    <button class="copy-btn" id="tCopyMissing" style="margin-top:8px;display:none" onclick="copyMissing()">📋 复制未交名单</button>
+  </div>
+  <div class="teacher-card">
+    <div class="teacher-card-title">👤 名单管理</div>
+    <div style="font-size:12px;color:#7f8c8d;margin-bottom:6px">
+      一行一个学生，格式：<b>学号 姓名 组号</b>（组号可不填），中间用空格或 Tab 分开。<br>
+      保存会<b>整班覆盖</b>，别的班不受影响。
+    </div>
+    <input id="tRosterCls" placeholder="班级代号，例如 2E1"
+      style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid #dfe6e9;font-size:14px;margin-bottom:6px">
+    <textarea id="tRosterTxt" rows="6" placeholder="1&#9;陈小明&#9;1&#10;2&#9;林美玲&#9;1&#10;3&#9;王志强&#9;2"
+      style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid #dfe6e9;font-size:14px;font-family:inherit"></textarea>
+    <button class="copy-btn green" style="margin-top:8px" onclick="saveRoster()">💾 保存这个班的名单</button>
+    <div id="tRosterMsg" style="font-size:13px;margin-top:8px"></div>
+  </div>
+  <div class="teacher-card">
+    <div class="teacher-card-title">⚠️ 全班最容易错的字</div>
+    <div class="top-errors-row" id="topErrorsRow"><div style="color:#b2bec3;font-size:13px">点「刷新」后显示</div></div>
+    <button class="copy-btn" onclick="copyWeakChars()" style="margin-top:8px">📋 复制重点复习字表</button>
+  </div>
+  <div class="teacher-card">
+    <div class="teacher-card-title">🏆 个人榜（按正确率）</div>
+    <div id="tIndiv" style="font-size:13px;color:#b2bec3">点「刷新」后显示</div>
+  </div>
+  <div class="teacher-card">
+    <div class="teacher-card-title">👥 小组榜</div>
+    <div id="tGroup" style="font-size:13px;color:#b2bec3">点「刷新」后显示</div>
+  </div>
+</div>
+
+<div class="teacher-card">
+  <div class="teacher-card-title">📝 当前范围听写清单</div>
+  <div style="font-size:12px;color:#95a5a6;margin-bottom:8px">在游戏页选好课文后，回来这里查看</div>
+  <ul class="dictation-list" id="dictationList"></ul>
+  <button class="copy-btn" onclick="copyDictation()" style="margin-top:10px">📋 复制听写清单</button>
+</div>
+</div>
+<div class="bottom-nav">
+<button class="nav-btn active" id="nav-game" onclick="switchPage('game')"><span class="nav-icon">🎮</span><span class="nav-label">游戏</span></button>
+<button class="nav-btn" id="nav-collection" onclick="switchPage('collection')"><span class="nav-icon">📖</span><span class="nav-label">收藏册</span></button>
+<button class="nav-btn" id="nav-error" onclick="switchPage('error')"><span class="nav-icon">❌</span><span class="nav-label">错字本</span><span class="nav-badge" id="errorBadge" style="display:none">0</span></button>
+<button class="nav-btn" id="nav-ach" onclick="switchPage('ach')"><span class="nav-icon">🏅</span><span class="nav-label">成就</span></button>
+<button class="nav-btn" id="nav-teacher" onclick="switchPage('teacher')"><span class="nav-icon">👩‍🏫</span><span class="nav-label">老师</span></button>
+</div>
+<script>
+
+// ═══════════════════════════════════════════════════════════
+//  词库（按中一/中二上传词语表校对，2026-08-19）
+// ═══════════════════════════════════════════════════════════
+const rawDatabase = `
+S1_U1_L1|淘|táo|lr|氵,匋|淘气|调皮 (Naughty)|S
+S1_U1_L1|惹|rě|tb|若,心|惹|招来、引起（麻烦等） (Provoke)|S
+S1_U1_L1|肋|lèi|lr|月,力|两肋插刀|为朋友愿意付出一切 (Go all out for a friend)|S
+S1_U1_L1|拒|jù|lr|扌,巨|来者不拒|什么都不拒绝 (Accept everything)|S
+S1_U1_L1|禅|chán|lr|礻,单|口头禅|常说的话 (Catchphrase)|S
+S1_U1_L1|桩|zhuāng|lr|木,庄|小事一桩|很容易的事 (A piece of cake)|S
+S1_U1_L1|缘|yuán|lr|纟,彖|人缘|跟别人的关系好 (Good relations with others)|S
+S1_U1_L1|润|rùn|lr|氵,闰|红润|脸色好，有点红 (Rosy)|S
+S1_U1_L1|率|lǜ|look|卒,牵,幸|直率|说话做事爽快，不绕弯子 (Frank)|L
+S1_U1_L1|寡|guǎ|tmb|宀,直,分|沉默寡言|平时很少说话 (Reticent)|S
+S1_U1_L1|辩|biàn|lmr|辛,讠,辛|争辩|为了对错而争吵 (Argue)|S
+S1_U1_L1|冤|yuān|tb|冖,兔|冤枉|受到不该受的责怪 (Wrongly blamed)|S
+S1_U1_L1|荐|jiàn|tb|艹,存|推荐|把好的人或物介绍给别人 (Recommend)|S
+S1_U1_L2|捣|dǎo|lr|扌,岛|捣乱|制造麻烦 (Make trouble)|S
+S1_U1_L2|瞬|shùn|lr|目,舜|瞬间|极短的一段时间 (In an instant)|S
+S1_U1_L2|勃|bó|lr|孛,力|兴致勃勃|兴趣很浓，劲头很足 (Full of enthusiasm)|S
+S1_U1_L2|狈|bèi|lr|犭,贝|狼狈|处境尴尬，很难堪 (In a sorry state)|S
+S1_U1_L2|讽|fěng|lr|讠,风|讥讽|用尖刻的话嘲笑别人 (Mock)|S
+S1_U1_L2|吻|wěn|lr|口,勿|口吻|说话时的语气 (Tone of speech)|S
+S1_U1_L2|赌|dǔ|lr|贝,者|赌气|因不满而故意闹别扭 (Act out of pique)|S
+S1_U1_L2|扯|chě|lr|扌,止|拉扯|用手拉来拉去 (Pull about)|S
+S1_U1_L2|措|cuò|lr|扌,昔|手足无措|慌得不知怎么办才好 (At a loss)|S
+S1_U1_L3|案|àn|tb|安,木|审案|法官审理案件 (Try a case)|S
+S1_U1_L3|律|lǜ|lr|彳,聿|律师|专门帮人打官司的人 (Lawyer)|S
+S1_U1_L3|拔|bá|lr|扌,犮|拔刀相助|在别人遇到困难时出手帮助 (Come to someone’s aid)|S
+S1_U1_L3|振|zhèn|lr|扌,辰|振振有词|自以为有理，说个不停 (Justify oneself volubly)|S
+S1_U1_L3|虚|xū|semi-tl|虍,业|心虚|做错事后心里发慌 (Feel guilty)|S
+S1_U1_L3|哑|yǎ|lr|口,亚|哑口无言|被问得说不出话来 (Speechless)|S
+S1_U1_L3|判|pàn|lr|半,刂|判决|法官对案件做出的决定 (Verdict)|S
+S1_U1_L4|皱|zhòu|lr|刍,皮|皱纹|脸上的纹路 (Wrinkle)|S
+S1_U1_L4|哄|hōng|lr|口,共|哄堂大笑|全屋子的人一起大笑 (Roar with laughter)|S
+S1_U1_L4|准|zhǔn|lr|冫,隹|标准|衡量事物的准则 (Standard)|S
+S1_U1_L4|属|shǔ|semi-tl|尸,禹|金属|一类材料 (Metal)|S
+S1_U1_L4|绰|chuò|lr|纟,卓|绰号|外号 (Nickname)|S
+S1_U1_L4|谱|pǔ|lr|讠,普|离谱|不合常理 (Absurd)|S
+S1_U1_L4|叛|pàn|lr|半,反|叛逆|不服从 (Rebellious)|S
+S1_U1_L4|逆|nì|semi-bl|辶,屰|叛逆|不服从，故意反抗 (Rebellious)|S
+S1_U1_L4|誓|shì|tb|折,言|发誓|郑重承诺 (Vow)|S
+S1_U1_L4|牢|láo|tb|宀,牛|牢记|牢牢地记在心里 (Bear firmly in mind)|S
+S1_U1_L4|恒|héng|lr|忄,亘|持之以恒|长期坚持，不半途而废 (Persevere)|S
+S1_U1_L4|鸦|yā|lr|牙,鸟|鸦雀无声|十分安静，没有一点声音 (Utterly silent)|S
+S1_U1_L4|雀|què|tb|小,隹|鸦雀无声|十分安静，没有一点声音 (Utterly silent)|S
+S1_U2_L1|葡|pú|tb|艹,匍|葡萄|一种紫色的水果 (Grapes)|S
+S1_U2_L1|萄|táo|tb|艹,匋|葡萄|一串串的紫色或绿色水果 (Grapes)|S
+S1_U2_L1|征|zhēng|lr|彳,正|象征|代表某种意义 (Symbolize)|S
+S1_U2_L1|俗|sú|lr|亻,谷|风俗|社会上流传的习惯 (Custom)|S
+S1_U2_L1|辞|cí|lr|舌,辛|辞旧迎新|告别旧年，迎接新年 (Welcome the new year)|S
+S1_U2_L1|燃|rán|lr|火,然|燃放|点燃鞭炮等 (Set off)|S
+S1_U2_L1|翩|piān|lr|扁,羽|翩翩起舞|跳起优美的舞蹈 (Dance beautifully)|S
+S1_U2_L1|罐|guàn|lr|缶,雚|瓶瓶罐罐|各种瓶子和罐子 (Bottles and cans)|S
+S1_U2_L1|厄|è|semi-tl|厂,卩|厄运|不好的运气 (Bad luck)|S
+S1_U2_L1|夕|xī|look|歹,夂,久|前夕|某个日子的前一天 (Eve)|L
+S1_U2_L1|预|yù|lr|予,页|预示|事先显示出将要发生 (Foreshadow)|S
+S1_U2_L1|兆|zhào|look|北,兀,爪|兆头|预示好坏的迹象 (Omen)|L
+S1_U2_L1|碌|lù|lr|石,录|忙碌|事情多，忙个不停 (Busy)|S
+S1_U2_L1|遥|yáo|semi-bl|辶,䍃|遥远|距离非常远 (Distant)|S
+S1_U2_L1|恭|gōng|tmb|共,小,丶|恭敬|对别人很有礼貌 (Respectful)|S
+S1_U2_L1|戚|qī|semi-top|戊,尗|亲戚|家人和亲属 (Relatives)|S
+S1_U2_L1|诸|zhū|lr|讠,者|诸事大吉|每一件事都顺利吉祥 (May all go well)|S
+S1_U2_L1|旦|dàn|tb|日,一|元旦|新年的第一天 (New Year's Day)|S
+S1_U2_L2|贼|zéi|lr|贝,戎|贼|偷东西的人 (Thief)|S
+S1_U2_L2|诞|dàn|lr|讠,延|圣诞|纪念耶稣诞生的节日 (Christmas)|S
+S1_U2_L2|嫁|jià|lr|女,家|嫁|女子结婚 (Marry, of a woman)|S
+S1_U2_L2|讯|xùn|lr|讠,卂|视讯|通过网络的影像通话 (Video call)|S
+S1_U2_L2|酷|kù|lr|酉,告|酷|帅气，有个性 (Cool)|S
+S1_U2_L2|诺|nuò|lr|讠,若|承诺|答应做某事，并表示会做到 (Promise)|S
+S1_U2_L2|剃|tì|lr|弟,刂|剃|用刀刮掉毛发 (Shave)|S
+S1_U2_L2|蒸|zhēng|tmb|艹,丞,灬|蒸腾|热气往上升 (Transpire)|S
+S1_U2_L2|肴|yáo|tb|乂,有|佳肴|非常好吃的菜 (Delicacy)|S
+S1_U2_L2|喳|zhā|lr|口,查|叽叽喳喳|说话声音细碎又杂乱 (Chattering)|S
+S1_U2_L2|缺|quē|lr|缶,夬|缺席|该到而没到 (Absent)|S
+S1_U2_L2|悦|yuè|lr|忄,兑|悦耳|声音好听，动听 (Pleasant to the ear)|S
+S1_U2_L3|饺|jiǎo|lr|饣,交|饺子|一种有馅的食物 (Dumplings)|S
+S1_U2_L3|剁|duò|lr|朵,刂|剁肉|用刀把肉剁成碎末 (Chop meat)|S
+S1_U2_L3|馅|xiàn|lr|饣,臽|馅料|包在食物里的东西 (Filling)|S
+S1_U2_L3|莫|mò|tmb|艹,日,大|莫名其妙|说不出道理，让人费解 (Baffling)|S
+S1_U2_L3|妙|miào|lr|女,少|莫名其妙|说不出道理，让人费解 (Baffling)|S
+S1_U2_L3|偷|tōu|lr|亻,俞|偷龙转凤|暗中把东西掉换 (Secretly swap)|S
+S1_U2_L4|涯|yá|lr|氵,厓|天涯海角|很远的地方 (Ends of the earth)|S
+S1_U2_L4|割|gē|lr|害,刂|分割|把整体分成几部分 (Divide)|S
+S1_U2_L4|嚼|jué|lr|口,爵|嚼|用牙磨碎食物 (Chew)|S
+S1_U2_L4|溢|yì|lr|氵,益|溢|满了流出来 (Overflow)|S
+S1_U2_L4|盏|zhǎn|tb|戋,皿|盏|量词，用于灯、茶等 (Measure word)|S
+S1_U3_L1|魅|mèi|semi-bl|鬼,未|魅力|很吸引人的力量 (Charm)|S
+S1_U3_L1|悠|yōu|tb|攸,心|悠久|年代久远 (Long-standing)|S
+S1_U3_L1|遗|yí|semi-bl|辶,贵|遗产|历史上遗留下来的物质或文化财富 (Heritage)|S
+S1_U3_L1|刹|shā|lr|杀,刂|巴刹|本地对菜市场的叫法 (Wet market)|S
+S1_U3_L1|饱|bǎo|lr|饣,包|饱经风霜|经历过许多艰难困苦 (Weather-beaten)|S
+S1_U3_L1|胞|bāo|lr|月,包|同胞|同一个国家的人 (Compatriot)|S
+S1_U3_L1|融|róng|lr|鬲,虫|融合|合在一起 (Integrate)|S
+S1_U3_L1|郁|yù|lr|有,阝|浓郁|气味色彩很浓 (Rich)|S
+S1_U3_L1|宫|gōng|tb|宀,吕|皇宫|帝王居住的宫殿 (Palace)|S
+S1_U3_L1|堡|bǎo|tb|保,土|城堡|用石头建成的坚固大屋 (Castle)|S
+S1_U3_L1|绘|huì|lr|纟,会|彩绘|用颜色画上去的图画 (Coloured painting)|S
+S1_U3_L1|索|suǒ|tmb|十,冖,糸|探索|深入地寻找和研究 (Explore)|S
+S1_U3_L1|娘|niáng|lr|女,良|娘惹|土生华人女性，也指相关文化 (Nyonya)|S
+S1_U3_L1|惹|rě|tb|若,心|娘惹|土生华人女性的称呼，也指相关文化 (Nyonya)|S
+S1_U3_L1|摄|shè|lr|扌,聂|拍摄|用相机拍下画面 (Photograph)|S
+S1_U3_L2|镶|xiāng|lr|钅,襄|镶嵌|嵌入 (Inlay)|S
+S1_U3_L2|嵌|qiàn|t-lr|山,甘,欠|镶嵌|填入 (Embed)|S
+S1_U3_L2|梁|liáng|look|粱,染,渠|横梁|架在柱子上的横木 (Beam)|L
+S1_U3_L2|璃|lí|lr|王,离|玻璃|透明材料 (Glass)|S
+S1_U3_L2|循|xún|lr|彳,盾|循环|周而复始地转动 (Circulate)|S
+S1_U3_L2|衬|chèn|lr|衤,寸|映衬|衬托 (Set off)|S
+S1_U3_L2|盎|àng|tb|央,皿|盎然|气氛或趣味很浓厚 (Abundant)|S
+S1_U3_L2|株|zhū|lr|木,朱|株|用来数植物的量词 (Measure word for plants)|S
+S1_U3_L2|懈|xiè|lr|忄,解|松懈|不紧张 (Slack)|S
+S1_U3_L2|略|lüè|lr|田,各|领略|了解、欣赏事物的特点或意味 (Appreciate/Experience)|S
+S1_U3_L2|施|shī|l-tr-br|方,𠂉,也|设施|为某种用途设置的设备 (Facilities)|S
+S1_U3_L3|殖|zhí|lr|歹,直|殖民地|受外国政治控制和统治的地区 (Colony)|S
+S1_U3_L3|降|xiáng|lr|阝,夅|投降|认输 (Surrender)|S
+S1_U3_L3|棕|zōng|lr|木,宗|棕色|颜色 (Brown)|S
+S1_U3_L3|氧|yǎng|semi-tr|气,羊|氧化|与氧结合 (Oxidize)|S
+S1_U3_L3|碑|bēi|lr|石,卑|里程碑|标志重大发展的事件 (Milestone)|S
+S1_U3_L3|掘|jué|lr|扌,屈|发掘|挖出来 (Excavate)|S
+S1_U3_L4|擅|shàn|lr|扌,亶|擅长|很会做某事 (Be good at)|S
+S1_U3_L4|凑|còu|lr|冫,奏|紧凑|安排紧密，不松散 (Compact)|S
+S1_U3_L4|府|fǔ|semi-tl|广,付|打道回府|返回原处、回去 (Return)|S
+S1_U3_L4|甩|shuǎi|look|用,甫,田|甩|用力往外扔或摆动 (Fling / Swing)|L
+S1_U3_L4|薄|báo|t-lr|艹,氵,尃|薄|厚度很小，不厚 (Thin)|S
+S1_U3_L4|倚|yǐ|lr|亻,奇|不偏不倚|不偏向任何一方 (Impartial)|S
+S1_U3_L4|喱|lí|lr|口,厘|咖喱|一种调料 (Curry)|S
+S1_U3_L4|沾|zhān|lr|氵,占|沾|碰到、附着 (Touch/Dip)|S
+S1_U3_L4|沫|mò|lr|氵,末|泡沫|液体表面聚成的小气泡 (Foam / Bubbles)|S
+S1_U3_L4|赞|zàn|tlr-b|先,先,贝|赞不绝口|不停地称赞 (Praise highly)|S
+S1_U4_L1|诺|nuò|lr|讠,若|一诺千金|说话算数，信用很高 (Keep one’s promise)|S
+S1_U4_L1|码|mǎ|lr|石,马|起码|最低限度，至少 (At least)|S
+S1_U4_L1|卷|juǎn|tb|龹,㔾|开卷有益|读书总会有好处 (Reading is beneficial)|S
+S1_U4_L1|颖|yǐng|lt-lb-r|匕,禾,页|新颖|新鲜特别 (Novel)|S
+S1_U4_L1|坊|fāng|lr|土,方|工作坊|以动手实作为主的学习活动 (Workshop)|S
+S1_U4_L1|尴|gān|semi-bl|尢,监|尴尬|难为情 (Awkward)|S
+S1_U4_L1|尬|gà|semi-bl|尢,介|尴尬|难为情 (Awkward)|S
+S1_U4_L1|维|wéi|lr|纟,隹|维护|保护，使不受破坏 (Safeguard)|S
+S1_U4_L1|谊|yì|lr|讠,宜|友谊|友情 (Friendship)|S
+S1_U4_L1|帆|fān|lr|巾,凡|一帆风顺|事情进行得很顺利 (Smooth sailing)|S
+S1_U4_L1|效|xiào|lr|交,攵|有效|能产生预期的作用 (Effective)|S
+S1_U4_L1|策|cè|tb|⺮,朿|策略|为达到目的而采取的方法 (Strategy)|S
+S1_U4_L1|略|lüè|lr|田,各|策略|为达到目的而采取的方法 (Strategy)|S
+S1_U4_L1|嘉|jiā|tb|壴,加|嘉宾|贵客 (Guest)|S
+S1_U4_L1|辅|fǔ|lr|车,甫|辅导员|负责带领和辅导学生的人 (Counsellor / Facilitator)|S
+S1_U4_L2|赖|lài|lr|束,负|赖床|醒了还躺着不肯起来 (Stay in bed)|S
+S1_U4_L2|辫|biàn|lmr|辛,纟,辛|辫子|把头发分股编成的长条 (Braid / Plait)|S
+S1_U4_L2|惧|jù|lr|忄,具|恐惧|心里非常害怕 (Fear)|S
+S1_U4_L2|袄|ǎo|lr|衤,夭|夹袄|有夹层的中式棉上衣 (Lined jacket)|S
+S1_U4_L2|滋|zī|lr|氵,兹|滋味|味道；也指某种感受 (Taste/Feeling)|S
+S1_U4_L2|催|cuī|lr|亻,崔|催促|一再叫人赶快行动 (Urge)|S
+S1_U4_L2|哀|āi|tmb|亠,口,𧘇|哀求|苦苦地请求别人 (Beg)|S
+S1_U4_L2|挪|nuó|lr|扌,那|挪窝|离开原来的位置 (Move from one's spot)|S
+S1_U4_L2|鞭|biān|lr|革,便|藤鞭|藤条做的鞭子 (Cane)|S
+S1_U4_L2|抡|lūn|lr|扌,仑|抡|用力挥动手臂 (Swing one's arm)|S
+S1_U4_L2|挨|ái|lr|扌,矣|挨打|被人打 (Get a beating)|S
+S1_U4_L2|狈|bèi|lr|犭,贝|狼狈|处境尴尬，很难堪 (In a sorry state)|S
+S1_U4_L2|佣|yōng|lr|亻,用|女佣|受雇在家里帮忙做事的女子 (Domestic helper)|S
+S1_U4_L2|篷|péng|tb|⺮,逢|雨篷|用来遮雨的篷 (Rain canopy)|S
+S1_U4_L2|缘|yuán|lr|纟,彖|缘故|原因 (Reason)|S
+S1_U4_L2|痕|hén|semi-tl|疒,艮|泪痕|眼泪流过留下的痕迹 (Tear stains)|S
+S1_U4_L2|嗓|sǎng|lr|口,桑|嗓子眼|喉咙口 (Throat)|S
+S1_U4_L2|袱|fú|lr|衤,伏|包袱|用布包起来的行李 (Bundle)|S
+S1_U4_L3|皆|jiē|tb|比,白|人人皆晓|每一个人都知道 (Known to all)|S
+S1_U4_L3|铺|pù|lr|钅,甫|当铺|用东西抵押借钱的店 (Pawnshop)|S
+S1_U4_L3|账|zhàng|lr|贝,长|记账|把收支一笔笔记下来 (Keep accounts)|S
+S1_U4_L3|亏|kuī|tb|一,丂|亏|损失，吃亏 (Lose out)|S
+S1_U4_L3|撇|piē|lr|扌,敝|撇|汉字向左下的一笔 (A left-falling stroke)|S
+S1_U4_L3|斯|sī|lr|其,斤|慢条斯理|说话做事不慌不忙 (Unhurried)|S
+S1_U4_L3|航|háng|lr|舟,亢|起航|船或飞机开始出发 (Set off)|S
+S1_U4_L3|呜|wū|lr|口,乌|一命呜呼|指人失去了生命 (Pass away)|S
+S1_U4_L3|赞|zàn|tlr-b|先,先,贝|称赞|夸奖 (Praise)|S
+S1_U4_L4|寓|yù|tb|宀,禺|寓言|有道理的故事 (Fable)|S
+S1_U4_L4|篷|péng|tb|⺮,逢|帐篷|临时搭建、供人居住的篷子 (Tent)|S
+S1_U4_L4|徒|tú|lr|彳,走|徒劳无功|白费力气，没有成效 (Labour in vain)|S
+S1_U5_L1|剩|shèng|lr|乘,刂|剩|用掉一部分之后余下 (Left over)|S
+S1_U5_L1|膏|gāo|tb|高,月|牙膏|刷牙时使用的膏状清洁用品 (Toothpaste)|S
+S1_U5_L1|擦|cā|lr|扌,察|橡皮擦|擦掉铅笔字的文具 (Eraser)|S
+S1_U5_L1|薯|shǔ|tb|艹,署|薯条|薯类食物 (Potato)|S
+S1_U5_L1|茄|jiā|tb|艹,加|番茄酱|用番茄制成的酱料 (Tomato sauce)|S
+S1_U5_L1|偶|ǒu|lr|亻,禺|偶尔|有时候，次数不多 (Occasionally)|S
+S1_U5_L1|晋|jìn|tb|亚,日|晋级|升级 (Advance)|S
+S1_U5_L1|企|qǐ|tb|人,止|企业|从事生产或经营的公司 (Enterprise)|S
+S1_U5_L2|潜|qián|lr|氵,替|潜水|在水面下活动 (Dive)|S
+S1_U5_L2|拢|lǒng|lr|扌,龙|收拢|聚集在一起 (Gather)|S
+S1_U5_L2|艘|sōu|lr|舟,叟|艘|用来数船只的量词 (Measure word for ships)|S
+S1_U5_L2|屁|pì|semi-tl|尸,比|屁股|人身体后面坐着的部位 (Buttocks)|S
+S1_U5_L2|翘|qiào|semi-bl|尧,羽|翘|一头向上抬起来 (Tilt up)|S
+S1_U5_L2|恙|yàng|tb|羊,心|安然无恙|平安无事，没有受到损害 (Safe and sound)|S
+S1_U5_L3|拜|bài|l-tr-br|龵,一,丰|拜访|登门探望或访问 (Pay a visit)|S
+S1_U5_L3|漫|màn|lr|氵,曼|漫步|没有目的地慢慢走 (Stroll)|S
+S1_U5_L3|绞|jiǎo|lr|纟,交|绞尽脑汁|费尽心思 (Rack brains)|S
+S1_U5_L3|侨|qiáo|lr|亻,乔|华侨|海外华人 (Overseas Chinese)|S
+S1_U5_L3|衷|zhōng|tmb|亠,中,𧘇|由衷|发自内心 (Heartfelt)|S
+S1_U5_L3|摩|mó|semi-tl|麻,手|摩天大楼|特别高的大楼 (Skyscraper)|S
+S1_U5_L3|帜|zhì|lr|巾,只|独树一帜|风格独特，自成一家 (Have a unique style)|S
+S1_U5_L3|塔|tǎ|lr|土,荅|金字塔|古埃及的三角形巨大建筑 (Pyramid)|S
+S1_U5_L3|抨|pēng|lr|扌,平|抨击|批评 (Attack)|S
+S1_U5_L4|鼎|dǐng|look|真,具,县|大名鼎鼎|名气很大，人人知道 (Renowned)|L
+S1_U5_L4|籍|jí|tb|⺮,耤|书籍|书 (Books)|S
+S1_U5_L4|播|bō|lr|扌,番|传播|广泛地散布出去 (Spread / Disseminate)|S
+S1_U5_L4|胶|jiāo|lr|月,交|胶泥|黏性很强的泥土 (Clay)|S
+S1_U5_L4|雕|diāo|lr|周,隹|雕刻|刻 (Carve)|S
+S1_U5_L4|凸|tū|look|凹,凶,山|凸|表面高起来，不平 (Protruding)|L
+S1_U5_L4|框|kuāng|lr|木,匡|框|围在四周的边 (Frame)|S
+S1_U5_L4|蜡|là|lr|虫,昔|蜡|蜡烛材料 (Wax)|S
+S1_U5_L4|熔|róng|lr|火,容|熔化|受热后由固体变成液体 (Melt)|S
+S1_U5_L4|窍|qiào|tb|穴,巧|窍门|好方法 (Knack)|S
+S1_U6_L1|漆|qī|lr|氵,桼|油漆|涂在墙上的颜料 (Paint)|S
+S1_U6_L1|卸|xiè|lt-lb-r|午,止,卩|拆卸|把东西拆开 (Dismantle)|S
+S1_U6_L1|宿|sù|tb|宀,佰|宿舍|供人住宿的房屋 (Dormitory)|S
+S1_U6_L1|凭|píng|tb|任,几|凭|依靠，根据某样东西 (Rely on)|S
+S1_U6_L2|截|jié|lt-lb-r|土,隹,戈|截至|到某个时间为止 (Up to)|S
+S1_U6_L2|驶|shǐ|lr|马,史|行驶|车、船开动前进 (Travel along)|S
+S1_U6_L2|误|wù|lr|讠,吴|延误|耽误、拖延 (Delay)|S
+S1_U6_L2|稳|wěn|lr|禾,急|稳定|平稳，没有大变动 (Stable)|S
+S1_U6_L2|漏|lòu|lr|氵,屚|漏液|液体从容器里渗出来 (Leak)|S
+S1_U6_L2|轨|guǐ|lr|车,九|轨道|火车走的路 (Track)|S
+S1_U6_L2|晨|chén|tb|日,辰|凌晨|天快亮的那段时间 (Before dawn)|S
+S1_U6_L2|绪|xù|lr|纟,者|就绪|一切都准备妥当了 (Be ready)|S
+S1_U6_L2|隧|suì|lr|阝,遂|隧道|在地下或山里挖通的通道 (Tunnel)|S
+S1_U6_L2|描|miáo|lr|扌,苗|扫描|用仪器逐一照射读取 (Scan)|S
+S1_U6_L2|畅|chàng|look|场,杨,汤|顺畅|顺利通畅，没有阻碍 (Smooth)|L
+S1_U6_L2|赴|fù|semi-bl|走,卜|全力以赴|用全部力量去做 (Go all out)|S
+S1_U6_L2|职|zhí|lr|耳,只|职业|个人长期从事的工作 (Occupation)|S
+S1_U6_L2|故|gù|lr|古,攵|故障|机器、设备或系统发生异常，不能正常运作 (Malfunction)|S
+S1_U6_L2|障|zhàng|lr|阝,章|故障|机器、设备或系统发生异常，不能正常运作 (Malfunction)|S
+S1_U6_L2|岗|gǎng|tb|山,冈|岗位|工作所在的位置 (Work post)|S
+S1_U6_L2|献|xiàn|lr|南,犬|奉献|不求回报地献出 (Dedicate)|S
+S1_U6_L3|谣|yáo|lr|讠,䍃|新谣|新加坡本地创作的华语歌谣 (Xinyao)|S
+S1_U6_L3|芝|zhī|tb|艹,之|芝麻|很小的黑色或白色油料种子 (Sesame)|S
+S1_U6_L3|琐|suǒ|l-tr-br|王,小,贝|琐事|零碎的小事情 (Trivial matters)|S
+S1_U6_L3|朗|lǎng|lr|良,月|朗朗上口|读起来顺口又好记 (Catchy to recite)|S
+S1_U6_L3|繁|fán|tb|敏,糸|繁荣昌盛|兴旺发达，蓬勃发展 (Prosperous)|S
+S1_U6_L3|昌|chāng|tb|日,日|繁荣昌盛|兴旺发达，蓬勃发展 (Prosperous)|S
+S1_U6_L3|芒|máng|tb|艹,亡|光芒|向四周射出的强烈光线 (Radiance)|S
+S1_U6_L4|葬|zàng|tmb|艹,死,廾|埋葬|安葬 (Bury)|S
+S1_U6_L4|炬|jù|lr|火,巨|火炬|火把 (Torch)|S
+S1_U6_L4|贸|mào|tb|卯,贝|贸易|买卖商品的活动 (Trade)|S
+S1_U6_L4|隙|xì|lr|阝,𡭴|间隙|缝隙 (Gap)|S
+S1_U6_L4|撤|chè|lmr|扌,育,攵|撤离|离开原来的地方，通常指撤出危险地区 (Evacuate)|S
+S1_U6_L4|塌|tā|l-tr-br|土,日,羽|倒塌|倒下 (Collapse)|S
+S1_U6_L4|胁|xié|lr|月,办|威胁|用力量吓唬，造成危险 (Threaten)|S
+S1_U6_L4|镇|zhèn|lr|钅,真|镇静|遇到事情不慌乱 (Calm)|S
+S1_U6_L4|移|yí|lr|禾,多|移民|迁到别的国家定居 (Migrate / Immigrant)|S
+S1_U6_L4|牺|xī|lr|牜,西|牺牲|为某事舍弃 (Sacrifice)|S
+S1_U6_L4|牲|shēng|lr|牜,生|牺牲|为正义舍弃生命或利益 (Sacrifice)|S
+S1_U6_L4|喻|yù|lr|口,俞|家喻户晓|每家每户都知道 (Known to every household)|S
+S1_U6_L4|晓|xiǎo|lr|日,尧|家喻户晓|人人都知道 (Widely known)|S
+S2_U1_L1|惫|bèi|tb|备,心|疲惫|非常累 (Exhausted)|S
+S2_U1_L1|犹|yóu|lr|犭,尤|犹豫|拿不定主意，迟疑不决 (Hesitate)|S
+S2_U1_L1|豫|yù|lr|予,象|犹豫|拿不定主意 (Hesitate)|S
+S2_U1_L1|疚|jiù|semi-tl|疒,久|内疚|觉得对不起别人 (Guilty)|S
+S2_U1_L1|匿|nì|l-tb|匚,若|匿名|不写出真实姓名 (Anonymous)|S
+S2_U1_L1|监|jiān|look|盐,临,益|监督|从旁察看并督促 (Supervise)|L
+S2_U1_L1|督|dū|tb|叔,目|监督|从旁察看并督促 (Supervise)|S
+S2_U1_L1|窒|zhì|tb|穴,至|窒息|呼吸困难甚至停止 (Suffocate)|S
+S2_U1_L1|沟|gōu|lr|氵,勾|代沟|两代人之间的想法隔阂 (Generation gap)|S
+S2_U1_L1|瘾|yǐn|semi-tl|疒,隐|上瘾|养成难以戒掉的习惯 (Become addicted)|S
+S2_U1_L1|疏|shū|lr|疋,㐬|疏远|关系变得不亲近 (Drift apart)|S
+S2_U1_L1|刃|rèn|look|刀,丸,办|迎刃而解|主要问题一解决，其余跟着解决 (Be readily solved)|L
+S2_U1_L2|崇|chóng|tb|山,宗|崇拜|非常尊敬和佩服 (Adore)|S
+S2_U1_L2|释|shì|l-tmb|釆,又,二,丨|爱不释手|喜欢得舍不得放下 (Can't put it down)|S
+S2_U1_L2|钉|dīng|lr|钅,丁|碰钉子|办事遭到拒绝或阻碍 (Be rebuffed)|S
+S2_U1_L2|泼|pō|lr|氵,发|泼冷水|打击别人的热情 (Dampen someone's enthusiasm)|S
+S2_U1_L2|屉|tì|semi-tl|尸,世|抽屉|桌子里拉出来的格子 (Drawer)|S
+S2_U1_L2|竭|jié|lr|立,曷|精疲力竭|一点力气都没了 (Exhausted)|S
+S2_U1_L2|抑|yì|lr|扌,卬|抑郁|心情非常不好 (Depressed)|S
+S2_U1_L2|郁|yù|lr|有,阝|抑郁|情绪低落、精神不振 (Depressed)|S
+S2_U1_L2|齿|chǐ|tmb|止,人,凵|启齿|开口说话，多指难以说出口 (Bring oneself to say)|S
+S2_U1_L2|扪|mén|lr|扌,门|扪心自问|摸着良心问自己 (Search one's conscience)|S
+S2_U1_L2|羞|xiū|semi-tl|羊,丑|害羞|不好意思 (Shy)|S
+S2_U1_L2|懊|ào|lr|忄,奥|懊恼|因后悔而心烦 (Annoyed)|S
+S2_U1_L2|伺|sì|lr|亻,司|伺机|暗中等待时机 (Watch for a chance)|S
+S2_U1_L2|疙|gē|semi-tl|疒,乞|疙瘩|皮肤上鼓起的小硬块 (Lump)|S
+S2_U1_L2|瘩|dā|semi-tl|疒,荅|疙瘩|皮肤上鼓起的小硬块 (Lump)|S
+S2_U1_L2|焉|yān|look|马,鸟,乌|心不在焉|心思不在这里，不专心 (Absent-minded)|L
+S2_U1_L2|荒|huāng|tb|艹,巟|破天荒|从来没有过，第一次出现 (Unprecedented)|S
+S2_U1_L3|兢|jīng|lr|克,克|战战兢兢|很害怕的样子 (Trembling with fear)|S
+S2_U1_L3|钥|yào|lr|钅,月|钥匙|开门用的工具 (Key)|S
+S2_U1_L3|匙|shi|semi-bl|是,匕|钥匙|开锁用的小工具 (Key)|S
+S2_U1_L3|锁|suǒ|l-tr-br|钅,小,贝|锁|把门锁上的东西 (Lock)|S
+S2_U1_L3|抚|fǔ|lr|扌,无|安抚|安慰别人不要生气或害怕 (Comfort)|S
+S2_U1_L3|况|kuàng|lr|冫,兄|何况|用反问表示更进一层 (Let alone)|S
+S2_U1_L3|佬|lǎo|lr|亻,老|和事佬|帮忙解决吵架的人 (Peacemaker)|S
+S2_U1_L3|讶|yà|lr|讠,牙|惊讶|感到十分意外 (Surprised)|S
+S2_U1_L3|斑|bān|lmr|王,文,王|斑|点点相间 (Mottled)|S
+S2_U1_L3|缠|chán|look|缩,绳,绵|缠绕|绕在一起 (Twine)|L
+S2_U1_L3|搂|lǒu|lr|扌,娄|搂|抱 (Hug)|S
+S2_U1_L4|臃|yōng|lr|月,雍|臃肿|肥胖 (Bloated)|S
+S2_U1_L4|肿|zhǒng|lr|月,中|臃肿|过于肥胖，行动不便 (Bloated)|S
+S2_U1_L4|庸|yōng|semi-tl-tb|广,聿,冃|庸俗|不高雅，格调低下 (Vulgar)|S
+S2_U1_L4|俗|sú|lr|亻,谷|庸俗|不高雅、低俗 (Vulgar)|S
+S2_U1_L4|枚|méi|lr|木,攵|枚|用于小件东西的量词 (Measure word)|S
+S2_U1_L4|戒|jiè|semi-tr|戈,廾|戒指|套在手指上的环形饰物 (Ring)|S
+S2_U1_L4|躯|qū|lr|身,区|身躯|身体 (Body)|S
+S2_U1_L4|姿|zī|tb|次,女|姿势|身体的样子 (Posture)|S
+S2_U1_L4|熬|áo|tb|敖,灬|熬|长时间忍受、支撑 (Endure)|S
+S2_U1_L4|瞌|kē|lr|目,盍|打瞌睡|想睡 (Drowsy)|S
+S2_U1_L4|蹒|pán|l-tr-br|⻊,艹,两|蹒跚|走路缓慢摇晃的样子 (Hobble)|S
+S2_U1_L4|跚|shān|lr|⻊,册|蹒跚|走路缓慢摇晃的样子 (Hobble)|S
+S2_U1_L4|惺|xīng|lr|忄,星|惺忪|刚睡醒时眼睛模糊 (Drowsy-eyed)|S
+S2_U1_L4|忪|sōng|lr|忄,公|惺忪|刚睡醒时眼睛模糊 (Drowsy-eyed)|S
+S2_U1_L4|辉|huī|lr|光,军|光辉|光彩耀眼 (Brilliant)|S
+S2_U2_L1|捐|juān|lr|扌,肙|捐款|把钱捐给有需要的人 (Donate)|S
+S2_U2_L1|拯|zhěng|lr|扌,丞|拯救|救人或动物 (Save)|S
+S2_U2_L1|惠|huì|tb|叀,心|优惠|便宜一点 (Discount)|S
+S2_U2_L1|券|quàn|tb|龹,刀|券|可换取商品、服务或优惠的票据凭证 (Voucher)|S
+S2_U2_L1|肢|zhī|lr|月,支|四肢|两只手和两只脚 (Limbs)|S
+S2_U2_L1|捷|jié|lr|扌,疌|敏捷|反应或动作很快 (Agile)|S
+S2_U2_L1|梭|suō|lr|木,夋|穿梭|在中间来回穿过 (Shuttle)|S
+S2_U2_L1|辨|biàn|lmmr|辛,丶,丿,辛|辨识|认出来 (Identify)|S
+S2_U2_L1|馋|chán|l-tr-br|饣,免,冫|馋|很想吃东西 (Greedy for food)|S
+S2_U2_L1|跤|jiāo|lr|⻊,交|摔跤|摔倒；摔跤运动 (Wrestle/Fall)|S
+S2_U2_L1|猛|měng|lr|犭,孟|凶猛|很凶 (Fierce)|S
+S2_U2_L2|泽|zé|lr|氵,𠬤|光泽|亮亮的光芒 (Luster)|S
+S2_U2_L2|缩|suō|lr|纟,宿|缩|变小、收缩或退回 (Shrink)|S
+S2_U2_L2|枕|zhěn|lr|木,冘|枕|靠在上面睡觉 (Pillow)|S
+S2_U2_L2|啾|jiū|lr|口,秋|啾啾|小鸟叫的声音 (Chirping)|S
+S2_U2_L2|凝|níng|lr|冫,疑|凝望|一直盯着看 (Gaze)|S
+S2_U2_L2|笼|lóng|tb|⺮,龙|鸟笼|关鸟的笼子 (Birdcage)|S
+S2_U2_L2|隔|gé|lr|阝,鬲|隔|中间有东西挡着 (Separate)|S
+S2_U2_L2|惩|chéng|tb|征,心|惩罚|做错事受罚 (Punish)|S
+S2_U2_L2|罚|fá|t-lr|罒,讠,刂|惩罚|对过错加以处罚 (Punish)|S
+S2_U2_L2|畏|wèi|look|农,界,异|畏罪潜逃|做错事怕被抓跑掉 (Flee to escape punishment)|L
+S2_U2_L2|潜|qián|lr|氵,替|畏罪潜逃|因害怕罪责而逃走 (Flee from justice)|S
+S2_U2_L2|喵|miāo|lr|口,苗|喵|猫叫声 (Meow)|S
+S2_U2_L2|衔|xián|lmr|彳,钅,亍|衔|用嘴叼着 (Hold in mouth)|S
+S2_U2_L2|谴|qiǎn|lr|讠,遣|谴责|严厉地责备或批评 (Condemn)|S
+S2_U2_L2|估|gū|lr|亻,古|估计|根据情况作大概的推测 (Estimate)|S
+S2_U2_L3|翼|yì|tmb|羽,田,共|小心翼翼|非常小心 (Careful)|S
+S2_U2_L3|褐|hè|lr|衤,曷|褐|像咖啡一样的颜色 (Brown)|S
+S2_U2_L3|旋|xuán|lr|方,疋|盘旋|绕着圈子飞或走 (Circle)|S
+S2_U2_L3|愣|lèng|l-tr-br|忄,罒,方|愣|发呆 (Stunned)|S
+S2_U2_L3|傻|shǎ|l-tmb|亻,囟,儿,夂|傻|笨笨的 (Silly)|S
+S2_U2_L3|啼|tí|lr|口,帝|啼|叫 (Cry/Sing)|S
+S2_U2_L3|鸣|míng|lr|口,鸟|鸣|鸟叫 (Chirp)|S
+S2_U2_L3|觑|qù|lr|虚,见|面面相觑|你看我、我看你，不知道怎么办 (Look at each other in dismay)|S
+S2_U2_L3|揪|jiū|lr|扌,秋|揪心|心里很难受 (Anxious)|S
+S2_U2_L4|茂|mào|tb|艹,戊|茂盛|植物长得很好 (Lush)|S
+S2_U2_L4|扒|bā|lr|扌,八|扒开|用手拨开 (Push aside)|S
+S2_U2_L4|娇|jiāo|lr|女,乔|娇嫩|柔嫩脆弱，怕损伤 (Tender)|S
+S2_U2_L4|嫩|nèn|lmr|女,束,攵|娇嫩|柔嫩，容易受到损伤 (Delicate)|S
+S2_U2_L4|掀|xiān|lr|扌,欣|掀开|揭开 (Lift open)|S
+S2_U2_L4|啄|zhuó|lr|口,豖|啄|鸟用嘴吃东西 (Peck)|S
+S2_U2_L4|俯|fǔ|lr|亻,府|俯下|弯下身子 (Bend down)|S
+S2_U2_L4|蹦|bèng|lr|⻊,崩|蹦来蹦去|跳跃 (Jump)|S
+S2_U2_L4|涂|tú|lr|氵,余|涂上颜色|把颜料等抹在物体表面 (Apply/Paint)|S
+S2_U2_L4|绒|róng|lr|纟,戎|绒毛|细细软软的毛 (Fluff)|S
+S2_U2_L4|唤|huàn|lr|口,奂|呼唤|大声叫 (Call)|S
+S2_U2_L4|肩|jiān|semi-tl|户,月|肩头|身体的部位 (Shoulder)|S
+S2_U3_L1|素|sù|tb|龶,糸|因素|构成事物或影响结果的原因、条件 (Factor)|S
+S2_U3_L1|喉|hóu|lr|口,侯|水喉|新加坡常用语，指水管或水龙头 (Water pipe/tap)|S
+S2_U3_L1|艰|jiān|lr|又,艮|艰巨|非常困难 (Arduous)|S
+S2_U3_L1|昂|áng|tb|日,卬|昂贵|很贵 (Expensive)|S
+S2_U3_L1|耗|hào|lr|耒,毛|消耗|用掉 (Consume)|S
+S2_U3_L1|旱|hàn|tb|日,干|干旱|很久不下雨 (Drought)|S
+S2_U3_L1|扩|kuò|lr|扌,广|扩大|变大 (Expand)|S
+S2_U3_L1|蓄|xù|tb|艹,畜|蓄水池|装水的大池子 (Reservoir)|S
+S2_U3_L1|澡|zǎo|lr|氵,喿|洗澡|用水洗身子 (Bath)|S
+S2_U3_L1|浴|yù|lr|氵,谷|浴室|洗澡的房间 (Bathroom)|S
+S2_U3_L1|趋|qū|semi-bl|走,刍|趋势|事物发展的方向 (Trend)|S
+S2_U3_L2|媒|méi|lr|女,某|媒体|传播信息的工具、平台或机构 (Media)|S
+S2_U3_L2|塑|sù|tb|朔,土|塑料|做袋子或瓶子的材料 (Plastic)|S
+S2_U3_L2|吨|dūn|lr|口,屯|吨|很重的重量单位 (Ton)|S
+S2_U3_L2|廉|lián|semi-tl|广,兼|廉价|很便宜 (Cheap)|S
+S2_U3_L2|靡|mǐ|semi-tl|麻,非|风靡|非常流行 (Popular)|S
+S2_U3_L2|垄|lǒng|tb|龙,土|垄断|独占并控制某种市场、资源或事业 (Monopolize)|S
+S2_U3_L2|危|wēi|tb|⺈,厄|危害|伤害 (Endanger)|S
+S2_U3_L2|焚|fén|tb|林,火|焚烧|烧掉 (Burn)|S
+S2_U3_L2|尘|chén|tb|小,土|烟尘|烟雾和灰尘 (Smoke and dust)|S
+S2_U3_L2|壤|rǎng|lr|土,襄|土壤|泥土 (Soil)|S
+S2_U3_L2|遏|è|semi-bl|辶,曷|遏制|阻止 (Contain)|S
+S2_U3_L2|税|shuì|lr|禾,兑|税|交给政府的钱 (Tax)|S
+S2_U3_L2|倡|chàng|lr|亻,昌|倡导|带头提倡 (Advocate)|S
+S2_U3_L2|逐|zhú|semi-bl|辶,豕|逐渐|一点一点地 (Gradually)|S
+S2_U3_L2|斥|chì|look|斤,丘,乒|充斥|到处都是 (Full of)|L
+S2_U3_L2|妥|tuǒ|tb|爫,女|妥善|处理得合适、周到 (Properly)|S
+S2_U3_L2|煞|shà|tlr-b|刍,攵,灬|煞费苦心|费了很多心思 (Take great pains)|S
+S2_U3_L3|统|tǒng|lr|纟,充|统计|收集、整理并计算有关数据 (Statistics)|S
+S2_U3_L3|型|xíng|tb|刑,土|大型|规模很大 (Large-scale)|S
+S2_U3_L3|异|yì|tb|巳,廾|日新月异|变化、发展非常快 (Change rapidly)|S
+S2_U3_L3|泛|fàn|lr|氵,乏|泛滥|过多地漫延、到处都是 (Overflow/Spread unchecked)|S
+S2_U3_L3|滥|làn|lr|氵,监|泛滥|多得到处都是 (Overflow)|S
+S2_U3_L3|寿|shòu|semi-tl|丰,寸|寿命|活多长时间 (Lifespan)|S
+S2_U3_L3|途|tú|semi-bl|辶,余|途径|方法、路线 (Way/Channel)|S
+S2_U3_L3|径|jìng|lr|彳,圣|途径|达到目的的方法或门路 (Way / Channel)|S
+S2_U3_L3|乏|fá|tb|丿,之|缺乏|没有或不够 (Lack)|S
+S2_U3_L3|亿|yì|lr|亻,乙|亿|数目单位，一亿等于一万万 (Hundred million)|S
+S2_U3_L3|憾|hàn|lr|忄,感|遗憾|觉得可惜 (Regret)|S
+S2_U3_L3|慎|shèn|lr|忄,真|谨慎|很小心 (Cautious)|S
+S2_U3_L3|渗|shèn|lr|氵,参|渗透|水慢慢渗进去 (Penetrate)|S
+S2_U3_L4|宣|xuān|tb|宀,亘|宣布|告诉大家 (Declare)|S
+S2_U3_L4|狩|shòu|lr|犭,守|狩猎|打猎 (Hunt)|S
+S2_U3_L4|聘|pìn|lr|耳,甹|聘请|请人来工作 (Hire)|S
+S2_U3_L4|啃|kěn|lr|口,肯|啃|用力咬 (Gnaw)|S
+S2_U3_L4|疾|jí|semi-tl|疒,矢|疾病|身体或精神出现的病症 (Disease)|S
+S2_U3_L4|锐|ruì|lr|钅,兑|锐减|快速减少 (Decrease sharply)|S
+S2_U3_L4|糟|zāo|lr|米,曹|糟蹋|浪费或破坏好东西 (Waste/Ruin)|S
+S2_U3_L4|毁|huǐ|lt-lb-r|臼,工,殳|毁灭|全部破坏掉 (Destroy)|S
+S2_U3_L4|罪|zuì|tb|罒,非|罪魁祸首|造成祸患的主要人物或原因 (Chief culprit)|S
+S2_U3_L4|魁|kuí|semi-bl|鬼,斗|罪魁祸首|造成祸患的主要人物或原因 (Chief culprit)|S
+S2_U3_L4|睹|dǔ|lr|目,者|目睹|亲眼看到 (Witness)|S
+S2_U3_L4|违|wéi|semi-bl|辶,韦|违背|不遵守 (Violate)|S
+S2_U3_L4|搏|bó|lr|扌,尃|拼搏|非常努力地去争取 (Struggle/Fight)|S
+S2_U4_L1|卑|bēi|look|卓,卒,单|自卑|觉得自己不如别人 (Inferiority)|L
+S2_U4_L1|羡|xiàn|tb|羊,次|羡慕|觉得别人好，自己也想要 (Envy)|S
+S2_U4_L1|诱|yòu|lr|讠,秀|诱惑|吸引人，使人产生想得到或去做的欲望 (Temptation)|S
+S2_U4_L1|毅|yì|lr|豙,殳|毅力|不怕困难坚持下去的心 (Perseverance)|S
+S2_U4_L1|茫|máng|t-lr|艹,氵,亡|茫然|不知道该怎么办 (At a loss)|S
+S2_U4_L1|魂|hún|lr|云,鬼|魂不守舍|心神不定，精神恍惚 (Distracted)|S
+S2_U4_L1|眠|mián|lr|目,民|睡眠|睡觉 (Sleep)|S
+S2_U4_L1|烁|shuò|lr|火,乐|闪烁其词|说话含糊躲闪，不肯明确说明 (Speak evasively)|S
+S2_U4_L1|嫌|xián|lr|女,兼|嫌|讨厌 (Dislike)|S
+S2_U4_L1|逼|bī|semi-bl|辶,畐|逼|强迫别人做 (Force)|S
+S2_U4_L1|霸|bà|t-lr|雨,革,月|霸道|不讲理，欺负人 (Overbearing)|S
+S2_U4_L1|怄|òu|lr|忄,区|怄气|生闷气 (Sulk)|S
+S2_U4_L1|饪|rèn|lr|饣,壬|烹饪|做饭 (Cooking)|S
+S2_U4_L1|符|fú|tb|⺮,付|符合|与标准、条件或事实相一致 (Match)|S
+S2_U4_L2|憋|biē|tb|敝,心|憋|强忍住呼吸 (Hold in)|S
+S2_U4_L2|婉|wǎn|lr|女,宛|委婉|说话很温和，不直接伤人 (Tactful)|S
+S2_U4_L2|吼|hǒu|lr|口,孔|吼|大声喊叫 (Roar)|S
+S2_U4_L2|驳|bó|lr|马,爻|反驳|提出理由否定对方的意见 (Refute)|S
+S2_U4_L2|缝|fèng|lr|纟,逢|缝|裂开的口子 (Seam)|S
+S2_U4_L2|吭|kēng|lr|口,亢|吭声|出声说话 (Utter a word)|S
+S2_U4_L2|掩|yǎn|lr|扌,奄|掩|遮盖、隐藏 (Cover/Hide)|S
+S2_U4_L2|廊|láng|semi-tl|广,郎|走廊|通道 (Corridor)|S
+S2_U4_L2|熄|xī|lr|火,息|熄灯|关灯 (Turn off lights)|S
+S2_U4_L2|诡|guǐ|lr|讠,危|诡异|很奇怪、有点吓人 (Weird)|S
+S2_U4_L2|蜷|quán|lr|虫,卷|蜷缩|身体缩成一团 (Curl up)|S
+S2_U4_L2|瑟|sè|tlr-b|王,王,必|瑟瑟|发抖的样子 (Shiver)|S
+S2_U4_L2|怖|bù|lr|忄,布|恐怖|非常害怕 (Terror)|S
+S2_U4_L2|宵|xiāo|tb|宀,肖|通宵|整夜不睡 (All night)|S
+S2_U4_L2|悚|sǒng|lr|忄,束|惊悚|使人惊恐、害怕 (Frightening)|S
+S2_U4_L3|脖|bó|lr|月,孛|脖子|头和身体连接的地方 (Neck)|S
+S2_U4_L3|瞥|piē|tb|敝,目|瞥|很快地看一眼 (Glance)|S
+S2_U4_L3|炙|zhì|tb|⺼,火|炙|烤、很热 (Roast/Hot)|S
+S2_U4_L3|媒|méi|lr|女,某|社交媒体|供人交流、分享内容的网络平台 (Social media)|S
+S2_U4_L3|饰|shì|l-tr-br|饣,𠂉,巾|掩饰|故意藏起来 (Conceal)|S
+S2_U4_L3|拘|jū|lr|扌,句|拘束|不自然、放不开 (Restrained)|S
+S2_U4_L3|嘈|cáo|lr|口,曹|嘈杂|声音很吵 (Noisy)|S
+S2_U4_L3|局|jú|look|屈,届,尼|局促|很不自然的样子 (Constrained)|L
+S2_U4_L3|沮|jǔ|lr|氵,且|沮丧|失望而情绪低落 (Dejected)|S
+S2_U4_L3|睿|ruì|look|督,眷,冒|睿智|非常聪明有智慧 (Wise)|L
+S2_U4_L4|搓|cuō|lr|扌,差|搓澡|洗澡时用力搓身体 (Scrub)|S
+S2_U4_L4|涩|sè|l-tr-br|氵,刃,止|涩涩|不光滑、不润泽，带有涩感 (Astringent/Rough)|S
+S2_U4_L4|筹|chóu|tb|⺮,寿|筹划|计划 (Plan)|S
+S2_U4_L4|掇|duō|lr|扌,叕|拾掇|整理、收拾 (Tidy up)|S
+S2_U4_L4|颔|hàn|lr|含,页|颔首|点头 (Nod)|S
+S2_U4_L4|棉|mián|l-tr-br|木,白,巾|棉|一种植物和布料 (Cotton)|S
+S2_U4_L4|掏|tāo|lr|扌,匋|掏|从口袋里拿出来 (Take out)|S
+S2_U4_L4|崭|zhǎn|tb|山,斩|崭新|全新的 (Brand new)|S
+S2_U4_L4|喃|nán|lr|口,南|喃喃|小声说话 (Mutter)|S
+S2_U4_L4|涌|yǒng|lr|氵,甬|涌动|像水一样不断翻动、流动；也可形容感情强烈出现 (Surge)|S
+S2_U4_L4|捅|tǒng|lr|扌,甬|捅|戳 (Poke)|S
+S2_U4_L4|藏|cáng|tb|艹,臧|珍藏|珍重地收藏和保存 (Treasure/Collect)|S
+S2_U5_L1|陋|lòu|l-semi-bl-r|阝,𠃊,丙|简陋|简单粗陋，条件不完善 (Simple and crude)|S
+S2_U5_L1|辟|pì|lt-lb-r|尸,口,辛|开辟|开发新的地方 (Open up)|S
+S2_U5_L1|贩|fàn|lr|贝,反|小贩|在街上卖东西的人 (Hawker)|S
+S2_U5_L1|宗|zōng|tb|宀,示|宗教|信仰 (Religion)|S
+S2_U5_L1|综|zōng|lr|纟,宗|综合|结合起来 (Comprehensive)|S
+S2_U5_L1|诊|zhěn|l-tr-br|讠,人,彡|诊疗所|提供诊断和治疗服务的医疗场所 (Clinic)|S
+S2_U5_L1|裕|yù|lr|衤,谷|富裕|财物充足，生活宽裕 (Wealthy)|S
+S2_U5_L1|迁|qiān|semi-bl|辶,千|变迁|事物在发展过程中发生变化、转变 (Change over time)|S
+S2_U5_L1|障|zhàng|lr|阝,章|障碍|阻挡前进的事物 (Obstacle)|S
+S2_U5_L1|驰|chí|lr|马,也|驰名|非常出名 (Famous)|S
+S2_U5_L1|屡|lǚ|semi-tl|尸,娄|屡次|很多次 (Repeatedly)|S
+S2_U5_L1|荣|róng|tmb|艹,冖,木|荣誉|光荣的名声 (Honor)|S
+S2_U5_L2|触|chù|lr|角,虫|接触|碰到或交往 (Contact)|S
+S2_U5_L2|翠|cuì|tb|羽,卒|翠绿|非常绿 (Emerald green)|S
+S2_U5_L2|怡|yí|lr|忄,台|心旷神怡|心情舒畅，精神愉快 (Relaxed and joyful)|S
+S2_U5_L2|曝|pù|lr|日,暴|曝晒|在太阳底下晒 (Exposed to the sun)|S
+S2_U5_L2|荫|yīn|tb|艹,阴|林荫大道|两旁树木成荫的大道 (Tree-lined avenue)|S
+S2_U5_L2|樟|zhāng|lr|木,章|樟宜|新加坡地名“樟宜” (Changi)|S
+S2_U5_L2|耸|sǒng|tb|从,耳|耸立|高高地立着 (Stand tall)|S
+S2_U5_L2|咛|níng|lr|口,宁|叮咛|再三嘱咐 (Urge/Warn)|S
+S2_U5_L2|馨|xīn|tb|殸,香|温馨|温暖舒服的感觉 (Warm)|S
+S2_U5_L2|糙|cāo|lr|米,造|粗糙|摸起来不光滑 (Rough)|S
+S2_U5_L2|婆|pó|tb|波,女|婆娑|枝叶繁茂并随风摇曳的样子 (Swaying foliage)|S
+S2_U5_L2|娑|suō|tb|沙,女|婆娑|枝叶随风摆动的样子 (Swaying)|S
+S2_U5_L2|翱|áo|lr|皋,羽|翱翔|在天空中飞 (Soar)|S
+S2_U5_L2|翔|xiáng|lr|羊,羽|翱翔|在空中回旋地飞 (Soar)|S
+S2_U5_L2|茁|zhuó|tb|艹,出|茁壮|强壮健康地成长 (Thriving)|S
+S2_U5_L2|纳|nà|lr|纟,内|接纳|接受 (Accept)|S
+S2_U5_L3|妻|qī|tmb|一,肀,女|妻子|男子的配偶 (Wife)|S
+S2_U5_L3|患|huàn|tb|串,心|患|得病 (Suffer from)|S
+S2_U5_L3|症|zhèng|semi-tl|疒,正|失智症|因脑部功能退化，使记忆和其他认知能力下降并影响日常生活的病症 (Dementia)|S
+S2_U5_L3|逝|shì|semi-bl|辶,折|流逝|时间悄悄走掉 (Pass by)|S
+S2_U5_L3|嘱|zhǔ|lr|口,属|叮嘱|再三地关照别人 (Urge again)|S
+S2_U5_L3|嬉|xī|lr|女,喜|嬉戏|开心地玩耍 (Play)|S
+S2_U5_L3|俏|qiào|lr|亻,肖|俏皮|调皮可爱 (Playful)|S
+S2_U5_L3|惬|qiè|l-wrap-r|忄,匚,夹|惬意|心情满足而感到舒适、愉快 (Pleasant/Contented)|S
+S2_U5_L3|躁|zào|lr|足,喿|烦躁|心里很烦，不耐烦 (Irritable)|S
+S2_U5_L4|矿|kuàng|lr|石,广|矿泉水|从地下矿层取得的饮用水 (Mineral water)|S
+S2_U5_L4|缕|lǚ|lr|纟,娄|缕|用来数细长东西的量词 (Measure word for strands)|S
+S2_U5_L4|竿|gān|tb|⺮,干|竹竿|竹子做成的长杆 (Bamboo pole)|S
+S2_U5_L4|涓|juān|lr|氵,肙|涓涓|水流细小而不断的样子 (Trickling)|S
+S2_U5_L4|缸|gāng|lr|缶,工|缸|盛水或东西的大容器 (Vat / Jar)|S
+S2_U5_L4|舀|yǎo|tb|爫,臼|舀|用勺子把液体取出来 (Scoop / Ladle)|S
+S2_U5_L4|滋|zī|lr|氵,兹|滋养|供给养分，使成长 (Nourish)|S
+S2_U5_L4|漂|piāo|lr|氵,票|漂泊|四处流浪，居无定所 (Drift about)|S
+S2_U5_L4|惆|chóu|lr|忄,周|惆怅|失意伤感的心情 (Melancholy)|S
+S2_U5_L4|怅|chàng|lr|忄,长|惆怅|失意伤感的心情 (Melancholy)|S
+S2_U5_L4|跋|bá|lr|⻊,犮|跋涉|长途奔走，十分辛苦 (Trek)|S
+S2_U5_L4|尘|chén|tb|小,土|尘封|长期搁置，像被尘土封住一样 (Long sealed away)|S
+S2_U5_L4|岂|qǐ|tb|山,己|岂|难道，表示反问 (How could)|S
+S2_U6_L1|绸|chóu|lr|纟,周|丝绸|用蚕丝做的好布料 (Silk)|S
+S2_U6_L1|陆|lù|lr|阝,击|陆地|地球上没有水的地方 (Land)|S
+S2_U6_L1|奢|shē|tb|大,者|奢侈|花很多钱在不需要的东西上 (Luxurious)|S
+S2_U6_L1|侈|chǐ|lr|亻,多|奢侈|花费过度，讲究排场 (Extravagant)|S
+S2_U6_L1|瓷|cí|tb|次,瓦|瓷器|用瓷土等烧制成的器物 (Porcelain)|S
+S2_U6_L1|仪|yí|lr|亻,义|仪式|正式的活动过程 (Ceremony)|S
+S2_U6_L1|秉|bǐng|look|乘,兼,束|秉持|一直坚持某种想法 (Uphold)|L
+S2_U6_L1|枢|shū|lr|木,区|枢纽|非常重要的中心位置 (Hub)|S
+S2_U6_L1|纽|niǔ|lr|纟,丑|枢纽|互相联系的中心环节 (Hub)|S
+S2_U6_L1|港|gǎng|lr|氵,巷|港口|船停靠的地方 (Port)|S
+S2_U6_L1|勾|gōu|semi-tr|勹,厶|勾勒|用线条画出轮廓 (Outline)|S
+S2_U6_L1|勒|lè|lr|革,力|勾勒|画出轮廓 (Outline)|S
+S2_U6_L1|瞻|zhān|lr|目,詹|高瞻远瞩|看得很远，很有眼光 (Foresight)|S
+S2_U6_L1|瞩|zhǔ|lr|目,属|高瞻远瞩|眼光远大，能看到长远的发展 (Far-sighted)|S
+S2_U6_L1|致|zhì|lr|至,攵|致力于|努力专注做某事 (Devote to)|S
+S2_U6_L1|愿|yuàn|semi-tl|原,心|愿景|希望实现的美好前景 (Vision)|S
+S2_U6_L1|惠|huì|tb|叀,心|受惠|得到好处、利益 (Benefit)|S
+S2_U6_L2|谓|wèi|lr|讠,胃|可谓|可以说是 (Can be described as)|S
+S2_U6_L2|屿|yǔ|lr|山,与|岛屿|四面被水包围的陆地 (Island)|S
+S2_U6_L2|峡|xiá|lr|山,夹|海峡|两块陆地之间连接两片海域的狭窄水道 (Strait)|S
+S2_U6_L2|币|bì|tb|丿,巾|钱币|钱，货币 (Coin / Currency)|S
+S2_U6_L2|域|yù|lr|土,或|区域|划分出来的一块地方 (Region / Area)|S
+S2_U6_L2|赋|fù|lr|贝,武|赋予|交给重大的任务或使命 (Bestow)|S
+S2_U6_L2|乍|zhà|look|年,生,毛|初来乍到|刚刚来到一个地方 (Newly arrived)|L
+S2_U6_L2|啧|zé|lr|口,责|啧啧称奇|不断赞叹，觉得神奇 (Marvel at)|S
+S2_U6_L2|芽|yá|tb|艹,牙|发芽|种子长出幼芽 (Sprout)|S
+S2_U6_L2|兼|jiān|look|秉,乘,束|兼容并蓄|把不同的东西都包容进来 (All-embracing)|L
+S2_U6_L2|煌|huáng|lr|火,皇|辉煌|光彩耀眼，成就杰出 (Brilliant)|S
+S2_U6_L2|誉|yù|tb|兴,言|赞誉有加|给予很多称赞 (Praise highly)|S
+S2_U6_L2|纳|nà|lr|纟,内|海纳百川|比喻胸怀宽广，能包容不同事物 (All-embracing)|S
+S2_U6_L2|瞩|zhǔ|lr|目,属|引人瞩目|吸引大家注意 (Eye-catching)|S
+S2_U6_L2|迁|qiān|semi-bl|辶,千|变迁|事物在发展过程中发生变化、转变 (Change over time)|S
+S2_U6_L3|砍|kǎn|lr|石,欠|砍|用刀斧向下用力劈 (Chop / Hack)|S
+S2_U6_L3|弗|fú|look|弟,弓,丰|无远弗届|再远的地方也能到达 (Reaching everywhere)|L
+S2_U6_L3|伪|wěi|lr|亻,为|真伪|真的还是假的 (True or false)|S
+S2_U6_L3|陷|xiàn|lr|阝,臽|陷阱|诱人上当的圈套 (Trap)|S
+S2_U6_L3|伐|fá|lr|亻,戈|步伐|行进的脚步和速度 (Pace)|S
+S2_U6_L3|询|xún|lr|讠,旬|询问|开口打听、查问 (Enquire)|S
+S2_U6_L3|亦|yì|look|赤,办,示|人云亦云|别人怎么说就跟着怎么说 (Echo others)|L
+S2_U6_L3|疫|yì|semi-tl|疒,殳|免疫|有抵抗力，不受影响 (Immune)|S
+S2_U6_L3|诞|dàn|lr|讠,延|荒诞不经|荒唐离奇，不合情理 (Absurd)|S
+S2_U6_L3|聚|jù|tb|取,乑|凝聚力|把大家团结在一起的力量 (Cohesion)|S
+S2_U6_L4|缔|dì|lr|纟,帝|缔造|创立伟大的事业 (Found)|S
+S2_U6_L4|溪|xī|lr|氵,奚|溪|山间的小河 (Stream)|S
+S2_U6_L4|硕|shuò|lr|石,页|硕果|巨大的成绩或收获 (Great achievement)|S
+S2_U6_L4|洲|zhōu|lr|氵,州|美洲|包括南北美的大洲 (The Americas)|S
+S2_U6_L4|湮|yān|lr|氵,垔|湮灭|消失得无影无踪 (Vanish)|S
+S2_U6_L4|埃|āi|lr|土,矣|尘埃|飞扬的细小灰尘 (Dust)|S
+S2_U6_L4|震|zhèn|tb|雨,辰|震惊|使人大吃一惊 (Shock)|S
+S2_U6_L4|辣|là|lr|辛,束|辣椒|味道辛辣的红绿色果实 (Chilli)|S
+S2_U6_L4|革|gé|look|幸,韭,苹|变革|改变旧的，建立新的 (Reform)|L
+S2_U6_L4|灿|càn|lr|火,山|灿烂|光彩鲜明而耀眼 (Splendid)|S
+S2_U6_L4|翻|fān|lr|番,羽|翻天覆地|变化非常巨大 (Earth-shaking)|S
+S2_U6_L4|滞|zhì|lr|氵,带|停滞|停下来不再前进 (Stagnate)|S
+`;
+
+
+// ═══════════════════════════════════════════════════════════
+//  ⚙️ 设置区（老师只需要改这一行）
+// ═══════════════════════════════════════════════════════════
+let HWT_API = "https://script.google.com/macros/s/AKfycbwdsIuAxuC9rzXAgvD9ocKUPK5GpLrOttDFa0XelvrBaKbIT7yv-54ZYW-5uPTeT-Ah/exec";   // ← 把 Apps Script 的网址粘在这两个引号中间
+
+// ---- 与后台通讯：先试 POST，失败自动退回 JSONP（绕开 CORS）----
+function api(params, cb){
+  if(!HWT_API){ cb({ok:false, err:'老师还没设置后台网址'}); return; }
+  var done=false;
+  var to=setTimeout(function(){ if(!done){done=true; jsonp(params,cb);} }, 8000);
+  fetch(HWT_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(params)})
+    .then(function(r){return r.json();})
+    .then(function(j){ if(!done){done=true;clearTimeout(to);cb(j);} })
+    .catch(function(){ if(!done){done=true;clearTimeout(to);jsonp(params,cb);} });
+}
+function jsonp(params, cb){
+  var name='hwtcb_'+Date.now()+'_'+Math.floor(Math.random()*1e6);
+  var q=Object.keys(params).map(function(k){
+    var v=params[k]; if(typeof v==='object') v=JSON.stringify(v);
+    return encodeURIComponent(k)+'='+encodeURIComponent(v);
+  }).join('&');
+  var sc=document.createElement('script'), fired=false;
+  window[name]=function(j){ fired=true; cb(j); try{delete window[name];sc.remove();}catch(e){} };
+  sc.src=HWT_API+'?'+q+'&callback='+name;
+  sc.onerror=function(){ if(!fired){ cb({ok:false,err:'连不上后台'}); try{delete window[name];sc.remove();}catch(e){} } };
+  setTimeout(function(){ if(!fired){ cb({ok:false,err:'后台超时'}); try{delete window[name];sc.remove();}catch(e){} } },15000);
+  document.body.appendChild(sc);
+}
+
+const wordBank={};
+const allDistractors=[];
+const allGlobalParts=[];
+// 课文元数据：unitKey(如 S1_U1_L1) -> {grade,unitNum,lessonNum}
+const LESSON_NAMES={
+ 1:'第一课',2:'第二课',3:'第三课',4:'第四课'
+};
+rawDatabase.trim().split('\n').forEach(line=>{
+  if(!line.trim())return;
+  const p=line.split('|');
+  if(p.length<7)return;
+  const[unit,w,py,layout,partsStr,vocab,def,mode]=p;
+  if(!wordBank[unit])wordBank[unit]=[];
+  const m=(mode||'S').trim();
+  if(m==='L'){
+    // 形近字辨认：partsStr 为三个干扰字，如 "歹,夂,久"
+    wordBank[unit].push({w,py,layout:'look',mode:'look',lookOpts:partsStr.split(','),vocab,def});
+  }else if(m==='C'){
+    // 字形切割模式：partsStr 形如 "h:2" 或 "v:3"
+    const [dir,nStr]=partsStr.split(':');
+    wordBank[unit].push({w,py,layout:'cut',mode:'cut',cutDir:dir,cutN:parseInt(nStr)||2,vocab,def});
+  }else{
+    const parts=partsStr.split(',');
+    wordBank[unit].push({w,py,layout,mode:'semantic',parts,vocab,def});
+    parts.forEach(q=>{if(!allGlobalParts.includes(q))allGlobalParts.push(q);});
+  }
+  if(def)allDistractors.push(def);
+});
+
+// ═══════════════════════════════════════════════════════════
+//  同字词配对数据：字 -> [{w:词, d:释义}, ...]（仅含≥2个同字词的难字）
+// ═══════════════════════════════════════════════════════════
+const PAIRMAP={"惹":[{w:"惹",d:"招来（麻烦等） (Provoke)"},{w:"娘惹",d:"土生华人女性的称呼，也指相关文化 (Nyonya)"}],
+"技":[{w:"科技",d:"科学技术 (Technology)"},{w:"杂技",d:"高难度的表演技艺 (Acrobatics)"}],
+"缘":[{w:"人缘",d:"跟别人的关系好 (Good relations with others)"},{w:"缘故",d:"原因 (Reason)"}],
+"致":[{w:"兴致勃勃",d:"兴趣非常浓厚 (Full of enthusiasm)"},{w:"致力于",d:"努力专注做某事 (Devote oneself to)"}],
+"误":[{w:"错误",d:"不正确的地方 (Mistake)"},{w:"延误",d:"耽误、拖延 (Delay)"}],
+"哄":[{w:"哄堂大笑",d:"全屋子的人一起大笑 (Roar with laughter)"},{w:"一哄而散",d:"一下子吵闹着散开 (Disperse in a hubbub)"}],
+"俗":[{w:"风俗",d:"社会上流传的习惯 (Custom)"},{w:"庸俗",d:"低级、不高雅 (Vulgar)"}],
+"诞":[{w:"圣诞",d:"纪念耶稣诞生的节日 (Christmas)"},{w:"荒诞不经",d:"荒唐、不合常理 (Absurd)"}],
+"诺":[{w:"承诺",d:"答应做某事 (Promise)"},{w:"一诺千金",d:"答应的话非常可靠 (A promise worth a thousand pieces of gold)"}],
+"缺":[{w:"缺席",d:"该到而没到 (Absent)"},{w:"缺乏",d:"没有或不够 (Lack)"}],
+"悠":[{w:"悠久",d:"时间很长很久 (Long-standing)"},{w:"悠然自得",d:"悠闲自在的样子 (Carefree and content)"}],
+"遗":[{w:"遗产",d:"祖先留下来的东西 (Heritage)"},{w:"遗憾",d:"觉得可惜 (Regret)"}],
+"郁":[{w:"浓郁",d:"（气味、色彩）很浓 (Rich and strong)"},{w:"抑郁",d:"心情非常不好 (Depressed)"}],
+"略":[{w:"领略",d:"体会、欣赏 (Appreciate)"},{w:"策略",d:"做事的计谋方法 (Strategy)"}],
+"府":[{w:"打道回府",d:"原路返回家去 (Head back home)"},{w:"政府",d:"管理国家事务的机构 (Government)"}],
+"赞":[{w:"赞不绝口",d:"不停地称赞 (Praise endlessly)"},{w:"称赞",d:"夸奖 (Praise)"},{w:"赞誉有加",d:"给予很高的赞扬 (Highly praised)"}],
+"滋":[{w:"滋味",d:"味道、感受 (Taste/Feeling)"},{w:"滋养",d:"提供养分使成长 (Nourish)"}],
+"促":[{w:"催促",d:"叫人赶快做 (Urge)"},{w:"仓促",d:"匆忙、来不及准备 (Hasty)"},{w:"局促",d:"很不自然的样子 (Constrained)"},{w:"促进",d:"推动使前进 (Promote)"}],
+"篷":[{w:"雨篷",d:"挡雨的篷子 (Awning)"},{w:"帐篷",d:"野外用来遮风挡雨的临时住所 (Tent)"}],
+"故":[{w:"缘故",d:"原因 (Reason)"},{w:"故障",d:"机器出毛病 (Malfunction)"}],
+"晓":[{w:"人人皆晓",d:"每个人都知道 (Everyone knows)"},{w:"家喻户晓",d:"家家户户都知道 (Widely known)"}],
+"慢":[{w:"慢条斯理",d:"做事不慌不忙 (Unhurried)"},{w:"缓慢",d:"速度很慢 (Slow)"}],
+"潜":[{w:"潜水",d:"在水面下活动 (Dive)"},{w:"潜水艇",d:"能在水下航行的船 (Submarine)"},{w:"畏罪潜逃",d:"做错事怕被抓跑掉 (Flee to escape punishment)"}],
+"齿":[{w:"牙齿",d:"吃东西用的器官 (Teeth)"},{w:"启齿",d:"开口说话（多指难说的事） (Bring oneself to mention)"}],
+"势":[{w:"手势",d:"用手做出的动作 (Gesture)"},{w:"姿势",d:"身体摆出的样子 (Posture)"},{w:"趋势",d:"事物发展的方向 (Trend)"}],
+"泛":[{w:"泛起",d:"（水面等）漾起、浮现 (Ripple up)"},{w:"泛滥",d:"多得到处都是 (Overflow)"}],
+"拜":[{w:"拜访",d:"登门探望 (Pay a visit)"},{w:"崇拜",d:"非常敬佩 (Worship)"}],
+"陷":[{w:"陷入",d:"落入（困境等） (Fall into)"},{w:"陷阱",d:"诱人上当的圈套 (Trap)"}],
+"协":[{w:"协助",d:"从旁帮助 (Assist)"},{w:"协调",d:"配合得当、不冲突 (Coordinate)"}],
+"障":[{w:"故障",d:"机器出毛病 (Malfunction)"},{w:"障碍",d:"挡路的东西 (Obstacle)"}],
+"荣":[{w:"繁荣昌盛",d:"兴旺发达 (Prosperous)"},{w:"荣誉",d:"光荣的名声 (Honor)"}],
+"荒":[{w:"破天荒",d:"从未有过、第一次 (Unprecedented)"},{w:"荒诞不经",d:"荒唐、不合常理 (Absurd)"}],
+"辉":[{w:"光辉",d:"明亮的光芒 (Radiance)"},{w:"辉煌",d:"光彩耀眼、成就极大 (Brilliant)"}],
+"惠":[{w:"优惠",d:"便宜一点 (Discount)"},{w:"受惠",d:"得到好处 (Benefit from)"}],
+"缩":[{w:"缩",d:"变小或退回 (Shrink)"},{w:"蜷缩",d:"身体缩成一团 (Curl up)"}],
+"凝":[{w:"凝望",d:"一直盯着看 (Gaze)"},{w:"凝聚力",d:"把大家团结在一起的力量 (Cohesion)"}],
+"罪":[{w:"畏罪潜逃",d:"做错事怕被抓跑掉 (Flee to escape punishment)"},{w:"罪魁祸首",d:"做坏事的领头人 (Chief culprit)"}],
+"蓄":[{w:"蓄水池",d:"装水的大池子 (Reservoir)"},{w:"兼容并蓄",d:"同时容纳不同的事物 (Be all-embracing)"}],
+"澡":[{w:"洗澡",d:"用水洗身子 (Bath)"},{w:"搓澡",d:"洗澡时用力搓身体 (Scrub)"}],
+"媒":[{w:"媒体",d:"报纸、电视等新闻机构 (Media)"},{w:"社交媒体",d:"网上交流的平台 (Social media)"}],
+"尘":[{w:"烟尘",d:"烟雾和灰尘 (Smoke and dust)"},{w:"尘封",d:"积满灰尘、长久没动 (Dust-laden)"},{w:"尘埃",d:"细小的灰尘 (Dust)"}],
+"型":[{w:"大型",d:"规模很大的 (Large-scale)"},{w:"典型",d:"有代表性的例子 (Typical)"}],
+"异":[{w:"日新月异",d:"变化又快又大 (Change rapidly)"},{w:"诡异",d:"很奇怪、有点吓人 (Weird)"},{w:"求同存异",d:"找共同点，保留分歧 (Seek common ground)"}],
+"乏":[{w:"缺乏",d:"没有或不够 (Lack)"},{w:"不乏",d:"不缺少 (Not lacking)"}],
+"掩":[{w:"掩",d:"遮盖、关上 (Cover)"},{w:"掩饰",d:"故意藏起来 (Conceal)"}],
+"誉":[{w:"荣誉",d:"光荣的名声 (Honor)"},{w:"赞誉有加",d:"给予很高的赞扬 (Highly praised)"}],
+"纳":[{w:"接纳",d:"接受 (Accept)"},{w:"海纳百川",d:"像大海容纳众多河流，比喻气度宽广 (All-embracing)"}],
+"瞩":[{w:"高瞻远瞩",d:"看得很远，很有眼光 (Foresight)"},{w:"引人瞩目",d:"吸引大家的注意 (Eye-catching)"}]};
+
+
+// v3：同字词配对严格限制在“当前选中的课文”，不跨范围串词
+function getScopeUnitKeysForSupport(){
+  return getCurrentSelUnits();
+}
+function getScopedPairItems(data){
+  const allowedVocabs=new Set();
+  getScopeUnitKeysForSupport().forEach(uk=>{
+    (wordBank[uk]||[]).forEach(it=>allowedVocabs.add(it.vocab));
+  });
+  return (PAIRMAP[data.w]||[]).filter(it=>allowedVocabs.has(it.w));
+}
+function getScopedDistractors(data){
+  const sel=getScopeUnitKeysForSupport();
+  // 选择单课时，为保证有足够干扰项，扩到“同一单元”，但绝不跨单元
+  const grade=document.getElementById('gradeSelect').value;
+  const unitNums=new Set(sel.map(uk=>parseUnitKey(uk)?.unitNum).filter(Boolean));
+  const keys=Object.keys(wordBank).filter(uk=>{
+    const pk=parseUnitKey(uk);
+    return pk&&pk.gradeCode===grade&&unitNums.has(pk.unitNum);
+  });
+  const defs=[];
+  keys.forEach(uk=>(wordBank[uk]||[]).forEach(it=>{
+    if(it.def&&it.def.trim()&&it.def!==data.def&&!defs.includes(it.def))defs.push(it.def);
+  }));
+  return defs;
+}
+// 从 unitKey 解析出 年级码/单元号/课文号。键格式：S1_U1_L1
+function parseUnitKey(uk){
+  const m=uk.match(/^(S\d)_U(\d+)_L(\d+)$/);
+  if(!m)return null;
+  return {gradeCode:m[1],unitNum:+m[2],lessonNum:+m[3]};
+}
+// 取某年级下所有"单元号"（去重排序）
+function unitsOfGrade(gradeCode){
+  const s=new Set();
+  Object.keys(wordBank).forEach(uk=>{
+    const pk=parseUnitKey(uk);
+    if(pk&&pk.gradeCode===gradeCode)s.add(pk.unitNum);
+  });
+  return [...s].sort((a,b)=>a-b);
+}
+// 取某年级某单元下所有课文 unitKey（按课文号排序）
+function lessonKeysOf(gradeCode,unitNum){
+  return Object.keys(wordBank).filter(uk=>{
+    const pk=parseUnitKey(uk);
+    return pk&&pk.gradeCode===gradeCode&&pk.unitNum===unitNum;
+  }).sort((a,b)=>parseUnitKey(a).lessonNum-parseUnitKey(b).lessonNum);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  存储
+// ═══════════════════════════════════════════════════════════
+const SK={name:'hzld_name',cls:'hzld_class',sid:'hzld_sid',grp:'hzld_grp',score:'hzld_score',mastery:'hzld_mastery',errors:'hzld_errors',ach:'hzld_ach',dates:'hzld_dates',maxCombo:'hzld_maxCombo',pending:'hzld_pending'};
+const ls={get:k=>{try{return JSON.parse(localStorage.getItem(k));}catch{return null;}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}}};
+
+// ═══════════════════════════════════════════════════════════
+//  游戏状态
+// ═══════════════════════════════════════════════════════════
+let score=0,combo=0,unitPlayQueue={},currentSet=[],currentWordIndex=0,activePiece=null,playerName='',playerClass='',playerSid='',playerGrp='',consecutiveCorrect=0,currentPoolKey='';
+let ROSTER=[], pickCls='', pickStu=null;
+let roundLog={};   // 本轮逐字记录
+
+// ═══════════════════════════════════════════════════════════
+//  玩家名字
+// ═══════════════════════════════════════════════════════════
+function showLoginStep(n){
+  ['loginStep1','loginStep2','loginStep3','loginOffline'].forEach(function(id,i){
+    document.getElementById(id).style.display=(i===n-1)?'block':'none';
+  });
+}
+function setLoginSub(t){document.getElementById('loginSub').innerHTML=t;}
+
+function checkPlayerName(){
+  playerName=ls.get(SK.name)||''; playerClass=ls.get(SK.cls)||'';
+  playerSid=ls.get(SK.sid)||'';   playerGrp=ls.get(SK.grp)||'';
+  if(playerName&&playerClass){
+    document.getElementById('nameModal').style.display='none';
+    paintPlayerLabel();
+  }else{
+    document.getElementById('nameModal').style.display='flex';
+    bootLogin();
+  }
+  recordDate();
+}
+function paintPlayerLabel(){
+  var t='👤 '+playerClass+' '+playerName;
+  if(playerGrp) t+=' · 第'+playerGrp+'组';
+  document.getElementById('playerLabel').innerText=t;
+}
+// 从后台读名单
+function bootLogin(){
+  setLoginSub('正在连接老师的名单……');
+  document.getElementById('offlineBtn').style.display='none';
+  api({a:'roster'}, function(j){
+    if(j&&j.ok&&j.roster&&j.roster.length){
+      ROSTER=j.roster;
+      document.getElementById('offlineBtn').style.display='block';
+      renderClsGrid();
+    }else{
+      setLoginSub('连不上老师的名单');
+      showOfflineLogin();
+    }
+  });
+}
+function renderClsGrid(){
+  var seen={}, list=[];
+  ROSTER.forEach(function(r){ if(!seen[r.cls]){seen[r.cls]=1;list.push(r.cls);} });
+  list.sort();
+  setLoginSub('先点班级，再点学号，不用打字');
+  var g=document.getElementById('clsGrid'); g.innerHTML='';
+  list.forEach(function(c){
+    var b=document.createElement('button'); b.className='pick-btn'; b.innerText=c;
+    b.onclick=function(){ pickCls=c; renderSidGrid(); };
+    g.appendChild(b);
+  });
+  showLoginStep(1);
+}
+function renderSidGrid(){
+  setLoginSub(pickCls+' 班 —— 点你的学号');
+  var g=document.getElementById('sidGrid'); g.innerHTML='';
+  ROSTER.filter(function(r){return r.cls===pickCls;})
+    .sort(function(a,b){return (parseInt(a.sid,10)||0)-(parseInt(b.sid,10)||0);})
+    .forEach(function(r){
+      var b=document.createElement('button'); b.className='pick-btn';
+      b.innerHTML='<span class="sid-num">'+r.sid+'</span><span class="sid-name">'+(r.name||'')+'</span>';
+      b.onclick=function(){ pickStu=r; renderConfirm(); };
+      g.appendChild(b);
+    });
+  showLoginStep(2);
+}
+function renderConfirm(){
+  setLoginSub('确认一下是不是你');
+  var mates=ROSTER.filter(function(r){return r.cls===pickCls&&r.grp&&r.grp===pickStu.grp&&r.sid!==pickStu.sid;})
+                  .map(function(r){return r.name;}).join('、');
+  var html='你好，<span style="color:#0984e3">'+(pickStu.name||pickStu.sid)+'</span>！<br>'+pickCls+' 班 · 学号 '+pickStu.sid;
+  if(pickStu.grp) html+=' · 第 '+pickStu.grp+' 组';
+  if(mates) html+='<div class="cc-sub">同组：'+mates+'</div>';
+  document.getElementById('confirmCard').innerHTML=html;
+  showLoginStep(3);
+}
+function loginBack(n){ if(n===1)showLoginStep(1); else showLoginStep(2); }
+function loginConfirm(){
+  playerClass=pickCls; playerName=pickStu.name||pickStu.sid;
+  playerSid=pickStu.sid; playerGrp=pickStu.grp||'';
+  ls.set(SK.cls,playerClass); ls.set(SK.name,playerName);
+  ls.set(SK.sid,playerSid);   ls.set(SK.grp,playerGrp);
+  document.getElementById('nameModal').style.display='none';
+  paintPlayerLabel(); recordDate(); checkAchievements();
+}
+function showOfflineLogin(){ showLoginStep(4); document.getElementById('offlineBtn').style.display='none'; }
+function savePlayerName(){
+  const cls=document.getElementById('classInput').value.trim();
+  const v=document.getElementById('nameInput').value.trim();
+  if(!cls){document.getElementById('classInput').style.borderColor='var(--red)';return;}
+  if(!v){document.getElementById('nameInput').style.borderColor='var(--red)';return;}
+  playerClass=cls; playerName=v; playerSid=''; playerGrp='';
+  ls.set(SK.cls,playerClass); ls.set(SK.name,playerName); ls.set(SK.sid,''); ls.set(SK.grp,'');
+  document.getElementById('nameModal').style.display='none';
+  paintPlayerLabel(); recordDate(); checkAchievements();
+}
+// 换人（老师页/长按名字用）
+function switchStudent(){
+  ['name','cls','sid','grp'].forEach(function(k){ ls.set(SK[k],''); });
+  location.reload();
+}
+function recordDate(){
+  const today=new Date().toDateString();
+  const dates=ls.get(SK.dates)||[];
+  if(!dates.includes(today)){dates.push(today);ls.set(SK.dates,dates);}
+}
+
+// ═══════════════════════════════════════════════════════════
+//  积分 & 连击
+// ═══════════════════════════════════════════════════════════
+function addScore(pts){
+  const mult=combo>=5?3:combo>=3?2:1;
+  score=Math.max(0,score+pts*mult);
+  ls.set(SK.score,score);
+  document.getElementById('scoreVal').innerText=score;
+  return pts*mult;
+}
+function incCombo(){
+  combo++;
+  if(combo>roundMaxCombo)roundMaxCombo=combo;
+  const mx=ls.get(SK.maxCombo)||0;
+  if(combo>mx)ls.set(SK.maxCombo,combo);
+  renderCombo();
+}
+function resetCombo(){combo=0;renderCombo();}
+function renderCombo(){
+  const el=document.getElementById('comboDisplay');
+  if(combo>=5)el.innerText=`🔥 ${combo}连击  ×3积分！`;
+  else if(combo>=3)el.innerText=`⚡ ${combo}连击  ×2积分！`;
+  else if(combo>=2)el.innerText=`✨ ${combo}连击！`;
+  else el.innerText='';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  掌握度
+// ═══════════════════════════════════════════════════════════
+function cKey(u,w){return u+'|'+w;}
+function masteryLevel(key){
+  const m=ls.get(SK.mastery)||{};
+  const d=m[key];
+  if(!d)return 0;
+  if(d.correct>=3)return 2;
+  if(d.correct>=1)return 1;
+  return 0;
+}
+function recordCorrect(u,w){
+  const key=cKey(u,w),m=ls.get(SK.mastery)||{};
+  if(!m[key])m[key]={correct:0,wrong:0};
+  m[key].correct++;ls.set(SK.mastery,m);
+}
+function recordWrong(u,w,data){
+  const key=cKey(u,w),m=ls.get(SK.mastery)||{};
+  if(!m[key])m[key]={correct:0,wrong:0};
+  m[key].wrong++;ls.set(SK.mastery,m);
+  const errs=ls.get(SK.errors)||{};
+  if(!errs[key])errs[key]={count:0,data};
+  errs[key].count++;errs[key].data=data;
+  ls.set(SK.errors,errs);updateErrorBadge();
+}
+function updateErrorBadge(){
+  const errs=ls.get(SK.errors)||{};
+  const n=Object.keys(errs).length;
+  const b=document.getElementById('errorBadge');
+  b.style.display=n>0?'flex':'none';
+  b.innerText=n>99?'99+':n;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  页面切换
+// ═══════════════════════════════════════════════════════════
+function switchPage(pg){
+  ['game','collection','error','ach','teacher'].forEach(p=>{
+    document.getElementById(p+'Page').classList.remove('active');
+    document.getElementById('nav-'+p).classList.remove('active');
+  });
+  document.getElementById(pg+'Page').classList.add('active');
+  document.getElementById('nav-'+pg).classList.add('active');
+  if(pg==='collection')renderCollection();
+  if(pg==='error')renderErrors();
+  if(pg==='ach')renderAchievements();
+  if(pg==='teacher')renderTeacher();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  收藏册
+// ═══════════════════════════════════════════════════════════
+function renderCollection(){
+  const grade=document.getElementById('gradeSelect').value;
+  const units=Object.keys(wordBank).filter(k=>k.startsWith(grade)).sort();
+  const body=document.getElementById('collectionBody');
+  body.innerHTML='';
+  let totDone=0,totBlue=0,totGold=0;
+  units.forEach(unitKey=>{
+    const num=unitKey.split('_U')[1];
+    const words=wordBank[unitKey];
+    let unitBlue=0;
+    words.forEach(item=>{
+      const lv=masteryLevel(cKey(unitKey,item.w));
+      if(lv>=1){unitBlue++;totDone++;totBlue++;}
+      if(lv===2)totGold++;
+    });
+    const pct=Math.round(unitBlue/words.length*100);
+    const hd=document.createElement('div');
+    hd.className='unit-hd';
+    hd.innerHTML=`<span>单元${['一','二','三','四','五','六'][num-1]}</span><span class="unit-pct">${pct}% 完成</span>`;
+    body.appendChild(hd);
+    const grid=document.createElement('div');
+    grid.className='char-grid';
+    words.forEach(item=>{
+      const lv=masteryLevel(cKey(unitKey,item.w));
+      const card=document.createElement('div');
+      card.className='char-card'+(lv===2?' gold':lv===1?' blue':'');
+      card.innerHTML=item.w+(lv===2?'<span class="card-badge">🥇</span>':lv===1?'<span class="card-badge">🔵</span>':'');
+      grid.appendChild(card);
+    });
+    body.appendChild(grid);
+  });
+  document.getElementById('sTotalDone').innerText=totDone;
+  document.getElementById('sBlue').innerText=totBlue;
+  document.getElementById('sGold').innerText=totGold;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  错字本
+// ═══════════════════════════════════════════════════════════
+function renderErrors(){
+  const body=document.getElementById('errorBody');
+  const errs=ls.get(SK.errors)||{};
+  const entries=Object.entries(errs).sort((a,b)=>b[1].count-a[1].count);
+  if(entries.length===0){
+    body.innerHTML='<div class="empty-state"><div class="empty-icon">🎉</div><div class="empty-txt">太棒了！<br>还没有错字记录，继续保持！</div></div>';
+    return;
+  }
+  const list=document.createElement('div');
+  list.className='error-list';
+  entries.forEach(([key,val])=>{
+    const d=val.data;
+    const dm=(d.def||'').match(/(.*?)\s*\((.*?)\)/);
+    const defTxt=dm?dm[1]:d.def;
+    const item=document.createElement('div');
+    item.className='error-item';
+    item.innerHTML=`<div class="error-char">${d.w}</div><div class="error-info"><div class="error-word">${d.vocab}</div><div class="error-def">${defTxt}</div><div class="error-cnt">已错 ${val.count} 次</div></div>`;
+    list.appendChild(item);
+  });
+  body.innerHTML='';body.appendChild(list);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  成就
+// ═══════════════════════════════════════════════════════════
+const ACH_TIERS=[
+  {id:'streak10',icon:'🏅',name:'初学者',  target:10,desc:'连续准确完成10个字'},
+  {id:'streak20',icon:'🔥',name:'连击王',  target:20,desc:'连续准确完成20个字'},
+  {id:'streak30',icon:'🔵',name:'收藏家',  target:30,desc:'连续准确完成30个字'},
+  {id:'streak40',icon:'🥇',name:'默写达人',target:40,desc:'连续准确完成40个字'},
+  {id:'streak50',icon:'📅',name:'每日达人',target:50,desc:'连续准确完成50个字'},
+  {id:'streak60',icon:'⭐',name:'班级达人',target:60,desc:'连续准确完成60个字'},
+];
+const ACHS=ACH_TIERS;
+function checkAchievements(){
+  const done=ls.get(SK.ach)||{};
+  let nw=null;
+  ACH_TIERS.forEach(a=>{if(!done[a.id]&&consecutiveCorrect>=a.target){done[a.id]=true;if(!nw)nw=a;}});
+  ls.set(SK.ach,done);
+  if(nw)showAchToast(nw);
+}
+function showAchToast(a){
+  const t=document.getElementById('achToast');
+  t.innerText=`🎉 解锁成就：${a.icon} ${a.name}！`;
+  t.style.display='block';
+  setTimeout(()=>{t.style.display='none';},3200);
+}
+function renderAchievements(){
+  const done=ls.get(SK.ach)||{};
+  const list=document.getElementById('achList');
+  list.innerHTML='';
+  let unlocked=0;
+  ACH_TIERS.forEach((a,i)=>{
+    const isDone=!!done[a.id];
+    if(isDone)unlocked++;
+    const prevTarget=i>0?ACH_TIERS[i-1].target:0;
+    const pct=isDone?100:Math.min(100,Math.max(0,Math.round((consecutiveCorrect-prevTarget)/(a.target-prevTarget)*100)));
+    const el=document.createElement('div');
+    el.className='ach-item'+(isDone?' done':'');
+    el.innerHTML=`<div class="ach-icon">${a.icon}</div><div class="ach-info"><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div><div style="margin-top:5px;background:#ecf0f1;border-radius:4px;height:5px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${isDone?'var(--green)':'var(--orange)'};transition:width .4s"></div></div></div><div class="ach-badge" style="min-width:64px;text-align:right">${isDone?'✅ 已解锁':consecutiveCorrect+'/'+a.target}</div>`;
+    list.appendChild(el);
+  });
+  document.getElementById('achSub').innerText=`已解锁 ${unlocked} / ${ACH_TIERS.length}`;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  粒子
+// ═══════════════════════════════════════════════════════════
+function spawnParticles(x,y){
+  const colors=['#27ae60','#2ecc71','#f39c12','#3498db','#e74c3c','#9b59b6'];
+  for(let i=0;i<10;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const angle=(i/10)*360,dist=35+Math.random()*55;
+    const dx=Math.cos(angle*Math.PI/180)*dist,dy=Math.sin(angle*Math.PI/180)*dist;
+    p.style.cssText=`left:${x}px;top:${y}px;background:${colors[i%colors.length]};--dx:${dx}px;--dy:${dy}px`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),800);
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════
+//  本轮记录（用于结算卡 + 上传给老师）
+// ═══════════════════════════════════════════════════════════
+let roundMaxCombo=0, roundStartScore=0, roundStartTime=0;
+function resetRound(){
+  roundLog={}; roundMaxCombo=0; roundStartScore=score; roundStartTime=Date.now();
+}
+function touchRound(data){
+  if(!data)return;
+  const k=data.w;
+  if(!roundLog[k])roundLog[k]={unit:data._unit||'',w:data.w,py:data.py||'',spell:0,quiz:0,match:0};
+}
+function tallyWrong(stage){
+  const d=currentSet[currentWordIndex]; if(!d)return;
+  touchRound(d);
+  roundLog[d.w][stage]=(roundLog[d.w][stage]||0)+1;
+}
+function roundStats(){
+  const rows=Object.keys(roundLog).map(k=>roundLog[k]);
+  const first=rows.filter(r=>!r.spell&&!r.quiz&&!r.match).length;
+  const wrong=rows.filter(r=>r.spell||r.quiz||r.match);
+  const pct=rows.length?Math.round(first/rows.length*100):0;
+  return {rows:rows,total:rows.length,first:first,pct:pct,wrong:wrong,
+          pts:score-roundStartScore, combo:roundMaxCombo,
+          mins:Math.max(1,Math.round((Date.now()-roundStartTime)/60000))};
+}
+// ---- 上传（失败入队，下次自动补交）----
+function queuePending(pkt){
+  const q=ls.get(SK.pending)||[]; q.push(pkt);
+  ls.set(SK.pending,q.slice(-40));
+}
+function flushPending(){
+  const q=ls.get(SK.pending)||[];
+  if(!q.length||!HWT_API)return;
+  const pkt=q[0];
+  api(pkt,function(j){
+    if(j&&j.ok){ const cur=ls.get(SK.pending)||[]; cur.shift(); ls.set(SK.pending,cur); setTimeout(flushPending,600); }
+  });
+}
+function uploadRound(st,onDone){
+  const pkt={a:'submit',cls:playerClass,sid:playerSid,name:playerName,grp:playerGrp,
+    grade:document.getElementById('gradeSelect').value==='S1'?'中一':'中二',
+    range:rangeText(), chars:st.total, first:st.first, pct:st.pct,
+    pts:st.pts, combo:st.combo, mins:st.mins,
+    detail:st.rows.map(r=>[r.unit,r.w,r.py,r.spell,r.quiz,r.match,(!r.spell&&!r.quiz&&!r.match)?1:0])};
+  api(pkt,function(j){
+    if(j&&j.ok){ onDone('ok'); flushPending(); }
+    else { queuePending(pkt); onDone('bad'); }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  游戏逻辑
+// ═══════════════════════════════════════════════════════════
+function unitNumLabel(n){return['一','二','三','四','五','六'][n-1]||n;}
+
+// ═══════════════════════════════════════════════════════════
+//  课文多选（v3）：学生可一次勾选任意几课一起复习
+// ═══════════════════════════════════════════════════════════
+let selLessons=[];   // 当前选中的课文 key 数组，如 ['S1_U5_L1','S1_U5_L3']
+
+function selKeyOfGrade(g){ return 'hzld_selL_'+g; }
+function charCountOf(keys){
+  const seen=new Set();
+  keys.forEach(uk=>(wordBank[uk]||[]).forEach(it=>seen.add(it.w)));
+  return seen.size;
+}
+function lessonShort(n){ return ['一','二','三','四'][n-1]||n; }
+
+function updateUnitPickerLabel(){
+  const lbl=document.getElementById('unitPickerLabel');
+  const g=document.getElementById('gradeSelect').value;
+  const allNums=unitsOfGrade(g);
+  const totalLessons=allNums.reduce((a,n)=>a+lessonKeysOf(g,n).length,0);
+  if(!selLessons.length){ lbl.innerText='未选课文'; return; }
+  if(selLessons.length===totalLessons){ lbl.innerText='全部课文 · '+charCountOf(selLessons)+'字'; return; }
+  const byU={};
+  selLessons.forEach(uk=>{const pk=parseUnitKey(uk);(byU[pk.unitNum]=byU[pk.unitNum]||[]).push(pk.lessonNum);});
+  const parts=Object.keys(byU).map(Number).sort((a,b)=>a-b).map(u=>{
+    const all=lessonKeysOf(g,u).length, arr=byU[u].sort((a,b)=>a-b);
+    return '单元'+unitNumLabel(u)+(arr.length===all?'全':'第'+arr.map(lessonShort).join('')+'课');
+  });
+  lbl.innerText=parts.join('｜')+' · '+charCountOf(selLessons)+'字';
+}
+// 给后台用的范围文字
+function rangeText(){
+  const g=document.getElementById('gradeSelect').value==='S1'?'中一':'中二';
+  const lbl=document.getElementById('unitPickerLabel').innerText.split(' · ')[0];
+  return g+' '+lbl;
+}
+
+function toggleUnitPicker(){
+  const p=document.getElementById('unitPickerPanel');
+  p.classList.toggle('open');
+  if(p.classList.contains('open'))setTimeout(()=>document.addEventListener('click',closePickerOutside,true),0);
+}
+function closePickerOutside(e){
+  const p=document.getElementById('unitPickerPanel'), b=document.getElementById('unitPickerBtn');
+  if(!p.contains(e.target)&&!b.contains(e.target))closeUnitPicker();
+}
+function closeUnitPicker(){
+  document.getElementById('unitPickerPanel').classList.remove('open');
+  document.removeEventListener('click',closePickerOutside,true);
+}
+
+function updateUnits(){
+  const g=document.getElementById('gradeSelect').value;
+  const allNums=unitsOfGrade(g);
+  const allKeys=[]; allNums.forEach(n=>allKeys.push(...lessonKeysOf(g,n)));
+  let saved=ls.get(selKeyOfGrade(g));
+  saved=(saved||[]).filter(k=>allKeys.includes(k));
+  selLessons = saved.length? saved : allKeys.slice();
+  buildLessonPanel();
+  updateUnitPickerLabel();
+  initUnitGame(true);
+}
+
+function buildLessonPanel(){
+  const g=document.getElementById('gradeSelect').value;
+  const allNums=unitsOfGrade(g);
+  const panel=document.getElementById('unitPickerPanel');
+  panel.innerHTML='';
+
+  const tip=document.createElement('div');
+  tip.style.cssText='font-size:13px;color:#636e72;font-weight:700;margin-bottom:8px';
+  tip.innerText='想复习哪几课？点一下就选上，可以多选';
+  panel.appendChild(tip);
+
+  allNums.forEach(n=>{
+    const keys=lessonKeysOf(g,n);
+    const box=document.createElement('div'); box.className='lp-unit';
+    const hd=document.createElement('div'); hd.className='lp-unit-hd';
+    const nm=document.createElement('span'); nm.innerText='单元'+unitNumLabel(n);
+    const mini=document.createElement('button'); mini.className='lp-mini';
+    mini.innerText='整个单元';
+    mini.onclick=()=>{
+      const allIn=keys.every(k=>selLessons.includes(k));
+      keys.forEach(k=>{
+        const i=selLessons.indexOf(k);
+        if(allIn){ if(i>=0)selLessons.splice(i,1); } else if(i<0) selLessons.push(k);
+      });
+      paintChips(); 
+    };
+    hd.appendChild(nm); hd.appendChild(mini); box.appendChild(hd);
+
+    const row=document.createElement('div'); row.className='lp-lessons';
+    keys.forEach(uk=>{
+      const pk=parseUnitKey(uk);
+      const c=document.createElement('div'); c.className='lp-chip'; c.dataset.key=uk;
+      c.innerText=LESSON_NAMES[pk.lessonNum]+'（'+(wordBank[uk]||[]).length+'字）';
+      c.onclick=()=>{
+        const i=selLessons.indexOf(uk);
+        if(i>=0)selLessons.splice(i,1); else selLessons.push(uk);
+        paintChips();
+      };
+      row.appendChild(c);
+    });
+    box.appendChild(row); panel.appendChild(box);
+  });
+
+  const foot=document.createElement('div'); foot.className='lp-foot';
+  const bAll=document.createElement('button'); bAll.className='lp-mini'; bAll.innerText='全选';
+  bAll.onclick=()=>{ selLessons=[]; allNums.forEach(n=>selLessons.push(...lessonKeysOf(g,n))); paintChips(); };
+  const bNone=document.createElement('button'); bNone.className='lp-mini'; bNone.innerText='清空';
+  bNone.onclick=()=>{ selLessons=[]; paintChips(); };
+  const cnt=document.createElement('div'); cnt.className='lp-count'; cnt.id='lpCount';
+  const go=document.createElement('button'); go.className='lp-go'; go.id='lpGo'; go.innerText='开始练习 ▶';
+  go.onclick=()=>{
+    if(!selLessons.length)return;
+    ls.set(selKeyOfGrade(g),selLessons);
+    updateUnitPickerLabel(); closeUnitPicker(); initUnitGame(true);
+  };
+  foot.appendChild(bAll); foot.appendChild(bNone); foot.appendChild(cnt); foot.appendChild(go);
+  panel.appendChild(foot);
+  paintChips();
+}
+function paintChips(){
+  const panel=document.getElementById('unitPickerPanel');
+  panel.querySelectorAll('.lp-chip').forEach(c=>{
+    c.classList.toggle('on', selLessons.includes(c.dataset.key));
+  });
+  const c=document.getElementById('lpCount');
+  if(c)c.innerText='已选 '+selLessons.length+' 课 · '+charCountOf(selLessons)+' 个字';
+  const go=document.getElementById('lpGo');
+  if(go)go.disabled=selLessons.length===0;
+}
+
+function buildWeightedPool(selUnitKeys){
+  // v2.2：一轮内“每个目标字只出现一次”。学生当前做错时原题会保留重做，不再按历史错题复制多份。
+  const seenChars=new Set();
+  const pool=[];
+  selUnitKeys.forEach(uk=>{
+    (wordBank[uk]||[]).forEach(item=>{
+      if(seenChars.has(item.w))return;
+      seenChars.add(item.w);
+      pool.push({...item,_unit:uk});
+    });
+  });
+  return pool.sort(()=>Math.random()-.5);
+}
+function refillPool(poolKey,selUnitKeys){
+  // 不自动二刷；本轮完成后由学生主动点击“再练一轮”
+  if(!unitPlayQueue[poolKey])unitPlayQueue[poolKey]=[];
+}
+// 返回当前应练习的课文 key 列表（v3：学生自由多选）
+function getCurrentSelUnits(){
+  return selLessons.slice();
+}
+function initUnitGame(forceReset=false){
+  const sel=getCurrentSelUnits();
+  if(!sel.length){ showNoSelection(); return; }
+  resetRound();
+  const poolKey='pool_'+sel.join('_');
+  if(forceReset||!unitPlayQueue[poolKey]||unitPlayQueue[poolKey].length<5){
+    unitPlayQueue[poolKey]=buildWeightedPool(sel);
+    if(!forceReset)triggerFeedback(true,'🎉 全部完成！二刷开始！');
+  }
+  const n=Math.min(10,unitPlayQueue[poolKey].length);
+  currentSet=unitPlayQueue[poolKey].splice(0,n);
+  currentPoolKey=poolKey;currentWordIndex=0;loadWord();
+}
+function loadWord(){
+  touchRound(currentSet[currentWordIndex]);
+  document.getElementById('quizPanel').style.display='none';
+  const mp=document.getElementById('matchPanel');if(mp){mp.classList.remove('show');mp.style.display='none';}
+  const data=currentSet[currentWordIndex];
+  document.getElementById('pinyinHint').innerText=data.py;
+  // Progress bar: show consecutive streak toward next achievement
+  const _nextT=ACH_TIERS.find(a=>consecutiveCorrect<a.target);
+  const _tIdx=_nextT?ACH_TIERS.indexOf(_nextT):ACH_TIERS.length;
+  const _tMax=_nextT?_nextT.target:ACH_TIERS[ACH_TIERS.length-1].target;
+  const _tBase=_tIdx>0?ACH_TIERS[_tIdx-1].target:0;
+  const _pct=_nextT?Math.max(0,Math.min(100,((consecutiveCorrect-_tBase)/(_tMax-_tBase))*100)):100;
+  document.getElementById('progressFill').style.width=_pct+'%';
+  document.getElementById('progressLabel').innerText=_nextT?`连续 ${consecutiveCorrect}/${_tMax} 字 → ${_nextT.name}`:`🏆 已解锁全部成就！连续${consecutiveCorrect}字！`;
+  const layoutMap={
+  'lr':'左右结构',
+  'tb':'上下结构',
+  'lmr':'左中右结构',
+  'tmb':'上中下结构',
+  'l-tb':'左包围结构',
+  'semi-bl':'左下包围结构',
+  'semi-tl':'左上包围结构',
+  'semi-tr':'右上包围结构',
+  'semi-top':'三面包围（下方开口）',
+  'semi-tl-tb':'左上包围（内部上下）',
+  'l-tr-br':'左部＋右部上下',
+  'l-tmb':'左部＋右部上中下',
+  't-lr':'上部＋下部左右',
+  'lt-lb-r':'左部上下＋右部',
+  'tlr-b':'上部左右＋下部',
+  'lmmr':'左中右（中间双部件）',
+  'tb4':'四层上下结构',
+  'l-wrap-r':'左右嵌套结构（右部半包围）',
+  'l-semi-bl-r':'左右嵌套结构（右部左下包围）',
+  'look':'看清字形，选出正确的字'
+};
+  document.getElementById('structHint').innerHTML=`💡 提示：这是一个【${layoutMap[data.layout]||'特殊结构'}】的字`;
+
+  if(data.mode==='look'){ loadWordLook(data); return; }
+  if(data.mode==='cut'){ loadWordCut(data); return; }
+
+  const pool=document.getElementById('pool');
+  pool.innerHTML='<div class="pool-title">请从下方找出正确的偏旁部首，拖入红框中</div>';
+  let poolParts=[...data.parts];
+  const shuffled=[...allGlobalParts].sort(()=>Math.random()-.5);
+  for(const p of shuffled){if(!poolParts.includes(p))poolParts.push(p);if(poolParts.length>=data.parts.length+4)break;}
+  poolParts.sort(()=>Math.random()-.5);
+  poolParts.forEach((pt,i)=>{
+    const piece=document.createElement('div');
+    piece.className='component';piece.innerText=pt;piece.id='piece-'+i;
+    piece.addEventListener('mousedown',dragStart);
+    piece.addEventListener('touchstart',dragStart,{passive:false});
+    pool.appendChild(piece);
+  });
+  const board=document.getElementById('board');
+  board.className=`dynamic-board layout-${data.layout}`;board.innerHTML='';
+  data.parts.forEach((pt,idx)=>{
+    const cell=document.createElement('div');
+    cell.className=`grid-cell cell-${idx}`;
+    cell.dataset.expected=pt;cell.dataset.filled='false';
+    board.appendChild(cell);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  字形切割模式：把真字切成N块，学生拖回拼成完整字
+// ═══════════════════════════════════════════════════════════
+function charSliceSVG(ch, dir, idx, n, boxW, boxH){
+  // 用真实字体渲染整字，按 dir(h横切/v竖切) 取第 idx/n 段
+  const S=200;
+  let vbX,vbY,vbW,vbH;
+  if(dir==='v'){ vbW=S/n; vbH=S; vbX=S/n*idx; vbY=0; }
+  else { vbW=S; vbH=S/n; vbX=0; vbY=S/n*idx; }
+  return `<svg width="${boxW}" height="${boxH}" viewBox="${vbX} ${vbY} ${vbW} ${vbH}" preserveAspectRatio="xMidYMid meet">`+
+    `<text x="${S/2}" y="${S*0.8}" font-size="180" text-anchor="middle" font-family="KaiTi,'楷体',serif" fill="#000">${ch}</text></svg>`;
+}
+function loadWordCut(data){
+  const n=data.cutN, dir=data.cutDir, ch=data.w;
+  const pool=document.getElementById('pool');
+  pool.innerHTML='<div class="pool-title">请把下面的字块，按正确位置拖进红框，拼成完整的字</div>';
+
+  // 字块尺寸（池中）
+  const PW = dir==='v' ? Math.round(120/n) : 92;
+  const PH = dir==='v' ? 92 : Math.round(120/n);
+
+  // 正确块
+  const items=[];
+  for(let idx=0;idx<n;idx++) items.push({ch,idx,n,dir,correct:true});
+  // 干扰块：从别的字里取切片（同方向），数量 = n 个正确块配 2 个干扰
+  const distractorChars=[];
+  for(const uk in wordBank){
+    for(const it of wordBank[uk]){
+      if(it.mode==='cut' && it.w!==ch && it.cutDir===dir){ distractorChars.push(it); }
+    }
+  }
+  const shufD=distractorChars.sort(()=>Math.random()-.5);
+  let added=0;
+  for(const d of shufD){
+    if(added>=2)break;
+    const ri=Math.floor(Math.random()*d.cutN);
+    items.push({ch:d.w,idx:ri,n:d.cutN,dir,correct:false});
+    added++;
+  }
+  // 打乱所有块
+  items.sort(()=>Math.random()-.5);
+  items.forEach((it,i)=>{
+    const piece=document.createElement('div');
+    piece.className='component cut-piece';
+    piece.style.width=PW+'px';piece.style.height=PH+'px';
+    piece.innerHTML=charSliceSVG(it.ch,it.dir,it.idx,it.n,PW,PH);
+    // 只有正确块带 cutIdx 能匹配；干扰块 cutIdx 设为 -1（永不匹配）
+    piece.dataset.cutIdx = it.correct ? it.idx : ('x'+i);
+    piece.id='piece-'+i;
+    piece.addEventListener('mousedown',dragStart);
+    piece.addEventListener('touchstart',dragStart,{passive:false});
+    pool.appendChild(piece);
+  });
+
+  // 字框：n 个格子，按 dir 排列
+  const board=document.getElementById('board');
+  board.className='dynamic-board '+(dir==='v'?'cut-board-v':'cut-board-h');
+  board.innerHTML='';
+  for(let idx=0;idx<n;idx++){
+    const cell=document.createElement('div');
+    cell.className='grid-cell cut-cell';
+    cell.dataset.cutExpect=idx;cell.dataset.filled='false';
+    cell.innerHTML=`<div class="cut-ghost">${charSliceSVG(ch,dir,idx,n,'100%','100%')}</div>`;
+    board.appendChild(cell);
+  }
+}
+// ═══════════════════════════════════════════════════════════
+//  形近字辨认：独体字/不成部件的字，改为从四个完整字中点选
+// ═══════════════════════════════════════════════════════════
+function loadWordLook(data){
+  const pool=document.getElementById('pool');
+  pool.innerHTML='<div class="pool-title">下面四个字长得很像，点一下正确的那个</div>';
+  const opts=[data.w].concat(data.lookOpts||[]).sort(()=>Math.random()-.5);
+  opts.forEach(ch=>{
+    const b=document.createElement('div');
+    b.className='look-piece';b.innerText=ch;
+    b.onclick=()=>handleLookPick(b,ch,data);
+    pool.appendChild(b);
+  });
+  // 字框：把词语中的目标字挖空
+  const board=document.getElementById('board');
+  board.className='dynamic-board look-board';
+  const v=String(data.vocab||data.w);
+  const i=v.indexOf(data.w);
+  const esc=t=>t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  board.innerHTML = i<0
+    ? '<span class="look-blank">？</span>'
+    : esc(v.slice(0,i))+'<span class="look-blank">？</span>'+esc(v.slice(i+data.w.length));
+}
+function handleLookPick(btn,ch,data){
+  if(ch===data.w){
+    document.querySelectorAll('.look-piece').forEach(e=>e.classList.add('locked'));
+    btn.classList.remove('locked');
+    const board=document.getElementById('board');
+    const bl=board.querySelector('.look-blank');
+    if(bl){bl.outerHTML=ch;}
+    incCombo();
+    const r=btn.getBoundingClientRect();
+    spawnParticles(r.left+r.width/2,r.top+r.height/2);
+    onSpellSuccess();
+  }else{
+    btn.classList.add('wrong');
+    setTimeout(()=>btn.classList.remove('wrong'),320);
+    btn.classList.add('locked');
+    addScore(-1);resetCombo();consecutiveCorrect=0;
+    const uk=data._unit||getCurrentSelUnits()[0];
+    recordWrong(uk,data.w,data);
+    tallyWrong('spell');
+    triggerFeedback(false,'看清楚字形，扣1分！');
+  }
+}
+
+function dragStart(e){
+  if(!e.target.classList.contains('component'))return;
+  activePiece=e.target;
+  const ec=e.type.includes('touch')?e.touches[0]:e;
+  activePiece.style.position='fixed';activePiece.style.zIndex=1000;
+  movePiece(ec.clientX,ec.clientY);
+  document.addEventListener('mousemove',dragMove);
+  document.addEventListener('touchmove',dragMove,{passive:false});
+  document.addEventListener('mouseup',dragEnd);
+  document.addEventListener('touchend',dragEnd);
+}
+function dragMove(e){
+  if(!activePiece)return;e.preventDefault();
+  const ec=e.type.includes('touch')?e.touches[0]:e;
+  movePiece(ec.clientX,ec.clientY);
+}
+function movePiece(x,y){activePiece.style.left=(x-22.5)+'px';activePiece.style.top=(y-22.5)+'px';}
+function dragEnd(e){
+  if(!activePiece)return;
+  const ec=e.type.includes('touch')?e.changedTouches[0]:e;
+  activePiece.style.visibility='hidden';
+  const target=document.elementFromPoint(ec.clientX,ec.clientY);
+  activePiece.style.visibility='visible';
+  const cell=target?target.closest('.grid-cell'):null;
+  if(cell&&cell.dataset.filled==='false'){
+    // 切割模式：按 cutIdx 匹配 cutExpect
+    if(activePiece.classList.contains('cut-piece')){
+      if(cell.dataset.cutExpect===activePiece.dataset.cutIdx){
+        cell.innerHTML='';
+        const svg=activePiece.querySelector('svg').cloneNode(true);
+        svg.setAttribute('width','100%');svg.setAttribute('height','100%');
+        cell.appendChild(svg);
+        cell.dataset.filled='true';
+        activePiece.remove();incCombo();
+        spawnParticles(ec.clientX,ec.clientY);
+        checkGridComplete();
+      }else{
+        cell.classList.add('shake');setTimeout(()=>cell.classList.remove('shake'),300);
+        tallyWrong('spell');
+        triggerFeedback(false,'位置不对，再试试！');resetPiece(activePiece);
+      }
+      cleanupDrag();return;
+    }
+    // 语义模式（原逻辑）
+    if(cell.dataset.expected===activePiece.innerText){
+      cell.innerText=activePiece.innerText;cell.dataset.filled='true';
+      activePiece.remove();incCombo();
+      spawnParticles(ec.clientX,ec.clientY);
+      checkGridComplete();
+    }else{
+      cell.classList.add('shake');setTimeout(()=>cell.classList.remove('shake'),300);
+      addScore(-1);resetCombo();consecutiveCorrect=0;
+      const uk=currentSet[currentWordIndex]._unit||getCurrentSelUnits()[0];
+      recordWrong(uk,currentSet[currentWordIndex].w,currentSet[currentWordIndex]);
+      tallyWrong('spell');
+      triggerFeedback(false,'放错扣1分！');resetPiece(activePiece);
+    }
+  }else{resetPiece(activePiece);}
+  cleanupDrag();
+}
+function resetPiece(p){p.style.position='static';p.style.zIndex='auto';}
+function cleanupDrag(){
+  activePiece=null;
+  document.removeEventListener('mousemove',dragMove);
+  document.removeEventListener('touchmove',dragMove);
+  document.removeEventListener('mouseup',dragEnd);
+  document.removeEventListener('touchend',dragEnd);
+}
+function checkGridComplete(){
+  const cells=Array.from(document.querySelectorAll('.grid-cell'));
+  if(!cells.every(c=>c.dataset.filled==='true'))return;
+  onSpellSuccess();
+}
+function onSpellSuccess(){
+  new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA').play().catch(()=>{});
+  document.getElementById('board').classList.add('success');
+  const data=currentSet[currentWordIndex];
+  const uk=data._unit||getCurrentSelUnits()[0];
+  recordCorrect(uk,data.w);addScore(1);
+  // Step 1: 立刻说"帅呆了"并显示左侧文字
+  showFeedbackLeft('帅呆了！');
+  // Step 2: 600ms后说词语，词语读完再显示选择题
+  setTimeout(()=>{
+    window.speechSynthesis.cancel();
+    const utt=new SpeechSynthesisUtterance(data.vocab);
+    utt.lang='zh-CN';
+    let fired=false;
+    const showQ=()=>{if(fired)return;fired=true;showQuiz(data);};
+    utt.onend=showQ;
+    setTimeout(showQ, Math.max(800, data.vocab.length*600));
+    window.speechSynthesis.speak(utt);
+  },600);
+}
+function showQuiz(data){
+  // 若该字有≥2个同字词，进入"同字词配对"环节
+  const scopedPairs=getScopedPairItems(data);
+  if(scopedPairs.length>=2){
+    showMatch(data,scopedPairs);
+    return;
+  }
+  // 没有释义的字（多为切割字）：不出选择题，直接进下一题
+  if(!data.def || !data.def.trim()){
+    setTimeout(()=>{ advanceAfterQuiz(); },800);
+    return;
+  }
+  // 完成页会临时改写标题；每道新题都先恢复标准题头
+  document.querySelector('.quiz-title').innerHTML='拼写成功！请选出 <span class="quiz-word" id="qw">-</span> 的正确解释：';
+  document.getElementById('qw').innerText=`【${data.vocab}】`;
+  const panel=document.getElementById('quizPanel');
+  const cont=document.getElementById('optionsContainer');
+  cont.innerHTML='';
+  let opts=[data.def];
+  const dist=getScopedDistractors(data).sort(()=>Math.random()-.5);
+  // 同单元通常足够；若不足3个，用中性占位释义补齐，避免从别的单元串词
+  const fillers=['表示一种动作或状态 (Action/State)','表示某种事物或概念 (Thing/Concept)','表示某种特征或情况 (Feature/Condition)'];
+  while(dist.length<3)dist.push(fillers[dist.length]);
+  opts.push(dist[0],dist[1],dist[2]);opts.sort(()=>Math.random()-.5);
+  opts.forEach(opt=>{
+    const btn=document.createElement('button');btn.className='quiz-btn';
+    const m=opt.match(/(.*?)\s*\((.*?)\)/);
+    btn.innerHTML=m?`${m[1]} <span style="color:#95a5a6;font-size:12px;">(${m[2]})</span>`:opt;
+    btn.onclick=()=>handleAnswer(btn,opt===data.def);
+    cont.appendChild(btn);
+  });
+  panel.style.display='flex';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  同字词配对：把词语拖到正确的释义上
+// ═══════════════════════════════════════════════════════════
+function splitDef(d){
+  // 把 "原因 (Reason)" 拆成中文/英文
+  const m=d.match(/^(.*?)\s*\((.*?)\)\s*$/);
+  return m?{cn:m[1].trim(),en:m[2].trim()}:{cn:d,en:''};
+}
+function showMatch(data,scopedItems){
+  document.getElementById('quizPanel').style.display='none';
+  const panel=document.getElementById('matchPanel');
+  const area=document.getElementById('matchArea');
+  document.getElementById('matchChar').innerText=data.w;
+  area.innerHTML='';
+
+  const items=(scopedItems||getScopedPairItems(data)).slice(); // 仅当前年级 [{w,d}]
+  // 释义顺序打乱，词语顺序也打乱，避免位置对应
+  const defs=items.slice().sort(()=>Math.random()-.5);
+  const words=items.slice().sort(()=>Math.random()-.5);
+
+  // 左列：词语（可拖）；右列：释义（放置区）。按释义行排布。
+  defs.forEach((it)=>{
+    const row=document.createElement('div');row.className='match-row';
+    // 释义放置区
+    const dz=document.createElement('div');dz.className='match-def';
+    dz.dataset.answer=it.w;       // 这一行正确应放的词
+    const sd=splitDef(it.d);
+    dz.innerHTML=`<div class="drop-slot" data-slot="1">？</div>`+
+      `<div class="match-def-text">${sd.cn}${sd.en?` <span class="match-def-en">(${sd.en})</span>`:''}</div>`;
+    row.appendChild(dz);
+    area.appendChild(row);
+  });
+  // 词语条放在顶部一排（独立容器），从释义行里分离，便于拖动
+  const wordBar=document.createElement('div');
+  wordBar.style.cssText='display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:4px';
+  words.forEach(it=>{
+    const wd=document.createElement('div');wd.className='match-word';
+    wd.innerText=it.w;wd.dataset.word=it.w;
+    attachMatchDrag(wd);
+    wordBar.appendChild(wd);
+  });
+  area.insertBefore(wordBar, area.firstChild);
+
+  matchRemaining=items.length;
+  matchData=data;
+  panel.classList.add('show');panel.style.display='flex';
+}
+
+let matchRemaining=0, matchData=null, mDragEl=null;
+function attachMatchDrag(el){
+  const start=(e)=>{
+    if(el.classList.contains('placed'))return;
+    e.preventDefault();
+    mDragEl=el;el.classList.add('dragging');
+    document.addEventListener('mousemove',mMove);
+    document.addEventListener('touchmove',mMove,{passive:false});
+    document.addEventListener('mouseup',mEnd);
+    document.addEventListener('touchend',mEnd);
+  };
+  el.addEventListener('mousedown',start);
+  el.addEventListener('touchstart',start,{passive:false});
+}
+function mMove(e){
+  if(!mDragEl)return;
+  e.preventDefault();
+  const p=e.touches?e.touches[0]:e;
+  mDragEl.style.position='fixed';mDragEl.style.zIndex=999;
+  mDragEl.style.left=(p.clientX-48)+'px';mDragEl.style.top=(p.clientY-24)+'px';
+  // 高亮悬停的释义区
+  document.querySelectorAll('.match-def').forEach(d=>d.classList.remove('over'));
+  const tgt=dropTargetAt(p.clientX,p.clientY);
+  if(tgt&&!tgt.classList.contains('correct'))tgt.classList.add('over');
+}
+function dropTargetAt(x,y){
+  const els=document.elementsFromPoint(x,y);
+  for(const el of els){const d=el.closest&&el.closest('.match-def');if(d)return d;}
+  return null;
+}
+function mEnd(e){
+  if(!mDragEl)return;
+  const p=e.changedTouches?e.changedTouches[0]:e;
+  const tgt=dropTargetAt(p.clientX,p.clientY);
+  const word=mDragEl.dataset.word;
+  // 复位样式
+  mDragEl.style.position='';mDragEl.style.left='';mDragEl.style.top='';mDragEl.style.zIndex='';
+  mDragEl.classList.remove('dragging');
+  document.querySelectorAll('.match-def').forEach(d=>d.classList.remove('over'));
+  document.removeEventListener('mousemove',mMove);
+  document.removeEventListener('touchmove',mMove);
+  document.removeEventListener('mouseup',mEnd);
+  document.removeEventListener('touchend',mEnd);
+
+  if(tgt && !tgt.classList.contains('correct')){
+    if(tgt.dataset.answer===word){
+      // 正确：词放进slot，锁定
+      const slot=tgt.querySelector('.drop-slot');
+      slot.innerText=word;
+      tgt.classList.add('correct');
+      mDragEl.classList.add('placed');
+      addScore(1);
+      matchRemaining--;
+      if(matchRemaining<=0){
+        showFeedbackRight('全对！太厉害了！');
+        setTimeout(()=>{advanceAfterQuiz();},1200);
+      }
+    }else{
+      // 错误：抖动提示，可重拖
+      tgt.classList.add('wrong-shake');
+      setTimeout(()=>tgt.classList.remove('wrong-shake'),350);
+      tallyWrong('match');
+      triggerFeedback(false,'再想想！');
+    }
+  }
+  mDragEl=null;
+}
+// 配对/选择题结束后，进入下一题（抽取自原 handleAnswer 的推进逻辑）
+function showNoSelection(){
+  document.getElementById('pool').innerHTML='<div class="pool-title">还没有选课文</div>';
+  document.getElementById('board').innerHTML='';
+  document.getElementById('matchPanel').style.display='none';
+  const panel=document.getElementById('quizPanel');
+  document.querySelector('.quiz-title').innerHTML='📚 请先点左上角「课文」，勾选你要复习的课';
+  document.getElementById('optionsContainer').innerHTML='';
+  panel.style.display='flex';
+  document.getElementById('progressLabel').innerText='未选课文';
+}
+
+function showRoundComplete(){
+  window.speechSynthesis.cancel();
+  document.getElementById('matchPanel').classList.remove('show');
+  document.getElementById('matchPanel').style.display='none';
+  const st=roundStats();
+  const panel=document.getElementById('quizPanel');
+  document.querySelector('.quiz-title').innerHTML='🎉 本轮完成！';
+  const cont=document.getElementById('optionsContainer');
+  const grade=document.getElementById('gradeSelect').value==='S1'?'中一':'中二';
+
+  let wrongHtml='';
+  if(st.wrong.length){
+    wrongHtml='<div class="rc-line">这几个字要再练：</div><div class="rc-wrong">'+
+      st.wrong.map(r=>'<span class="rc-w">'+r.w+'</span>').join('')+'</div>';
+  }else{
+    wrongHtml='<div class="rc-line" style="color:#00875a;font-weight:700">全部一次答对，太厉害了！</div>';
+  }
+
+  cont.innerHTML=
+    '<div class="round-card">'+
+      '<div class="rc-big">'+st.pct+'%</div>'+
+      '<div style="text-align:center;font-size:13px;color:#636e72;margin-bottom:10px">一次答对率</div>'+
+      '<div class="rc-line">范围：'+rangeText()+'</div>'+
+      '<div class="rc-line">本轮 '+st.total+' 个字 · 一次答对 <b>'+st.first+'</b> 个 · 最高连击 '+st.combo+'</div>'+
+      wrongHtml+
+      '<div class="rc-up wait" id="rcUp">正在把成绩交给老师……</div>'+
+    '</div>';
+
+  const btn=document.createElement('button');
+  btn.className='quiz-btn'; btn.style.textAlign='center';
+  btn.innerHTML='🔄 再练一轮（重新随机）';
+  btn.onclick=()=>initUnitGame(true);
+  cont.appendChild(btn);
+
+  const btn2=document.createElement('button');
+  btn2.className='quiz-btn'; btn2.style.textAlign='center';
+  btn2.innerHTML='📚 换课文再练';
+  btn2.onclick=()=>{ toggleUnitPicker(); };
+  cont.appendChild(btn2);
+
+  panel.style.display='flex';
+  document.getElementById('progressLabel').innerText='本轮完成 · 每个字只出现一次';
+
+  const up=document.getElementById('rcUp');
+  const codeTxt='【'+grade+'·'+rangeText()+'】'+playerClass+' '+playerSid+' '+playerName+
+                ' | '+st.first+'/'+st.total+' ('+st.pct+'%) | 连击'+st.combo+
+                ' | 错字:'+(st.wrong.map(r=>r.w).join('')||'无');
+  uploadRound(st,function(status){
+    if(status==='ok'){ up.className='rc-up ok'; up.innerText='✅ 成绩已交给老师'; }
+    else{
+      up.className='rc-up bad';
+      up.innerHTML='⚠️ 现在交不上（网络问题），已经存起来，下次打开会自动补交。<br>'+
+        '<button class="copy-btn" style="margin-top:6px" onclick="copyRoundCode(this)">📋 复制成绩交给老师</button>'+
+        '<div id="rcCode" style="display:none">'+codeTxt+'</div>';
+    }
+  });
+}
+function copyRoundCode(btn){
+  const t=document.getElementById('rcCode').innerText;
+  navigator.clipboard.writeText(t).then(()=>{btn.innerText='✅ 已复制';}).catch(()=>alert(t));
+}
+function goNextOrComplete(){
+  currentWordIndex++;
+  if(currentWordIndex<currentSet.length){loadWord();return;}
+  const sel=getCurrentSelUnits();
+  const poolKey='pool_'+sel.join('_');
+  const q=unitPlayQueue[poolKey]||[];
+  if(q.length>0){
+    const n=Math.min(10,q.length);
+    currentSet=q.splice(0,n);
+    currentPoolKey=poolKey;currentWordIndex=0;loadWord();
+  }else{
+    showRoundComplete();
+  }
+}
+function advanceAfterQuiz(){
+  window.speechSynthesis.cancel();
+  document.getElementById('matchPanel').classList.remove('show');
+  document.getElementById('matchPanel').style.display='none';
+  consecutiveCorrect++;checkAchievements();
+  goNextOrComplete();
+}
+function handleAnswer(btn,isCorrect){
+  if(btn.classList.contains('correct')||btn.classList.contains('wrong'))return;
+  if(isCorrect){
+    btn.classList.add('correct');addScore(1);
+    consecutiveCorrect++;checkAchievements();
+    showFeedbackRight('帅爆了，再来！');
+    setTimeout(()=>{
+      window.speechSynthesis.cancel();
+      goNextOrComplete();
+    },1100);
+  }else{
+    btn.classList.add('wrong');addScore(-1);resetCombo();consecutiveCorrect=0;
+    const uk=currentSet[currentWordIndex]._unit||getCurrentSelUnits()[0];
+    recordWrong(uk,currentSet[currentWordIndex].w,currentSet[currentWordIndex]);
+    tallyWrong('quiz');
+    triggerFeedback(false,'再试一下！');
+  }
+}
+function triggerFeedback(ok,txt){
+  const fb=document.getElementById('feedbackMsg'),ft=document.getElementById('fbText');
+  ft.innerText=txt;ft.style.color=ok?'var(--green)':'var(--red)';
+  speakText(txt.replace(/[^a-zA-Z一-龥]/g,''));
+  fb.style.display='block';setTimeout(()=>fb.style.display='none',1500);
+}
+function speakText(txt){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.lang='zh-CN';window.speechSynthesis.speak(u);}
+
+// ═══════════════════════════════════════════════════════════
+//  老师（PIN 保护，只读；名单管理与清空在教师看板文件里）
+// ═══════════════════════════════════════════════════════════
+let T_PIN='', T_DATA=null;
+
+function teacherLogin(){
+  const v=document.getElementById('pinIn').value.trim();
+  const msg=document.getElementById('pinMsg');
+  if(!v){msg.innerText='请输入密码';return;}
+  msg.innerText='正在验证……';
+  api({a:'board',pin:v},function(j){
+    if(j&&j.ok){
+      T_PIN=v; try{sessionStorage.setItem('hzld_tpin',v);}catch(e){}
+      document.getElementById('pinGate').style.display='none';
+      document.getElementById('teacherBody').style.display='block';
+      T_DATA=j; fillClsSel(); renderBoard();
+    }else{ msg.innerText=(j&&j.err)?j.err:'密码不对，或连不上后台'; }
+  });
+}
+function loadBoard(){
+  if(!T_PIN)return;
+  document.getElementById('tSummary').innerText='正在读取……';
+  api({a:'board',pin:T_PIN},function(j){
+    if(j&&j.ok){ T_DATA=j; fillClsSel(); renderBoard(); }
+    else document.getElementById('tSummary').innerText='读取失败：'+((j&&j.err)||'网络问题');
+  });
+}
+function fillClsSel(){
+  const sel=document.getElementById('tClsSel');
+  const cur=sel.value;
+  const seen={},list=[];
+  (T_DATA.roster||[]).forEach(r=>{if(!seen[r.cls]){seen[r.cls]=1;list.push(r.cls);}});
+  list.sort();
+  sel.innerHTML=list.map(c=>'<option>'+c+'</option>').join('');
+  if(cur&&list.includes(cur))sel.value=cur;
+}
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+// 时间戳统一取出 yyyy-MM-dd，兼容 2026-09-01 09:15:03 / 2026/9/1 / ISO 三种写法
+function dateOfRec(ts){
+  const t=String(ts||'').trim();
+  let m=t.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/);
+  if(!m)return '';
+  const z=n=>('0'+n).slice(-2);
+  return m[1]+'-'+z(+m[2])+'-'+z(+m[3]);
+}
+function copyMissing(){
+  const m=window.__missing||[];
+  if(!m.length)return;
+  const txt=m.map(r=>r.sid+' '+r.name).join('\n');
+  navigator.clipboard.writeText(txt).then(()=>{
+    const b=document.getElementById('tCopyMissing');
+    const o=b.innerText;b.innerText='✅ 已复制 '+m.length+' 人';
+    setTimeout(()=>b.innerText=o,1500);
+  }).catch(()=>alert(txt));
+}
+function saveRoster(){
+  const cls=document.getElementById('tRosterCls').value.trim();
+  const msg=document.getElementById('tRosterMsg');
+  if(!cls){msg.innerHTML='<span style="color:#d63031">请先填班级代号</span>';return;}
+  const lines=document.getElementById('tRosterTxt').value.split('\n')
+    .map(x=>x.trim()).filter(Boolean);
+  const data=[],bad=[];
+  lines.forEach((ln,i)=>{
+    const c=ln.split(/[\t\s，,]+/).filter(Boolean);
+    if(!c[0]){bad.push(i+1);return;}
+    data.push([c[0],c[1]||'',c[2]||'']);
+  });
+  if(!data.length){msg.innerHTML='<span style="color:#d63031">没读到任何学生</span>';return;}
+  msg.innerHTML='正在保存 '+data.length+' 人……';
+  api({a:'setRoster',pin:T_PIN,cls:cls,data:JSON.stringify(data)},function(j){
+    if(j&&j.ok){
+      msg.innerHTML='<span style="color:#00875a">✅ '+esc(j.msg||'已保存')+'</span>';
+      loadBoard();
+    }else{
+      msg.innerHTML='<span style="color:#d63031">保存失败：'+esc((j&&j.err)||'连不上后台')+'</span>';
+    }
+  });
+}
+function todayStr(){
+  const d=new Date(),z=n=>('0'+n).slice(-2);
+  return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());
+}
+function renderBoard(){
+  if(!T_DATA)return;
+  const cls=document.getElementById('tClsSel').value;
+  const roster=(T_DATA.roster||[]).filter(r=>r.cls===cls);
+  const today=todayStr();
+  // 练习记录：[时间,班级,学号,姓名,组号,年级,范围,字数,一次答对,正确率,积分,连击]
+  const recs=(T_DATA.scores||[]).filter(r=>String(r[1])===cls);
+
+  // ---- 课文筛选下拉：列出这个班练过的所有范围 ----
+  const rgSel=document.getElementById('tRangeSel');
+  const rgList=[];const rgSeen={};
+  recs.forEach(r=>{const v=String(r[6]||'');if(v&&!rgSeen[v]){rgSeen[v]=1;rgList.push(v);}});
+  rgList.sort();
+  const rgCur=rgSel.value;
+  rgSel.innerHTML='<option value="__ALL__">全部课文</option>'+rgList.map(v=>'<option>'+esc(v)+'</option>').join('');
+  if(rgCur&&(rgCur==='__ALL__'||rgList.includes(rgCur)))rgSel.value=rgCur;
+  const rg=rgSel.value||'__ALL__';
+
+  // ---- 日期筛选 ----
+  const dayMode=document.getElementById('tDaySel').value;
+  const dayOK=ts=>{
+    if(dayMode==='all')return true;
+    const d=dateOfRec(ts); if(!d)return false;
+    if(dayMode==='today')return d===today;
+    const diff=(new Date(today)-new Date(d))/86400000;
+    return diff>=0&&diff<7;
+  };
+  const shown=recs.filter(r=>dayOK(r[0])&&(rg==='__ALL__'||String(r[6]||'')===rg));
+
+  // ---- 汇总 ----
+  const doneSid={}; shown.forEach(r=>{ doneSid[String(r[2])]=(doneSid[String(r[2])]||0)+1; });
+  const doneN=Object.keys(doneSid).length;
+  const scopeTxt=(dayMode==='today'?today:dayMode==='7'?'最近 7 天':'不限日期')
+                 +(rg==='__ALL__'?'':' · '+rg);
+  document.getElementById('tSummary').innerHTML=
+    '<b>'+esc(scopeTxt)+'</b>　已练 <b style="color:#00875a">'+doneN+'</b> / '+roster.length+' 人　共 '+shown.length+' 轮';
+
+  const btnCM=document.getElementById('tCopyMissing');
+  const missBox=document.getElementById('tMissing');
+  if(!roster.length){
+    // 名单是空的：不能假装全班都交了
+    missBox.innerHTML='<span class="t-miss">⚠️ 这个班还没有名单，算不出谁没交。</span>'
+      +'<br><span style="color:#7f8c8d">请在下方「名单管理」里贴上学号姓名并保存。</span>';
+    window.__missing=[];btnCM.style.display='none';
+  }else{
+    const missing=roster.filter(r=>!doneSid[String(r.sid)]);
+    window.__missing=missing;
+    missBox.innerHTML= missing.length
+      ? '<span class="t-miss">还没交（'+missing.length+' 人）：</span>'+missing.map(r=>esc(r.sid+' '+r.name)).join('、')
+      : '<span style="color:#00875a">这个范围内全班都交了 ✅</span>';
+    btnCM.style.display=missing.length?'block':'none';
+  }
+
+  // ---- 错字排行（逐字明细：[时间,班,学号,姓名,单元,字,拼音,拼字错,释义错,配对错,一次答对]）----
+  const items=(T_DATA.items||[]).filter(r=>String(r[1])===cls&&dayOK(r[0]));
+  const agg={};
+  items.forEach(r=>{
+    const w=String(r[5]); if(!w)return;
+    if(!agg[w])agg[w]={w:w,py:String(r[6]||''),att:0,bad:0,spell:0,quiz:0,match:0};
+    agg[w].att++;
+    const sp=+r[7]||0,qz=+r[8]||0,mt=+r[9]||0;
+    if(sp||qz||mt)agg[w].bad++;
+    agg[w].spell+=sp;agg[w].quiz+=qz;agg[w].match+=mt;
+  });
+  const rank=Object.keys(agg).map(k=>agg[k]).filter(x=>x.bad>0)
+    .sort((a,b)=>(b.bad/b.att)-(a.bad/a.att)||b.bad-a.bad).slice(0,12);
+  const row=document.getElementById('topErrorsRow');
+  row.innerHTML = rank.length ? rank.map(x=>{
+    const pct=Math.round(x.bad/x.att*100);
+    const where=x.spell>=x.quiz&&x.spell>=x.match?'拼字':(x.quiz>=x.match?'释义':'配对');
+    return '<div class="top-err-chip"><span>'+x.w+'</span><div><div style="font-size:11px">'+x.py+'</div>'+
+           '<div class="top-err-cnt">'+pct+'% 错 · 卡在'+where+'</div></div></div>';
+  }).join('') : '<div style="color:#b2bec3;font-size:13px">还没有错误数据</div>';
+  window.__weak=rank;
+
+  // ---- 个人榜（同一学号只取最后一次）----
+  const last={};
+  recs.forEach(r=>{ last[String(r[2])]=r; });
+  const indiv=Object.keys(last).map(k=>last[k])
+    .sort((a,b)=>(+b[9])-(+a[9])||(+b[8])-(+a[8])).slice(0,10);
+  document.getElementById('tIndiv').innerHTML = indiv.length ?
+    '<table class="t-tbl"><tr><th>#</th><th>学号</th><th>姓名</th><th>正确率</th><th>范围</th></tr>'+
+    indiv.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td><b>'+r[9]+'%</b></td><td style="font-size:11px;color:#636e72">'+(r[6]||'')+'</td></tr>').join('')+
+    '</table>' : '<span style="color:#b2bec3">还没有数据</span>';
+
+  // ---- 小组榜 ----
+  const grp={};
+  Object.keys(last).forEach(k=>{
+    const r=last[k], g=String(r[4]||''); if(!g)return;
+    (grp[g]=grp[g]||[]).push(+r[9]||0);
+  });
+  const gRows=Object.keys(grp).sort((a,b)=>a-b).map(g=>{
+    const arr=grp[g], avg=Math.round(arr.reduce((x,y)=>x+y,0)/arr.length);
+    return {g:g,n:arr.length,avg:avg};
+  }).sort((a,b)=>b.avg-a.avg);
+  document.getElementById('tGroup').innerHTML = gRows.length ?
+    '<table class="t-tbl"><tr><th>#</th><th>组</th><th>已练人数</th><th>平均正确率</th></tr>'+
+    gRows.map((x,i)=>'<tr><td>'+(i+1)+'</td><td>第'+x.g+'组</td><td>'+x.n+'</td><td><b>'+x.avg+'%</b></td></tr>').join('')+
+    '</table>' : '<span style="color:#b2bec3">名单里还没有组号，可在教师看板分组</span>';
+}
+function copyWeakChars(){
+  const rank=window.__weak||[];
+  if(!rank.length){alert('还没有错误数据');return;}
+  const cls=document.getElementById('tClsSel').value;
+  const t='【'+cls+' 重点复习字表】（'+todayStr()+'）\n'+
+    rank.map((x,i)=>(i+1)+'. '+x.w+'（'+x.py+'）　错误率 '+Math.round(x.bad/x.att*100)+'%').join('\n');
+  navigator.clipboard.writeText(t).then(()=>alert('✅ 已复制')).catch(()=>alert(t));
+}
+
+// ---- 听写清单（不需要密码）----
+function renderTeacher(){
+  try{
+    const sp=sessionStorage.getItem('hzld_tpin');
+    if(sp&&!T_PIN){ document.getElementById('pinIn').value=sp; teacherLogin(); }
+  }catch(e){}
+  const sel=getCurrentSelUnits();
+  const words=sel.flatMap(u=>wordBank[u]||[]);
+  const list=document.getElementById('dictationList');
+  list.innerHTML=words.map((item,i)=>
+    `<li class="dictation-item"><span class="dictation-num">${i+1}.</span><span class="dictation-char">${item.w}</span><span class="dictation-py">${item.py}　${item.vocab}</span></li>`
+  ).join('');
+}
+function copyDictation(){
+  const sel=getCurrentSelUnits();
+  const words=sel.flatMap(u=>wordBank[u]||[]);
+  if(!words.length){alert('请先在游戏页选好课文');return;}
+  const text=`【${rangeText()} 听写清单】\n`+words.map((item,i)=>`${i+1}. ${item.w}（${item.py}）— ${item.vocab}`).join('\n');
+  navigator.clipboard.writeText(text).then(()=>alert('✅ 已复制')).catch(()=>alert(text));
+}
+
+// ═══════════════════════════════════════════════════════════
+//  侧边反馈文字
+// ═══════════════════════════════════════════════════════════
+function showFeedbackLeft(txt){
+  const el=document.getElementById('feedbackLeft');
+  el.innerText=txt;
+  el.className='feedback-left-side feedback-side-anim';
+  el.style.display='block';
+  speakText(txt.replace(/[^a-zA-Z\u4e00-\u9fa5]/g,''));
+  setTimeout(()=>{el.style.display='none';el.className='feedback-left-side';},1600);
+}
+function showFeedbackRight(txt){
+  const el=document.getElementById('feedbackRight');
+  el.innerText=txt;
+  el.className='feedback-right-side feedback-side-anim';
+  el.style.display='block';
+  speakText(txt.replace(/[^a-zA-Z\u4e00-\u9fa5]/g,''));
+  spawnParticles(window.innerWidth/2,window.innerHeight*0.45);
+  spawnParticles(window.innerWidth/2-60,window.innerHeight*0.5);
+  spawnParticles(window.innerWidth/2+60,window.innerHeight*0.5);
+  setTimeout(()=>{el.style.display='none';el.className='feedback-right-side';},1900);
+}
+window.onload=()=>{
+  score=ls.get(SK.score)||0;
+  document.getElementById('scoreVal').innerText=score;
+  checkPlayerName();updateUnits();updateErrorBadge();
+  setTimeout(flushPending,1500);
+  const pl=document.getElementById('playerLabel');
+  if(pl)pl.onclick=()=>{ if(confirm('要换成另一个同学吗？（会清掉这台机器上的登录）'))switchStudent(); };
+};
+</script>
+</body>
+</html>
