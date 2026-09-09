@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>成语闯关学习单（47－70）</title>
+<style>
+  :root{
+    --ink:#1A1A1A; --teal:#0F5E5A; --red:#C81E1E; --gray:#5A5A5A;
+    --tint:#EEF4F3; --tint2:#FBF3E7; --line:#C9D8D6; --ok:#0F7A4A; --no:#B3261E;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{margin:0; background:#FFF; color:var(--ink);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Heiti SC",sans-serif;
+    font-size:19px; line-height:1.6;}
+  .wrap{max-width:880px; margin:0 auto; padding:16px 16px 120px;}
+  h1{font-size:28px; margin:8px 0 4px;}
+  .sub{color:var(--teal); font-size:18px; margin-bottom:16px;}
+  .card{background:var(--tint); border:1px solid var(--line); border-radius:12px; padding:16px; margin:14px 0;}
+  .card.warm{background:var(--tint2);}
+  label{display:block; font-weight:700; margin:10px 0 6px;}
+  input[type=text]{width:100%; padding:14px; font-size:19px; border:2px solid var(--line);
+    border-radius:10px; font-family:inherit;}
+  textarea{width:100%; padding:14px; font-size:19px; border:2px solid var(--line);
+    border-radius:10px; font-family:inherit; min-height:120px;}
+  .btn{display:inline-block; background:var(--teal); color:#FFF; border:0; border-radius:12px;
+    padding:16px 28px; font-size:20px; font-weight:700; font-family:inherit; cursor:pointer;}
+  .btn:disabled{background:#9BB5B2;}
+  .btn.ghost{background:#FFF; color:var(--teal); border:2px solid var(--teal);}
+  .hide{display:none !important;}
+
+  .bar{position:sticky; top:0; background:#FFF; padding:10px 0 8px; border-bottom:2px solid var(--line); z-index:5;}
+  .bar .who{font-size:16px; color:var(--gray);}
+  .track{height:10px; background:var(--tint); border-radius:6px; overflow:hidden; margin-top:6px;}
+  .fill{height:100%; width:0; background:var(--teal); transition:width .3s;}
+
+  .tasktitle{margin:26px 0 6px; font-size:22px; font-weight:700; color:var(--teal);}
+  .tasknote{color:var(--gray); font-size:17px; margin-bottom:6px;}
+
+  .q{border:1px solid var(--line); border-radius:12px; padding:16px; margin:14px 0;}
+  .qnum{font-size:16px; color:var(--gray);}
+  .stem{font-size:20px; font-weight:700; margin:6px 0 12px;}
+  .opt{display:block; width:100%; text-align:left; background:#FFF; border:2px solid var(--line);
+    border-radius:12px; padding:15px 16px; margin:9px 0; font-size:19px; font-family:inherit;
+    color:var(--ink); cursor:pointer;}
+  .opt:active{background:var(--tint);}
+  .opt.picked-ok{border-color:var(--ok); background:#E9F6EF;}
+  .opt.picked-no{border-color:var(--no); background:#FBECEB;}
+  .opt.show-ok{border-color:var(--ok); background:#E9F6EF;}
+  .opt.dim{opacity:.55;}
+  .opt:disabled{cursor:default;}
+  .fb{margin-top:10px; padding:13px 14px; border-radius:10px; font-size:18px; display:none;}
+  .fb.ok{background:#E9F6EF; border-left:6px solid var(--ok);}
+  .fb.no{background:#FBECEB; border-left:6px solid var(--no);}
+  .fb b{color:var(--teal);}
+
+  .scorebar{margin:10px 0;}
+  .scorebar .lab{display:flex; justify-content:space-between; font-size:17px;}
+  .scorebar .track{height:16px;}
+  .medal{font-size:26px; font-weight:700; color:var(--teal); margin:6px 0;}
+  .code{font-family:ui-monospace,Menlo,Consolas,monospace; font-size:20px; background:#FFF;
+    border:2px dashed var(--teal); border-radius:10px; padding:14px; word-break:break-all; text-align:center;}
+  .warn{color:var(--red); font-weight:700;}
+  .foot{position:fixed; left:0; right:0; bottom:0; background:#FFF; border-top:2px solid var(--line);
+    padding:12px 16px; text-align:center;}
+
+  .grouptable{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:14px; margin-top:14px;}
+  .gcard{background:var(--tint); border:1px solid var(--line); border-radius:12px; padding:16px;}
+  .gcard .gname{font-size:22px; font-weight:700; color:var(--teal); margin-bottom:8px;}
+  .gcard .gnos{font-size:24px; font-weight:700; letter-spacing:1px;}
+  body.bigproject .grouptable{grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:20px;}
+  body.bigproject .gcard .gname{font-size:34px;}
+  body.bigproject .gcard .gnos{font-size:40px;}
+  body.bigproject #tgInput, body.bigproject #tgResult .card{display:none;}
+  body.bigproject h1{font-size:40px;}
+  body.bigproject .sub{font-size:22px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ 登记 ============ -->
+  <div id="gate">
+    <h1>成语闯关学习单（47－70）</h1>
+    <div class="sub">中一高级华文 ｜ 约 20 分钟 ｜ 全部点选，只有最后一题要打字</div>
+    <div class="card warm">
+      <label>姓名（写全名）</label>
+      <input type="text" id="nm" placeholder="例：陈小明">
+      <label style="margin-top:14px;">组别</label>
+      <input type="text" id="gp" placeholder="例：第3组">
+      <div style="margin-top:16px;">
+        <button class="btn" id="startBtn">开始闯关</button>
+      </div>
+      <div style="margin-top:12px; color:var(--red); font-weight:700;">
+        每题只能答一次，答了就锁住，别乱点。
+      </div>
+    </div>
+    <div style="text-align:right; margin-top:6px;">
+      <a href="#" id="teacherOpen" style="color:var(--gray); font-size:15px; text-decoration:underline;">教师专用：随机分组 →</a>
+    </div>
+  </div>
+
+  <!-- ============ 教师：随机分组（投影用） ============ -->
+  <div id="teacherGroup" class="hide">
+    <h1>随机分组</h1>
+    <div class="sub">老师用｜投影给全班看，学生自己找自己的学号</div>
+
+    <div class="card warm" id="tgInput">
+      <label>贴上名单（学号＋程度，例：3好 7中 11差 …）</label>
+      <textarea id="roster" placeholder="3好 7中 11差 5好 9中 14差 ..."></textarea>
+      <label style="margin-top:14px;">分成几组</label>
+      <input type="text" id="ngroup" placeholder="例：8" style="max-width:160px;">
+      <div style="margin-top:16px;">
+        <button class="btn" id="genBtn">生成分组</button>
+        <button class="btn ghost" id="backBtn1">返回</button>
+      </div>
+      <div id="rosterErr" style="margin-top:10px; color:var(--red); font-weight:700; display:none;"></div>
+    </div>
+
+    <div id="tgResult" class="hide">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div id="tgSummary" style="font-weight:700; font-size:19px;"></div>
+          <div>
+            <button class="btn" id="reshuffleBtn">重新分组</button>
+            <button class="btn ghost" id="bigBtn">放大投影</button>
+            <button class="btn ghost" id="backBtn2">返回</button>
+          </div>
+        </div>
+      </div>
+      <div id="grouptable" class="grouptable"></div>
+      <div style="text-align:center; color:var(--gray); font-size:15px; margin-top:14px;">
+        按键盘 G 键也能重新分组　｜　「放大投影」适合让后排学生看清楚
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 答题区 ============ -->
+  <div id="main" class="hide">
+    <div class="bar">
+      <div class="who" id="who"></div>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <div class="who" id="prog"></div>
+    </div>
+    <div id="quiz"></div>
+
+    <div class="tasktitle">任务六　写一句话（老师批改）</div>
+    <div class="tasknote">用「功亏一篑」写一句你自己或同学的经历。<br>
+      可以套这个句式：本来……，可是……，真是功亏一篑。</div>
+    <div class="card">
+      <textarea id="open" placeholder="本来我……，可是……，真是功亏一篑。"></textarea>
+      <div style="color:var(--gray); font-size:17px; margin-top:8px;">
+        这一题电脑不会打分，由老师另外评（8 分）。
+      </div>
+    </div>
+
+    <div style="text-align:center; margin:26px 0;">
+      <button class="btn" id="submitBtn">交卷，看成绩</button>
+    </div>
+  </div>
+
+  <!-- ============ 成绩 ============ -->
+  <div id="result" class="hide">
+    <h1>成绩单</h1>
+    <div class="sub" id="rwho"></div>
+    <div class="card warm">
+      <div class="medal" id="medal"></div>
+      <div style="font-size:22px; font-weight:700;" id="total"></div>
+      <div style="color:var(--gray); font-size:17px; margin-top:6px;">
+        电脑批改的是任务一至五（共 92 分）。第 24 题写句子由<span class="warn">老师另外评 8 分</span>，
+        最后成绩＝电脑分 ＋ 老师分。
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-weight:700; font-size:20px; margin-bottom:8px;">各任务表现</div>
+      <div id="bars"></div>
+    </div>
+
+    <div class="card warm">
+      <div style="font-weight:700; font-size:20px; margin-bottom:6px;">最需要加强的一项</div>
+      <div id="advice" style="font-size:19px;"></div>
+    </div>
+
+    <div class="card">
+      <div style="font-weight:700; font-size:20px; margin-bottom:8px;">成绩码（举给老师看）</div>
+      <div class="code" id="code"></div>
+      <div style="text-align:center; margin-top:12px;">
+        <button class="btn ghost" id="copyBtn">复制成绩码</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-weight:700; font-size:20px; margin-bottom:8px;">错题回顾</div>
+      <div id="wrongs" style="font-size:18px;"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ---------------- 题库 ---------------- */
+/* a = 正确选项的编号（打乱前）; why = 正确的理由; 每个干扰项都有对应的误区说明 */
+const TASKS = [
+  { name:"任务一　拆开字，读懂成语", note:"先看清楚每个字原来是什么意思。", qs:[
+    { stem:"「功亏一篑」的「篑」，原来指什么？",
+      opts:["装土的竹筐","量米的木斗","挑水的扁担","堆好的土山"], a:0,
+      why:"篑＝装土的竹筐。堆山只差最后一筐土，所以是「差一步就失败」。",
+      bad:["","「斗」是量米的，和堆山没关系。","扁担是挑东西的，句子里没有挑水。","土山是结果，不是「篑」这个字的意思。"] },
+    { stem:"「根深蒂固」的「蒂」，指的是什么？",
+      opts:["树木最粗的那条根","泥土最深的那一层","瓜果连着枝的那一点","花朵最外面的花瓣"], a:2,
+      why:"蒂＝瓜果连着枝条的那一点。根扎得深、蒂长得牢，所以「很难改变」。",
+      bad:["「根」是成语里的另一个字，不是「蒂」。","泥土不是「蒂」，这是望文生义。","","花瓣会掉，不能表示「牢固」。"] },
+    { stem:"「骇人听闻」的「骇」是什么意思？",
+      opts:["自己害怕发抖","使人非常震惊","听得不太清楚","大声喊叫吵闹"], a:1,
+      why:"骇＝使别人震惊。所以用在可怕的事件、新闻上，不是形容自己害怕。",
+      bad:["不是自己怕，是让听的人震惊。","","「听闻」是听到消息，不是听不清楚。","和喊叫无关。"] },
+    { stem:"「沽名钓誉」的「沽」，原来的意思是？",
+      opts:["偷偷藏起来","大声地叫喊","慢慢地积累","用手段换取"], a:3,
+      why:"沽＝换取、买。用手段「换」来好名声，所以是贬义词。",
+      bad:["藏起来就不会有名声了，正好相反。","叫喊是「呼」不是「沽」。","慢慢积累是靠真本事，那就不是贬义了。",""] },
+    { stem:"「敷衍塞责」的「塞责」是什么意思？",
+      opts:["把责任应付过去","把责任推给别人","把责任揽在身上","把责任写在纸上"], a:0,
+      why:"塞责＝把责任堵一堵、应付过去。重点在「自己做了，但做得很马虎」。",
+      bad:["","推给别人是「推卸责任」，敷衍塞责是自己做但乱做。","揽在身上是负责任，意思相反。","和写不写没有关系。"] } ]},
+
+  { name:"任务二　意思很像，怎么分", note:"先圈出句子里的关键词，再决定填哪一个。", qs:[
+    { stem:"陈先生开德士三十年，从不闯红灯，也不多收车资，是个________的司机。",
+      opts:["光明正大","奉公守法","改邪归正","高枕无忧"], a:1,
+      why:"关键词是「不闯红灯」——讲的是守不守规矩，用「奉公守法」。",
+      bad:["光明正大讲的是做人坦荡、不背后害人，不是守规矩。","","改邪归正是本来做坏事、后来变好，陈先生一直是好司机。","高枕无忧是没有忧虑，和守不守法无关。"] },
+    { stem:"有意见就在班会上说出来，________，不必在背后传纸条。",
+      opts:["光明正大","奉公守法","各有千秋","废寝忘食"], a:0,
+      why:"关键词是「背后传纸条」——讲的是做事坦不坦荡，用「光明正大」。",
+      bad:["","奉公守法讲的是遵守法律规章，提意见不涉及犯法。","各有千秋是各有长处，用来比较几个人或几件作品。","废寝忘食是非常努力，和坦不坦荡无关。"] },
+    { stem:"眼看中三就要分流，他却整天打游戏，只想________，不为将来打算。",
+      opts:["裹足不前","孤陋寡闻","苟且偷安","高瞻远瞩"], a:2,
+      why:"关键词是「不为将来打算」——只贪图眼前舒服，就是「苟且偷安」。",
+      bad:["裹足不前是因为害怕而不敢前进，他不是害怕，是贪玩。","孤陋寡闻讲的是见识少、不懂时事。","","高瞻远瞩是眼光长远的褒义词，和这句意思相反。"] },
+    { stem:"他提议全班早到十分钟一起打扫课室，可是没有人响应，真是________。",
+      opts:["寡不敌众","孤掌难鸣","孤注一掷","功亏一篑"], a:1,
+      why:"关键词是「没有人响应」——没人帮忙，事情做不成，就是「孤掌难鸣」。",
+      bad:["寡不敌众是对方人多、抵挡不住，这里没有人和他对抗。","","孤注一掷是把全部押上去冒险。","功亏一篑是差最后一步才失败，这件事还没开始。"] },
+    { stem:"比赛只剩十秒还落后三分，他只好________，在中线外出手投篮。",
+      opts:["功亏一篑","敷衍塞责","裹足不前","孤注一掷"], a:3,
+      why:"关键词是「只好」「只剩十秒」——被逼得冒险一搏，就是「孤注一掷」。",
+      bad:["功亏一篑是已经失败了，他还在拼。","敷衍塞责是做事马虎应付。","裹足不前是不敢行动，他已经出手了。",""] },
+    { stem:"他以前老是拖到最后一天才交作业，这学期决定________，每次都提前完成。",
+      opts:["改邪归正","光明正大","改过自新","奉公守法"], a:2,
+      why:"关键词是「拖作业」——改掉自己的坏习惯，用「改过自新」。",
+      bad:["改邪归正用在做过坏事、走上歪路的人身上，拖作业还谈不上。","光明正大是做人坦荡，不是改变自己。","","奉公守法是遵守法律规章，交作业不涉及法律。"] } ]},
+
+  { name:"任务三　关键词在提示什么", note:"这几个词一出现，句子的意思就定下来了。", qs:[
+    { stem:"「李老师一向________，从不偏心。」——「一向」告诉我们这句在写什么？",
+      opts:["他长期的为人品德","他今天做的一件事","他将来打算做什么","他教书上的能力"], a:0,
+      why:"「一向」＝长期以来都这样，所以填的成语要写品德，例如光明正大。",
+      bad:["","「一向」不是指今天，是指长期以来。","「一向」讲的是过去到现在，不是将来。","品德和能力不同，「一向」讲的是为人。"] },
+    { stem:"「他苦练了半年，终因________，无缘决赛。」——「终因」在提示什么？",
+      opts:["比赛举行的地点","失败的原因","他当时的心情","事情的先后次序"], a:1,
+      why:"「终因」＝最后因为……，后面填的必定是失败的原因，例如寡不敌众。",
+      bad:["「因」是原因，不是地点。","","心情要看「难过、紧张」这类词。","「终」虽有最后的意思，重点还是在「因」。"] },
+    { stem:"「只剩三分钟，他只好________。」——「只好」说明他当时是？",
+      opts:["早就计划好的","心里很高兴的","被逼没办法的","并不在乎的"], a:2,
+      why:"「只好」＝没有别的选择。所以填的成语要带冒险、无奈，例如孤注一掷。",
+      bad:["「只好」正好是没得选，不是事先计划好的。","被逼的人不会高兴。","","时间紧到要冒险，说明他很在乎。"] },
+    { stem:"「即使________，他也要送奶奶去医院。」——「即使……也」在强调什么？",
+      opts:["条件再难也肯做","他能力比别人强","事情已经做完了","别人都不愿意做"], a:0,
+      why:"「即使……也」＝再难也愿意，所以常配「赴汤蹈火」。",
+      bad:["","这句写的是意愿，不是能力。","「即使」讲的是假设，事情还没发生。","句子只写他一个人，没有比较别人。"] } ]},
+
+  { name:"任务四　用在生活里", note:"换成学校和组屋区的句子，你还认得出来吗？", qs:[
+    { stem:"运动会拔河比赛，我们班只来了六个人，对手却站满一整排，结果________。",
+      opts:["孤掌难鸣","功亏一篑","寡不敌众","苟且偷安"], a:2,
+      why:"我方人少、对方人多，拉不过对方，就是「寡不敌众」。",
+      bad:["孤掌难鸣是完全没有人帮忙，这里还有六个人。","功亏一篑是差最后一步才失败，这里是人数差太多。","","苟且偷安是贪图眼前安逸，和比赛输赢无关。"] },
+    { stem:"组屋楼下新开的面包店一开张，顾客________，队伍排到了巴士站。",
+      opts:["纷至沓来","各有千秋","高枕无忧","光明正大"], a:0,
+      why:"一批接一批地来，人多得排长队，就是「纷至沓来」。",
+      bad:["","各有千秋是各有长处，用来比较几样东西。","高枕无忧是没有忧虑，不能用来形容顾客多。","光明正大讲的是做人做事的方式。"] },
+    { stem:"他被选为壁报组长，却每次随便贴两张纸就算完成，真是________。",
+      opts:["孤陋寡闻","敷衍塞责","沽名钓誉","改过自新"], a:1,
+      why:"接下了这份职责，却马虎应付、交差了事，就是「敷衍塞责」。",
+      bad:["孤陋寡闻讲的是见识少，不是做事态度。","","沽名钓誉是为了骗取名声，他并不想要名声。","改过自新是改掉缺点变好，这里是被批评。"] },
+    { stem:"为了戏剧比赛全组排练了两个月，最后一次彩排大家却松懈下来，结果________。",
+      opts:["裹足不前","孤注一掷","骇人听闻","功亏一篑"], a:3,
+      why:"努力了很久，只差最后一步却没做好，就是「功亏一篑」。",
+      bad:["裹足不前是因害怕不敢开始，他们已经排练两个月了。","孤注一掷是冒险押上全部。","骇人听闻用在可怕的事件、新闻上。",""] },
+    { stem:"他每天坐在图书馆最显眼的位置，书一页也没翻，只想让老师觉得他用功，这叫________。",
+      opts:["沽名钓誉","勾心斗角","奉公守法","各有千秋"], a:0,
+      why:"用做样子的手段换取好名声，就是「沽名钓誉」。",
+      bad:["","勾心斗角要有两个人以上互相算计，这里只有他一个人。","奉公守法是遵守法律规章，看不看书不涉及法律。","各有千秋是比较几个人的长处。"] },
+    { stem:"班长选举的三位候选人，一位口才好，一位做事细心，一位人缘佳，可说是________。",
+      opts:["匪夷所思","各有千秋","纷至沓来","根深蒂固"], a:1,
+      why:"几个人各有各的长处，很难比出高下，就是「各有千秋」。",
+      bad:["匪夷所思是离奇得想不通，带有奇怪的意思。","","纷至沓来写的是一批接一批地来，讲的是数量。","根深蒂固写的是想法很难改变。"] } ]},
+
+  { name:"任务五　挑出用错的一句", note:"四句里有一句用错了，把它找出来。", qs:[
+    { stem:"下面哪一句成语用错了？",
+      opts:["为了准备华文演讲比赛，她废寝忘食地练习了一个月。",
+            "这次华文小测大家分数差不多，真是各有千秋。",
+            "他做错事之后决定改过自新，不再逃课了。",
+            "新食阁一开张，顾客纷至沓来，热闹极了。"], a:1,
+      why:"「各有千秋」是各有各的长处和特色，不能用来说分数差不多。",
+      bad:["废寝忘食＝努力到忘了吃饭睡觉，用得对。","","改过自新＝改掉坏习惯，用得对。","纷至沓来＝一批接一批地来，用得对。"] },
+    { stem:"下面哪一句成语用错了？",
+      opts:["妈妈提醒他别裹足不前，勇敢报名参加演讲比赛。",
+            "他一个人负责整个布置，孤掌难鸣，只好求助同学。",
+            "听说地铁站发生抢劫案，大家都觉得高枕无忧。",
+            "他每天读报，不至于成为孤陋寡闻的人。"], a:2,
+      why:"「高枕无忧」是没有忧虑、很安心。出了抢劫案大家应该担心，用在这里正好相反。",
+      bad:["裹足不前＝因害怕不敢行动，用得对。","孤掌难鸣＝没人帮忙做不成，用得对。","","孤陋寡闻＝见识少，用得对。"] } ]}
+];
+
+const PER = 4; // 每题 4 分
+let ST = { name:"", group:"", answers:[], total:0, done:0 };
+let FLAT = [];
+
+TASKS.forEach((t, ti) => t.qs.forEach((q, qi) => FLAT.push({ t:ti, q:qi, ref:q })));
+const TOTAL_Q = FLAT.length;
+const MAX = TOTAL_Q * PER;
+
+function shuffle(n){
+  const a = [...Array(n).keys()];
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+document.getElementById('startBtn').onclick = () => {
+  const nm = document.getElementById('nm').value.trim();
+  const gp = document.getElementById('gp').value.trim();
+  if(!nm || !gp){ alert("请先写上姓名和组别。"); return; }
+  ST.name = nm; ST.group = gp;
+  document.getElementById('gate').classList.add('hide');
+  document.getElementById('main').classList.remove('hide');
+  document.getElementById('who').textContent = nm + "　" + gp;
+  build();
+  updateProg();
+};
+
+function build(){
+  const box = document.getElementById('quiz');
+  let n = 0;
+  TASKS.forEach((task, ti) => {
+    const h = document.createElement('div');
+    h.className = 'tasktitle'; h.textContent = task.name;
+    box.appendChild(h);
+    const nt = document.createElement('div');
+    nt.className = 'tasknote'; nt.textContent = task.note;
+    box.appendChild(nt);
+
+    task.qs.forEach((q, qi) => {
+      n++;
+      const idx = FLAT.findIndex(f => f.t===ti && f.q===qi);
+      const order = shuffle(q.opts.length);
+      const wrap = document.createElement('div');
+      wrap.className = 'q';
+      wrap.innerHTML = '<div class="qnum">第 ' + n + ' 题</div><div class="stem">' + q.stem + '</div>';
+      const fb = document.createElement('div');
+      fb.className = 'fb';
+
+      order.forEach((oi) => {
+        const b = document.createElement('button');
+        b.className = 'opt';
+        b.textContent = q.opts[oi];
+        b.onclick = () => {
+          if(ST.answers[idx] !== undefined) return;
+          const right = (oi === q.a);
+          ST.answers[idx] = { right:right, picked:oi, qn:n };
+          if(right) ST.total += PER;
+          ST.done++;
+          [...wrap.querySelectorAll('.opt')].forEach(x => { x.disabled = true; x.classList.add('dim'); });
+          b.classList.remove('dim');
+          b.classList.add(right ? 'picked-ok' : 'picked-no');
+          if(!right){
+            [...wrap.querySelectorAll('.opt')].forEach(x => {
+              if(x.textContent === q.opts[q.a]){ x.classList.remove('dim'); x.classList.add('show-ok'); }
+            });
+          }
+          fb.className = 'fb ' + (right ? 'ok' : 'no');
+          fb.innerHTML = right
+            ? '<b>答对了。</b>' + q.why
+            : '<b>不对。</b>' + (q.bad[oi] ? q.bad[oi] + '<br>' : '') +
+              '正确答案是「' + q.opts[q.a] + '」。' + q.why;
+          fb.style.display = 'block';
+          updateProg();
+        };
+        wrap.appendChild(b);
+      });
+      wrap.appendChild(fb);
+      box.appendChild(wrap);
+    });
+  });
+}
+
+function updateProg(){
+  const pct = Math.round(ST.done / TOTAL_Q * 100);
+  document.getElementById('fill').style.width = pct + '%';
+  document.getElementById('prog').textContent = '已答 ' + ST.done + ' / ' + TOTAL_Q + ' 题';
+}
+
+document.getElementById('submitBtn').onclick = () => {
+  if(ST.done < TOTAL_Q){
+    if(!confirm('还有 ' + (TOTAL_Q - ST.done) + ' 题没答，没答的算 0 分。确定要交卷吗？')) return;
+  }
+  showResult();
+};
+
+function showResult(){
+  document.getElementById('main').classList.add('hide');
+  document.getElementById('result').classList.remove('hide');
+  window.scrollTo(0,0);
+  document.getElementById('rwho').textContent = ST.name + '　' + ST.group;
+
+  // 分任务统计
+  const per = TASKS.map(() => ({ got:0, max:0 }));
+  FLAT.forEach((f, i) => {
+    per[f.t].max += PER;
+    if(ST.answers[i] && ST.answers[i].right) per[f.t].got += PER;
+  });
+
+  const pct = Math.round(ST.total / MAX * 100);
+  const medal = pct >= 90 ? '金牌　成语高手' : pct >= 75 ? '银牌　基本掌握'
+              : pct >= 60 ? '铜牌　还要多练' : '加油　请重做一次';
+  document.getElementById('medal').textContent = medal;
+  document.getElementById('total').textContent = '电脑批改：' + ST.total + ' / ' + MAX + ' 分（' + pct + '%）';
+
+  const bars = document.getElementById('bars');
+  per.forEach((p, i) => {
+    const r = Math.round(p.got / p.max * 100);
+    const d = document.createElement('div');
+    d.className = 'scorebar';
+    d.innerHTML = '<div class="lab"><span>' + TASKS[i].name + '</span><span>' + p.got + '/' + p.max + '</span></div>'
+      + '<div class="track"><div class="fill" style="width:' + r + '%"></div></div>';
+    bars.appendChild(d);
+  });
+
+  // 最弱一项
+  let worst = 0, wr = 999;
+  per.forEach((p, i) => { const r = p.got / p.max; if(r < wr){ wr = r; worst = i; } });
+  const ADV = [
+    '你在「字义」上失分最多。回去把 篑、蒂、骇、沽、塞责 这几个字抄一遍，写下它们原来的意思——字看不懂，句子一定选错。',
+    '你在「易混成语」上失分最多。把这三组抄成对比表：奉公守法／光明正大、孤掌难鸣／寡不敌众、改过自新／改邪归正，每组写一个只属于它的关键词。',
+    '你在「关键词」上失分最多。做题时先用笔圈出：一向、终因、只好、即使……也。圈了再选，正确率会明显提高。',
+    '你在「生活运用」上失分最多。试着为 寡不敌众、纷至沓来、敷衍塞责 各造一个学校里的句子，写在练习本上交给老师看。',
+    '你在「挑错句」上失分最多。看到成语先问一句：这个成语是褒义还是贬义？用在这个句子里，意思有没有反过来？'
+  ];
+  document.getElementById('advice').textContent = ADV[worst];
+
+  // 错题回顾
+  const w = document.getElementById('wrongs');
+  const list = [];
+  FLAT.forEach((f, i) => {
+    const a = ST.answers[i];
+    if(!a) list.push('第 ' + (i+1) + ' 题：没有作答，正确答案是「' + f.ref.opts[f.ref.a] + '」。');
+    else if(!a.right) list.push('第 ' + a.qn + ' 题：正确答案是「' + f.ref.opts[f.ref.a] + '」。');
+  });
+  w.innerHTML = list.length ? list.join('<br>') : '全部答对，很好。';
+
+  // 成绩码
+  const seg = per.map(p => p.got).join('.');
+  const raw = ST.name + ST.group + ST.total + seg;
+  let sum = 0; for(let i=0;i<raw.length;i++) sum += raw.charCodeAt(i);
+  const chk = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ'[sum % 34];
+  const code = 'CY47-' + ST.group + '-' + ST.name + '-' + ST.total + '/' + MAX + '-' + seg + '-' + chk;
+  document.getElementById('code').textContent = code;
+
+  document.getElementById('copyBtn').onclick = () => {
+    const ta = document.createElement('textarea');
+    ta.value = code + '\n第24题作文：' + (document.getElementById('open').value.trim() || '（未写）');
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); alert('已复制，可以贴给老师。'); }
+    catch(e){ alert('复制失败，请直接把成绩码抄给老师。'); }
+    document.body.removeChild(ta);
+  };
+}
+
+/* ================= 教师：随机分组 ================= */
+let TG = { groups: null, roster: null, n: 0 };
+
+function tgShow(){
+  document.getElementById('gate').classList.add('hide');
+  document.getElementById('teacherGroup').classList.remove('hide');
+}
+function tgBack(){
+  document.getElementById('teacherGroup').classList.add('hide');
+  document.getElementById('gate').classList.remove('hide');
+  document.body.classList.remove('bigproject');
+}
+document.getElementById('teacherOpen').onclick = (e) => { e.preventDefault(); tgShow(); };
+document.getElementById('backBtn1').onclick = tgBack;
+document.getElementById('backBtn2').onclick = tgBack;
+
+function shuffleArr(a){
+  a = [...a];
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+// 解析名单：形如 "3好 7中 11差"，返回 {好:[3,...], 中:[...], 差:[...]}，以及无法识别的原始词
+function parseRoster(text){
+  const toks = text.trim().split(/\s+/).filter(Boolean);
+  const tiers = { 好:[], 中:[], 差:[] };
+  const bad = [];
+  toks.forEach(tok => {
+    const m = tok.match(/^(\d+)(好|中|差)$/);
+    if(m) tiers[m[2]].push(m[1]);
+    else bad.push(tok);
+  });
+  return { tiers, bad, count: tiers.好.length + tiers.中.length + tiers.差.length };
+}
+
+// 分层打乱、轮流发牌，保证每组尽量都有好中差
+function dealGroups(tiers, n){
+  const groups = Array.from({length:n}, () => []);
+  ['好','中','差'].forEach(k => {
+    const list = shuffleArr(tiers[k]);
+    const offset = Math.floor(Math.random() * n); // 随机起点，避免余数总堆在前几组
+    list.forEach((no, i) => groups[(i + offset) % n].push(no));
+  });
+  // 组内按学号大小排列，方便学生找自己
+  groups.forEach(g => g.sort((a,b) => Number(a) - Number(b)));
+  return groups;
+}
+
+function renderGroups(groups){
+  const box = document.getElementById('grouptable');
+  box.innerHTML = '';
+  groups.forEach((g, i) => {
+    const d = document.createElement('div');
+    d.className = 'gcard';
+    d.innerHTML = '<div class="gname">第 ' + (i+1) + ' 组</div>'
+      + '<div class="gnos">' + (g.length ? g.join('　') : '（空）') + '</div>';
+    box.appendChild(d);
+  });
+  document.getElementById('tgSummary').textContent =
+    '名单 ' + TG.roster.count + ' 人，分成 ' + groups.length + ' 组';
+  document.getElementById('tgResult').classList.remove('hide');
+}
+
+function doGenerate(){
+  const errBox = document.getElementById('rosterErr');
+  errBox.style.display = 'none';
+  const text = document.getElementById('roster').value;
+  const n = parseInt(document.getElementById('ngroup').value, 10);
+
+  const parsed = parseRoster(text);
+  if(parsed.count === 0){
+    errBox.textContent = '没有识别到名单。格式要像「3好 7中 11差」，学号后面紧跟好／中／差。';
+    errBox.style.display = 'block';
+    return;
+  }
+  if(!n || n < 1){
+    errBox.textContent = '请填分成几组（例如 8）。';
+    errBox.style.display = 'block';
+    return;
+  }
+  if(parsed.bad.length){
+    errBox.textContent = '这几项看不懂，已忽略：' + parsed.bad.join('、') + '（格式要像 3好／7中／11差）';
+    errBox.style.display = 'block';
+  }
+  TG.roster = parsed;
+  TG.n = n;
+  TG.groups = dealGroups(parsed.tiers, n);
+  renderGroups(TG.groups);
+}
+
+document.getElementById('genBtn').onclick = doGenerate;
+document.getElementById('reshuffleBtn').onclick = () => {
+  if(!TG.roster) return;
+  TG.groups = dealGroups(TG.roster.tiers, TG.n);
+  renderGroups(TG.groups);
+};
+document.getElementById('bigBtn').onclick = () => {
+  document.body.classList.toggle('bigproject');
+};
+document.addEventListener('keydown', (e) => {
+  if(document.getElementById('teacherGroup').classList.contains('hide')) return;
+  if((e.key === 'g' || e.key === 'G') && TG.roster){
+    TG.groups = dealGroups(TG.roster.tiers, TG.n);
+    renderGroups(TG.groups);
+  }
+});
+</script>
+</body>
+</html>
