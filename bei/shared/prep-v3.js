@@ -117,14 +117,16 @@ const HWT = (() => {
     return doc(input.title,body,'('+studentEngine.toString()+')('+json(data)+');');
   }
   function teacher(d,input){return doc(input.title+' 教师参考',`<h1>${esc(input.title)}｜教师参考</h1><p>${esc(input.mode==='writing'?input.writing:input.grade)} · ${input.minutes}分钟</p><h2>目标</h2><ul>${d.objectives.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>${d.plan.map(p=>`<section><h2>${esc(p.stage)} ${p.minutes}分钟</h2><p>${esc(p.activity)}</p></section>`).join('')}<h2>讲稿与投屏提示</h2>${d.slides.map((s,i)=>`<section><h3>${i+1}. ${esc(s.title)}</h3><p>${esc(s.body)}</p><p>关联随堂题：${esc(s.questionIds.join('、'))}</p><pre>${esc(s.notes)}</pre></section>`).join('')}<h2>逐题参考</h2>${d.questions.map(q=>`<section><h3>${esc(q.id)} ${esc(q.prompt)}</h3><p>${esc(q.phase)} · ${esc(q.skill)}</p><blockquote>${esc(q.context)}</blockquote>${q.type==='choice'?q.options.map((o,i)=>`<p>${i===q.answer?'✓ ':''}${esc(o)}：${esc(q.optionReasons[i])}</p>`).join(''):`<p>开放题 ${q.points}分，须教师覆核</p><ul>${q.rubric.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>`}<p>${esc(q.explanation)}</p><p>改进：${esc(q.improve)}</p></section>`).join('')}`);}
-  async function ppt(d,input,draft=false){
+  async function ppt(d,input,draft=false,save){
     if(!window.PptxGenJS)await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/pptxgenjs@4.0.1/dist/pptxgen.bundle.js';const timer=setTimeout(()=>{s.remove();reject(Error('PPT组件加载超时；可先下载教师参考。'));},20000);s.onload=()=>{clearTimeout(timer);resolve();};s.onerror=()=>{clearTimeout(timer);s.remove();reject(Error('PPT组件未能加载，请检查网络。'));};document.head.appendChild(s);});
     const p=new window.PptxGenJS();p.layout='LAYOUT_WIDE';p.author='华文通';p.subject=input.title;p.title=input.title;p.lang='zh-SG';
     if(draft){const warning=p.addSlide();warning.addText('教师审阅草稿',{x:.6,y:.8,w:12,h:1,fontSize:36,color:'A33131'});warning.addText('教学检查或教师确认尚未完成。请核对原文、答案、解析及课时后使用。',{x:.6,y:2,w:12,h:2,fontSize:26});}
     d.slides.forEach(s=>{
       const slide=p.addSlide();slide.background={color:'F4F8FC'};slide.addText(s.title,{x:.6,y:.4,w:12.1,h:.8,fontSize:30,color:'173B66',fontFace:'Microsoft YaHei',breakLine:false});slide.addText(s.body,{x:.6,y:1.5,w:12.1,h:4.4,fontSize:26,color:'18324D',fontFace:'Microsoft YaHei',valign:'top',fit:'shrink'});slide.addText(input.title,{x:.6,y:6.85,w:12,h:.25,fontSize:11,color:'58708A'});slide.addNotes(s.notes);
       s.questionIds.forEach(id=>{const q=d.questions.find(q=>q.id===id),qslide=p.addSlide();qslide.addText(q.id+' '+q.prompt,{x:.6,y:.4,w:12.1,h:1.25,fontSize:28,color:'173B66',fontFace:'Microsoft YaHei'});qslide.addText(q.context,{x:.6,y:1.9,w:12.1,h:1.6,fontSize:22,fontFace:'Microsoft YaHei'});qslide.addText(q.type==='choice'?q.options.map((o,i)=>String.fromCharCode(65+i)+'. '+o).join('\n'):'请在iPad完成表达。',{x:.6,y:3.7,w:12.1,h:2.9,fontSize:23,fontFace:'Microsoft YaHei'});qslide.addNotes(q.explanation);});
-    });return p.writeFile({fileName:draft?'教学课件-待审核草稿.pptx':'教学课件.pptx'});
+    });const name=draft?'教学课件-待审核草稿.pptx':'教学课件.pptx';
+    if(save)return save(name,await p.write({outputType:'blob'}),'application/vnd.openxmlformats-officedocument.presentationml.presentation');
+    return p.writeFile({fileName:name});
   }
   function runtimeErrors(d,phase){
     const errors=[];
@@ -206,7 +208,11 @@ if(typeof document!=='undefined' && document.getElementById('app')) {
   const livePreview=document.createElement('button');livePreview.id='liveTab';livePreview.type='button';livePreview.textContent='预览随堂学习单';$('studentTab').after(livePreview);
   for(const [id,target] of [['reviewStatus','frame'],['downloadStatus','downloads']]){const p=document.createElement('p');p.id=id;p.setAttribute('role','status');p.setAttribute('aria-live','polite');if(target==='frame')$(target).before(p);else $(target).after(p);}
   const status=(s,error=false)=>{for(const id of ['status','reviewStatus','downloadStatus']){$(id).textContent=s;$(id).className='status'+(error?' error':'');}};
-  const download=(name,content,type='text/html')=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
+  const savedFile=document.createElement('p');savedFile.id='savedFile';$('downloads').after(savedFile);let savedURL=null;
+  const download=(name,content,type='text/html')=>{
+    if(savedURL)URL.revokeObjectURL(savedURL);savedFile.replaceChildren();
+    const a=document.createElement('a');savedURL=URL.createObjectURL(new Blob([content],{type}));a.href=savedURL;a.download=name;a.textContent='保存文件：'+name;savedFile.appendChild(a);a.click();
+  };
   const referenceImages=mountReferenceImages($('reference'),()=>!!controller);
   const getInput=()=>{
     referenceImages.check();
@@ -283,7 +289,7 @@ if(typeof document!=='undefined' && document.getElementById('app')) {
     const {input:ignored,...bank}=data;$('editor').value=JSON.stringify(bank,null,2);pkg=bank;draft=null;$('reviewBox').hidden=false;preview('teacher');const live=bank.questions.filter(q=>q.phase==='live').length,review=bank.questions.filter(q=>q.phase==='review').length;status('题稿已导入：随堂题'+live+'道，复习题'+review+'道。'+(!snapshot.passage?'请补充课文原文；当前无法核对引句。':''));
   }catch(error){status('导入失败：'+error.message,true);}finally{e.target.value='';}};
   $('downloads').querySelectorAll('button').forEach(b=>b.onclick=async()=>{try{
-    if(b.dataset.file==='json'){let saved=$('editor').value;try{saved=JSON.stringify({...JSON.parse(saved),input:snapshot},null,2);}catch{}download('question-bank-draft.json',saved,'application/json');status('已下载当前JSON题稿及备课资料（不含密钥）。');return;}
+    if(b.dataset.file==='json'){let saved=$('editor').value;try{saved=JSON.stringify({...JSON.parse(saved),input:snapshot},null,2);}catch{}download('question-bank-draft.json',saved,'application/json');status('JSON题稿已生成（不含密钥）。若下载未开始，请点击下方“保存文件”链接。');return;}
     audit();if(!pkg||!snapshot)throw Error('请先导入或生成有效的JSON题稿。');
     const kind=b.dataset.file,isDraft=!valid||!$('reviewed').checked;
     const mark=html=>isDraft?html.replace('<main>','<main><p class="error">教师审阅草稿：教学检查或教师确认尚未完成，请勿直接用于课堂。</p>'):html;
@@ -293,17 +299,17 @@ if(typeof document!=='undefined' && document.getElementById('app')) {
       const qs=Array.isArray(pkg.questions)?pkg.questions:[];
       if(pkg.slides.some(s=>!s||typeof s.title!=='string'||typeof s.body!=='string'||typeof s.notes!=='string'||!Array.isArray(s.questionIds)||s.questionIds.some(id=>!qs.some(q=>q?.id===id))))throw Error('幻灯片标题、正文、讲稿或关联题号不完整，请先修改。');
       for(const phase of ['live','review'])if(qs.some(q=>q?.phase===phase)){const errors=HWT.runtimeErrors(pkg,phase);if(errors.length)throw Error(errors.join('；'));}
-      b.disabled=true;status('正在导出PPTX……');await HWT.ppt(pkg,snapshot,isDraft);
+      b.disabled=true;status('正在导出PPTX……');await HWT.ppt(pkg,snapshot,isDraft,download);
     }
     else if(kind==='student'||kind==='live'){
       const phase=kind==='live'?'live':'review',errors=HWT.runtimeErrors(pkg,phase);if(errors.length)throw Error('未下载：'+errors.join('；'));
       download((kind==='live'?'随堂学习单':'复习学习单')+(isDraft?'-待审核草稿':'')+'.html',mark(HWT.student(HWT.previewData(pkg),snapshot,phase)));
     }
     else download(isDraft?'core-questions-draft.js':'core-questions.js','window.HWT_LESSON = '+HWT.json({input:snapshot,...pkg,reviewStatus:isDraft?'draft':'teacher-confirmed'})+';','text/javascript');
-    status(isDraft?'已导出待审核草稿；请按检查清单修改后再用于教学。':'文件已导出。');
+    status((isDraft?'待审核草稿已生成，请先修改检查问题。':'文件已生成。')+'若下载未开始，请点击下方“保存文件”链接。');
   }catch(e){status(e.message,true);}finally{b.disabled=false;}});
   $('cancel').onclick=()=>controller?.abort();
-  $('clear').addEventListener('click',()=>referenceImages.reset());
+  $('clear').addEventListener('click',()=>{referenceImages.reset();if(savedURL)URL.revokeObjectURL(savedURL);savedURL=null;savedFile.replaceChildren();});
   $('terms').addEventListener('input',()=>{$('termCount').textContent='已识别 '+HWT.split($('terms').value).length+' 个词语';});
   $('inputs').addEventListener('input',e=>{if(['key','direct'].includes(e.target.id))return;valid=false;$('reviewed').checked=false;$('outlineBox').hidden=true;if(pkg&&snapshot){const id=e.target.id;if(id==='terms')snapshot.terms=HWT.split(e.target.value);else if(id==='minutes')snapshot.minutes=Number(e.target.value);else if(id in snapshot)snapshot[id]=e.target.value;status('备课资料已更新，原题稿保留。请点击检查或重新生成。');}else{snapshot=null;$('reviewBox').hidden=true;status('资料已修改，请重新生成大纲。');}});
   $('direct').onchange=()=>{$('generate').textContent=$('direct').checked?'直接生成教学资料':'生成教学设计大纲';};
