@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>核心课文随堂系统 · 教师投屏页</title>
+<style>
+:root{
+  --ink:#10202b; --sea:#0a3d62; --teal:#1b7b8c; --spice:#d97904;
+  --sand:#fbf3e7; --mist:#eaf1f4; --line:#c9d8de; --ok:#1f7a5a; --no:#b23a2f; --muted:#5b6770;
+  --body:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100vh}
+body{background:#0e1a22;color:var(--ink);font-family:var(--body)}
+
+/* ---------- 登录 ---------- */
+.gate{max-width:540px;margin:10vh auto;background:#fff;border-radius:18px;padding:32px;font-size:19px}
+.gate h1{color:var(--sea);font-size:30px;margin:0 0 4px}
+.gate p.sub{color:var(--muted);margin:0 0 22px}
+.gate label{display:block;font-weight:600;margin:14px 0 6px}
+input,textarea{width:100%;font:inherit;padding:13px;border:2px solid var(--line);border-radius:12px}
+textarea{min-height:96px;line-height:1.6;resize:vertical}
+.gate .tinynote{color:var(--muted);font-size:15px;margin:6px 0 0}
+.go{width:100%;margin-top:22px;background:var(--spice);color:#fff;border:0;border-radius:14px;
+  padding:15px;font:inherit;font-weight:700;font-size:20px;cursor:pointer}
+.err{color:var(--no);min-height:26px;margin:10px 0 0}
+
+/* ---------- 幻灯片视图 ---------- */
+#slideview{display:none;height:100vh;flex-direction:column;background:#0e1a22}
+#slideimg{flex:1;min-height:0;object-fit:contain;width:100%;background:#0e1a22}
+.sbar{height:46px;display:flex;align-items:center;gap:18px;padding:0 18px;color:#cfe2ea;font-size:17px}
+.sbar b{color:#fff}
+.sbar .cue{background:var(--spice);color:#fff;border-radius:999px;padding:3px 14px;font-weight:700}
+
+/* ---------- 题目视图 ---------- */
+#qview{display:none;height:100vh;background:#fff;flex-direction:column;padding:22px 30px 0}
+.qtop{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+.qtag{color:var(--spice);font-weight:700;font-size:21px;margin:0 0 4px}
+.qstem{font-size:36px;font-weight:700;color:var(--sea);line-height:1.35;margin:0;max-width:100%}
+.qbadge{background:var(--spice);color:#fff;border-radius:999px;padding:6px 24px;font-size:26px;
+  font-weight:700;white-space:nowrap}
+.qbadge.rev{background:var(--teal)}
+.qbadge.dis{background:var(--sea)}
+
+.qbody{flex:1;min-height:0;display:flex;gap:24px;margin-top:18px}
+.qmain{flex:1;min-width:0;overflow:auto}
+.qside{width:290px;flex:0 0 auto}
+
+.row{position:relative;border-radius:12px;background:var(--mist);overflow:hidden;margin-bottom:11px;
+  height:64px;display:flex;align-items:center;padding:0 20px;font-size:26px;font-weight:600}
+.row .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:#c5dbe2;transition:width .5s}
+.row .t{position:relative;flex:1}
+.row .c{position:relative;color:var(--muted);font-size:23px;font-variant-numeric:tabular-nums}
+.row .k{display:inline-block;width:38px;height:38px;line-height:38px;text-align:center;border-radius:50%;
+  background:#fff;color:var(--sea);font-weight:700;margin-right:14px;font-size:22px;position:relative}
+.row.right{background:#e3f3ea} .row.right .fill{background:#a8ddc0}
+.row.right .k{background:var(--ok);color:#fff}
+.row.dim{opacity:.45}
+.r2{position:absolute;right:20px;bottom:4px;font-size:15px;color:var(--sea);font-weight:700}
+
+.why{background:var(--sand);border-radius:12px;padding:14px 20px;font-size:23px;line-height:1.5;margin-top:6px}
+.tip{background:#fff6e8;border:2px dashed var(--spice);border-radius:12px;padding:10px 16px;
+  font-size:17px;color:#8a4f00;margin-top:10px}
+
+/* 打字题答案列 */
+.texts{columns:2;column-gap:22px;font-size:21px}
+.texts div{break-inside:avoid;padding:5px 0;border-bottom:1px solid var(--line)}
+.texts b{display:inline-block;width:44px;color:var(--muted);font-weight:600}
+.texts .y{color:var(--ok);font-weight:700}
+.texts .n{color:var(--no)}
+
+/* ---------- 作答进度（按小组，不显示个人对错、不点名） ---------- */
+.gridttl{font-size:18px;color:var(--muted);margin:0 0 8px;font-weight:600}
+.grid{display:flex;flex-direction:column;gap:6px}
+.grow{background:#fff;border:2px solid var(--line);border-radius:10px;padding:6px 10px;
+  display:flex;align-items:center;gap:8px;font-size:16px}
+.grow b{color:var(--sea);font-size:17px;white-space:nowrap}
+.grow .nums{flex:1;min-width:0;color:var(--muted);font-size:15px;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.grow .prog{font-weight:700;color:var(--teal);font-variant-numeric:tabular-nums;white-space:nowrap}
+.grow.full{background:#e3f3ea;border-color:#a8ddc0}
+.grow.full .prog{color:var(--ok)}
+.grow.off{background:#f4f7f8;border-style:dashed}
+.grow.off .prog{color:var(--muted)}
+.count{font-size:24px;font-weight:700;color:var(--sea);margin:10px 0 4px}
+.timer{height:12px;border-radius:999px;background:#e4ecef;overflow:hidden;margin:12px 0 4px}
+.timer i{display:block;height:100%;background:var(--spice);width:100%;transition:width 1s linear}
+.timer.up i{background:var(--no)}
+.secs{font-size:20px;color:var(--muted)}
+
+/* ---------- 分组表投影层 ---------- */
+#glist{display:none;position:fixed;inset:0;background:#fff;z-index:9;overflow:auto;padding:28px 34px}
+#glist h2{color:var(--sea);font-size:40px;margin:0 0 18px}
+.gl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.gl-card{background:var(--mist);border-radius:14px;padding:14px 18px}
+.gl-card b{display:block;color:var(--sea);font-size:30px;margin-bottom:4px}
+.gl-card span{font-size:28px;letter-spacing:2px}
+.gl-tip{color:var(--muted);font-size:22px;margin-top:20px}
+
+/* ---------- 底栏 ---------- */
+.foot{display:flex;align-items:center;gap:10px;padding:12px 0 16px;flex-wrap:wrap}
+.gcard{background:var(--sea);color:#fff;border-radius:10px;padding:5px 14px;font-size:20px;font-weight:700}
+.gcard span{opacity:.75;font-weight:400;font-size:16px;margin-left:6px}
+.gcard.top{background:var(--spice)}
+.hint{margin-left:auto;color:var(--muted);font-size:16px}
+button.act{background:#fff;border:2px solid var(--sea);color:var(--sea);border-radius:10px;
+  padding:8px 16px;font:inherit;font-size:19px;font-weight:700;cursor:pointer}
+button.act.main{background:var(--spice);border-color:var(--spice);color:#fff}
+button.act.quiet{border-color:var(--line);color:var(--muted);font-weight:400}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <h1>核心课文随堂系统 · 教师投屏页</h1>
+  <p class="sub">《我为狮城做贡献》　幻灯片与随堂题在同一个窗口，全程只按空格键</p>
+  <label>教师口令</label>
+  <input id="pin" type="password" autocomplete="off">
+  <label>高华学生名单（学号＋程度，可跳号）</label>
+  <textarea id="roster" placeholder="例：3好 7中 11差 15好 22中 30差 33中 38差&#10;（只写学号也可以：3, 7, 11, 15, 22）"></textarea>
+  <p class="tinynote">程度只写<b>好／中／差</b>一个字，系统用来把每组配成好中差混合。
+  <b>配完就丢掉，不会上传、学生和大屏幕永远看不到谁是什么程度。</b>只写学号也行，那就随机平均分组。留空则默认 1–40。</p>
+  <label>每组几人</label>
+  <input id="gsize" type="number" value="4" min="0" max="8">
+  <p class="tinynote">填 <b>0</b> ＝ 不自动分组，改由学生自己在 iPad 上点组别（旧做法）。上课中随时按 <b>G</b> 键可重新洗牌分组。</p>
+  <label>从第几课时开始</label>
+  <input id="les" type="number" value="1" min="1" max="3">
+  <label>Google 成绩表网址（可留空，配置见指南）</label>
+  <input id="gs" placeholder="https://script.google.com/macros/s/..../exec" autocomplete="off">
+  <button class="go" id="enter">进入投屏（建议按 F11 全屏）</button>
+  <p class="err" id="err"></p>
+</div>
+
+<!-- 分组表（按 L 键投到大屏幕） -->
+<div id="glist"><div class="gl-in"><h2>今天的分组</h2><div id="glBody"></div>
+  <p class="gl-tip">按 L 键收起　·　按 G 键重新分组</p></div></div>
+
+<!-- 幻灯片 -->
+<div id="slideview">
+  <img id="slideimg" alt="">
+  <div class="sbar">
+    <b id="sPos"></b>
+    <span id="sCue"></span>
+    <span class="hint">空格＝下一步　←＝上一页　L＝分组表　G＝重新分组　F＝全屏　E＝结束本课</span>
+  </div>
+</div>
+
+<!-- 题目 -->
+<div id="qview">
+  <div class="qtop">
+    <div style="min-width:0">
+      <p class="qtag" id="qTag"></p>
+      <h2 class="qstem" id="qStem"></h2>
+    </div>
+    <div class="qbadge" id="qBadge">作答中</div>
+  </div>
+
+  <div class="qbody">
+    <div class="qmain" id="qMain"></div>
+    <div class="qside">
+      <p class="gridttl">作答进度（按小组，只看人数，不看谁选了什么）</p>
+      <div class="grid" id="grid"></div>
+      <div class="timer" id="tbar"><i></i></div>
+      <p class="secs" id="tsec"></p>
+      <p class="count" id="cnt"></p>
+    </div>
+  </div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script src="core-questions.js"></script>
+<script>
+const LES = window.CORE_LESSONS, QS = window.CORE_QS;
+const $ = s => document.querySelector(s);
+const COURSE = "gongxian";
+let PIN="", ROSTER=[], GSURL="", lesson=1, slide=1, cur=null, round=1, mode="slide", deadline=0;
+let closed=false;           // 老师是否已收卷（倒计时归零不锁题，只有这个旗标锁题）
+let LIST=[], GSIZE=4, GROUPS={};   // LIST 含程度，只留在本机内存，永不上传
+let showGroups=false;              // L 键：把分组表投到大屏幕
+let answers=[], present=[], texts=null, poll=null, tick=null, teacherPollMs=2500;
+let frozenBoard=null;       // 作答阶段冻结的小组分数，防止学生盯着分数条反推对错
+
+// 同一页可以挂多道题：每次取这一页上还没出过的第一道
+const qAt = (l,s) => QS.find(q => q.lesson===l && q.after===s && !q._fired);
+const qById = id => QS.find(q => q.id===id);
+
+/* ---------- 自动分组 ----------
+   老师贴「3好 7中 11差」，系统把好／中／差各自打乱后轮流发牌，
+   每组尽量都是好中差混合、人数相等。
+   ★ 程度只在这个浏览器里用一次，配完组就丢：
+     推给服务器和学生的只有「学号 → 组号」，没有任何等级信息。 */
+function parseRoster(raw){
+  const out = [], re = /(\d{1,2})\s*([好中差ABCabc])?/g;
+  let m;
+  while ((m = re.exec(raw))){
+    const no = +m[1];
+    if (no < 1 || no > 99 || out.some(x => x.no === no)) continue;
+    const c = m[2] || "";
+    const lv = /[好Aa]/.test(c) ? "好" : /[中Bb]/.test(c) ? "中" : /[差Cc]/.test(c) ? "差" : "";
+    out.push({ no, lv });
+  }
+  return out.sort((a,b)=>a.no-b.no);
+}
+function shuffleArr(a){
+  for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function makeGroups(list, size){
+  if (!list.length || !size) return {};
+  const buckets = { "好":[], "中":[], "差":[], "":[] };
+  list.forEach(x => buckets[x.lv].push(x.no));
+  Object.keys(buckets).forEach(k => shuffleArr(buckets[k]));
+  const g = Math.max(1, Math.min(12, Math.round(list.length / Math.max(2, size))));
+  const map = {};
+  let i = 0;
+  ["好","中","差",""].forEach(k => buckets[k].forEach(no => { map[no] = (i % g) + 1; i++; }));
+  return map;
+}
+function groupsByNo(){
+  const by = {};
+  if (Object.keys(GROUPS).length){
+    Object.entries(GROUPS).forEach(([no,g]) => { (by[g] = by[g] || []).push(+no); });
+  } else {
+    present.forEach(p => { (by[p.grp] = by[p.grp] || []).push(p.no); });
+  }
+  Object.values(by).forEach(a => a.sort((x,y)=>x-y));
+  return by;
+}
+function regroup(){
+  if (!LIST.length || !GSIZE){ return false; }
+  GROUPS = makeGroups(LIST, GSIZE);
+  push();
+  return true;
+}
+
+/* ---------- 进入 ---------- */
+$("#enter").onclick = async () => {
+  PIN = $("#pin").value;
+  LIST = parseRoster($("#roster").value);
+  GSIZE = Math.max(0, Math.min(8, +$("#gsize").value || 0));
+  ROSTER = LIST.length ? LIST.map(x=>x.no) : Array.from({length:40},(_,i)=>i+1);
+  GROUPS = makeGroups(LIST, GSIZE);
+  LIST = LIST.map(x => ({ no:x.no, lv:x.lv }));   // 只留在内存，供 G 键重新洗牌用
+  lesson = Math.max(1, Math.min(3, +$("#les").value || 1));
+  GSURL = ($("#gs").value || "").trim();
+  slide = 1; mode = "slide"; cur = null;
+  const ok = await push();
+  if (!ok) { $("#err").textContent = "口令不对，或者网络连不上。"; return; }
+  $("#gate").style.display = "none";
+  render();
+  // 名单收到几个人、分了几组——贴完名单立刻能核对，不必肉眼数格子
+  const gcount = new Set(Object.values(GROUPS)).size;
+  setTimeout(() => alert(
+    "名单已收到：" + ROSTER.length + " 人\n"
+    + (gcount ? "已自动分成 " + gcount + " 组（按 L 键查看分组表）"
+              : "未自动分组：学生在 iPad 上自己点组别")
+    + "\n\n人数不对的话，刷新这个页面重贴名单。"), 60);
+  fetchAns(); poll = setInterval(fetchAns, teacherPollMs);
+  tick = setInterval(tickTimer, 1000);
+};
+
+async function push(){
+  try{
+    const r = await fetch("/api/live", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ course: COURSE, pin:PIN, lesson, slide,
+        qid: cur?cur.id:null, round,
+        phase: mode==="slide" ? "slide" : mode,
+        deadline, closed, roster: ROSTER,
+        groups: GROUPS, board: boardPayload() })
+    });
+    if (!r.ok) {
+      const d = await r.json().catch(()=> ({}));
+      if (d.needConfirm) {
+        const ok = confirm("当前「" + d.currentCourse + "」有课堂进行中，确定要切换到「" + COURSE + "」吗？全班签到和状态将被清空。");
+        if (!ok) return false;
+        // 重发，带 force:true
+        const r2 = await fetch("/api/live", {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ course: COURSE, pin:PIN, lesson, slide,
+            qid: cur?cur.id:null, round,
+            phase: mode==="slide" ? "slide" : mode,
+            deadline, closed, roster: ROSTER,
+            groups: GROUPS, board: boardPayload(), force: true })
+        });
+        return r2.ok;
+      }
+      return false;
+    }
+    // 读取服务端下发的轮询间隔
+    const data = await r.json().catch(()=> ({}));
+    if (data.pollMs && data.pollMs !== teacherPollMs) {
+      teacherPollMs = data.pollMs;
+      if (poll) { clearInterval(poll); poll = setInterval(fetchAns, teacherPollMs); }
+    }
+    return true;
+  }catch(e){ return false; }
+}
+
+async function fetchAns(){
+  try{
+    const d = await (await fetch("/api/answer")).json();
+    answers = d.answers||[]; present = d.present||[];
+    if (mode!=="slide") render();
+    // 揭晓阶段成绩还在变（有人的答案刚同步进来），变了就补推一次给学生端
+    if (mode==="reveal"){
+      const str = JSON.stringify(boardPayload());
+      if (str !== lastBoardStr){ lastBoardStr = str; push(); }
+    }
+  }catch(e){}
+}
+
+/* ---------- 前进 ---------- */
+async function advance(){
+  if (mode === "slide"){
+    const q = qAt(lesson, slide);
+    if (q){ q._fired = true; startQ(q); return; }
+    if (slide < LES[lesson-1].slides){ slide++; }
+    else if (lesson < LES.length){ lesson++; slide=1; }
+    else { endLesson(); return; }
+    await push(); render(); return;
+  }
+  if (mode === "vote"){
+    if (cur.rounds===2 && round===1){ mode="discuss"; }
+    else { mode="reveal"; if (cur.type==="text") await loadTexts(); }
+    deadline = 0; closed = true; await push(); render(); return;
+  }
+  if (mode === "discuss"){
+    round = 2; mode = "vote"; closed = false; frozenBoard = null; tickTimer._done = false;
+    deadline = Date.now() + cur.secs*1000;
+    await push(); render(); return;
+  }
+  if (mode === "reveal"){
+    mode="slide"; cur=null; round=1; texts=null;
+    // 同一页还挂着没出的题，就留在这一页，别把幻灯片翻过去
+    if (!qAt(lesson, slide) && slide < LES[lesson-1].slides) slide++;
+    await push(); render(); return;
+  }
+}
+function startQ(q){
+  cur=q; round=1; mode="vote"; texts=null; closed=false;
+  frozenBoard=null; tickTimer._done=false;
+  deadline = Date.now() + q.secs*1000;
+  push(); render();
+}
+async function loadTexts(){
+  try{
+    const d = await (await fetch("/api/answer?texts=1&qid="+cur.id+"&round="+round)).json();
+    texts = d.rows||[];
+  }catch(e){ texts=[]; }
+}
+async function back(){
+  if (mode!=="slide"){ mode="slide"; cur=null; round=1; deadline=0; closed=false; await push(); render(); return; }
+  if (slide>1) slide--; else if (lesson>1){ lesson--; slide=LES[lesson-1].slides; }
+  await push(); render();
+}
+// 收卷＝立刻锁定学生端。倒计时归零本身不锁题，什么时候收由老师决定。
+async function collect(){ closed = true; deadline = 0; await push(); render(); }
+async function endLesson(){ mode="reveal"; cur=null; await push(); renderEnd(); }
+
+/* ---------- 计分 ---------- */
+function scoreboard(){
+  const fired = [...new Set(answers.map(a=>a.qid))];
+  const per = scorePerPerson();
+  const gm = {};
+  Object.values(per).forEach(p => { (gm[p.grp]=gm[p.grp]||[]).push(p); });
+  const groups = Object.entries(gm).map(([g,arr])=>{
+    let avg = arr.reduce((s,x)=>s+x.pts,0)/arr.length;
+    // 全组都作答，该组额外加分
+    const allIn = fired.length && fired.every(qid=>{
+      const last = Math.max(...answers.filter(a=>a.qid===qid).map(a=>a.round));
+      return arr.every(p=>answers.some(a=>a.qid===qid&&a.round===last&&a.no===p.no));
+    });
+    return { g:+g, avg: avg + (allIn?5:0), n:arr.length, allIn };
+  }).sort((a,b)=>b.avg-a.avg);
+  const top = Object.values(per).sort((a,b)=>b.pts-a.pts).slice(0,5);
+  return { groups, top, per };
+}
+/* 作答与讨论阶段冻结成绩：分数条实时跳动的话，
+   学生盯着自己组的分数就能反推刚才那题答对没有。揭晓时才结算。 */
+function currentBoard(){
+  if ((mode==="vote" || mode==="discuss") && frozenBoard) return frozenBoard;
+  frozenBoard = scoreboard();
+  return frozenBoard;
+}
+/* 推给学生端的成绩快照：只有分数，没有任何人的答案内容 */
+function boardPayload(){
+  const b = currentBoard(), p = {};
+  Object.values(b.per).forEach(x => { p[x.no] = x.pts; });
+  return { g: b.groups.map(g => ({ g: g.g, avg: +g.avg.toFixed(1) })), p };
+}
+let lastBoardStr = "";
+
+function isRight(q, code){
+  if (q.type==="choice") return +code === q.ans;
+  if (q.type==="order")  return code === q.ans.join("");
+  if (q.type==="match")  return code === q.ans.join("");
+  if (q.type==="text")   return code === "1";   // 打字题正误在学生端判定后回传 1/0
+  return false;
+}
+
+/* ---------- 画面 ---------- */
+/* 按小组显示作答进度。
+   只显示「第几组　3 / 5」，不标出是哪一个学号没答——
+   这个页面就是投影，点名会让固定的几个慢学生每题被公开一次。
+   谁经常不作答，课后从 CSV 逐题明细里看，不占课堂时间。 */
+function renderGrid(done){
+  const byGrp = groupsByNo();
+  const signed = new Set(present.map(p => p.no));
+  const missing = ROSTER.filter(n => !signed.has(n));
+
+  let h = Object.keys(byGrp).map(Number).sort((a,b)=>a-b).map(g => {
+    const nos = byGrp[g];
+    const d = nos.filter(n => done.has(n)).length;
+    const full = d===nos.length;
+    return '<div class="grow'+(full?" full":"")+'"><b>第 '+g+' 组</b>'
+      + '<span class="nums">'+nos.join(" · ")+'</span>'
+      + '<span class="prog">'+d+' / '+nos.length+'</span></div>';
+  }).join("");
+
+  if (missing.length){
+    h += '<div class="grow off"><b>未签到</b>'
+       + '<span class="nums">'+missing.join(" · ")+'</span>'
+       + '<span class="prog">'+missing.length+' 人</span></div>';
+  }
+  if (!h) h = '<div class="grow off"><b>还没有人签到</b></div>';
+  $("#grid").innerHTML = h;
+}
+function renderGroupList(){
+  const by = groupsByNo();
+  const ks = Object.keys(by).map(Number).sort((a,b)=>a-b);
+  $("#glBody").innerHTML = ks.length
+    ? '<div class="gl-grid">' + ks.map(g =>
+        '<div class="gl-card"><b>第 '+g+' 组</b><span>'+by[g].join("　")+'</span></div>').join("") + '</div>'
+    : '<p class="gl-tip">还没有分组：登录时没填名单，或「每组几人」填了 0。</p>';
+}
+
+function render(){
+  $("#glist").style.display = (mode==="slide" && showGroups) ? "block" : "none";
+  if (mode==="slide" && showGroups) renderGroupList();
+  if (mode==="slide"){
+    $("#qview").style.display="none";
+    $("#slideview").style.display="flex";
+    const L = LES[lesson-1];
+    $("#slideimg").src = L.dir+"/"+String(slide).padStart(2,"0")+".jpg";
+    $("#sPos").textContent = L.title+"　第 "+slide+" / "+L.slides+" 页";
+    const q = qAt(lesson, slide);
+    $("#sCue").innerHTML = q
+      ? '<span class="cue">下一步：随堂第 '+q.label+' 题 · '+q.secs+' 秒</span>' : "";
+    return;
+  }
+  $("#slideview").style.display="none";
+  $("#qview").style.display="flex";
+  if (!cur){ renderEnd(); return; }
+
+  $("#qTag").textContent = cur.tag + (cur.rounds===2 ? "　第 "+round+" 次投票" : "");
+  $("#qStem").innerHTML = cur.stem;
+  const b=$("#qBadge");
+  b.className = "qbadge" + (mode==="reveal"?" rev":mode==="discuss"?" dis":"");
+  b.textContent = mode==="vote" ? (closed?"已收卷":"作答中") : mode==="discuss"?"讨论一分钟" : "揭晓";
+
+  const rows = answers.filter(a=>a.qid===cur.id && a.round===round);
+  const done = new Set(rows.map(a=>a.no));
+  const here = new Set(present.map(p=>p.no));
+  renderGrid(done);
+  $("#cnt").textContent = "已答 "+done.size+" / 签到 "+here.size+" / 名单 "+ROSTER.length+" 人";
+
+  $("#qMain").innerHTML = mainHTML(rows);
+  renderFoot();
+}
+
+function mainHTML(rows){
+  if (cur.type==="text") return textHTML(rows);
+
+  /* ★ 作答阶段（vote）什么都不能泄露：
+     不显示人数、不显示分布条、不显示上一轮分布、不显示教师提示。
+     学生抬头只看得到题目本身。按空格揭晓后才一次性放出来。 */
+  const live = (mode === "vote");
+
+  if (live && (cur.type==="order" || cur.type==="match")){
+    return '<div class="why" style="font-size:26px">学生正在'
+      + (cur.type==="order" ? "排序" : "配对")
+      + '。右边看各组进度，按空格揭晓答案。</div>';
+  }
+
+  const labels = cur.type==="choice" ? cur.opts
+    : cur.type==="order" ? ["顺序完全正确","顺序不正确"]
+    : ["三个全对","有错"];
+  let counts;
+  if (cur.type==="choice") counts = cur.opts.map((_,i)=>rows.filter(a=>+a.code===i).length);
+  else {
+    const good = cur.ans.join("");
+    counts = [rows.filter(a=>a.code===good).length, rows.filter(a=>a.code!==good).length];
+  }
+  const prev = cur.rerun ? answers.filter(a=>a.qid===cur.rerun && a.round===1) : null;
+  const r2 = (cur.rounds===2 && round===2) ? answers.filter(a=>a.qid===cur.id && a.round===1) : null;
+  const cmp = prev || r2;
+  const max = Math.max(1, ...counts);
+  const showAns = mode==="reveal" && !cur.hold;
+  const rightIdx = cur.type==="choice" ? cur.ans : 0;
+
+  let h = labels.map((o,i)=>{
+    const cls = showAns ? (i===rightIdx?" right":" dim") : "";
+    const w = live ? 0 : counts[i]/max*100;
+    const c0 = (!live && cmp) ? cmp.filter(a=> cur.type==="choice" ? +a.code===i : (i===0)===(a.code===cur.ans.join(""))).length : null;
+    return '<div class="row'+cls+'"><div class="fill" style="width:'+w+'%"></div>'
+      + '<span class="t"><span class="k">'+"ABCD"[i]+'</span>'+esc(o)+'</span>'
+      + '<span class="c">'+(live ? "" : (counts[i]||"")+(counts[i]?" 人":""))+'</span>'
+      + (c0!==null ? '<span class="r2">'+(cur.rerun?"课初":"第 1 次")+'：'+c0+' 人</span>' : '')
+      + '</div>';
+  }).join("");
+
+  if (cur.type==="order"||cur.type==="match"){
+    const label = cur.type==="order" ? cur.ans.map((v,i)=>(i+1)+". "+cur.items[v]).join("　→　")
+      : cur.left.map((l,i)=>l+" — "+cur.right[cur.ans[i]]).join("　·　");
+    if (showAns) h += '<div class="why"><b>正确：</b>'+esc(label)+'</div>';
+  }
+  if (mode==="discuss"){
+    h += '<div class="why"><b>现在做这件事：</b>选不同答案的同学转过头，互相说服对方一分钟。一分钟后同一题再投一次。</div>';
+  } else if (showAns){
+    if (cur.shuffle && cur.type==="choice"){
+      h += '<div class="why"><b>正确的是：</b>'+esc(cur.opts[cur.ans])
+         + '<br><span style="font-size:19px;color:var(--muted)">这题每台 iPad 的选项顺序不同，请念句子，不要说「答案是 B」。</span></div>';
+    }
+    h += '<div class="why"><b>为什么：</b>'+esc(cur.why)+'</div>';
+  } else if (cur.hold && mode==="reveal"){
+    h += '<div class="why"><b>先不公布答案。</b>记住你选的，下课前我们回来看这一题。</div>';
+  }
+  // ★ 教师提示往往直接点出答案，而这个页面就是投影——只在揭晓后出现
+  if (mode==="reveal") h += '<div class="tip">教师提示：'+esc(cur.tip)+'</div>';
+  return h;
+}
+
+function textHTML(rows){
+  if (mode==="vote"){
+    return '<div class="why" style="font-size:26px">学生正在打字。右边看各组进度，按空格揭晓。</div>';
+  }
+  let h = "";
+  if (texts && texts.length){
+    h += '<div class="texts">' + texts.map(t=>{
+      const ok = cur.auto ? (cur.accept||[]).some(a=>t.text.includes(a)) : null;
+      const cls = ok===null ? "" : ok ? "y" : "n";
+      return '<div><b>'+t.no+'</b><span class="'+cls+'">'+esc(t.text||"（空白）")+'</span></div>';
+    }).join("") + '</div>';
+  } else h += '<div class="why">没有收到任何答案。</div>';
+  h += '<div class="why"><b>'+(cur.auto?"参考答案：":"参考：")+'</b>'
+     + esc(cur.auto ? (cur.accept||[]).join("／") : "") + (cur.auto?"　":"") + esc(cur.why)+'</div>';
+  h += '<div class="tip">教师提示：'+esc(cur.tip)+'</div>';
+  return h;
+}
+
+function renderFoot(){
+  // ★ 作答阶段冻结小组分数：分数条实时跳动的话，
+  //   学生盯着自己组的分数就能反推刚才那一题答对了没有。揭晓时才结算。
+  const { groups } = currentBoard();
+  const btns = '<button class="act main" id="bNext"></button>'
+    + (mode==="vote" && !closed ? '<button class="act" id="bCollect">收卷（锁定作答）</button>' : '')
+    + (mode==="reveal" && cur && cur.rounds===2 ? '<button class="act" id="bAgain">再投一次</button>' : '')
+    + '<button class="act quiet" id="bBack">回幻灯片</button>';
+  $("#foot").innerHTML = btns
+    + groups.slice(0,6).map((g,i)=>'<span class="gcard'+(i===0?" top":"")+'">第 '+g.g+' 组 '
+      + g.avg.toFixed(1) + '<span>'+g.n+' 人'+(g.allIn?" · 全员":"")+'</span></span>').join("")
+    + '<span class="hint">'+(mode!=="reveal"?"分数揭晓后才更新　·　":"")+'空格＝'+nextLabel()+'</span>';
+  $("#bNext").textContent = nextLabel();
+  $("#bNext").onclick = advance;
+  const c=$("#bCollect"); if(c) c.onclick = collect;
+  const a=$("#bAgain"); if(a) a.onclick = ()=>{ round=1; mode="discuss"; push(); render(); };
+  $("#bBack").onclick = back;
+}
+function nextLabel(){
+  if (mode==="vote") return cur && cur.rounds===2 && round===1 ? "收卷，进入讨论" : "揭晓答案";
+  if (mode==="discuss") return "讨论完了，重投";
+  return "回到幻灯片";
+}
+function renderEnd(){
+  const { groups, top } = currentBoard();
+  $("#qTag").textContent = "本课结束";
+  $("#qStem").textContent = "随堂成绩";
+  $("#qBadge").className="qbadge rev"; $("#qBadge").textContent="总结";
+  $("#qMain").innerHTML = '<div class="why"><b>小组榜</b><br>'
+    + groups.map((g,i)=>(i+1)+'. 第 '+g.g+' 组　'+g.avg.toFixed(1)+' 分'+(g.allIn?"（全员作答 +5）":"")).join("<br>")
+    + '</div><div class="why"><b>个人前五</b><br>'
+    + top.map((p,i)=>(i+1)+'. 学号 '+p.no+'　'+p.pts+' 分').join("<br>") + '</div>'
+    + '<div class="why" id="upmsg" style="display:none"></div>';
+  $("#foot").innerHTML =
+      '<button class="act main" id="bCsv">导出本课数据（CSV）</button>'
+    + (GSURL ? '<button class="act" id="bGs">上传成绩到 Google 表格</button>' : '')
+    + '<button class="act quiet" id="bClr">清空本课成绩（下一班上课前用）</button>';
+  $("#bCsv").onclick = exportCsv;
+  const g=$("#bGs"); if(g) g.onclick = uploadGoogle;
+  $("#bClr").onclick = async ()=>{
+    if(!confirm("清空前请先『导出』或『上传』，否则数据不可恢复。确定清空吗？")) return;
+    await fetch("/api/answer?reset="+encodeURIComponent(PIN));
+    answers=[]; present=[]; QS.forEach(q=>q._fired=false); renderEnd();
+  };
+}
+
+/* 把全班每题作答整理成明细行（含对错），CSV 与 Google 共用 */
+function detailRows(){
+  const lessonName = LES[lesson-1].title;
+  const rows = [];
+  answers.forEach(a=>{
+    const q = qById(a.qid); if(!q) return;
+    let right = "";
+    if (q.type==="text" && q.auto===false) right = "待评";
+    else right = isRight(q, a.code) ? "对" : "错";
+    rows.push({
+      lesson: lessonName, qlabel: q.label, qtag: q.tag,
+      no: a.no, grp: a.grp, round: a.round,
+      answer: a.code, right,
+    });
+  });
+  rows.sort((x,y)=> x.no-y.no || x.qlabel.localeCompare(y.qlabel));
+  return rows;
+}
+
+function exportCsv(){
+  const { groups } = scoreboard();
+  let csv = "﻿";  // BOM，Excel 正确识别中文
+  csv += "== 个人成绩 ==\n课时,学号,小组,得分\n";
+  Object.values(scorePerPerson()).sort((a,b)=>a.no-b.no).forEach(p=>{
+    csv += [LES[lesson-1].title, p.no, p.grp, p.pts].join(",")+"\n";
+  });
+  csv += "\n== 小组成绩 ==\n课时,小组,人数,平均分\n";
+  groups.forEach(g=>{ csv += [LES[lesson-1].title, g.g, g.n, g.avg.toFixed(1)].join(",")+"\n"; });
+  csv += "\n== 逐题作答明细（错误分析用）==\n课时,题号,考点,学号,小组,轮次,选了,对错\n";
+  detailRows().forEach(r=>{
+    csv += [r.lesson, r.qlabel, '"'+r.qtag+'"', r.no, r.grp, r.round, r.answer, r.right].join(",")+"\n";
+  });
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  const d = new Date();
+  a.download = "随堂成绩_第"+lesson+"课时_"+(d.getMonth()+1)+"-"+d.getDate()+".csv";
+  a.click();
+}
+
+function scorePerPerson(){
+  const per = {};
+  present.forEach(p => per[p.no] = { no:p.no, grp:p.grp, pts:0 });
+  const fired = [...new Set(answers.map(a=>a.qid))];
+  fired.forEach(qid => {
+    const q = qById(qid); if(!q) return;
+    const last = Math.max(...answers.filter(a=>a.qid===qid).map(a=>a.round));
+    const rows = answers.filter(a=>a.qid===qid && a.round===last);
+    const answered = new Set();
+    rows.forEach(a => {
+      answered.add(a.no);
+      per[a.no] = per[a.no] || { no:a.no, grp:a.grp, pts:0 };
+      if (q.type==="text" && q.auto===false) per[a.no].pts += 5;
+      else if (isRight(q, a.code)) per[a.no].pts += 10;
+    });
+    present.forEach(p => { if(!answered.has(p.no)) per[p.no].pts -= 5; });
+  });
+  return per;
+}
+
+async function uploadGoogle(){
+  const msg = $("#upmsg"); msg.style.display="block"; msg.textContent="正在上传……";
+  const { groups } = scoreboard();
+  const payload = {
+    lesson: LES[lesson-1].title,
+    date: new Date().toISOString().slice(0,10),
+    scores: Object.values(scorePerPerson()).sort((a,b)=>a.no-b.no)
+      .map(p=>({no:p.no, grp:p.grp, pts:p.pts})),
+    groups: groups.map(g=>({grp:g.g, n:g.n, avg:+g.avg.toFixed(1)})),
+    details: detailRows(),
+  };
+  try{
+    // Apps Script 只认简单请求，用 text/plain 避开预检
+    await fetch(GSURL, { method:"POST", mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify(payload) });
+    msg.innerHTML = "<b>已发送到 Google 表格。</b>请打开你的表格确认（no-cors 模式下浏览器看不到返回结果，属正常）。";
+  }catch(e){
+    msg.innerHTML = "<b>上传失败。</b>请检查网址是否正确、脚本是否已部署为「任何人可访问」。你也可以改用「导出 CSV」。";
+  }
+}
+
+/* ---------- 倒计时 ---------- */
+function tickTimer(){
+  const bar=$("#tbar"), sec=$("#tsec");
+  if (mode!=="vote" || !deadline){ bar.style.display="none"; sec.textContent=""; return; }
+  bar.style.display="block";
+  const left = Math.max(0, deadline - Date.now());
+  const total = cur ? cur.secs*1000 : 30000;
+  bar.querySelector("i").style.width = Math.min(100, left/total*100)+"%";
+  bar.className = "timer" + (left<=0 ? " up":"");
+  // ★ 归零只是提醒，不锁题——读得慢的学生不该因为读得慢被扣分。
+  //   真正收卷由老师按空格或点「收卷」。
+  sec.textContent = left>0 ? "还有 "+Math.ceil(left/1000)+" 秒" : "时间到（还能作答，等你收卷）";
+  if (left<=0 && !tickTimer._done){ tickTimer._done = true; render(); }
+}
+
+/* ---------- 键盘 ---------- */
+document.addEventListener("keydown", e=>{
+  if ($("#gate").style.display!=="none") return;
+  if (e.code==="Space"){ e.preventDefault(); advance(); }
+  else if (e.code==="ArrowLeft"){ e.preventDefault(); back(); }
+  else if (e.code==="ArrowRight"){ e.preventDefault(); advance(); }
+  else if (e.key==="f"||e.key==="F"){ document.documentElement.requestFullscreen?.(); }
+  else if (e.key==="t"||e.key==="T"){ if(mode==="vote") collect(); }
+  else if (e.key==="e"||e.key==="E"){ endLesson(); }
+  else if (e.key==="l"||e.key==="L"){ showGroups=!showGroups; render(); }
+  else if (e.key==="g"||e.key==="G"){
+    if (mode!=="slide") return;
+    if (!confirm("重新随机分组？已作答的成绩不会丢，但小组归属会变。")) return;
+    if (regroup()){ showGroups=true; render(); }
+    else alert("没有可分组的名单：登录时请填学号，并把「每组几人」设为 2 以上。");
+  }
+});
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+</script>
+</body>
+</html>
