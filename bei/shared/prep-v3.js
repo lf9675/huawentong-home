@@ -35,7 +35,7 @@ function decodeAI(data,asJSON=true){
 async function smallRequest(ask,system,content,asJSON=true){
  try{return await ask(system,content,asJSON);}catch(e){if(!recoverable(e))throw e;return ask(system+'\n上次输出未完整。本次只输出必要字段，每项用一句短句，绝不附加题库或重复原文。',content,asJSON);}
 }
-function aiPayload(system,content,asJSON=true){return {model:'deepseek-flash',thinking:{type:'disabled'},temperature:.25,max_tokens:12000,...(asJSON?{response_format:{type:'json_object'}}:{}),messages:[{role:'system',content:system},{role:'user',content:JSON.stringify(content)}]};}
+function aiPayload(system,content,asJSON=true){return {model:'deepseek-flash',thinking:{type:'disabled'},temperature:.25,max_tokens:12000,...(asJSON?{response_format:{type:'json_object'}}:{}),messages:[{role:'system',content:system+(asJSON?'\n只返回一个完整JSON对象，不使用代码围栏。':'')},{role:'user',content:JSON.stringify(content)}]};}
 // Use a batch-only schema: no full-lesson count or metadata in the output contract.
 function questionRequest(ask,input,batch,context={},options={}){
  const shape={questions:[{id:batch[0].id,phase:'live',stage:'你做',section:'训练环节',type:'choice',word:'',skill:'目标能力',context:'原句或明确标示的教学示例',sourceKind:'original',sourceQuote:'原文连续引句',prompt:'题干',hint:'不泄题提示',english:'Short English hint.',options:['选项一','选项二','选项三','选项四'],answer:0,optionReasons:['解析一','解析二','解析三','解析四'],misconceptions:['正确','误区二','误区三','误区四'],highDistractor:1,attractionReason:'误选原因',explanation:'证据及推理',improve:'下一步',points:1}]};

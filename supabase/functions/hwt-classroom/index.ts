@@ -1,3 +1,4 @@
+import {SHEET_HEADERS,sheetRows,validSheetURL,sendSheet} from './management.ts';
 // Custom teacher sessions and lesson-scoped submission tokens replace gateway JWT auth.
 // Privileged database keys exist only in Supabase's server environment.
 const enc = new TextEncoder();
@@ -7,7 +8,7 @@ const uuid = (v: unknown) => typeof v === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-
 const fail = (message: string, status = 400): never => { throw Object.assign(new Error(message), { status }); };
 const clean = (v: unknown, max: number) => { if (typeof v !== 'string' || !v.trim() || v.length > max) fail('资料缺失或过长。'); return (v as string).trim(); };
 const eq = (a: string, b: string) => { if (a.length !== b.length) return false; let n = 0; for (let i = 0; i < a.length; i++) n |= a.charCodeAt(i) ^ b.charCodeAt(i); return n === 0; };
-const canonical = (v: any): string => JSON.stringify(v && typeof v === 'object' ? (Array.isArray(v) ? v.map(x => JSON.parse(canonical(x))) : Object.fromEntries(Object.keys(v).sort().map(k => [k, JSON.parse(canonical(v[k]))]))) : v);
+const canonical = (v: any): string => JSON.stringify(v, (_key,value) => value && typeof value==='object' && !Array.isArray(value) ? Object.fromEntries(Object.keys(value).sort().filter(k=>value[k]!==undefined).map(k=>[k,value[k]])) : value);
 async function db(path: string, method = 'GET', body?: unknown, extra: Record<string,string> = {}) {
  const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
  if (!key) fail('成绩服务尚未配置。', 503);
@@ -43,6 +44,20 @@ export function scoreRecords(bank: any, submitted: any) {
   if (!Number.isInteger(r.selfScore) || r.selfScore < 0 || r.selfScore > q.points) fail('自评分无效。');
   return { ...base, answer: clean(r.answer, 5000), selfScore: r.selfScore, teacherScore: null };
  });
+}
+async function allRows(path:string,maximum=10000){
+ const rows=[];for(let offset=0;offset<maximum;offset+=500){const page=await db(path+'&limit=500&offset='+offset);rows.push(...page);if(page.length<500)return rows;}
+ fail('记录超过读取上限，未生成不完整报告。',413);
+}
+async function readLesson(id:unknown){
+ if(!uuid(id))fail('请选择学习单。');
+ const lesson=(await db('hwt_lessons?id=eq.'+id+'&select=id,title,input,bank,created_at'))[0];if(!lesson)fail('学习单不存在。',404);return lesson;
+}
+async function readAttempts(id:string){
+ const attempts=await allRows('hwt_attempts?lesson_id=eq.'+id+'&select=id,class_name,student_no,student_name,group_name,records,created_at&order=created_at.asc,id.asc');
+ const reviews=await allRows('hwt_reviews?lesson_id=eq.'+id+'&select=attempt_id,question_id,score,feedback,revision,reviewed_at&order=attempt_id.asc,question_id.asc',30000);
+ const index=new Map(reviews.map((r:any)=>[r.attempt_id+'\0'+r.question_id,r]));
+ return attempts.map((a:any)=>({...a,records:a.records.map((r:any)=>{const v:any=index.get(a.id+'\0'+r.id);return r.type==='open'?{...r,teacherScore:v?.score??null,teacherFeedback:v?.feedback||'',reviewRevision:v?.revision||0,reviewedAt:v?.reviewed_at||null}:r;})}));
 }
 export async function handle(req: Request) {
  const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'content-type,x-hwt-session',
@@ -99,19 +114,48 @@ export async function handle(req: Request) {
     await db('hwt_lessons?on_conflict=content_hash', 'POST', { content_hash: hash, title: safe.title, mode: safe.mode, input: safe, bank, publish_token: secret() }, { Prefer: 'resolution=ignore-duplicates' });
     const saved = (await db('hwt_lessons?content_hash=eq.' + hash + '&select=id,publish_token'))[0];
     result = { lessonId: saved.id, token: saved.publish_token };
+   } else if (b.action === 'review') {
+    if(!uuid(b.attemptId)||!Number.isInteger(b.score)||b.score<0||!Number.isInteger(b.revision)||b.revision<0)fail('覆核资料无效。');
+    const questionId=clean(b.questionId,100),feedback=typeof b.feedback==='string'?b.feedback.trim():'';
+    if(feedback.length>2000)fail('评语最多2000字。');
+    const attempt=(await db('hwt_attempts?id=eq.'+b.attemptId+'&select=lesson_id,records'))[0];if(!attempt)fail('提交不存在。',404);
+    const lesson=await readLesson(attempt.lesson_id),q=lesson.bank.questions.find((q:any)=>q.id===questionId);
+    if(!q||q.type!=='open'||b.score>q.points||!attempt.records.some((r:any)=>r.id===questionId))fail('只能覆核本次作答的开放题，分数不能超过题目满分。');
+    const saved=await db('rpc/hwt_save_review','POST',{p_attempt:b.attemptId,p_question:questionId,p_score:b.score,p_feedback:feedback,p_revision:b.revision});
+    if(saved?.conflict)fail('此题已有新的覆核，请刷新记录后再修改。',409);
+    if(!saved||saved.attempt_id!==b.attemptId||saved.score!==b.score)fail('没有收到覆核保存确认。',503);
+    result={saved:true,review:saved};
+   } else if(b.action==='roster_save'){
+    const lesson=await readLesson(b.lessonId),className=clean(b.className,40);
+    if(!Array.isArray(b.students)||!b.students.length||b.students.length>300)fail('名册须有1至300名学生。');
+    const students=b.students.map((x:any)=>({studentNo:clean(x.studentNo,30),name:clean(x.name,80)}));
+    if(new Set(students.map((x:any)=>x.studentNo)).size!==students.length)fail('名册有重复学号，请先修正。');
+    await db('hwt_rosters?on_conflict=lesson_id,class_name','POST',{lesson_id:lesson.id,class_name:className,students,updated_at:new Date().toISOString()},{Prefer:'resolution=merge-duplicates'});
+    const saved=(await db('hwt_rosters?lesson_id=eq.'+lesson.id+'&class_name=eq.'+encodeURIComponent(className)+'&select=students'))[0];
+    if(canonical(saved?.students)!==canonical(students))fail('没有收到名册保存确认。',503);
+    result={saved:true,count:students.length};
+   } else if(b.action==='sheets_status'){
+    const value=(await db('hwt_settings?key=eq.google_sheets_sink&select=value'))[0]?.value;
+    result={configured:!!value};
+   } else if(b.action==='sheets_configure'){
+    if(!validSheetURL(b.url)||typeof b.secret!=='string'||!/^[A-Za-z0-9_-]{32,200}$/.test(b.secret))fail('请填写Google Apps Script的/exec网址和同步码。');
+    const config={url:b.url,secret:b.secret};let ping;
+    try{ping=await sendSheet(config,{action:'ping'});}catch{fail('Google连接验证失败；请检查部署访问设置及同步码。原设置保留。',502);}
+    if(ping.kind!=='hwt-grades-v1')fail('Google返回的不是华文通成绩接收服务。');
+    await db('hwt_settings?on_conflict=key','POST',{key:'google_sheets_sink',value:JSON.stringify(config)},{Prefer:'resolution=merge-duplicates'});
+    result={configured:true};
+   } else if(b.action==='sheets_sync'){
+    const lesson=await readLesson(b.lessonId),attempts=await readAttempts(lesson.id);
+    const rows=sheetRows(lesson,attempts);if(!rows.length)fail('尚无学生提交，不能同步空成绩。');if(rows.length>2000)fail('记录超过单次同步上限，请先导出成绩表。');
+    const value=(await db('hwt_settings?key=eq.google_sheets_sink&select=value'))[0]?.value;if(!value)fail('请先连接Google成绩表。');
+    const requestId=crypto.randomUUID();let saved;
+    try{saved=await sendSheet(JSON.parse(value),{action:'sync',requestId,headers:SHEET_HEADERS,rows});}catch{fail('未收到Google保存确认，请重试；同一提交不会重复新增。',502);}
+    if(saved.requestId!==requestId||saved.saved!==rows.length)fail('Google保存结果不完整，请重试。',502);
+    result={saved:true,count:saved.saved};
    } else if (b.action === 'load' || b.action === 'records') {
-    if (!uuid(b.lessonId)) fail('请选择学习单。');
-    const lesson = (await db('hwt_lessons?id=eq.' + b.lessonId + '&select=id,title,input,bank,created_at'))[0];
-    if (!lesson) fail('学习单不存在。', 404);
-    if (b.action === 'load') result = { lesson };
-    else {
-     const rows = []; let more = false;
-     for (let offset = 0; offset < 10000; offset += 500) {
-      const page = await db('hwt_attempts?lesson_id=eq.' + b.lessonId + '&select=id,class_name,student_no,student_name,group_name,records,created_at&order=created_at.asc,id.asc&limit=500&offset=' + offset);
-      rows.push(...page); if (page.length < 500) break; if (offset === 9500) more = true;
-     }
-     result = { lesson, attempts: rows, truncated: more };
-    }
+    const lesson=await readLesson(b.lessonId);
+    if(b.action==='load')result={lesson};
+    else result={lesson,attempts:await readAttempts(lesson.id),rosters:await allRows('hwt_rosters?lesson_id=eq.'+lesson.id+'&select=class_name,students,updated_at&order=class_name.asc'),truncated:false};
    } else fail('未知操作。');
   }
   return new Response(JSON.stringify(result), { headers });
@@ -120,3 +164,4 @@ export async function handle(req: Request) {
  }
 }
 Deno.serve(handle);
+
