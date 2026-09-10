@@ -15,7 +15,7 @@ function render(){
  const number=i=>String(i+1).padStart(2,'0');
  let out='';
  if(!g){
-  out='<p class="kicker">LEARNING RESOURCES</p><h1>选择年级</h1><p class="hint">Choose your level.</p><div class="grades">'+Object.entries(G).map(([id,n])=>`<a class="grade" href="#${id}"><div><span class="num">SECONDARY ${id}</span><strong>${n}</strong></div><span class="en">Higher Chinese</span><span class="enter">Open resources →</span></a>`).join('')+'</div>';
+  out='<p class="kicker">LEARNING RESOURCES</p><h1>选择年级</h1><p class="hint">Choose your level.</p><div class="grades">'+Object.entries(G).map(([id,n])=>`<a class="grade" href="#${id}"><div><span class="num">SECONDARY ${id}</span><strong>${n}</strong></div><span class="en">Higher Chinese</span><span class="enter">Open resources →</span></a>`).join('')+['3','4'].map(id=>`<div class="grade" aria-disabled="true"><div><span class="num">SECONDARY ${id}</span><strong>${id==='3'?'中三':'中四'}</strong></div><span class="en">Higher Chinese</span><span class="enter">制作中…</span></div>`).join('')+'</div>';
  }else{
   out='<nav class="crumb" aria-label="Breadcrumb"><a href="#">所有年级 / Levels</a><span>/</span>';
   out+=cat?`<a href="#${g}">${G[g]}</a><span>/</span>`:`<span aria-current="page">${G[g]}</span>`;
