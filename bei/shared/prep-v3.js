@@ -140,69 +140,199 @@ const HWT = (() => {
   function previewData(d){return {...d,questions:d.questions.map(q=>({...q,section:q.section||'开放表达',improve:q.improve||'请对照本题解析或评分量表，找出遗漏内容并修改。'}))};}
   return {esc,split,json,css,rules,schema,focus,validate,student,teacher,ppt,doc,runtimeErrors,previewData};
 })();
-// OCR runs locally in a worker; only reviewed reference text enters AI requests.
-function mountReferenceImages(reference, isGenerating) {
-  const box=document.createElement('div');
-  box.innerHTML='<p><button type="button" id="referenceUpload">上传参考书截图</button> 或点击上方参考框，按 Ctrl+V 粘贴截图（Mac：⌘V）</p><input id="referenceFiles" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden><p class="muted">支持 PNG、JPG、WebP，每次最多5张，每张不超过10MB。图片在浏览器中识别；首次需联网加载识字组件。请裁掉无关区域，保持文字清晰。</p><label for="referenceLanguage">截图文字</label><select id="referenceLanguage"><option value="chi_sim">简体中文＋英文</option><option value="chi_tra">繁体中文＋英文</option></select><div id="referencePreviews" class="row"></div><button id="referenceRecognize" type="button">识别截图文字</button><button id="referenceCancel" type="button" disabled>取消识别</button><p id="referenceStatus" class="status" role="status" aria-live="polite">截图识别后会追加到教学参考框，请核对文字和表格顺序。</p>';
-  reference.after(box);
-  const $=id=>box.querySelector('#'+id);let items=[],busy=false,worker=null,epoch=0,loader=null;
-  const say=(s,error=false)=>{$('referenceStatus').textContent=s;$('referenceStatus').className='status'+(error?' error':'');};
-  function render(){
-    $('referencePreviews').replaceChildren();
-    items.forEach(item=>{const figure=document.createElement('figure');figure.style.cssText='margin:8px 0;max-width:220px';const image=document.createElement('img');image.src=item.url;image.alt=item.file.name||'粘贴的教学参考截图';image.style.cssText='max-width:100%;max-height:180px;object-fit:contain';const label=document.createElement('figcaption');label.textContent=(item.done?'已加入文字 · ':'待识别 · ')+(item.file.name||'粘贴截图');const remove=document.createElement('button');remove.type='button';remove.textContent='移除截图';remove.disabled=busy;remove.onclick=()=>{if(busy||isGenerating())return;URL.revokeObjectURL(item.url);items=items.filter(x=>x!==item);render();say('已移除截图；已加入参考框的文字保留，可自行编辑。');};figure.append(image,label,remove);$('referencePreviews').appendChild(figure);});
-    $('referenceRecognize').disabled=busy||!items.some(x=>!x.done);$('referenceCancel').disabled=!busy;$('referenceUpload').disabled=busy;$('referenceFiles').disabled=busy;$('referenceLanguage').disabled=busy;
+// Document parsing happens in the browser. Only explicitly selected text is
+// appended to the reference field that is sent to the existing AI endpoint.
+const HWTReferenceImport=(()=>{
+  const PDF_ROOT='https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/';
+  const libs=new Map();
+  function loadScript(key,url){
+    if(window[key])return Promise.resolve(window[key]);
+    if(libs.has(key))return libs.get(key);
+    const p=new Promise((resolve,reject)=>{const s=document.createElement('script');let timer;
+      const fail=()=>{clearTimeout(timer);s.remove();libs.delete(key);reject(Error('读取组件未能加载，请检查网络后重试。'));};
+      s.src=url;s.onload=()=>{clearTimeout(timer);if(window[key])resolve(window[key]);else fail();};s.onerror=fail;
+      timer=setTimeout(fail,45000);document.head.appendChild(s);
+    });libs.set(key,p);return p;
   }
-  function add(files){
-    if(busy||isGenerating()){say('请等待当前任务完成后再添加截图。',true);return;}
-    const errors=[];
-    for(const file of files){if(items.length>=5){errors.push('最多保留5张截图，请先移除不需要的图片。');break;}if(!/^image\/(png|jpeg|webp)$/.test(file.type)){errors.push('不支持此图片格式，请转换为PNG或JPG。');continue;}if(file.size>10*1024*1024){errors.push('图片超过10MB，请裁剪后再上传。');continue;}items.push({file,url:URL.createObjectURL(file),done:false});}
-    render();reference.dispatchEvent(new Event('input',{bubbles:true}));say(errors.length?errors.join('\n'):'截图已添加。点击“识别截图文字”，再核对参考框中的识别结果。',!!errors.length);
+  function loadPDF(){
+    if(!libs.has('pdfjs'))libs.set('pdfjs',import(PDF_ROOT+'build/pdf.min.mjs').then(pdf=>{pdf.GlobalWorkerOptions.workerSrc=PDF_ROOT+'build/pdf.worker.min.mjs';return pdf;}).catch(e=>{libs.delete('pdfjs');throw Error('PDF组件未能加载：'+e.message);}));
+    return libs.get('pdfjs');
   }
-  $('referenceUpload').onclick=()=>{if(!busy&&!isGenerating())$('referenceFiles').click();};
-  $('referenceFiles').onchange=e=>{add(Array.from(e.target.files||[]));e.target.value='';};
-  reference.addEventListener('paste',e=>{const files=Array.from(e.clipboardData?.items||[]).filter(x=>x.kind==='file'&&x.type.startsWith('image/')).map(x=>x.getAsFile()).filter(Boolean);if(files.length){e.preventDefault();add(files);}});
-  function loadOCR(){
-    if(window.Tesseract)return Promise.resolve();if(loader)return loader;
-    loader=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js';const timer=setTimeout(()=>{script.remove();loader=null;reject(Error('识字组件加载超时，请检查网络后重试。'));},30000);script.onload=()=>{clearTimeout(timer);if(window.Tesseract)resolve();else{loader=null;reject(Error('识字组件未就绪。'));}};script.onerror=()=>{clearTimeout(timer);script.remove();loader=null;reject(Error('无法加载识字组件，请检查网络后重试。'));};document.head.appendChild(script);});return loader;
+  function kind(file){
+    const ext=file.name.toLowerCase().split('.').pop();
+    if(ext==='pdf'||file.type==='application/pdf')return 'pdf';
+    if(ext==='docx')return 'docx';
+    if(['txt','md','markdown','csv'].includes(ext)||/^text\/(plain|markdown|csv)$/.test(file.type))return 'text';
+    if(['html','htm'].includes(ext))return 'html';
+    if(['png','jpg','jpeg','webp','bmp','gif'].includes(ext)||/^image\/(png|jpeg|webp|bmp|gif)$/.test(file.type))return 'image';
+    if(ext==='doc')throw Error('旧版Word（.doc）请在Word中另存为.docx或PDF后上传。');
+    throw Error('暂不支持此格式；可使用PDF、DOCX、TXT、MD、CSV、HTML或常见图片。');
   }
-  async function stop(){epoch++;busy=false;const old=worker;worker=null;if(old)old.terminate().catch(()=>{});render();}
-  $('referenceCancel').onclick=()=>{stop();say('已取消识别，已加入的文字保留。');};
-  $('referenceRecognize').onclick=async()=>{
-    if(busy||isGenerating())return;const pending=items.filter(x=>!x.done);if(!pending.length)return;
-    busy=true;const token=++epoch;render();let timeout;
-    const current=()=>token===epoch;
-    try{
-      timeout=setTimeout(()=>{if(current()){stop();say('识别超过3分钟，已停止。请裁剪截图后重试；已加入的文字保留。',true);}},180000);
-      say('正在加载中文识字组件，首次可能较慢……');await loadOCR();if(!current())return;
-      const w=await window.Tesseract.createWorker([$('referenceLanguage').value,'eng'],1,{logger:m=>{if(current()&&m.status==='recognizing text')say('正在识别截图文字：'+Math.round((m.progress||0)*100)+'%');}});
-      if(!current()){await w.terminate();return;}worker=w;
-      await w.setParameters({tessedit_pageseg_mode:'3'});
-      const failures=[];let added=0;
-      for(let i=0;i<pending.length;i++){
-        say('正在识别第 '+(i+1)+'/'+pending.length+' 张截图……');
-        const bitmap=await createImageBitmap(pending[i].file);if(!current()){bitmap.close();return;}
-        const scale=Math.min(3,3600/Math.max(bitmap.width,bitmap.height));
-        const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));
-        const drawing=canvas.getContext('2d');drawing.fillStyle='white';drawing.fillRect(0,0,canvas.width,canvas.height);drawing.drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();
-        const result=await w.recognize(canvas);if(!current())return;
-        const text=String(result.data?.text||'').trim().replace(/([\u3400-\u9fff]) +(?=[\u3400-\u9fff])/g,'$1');
-        const confidence=Number(result.data?.confidence||0),chinese=(text.match(/[\u3400-\u9fff]/g)||[]).length;
-        if(!text||confidence<65||chinese<12){failures.push('第'+(i+1)+'张：识别质量不足（置信度'+Math.round(confidence)+'%），未写入参考框');continue;}
-        reference.value+=(reference.value.trim()?'\n\n':'')+'【参考截图识别文字，请核对】\n'+text;
-        pending[i].done=true;added++;reference.dispatchEvent(new Event('input',{bubbles:true}));
+  function pages(value,total){
+    if(!value.trim())return Array.from({length:total},(_,i)=>i+1);
+    const found=new Set();
+    for(const token of value.replace(/[，、；;]/g,',').replace(/[–—～~]/g,'-').split(/[\s,]+/).filter(Boolean)){
+      const m=/^(\d+)(?:-(\d+))?$/.exec(token);if(!m)throw Error('页码格式错误，请填写例如：3-8,12（按PDF实际页序）。');
+      const a=Number(m[1]),b=Number(m[2]||m[1]);if(a<1||b<a||b>total)throw Error('页码超出范围：本文件共'+total+'页。');
+      for(let i=a;i<=b;i++)found.add(i);
+    }
+    return [...found].sort((a,b)=>a-b);
+  }
+  function decode(buffer){
+    const b=new Uint8Array(buffer);
+    if(b[0]===255&&b[1]===254)return new TextDecoder('utf-16le').decode(b);
+    if(b[0]===254&&b[1]===255)return new TextDecoder('utf-16be').decode(b);
+    try{return new TextDecoder('utf-8',{fatal:true}).decode(b);}catch{return new TextDecoder('gb18030').decode(b);}
+  }
+  function pdfText(items){
+    let out='',lastY=null,lastX=null;
+    for(const item of items){if(typeof item.str!=='string')continue;const x=item.transform?.[4],y=item.transform?.[5];
+      if(lastY!==null&&Number.isFinite(y)&&Math.abs(y-lastY)>3&&!out.endsWith('\n'))out+='\n';
+      else if(lastX!==null&&Number.isFinite(x)&&x-lastX>12&&!out.endsWith('\n'))out+='\t';
+      out+=item.str;if(item.hasEOL)out+='\n';lastY=y;lastX=Number.isFinite(x)?x+(item.width||0):null;
+    }return out.replace(/\n{3,}/g,'\n\n').trim();
+  }
+  function mount(reference,isGenerating){
+    const box=document.createElement('div');box.className='reference-import';
+    box.innerHTML=`<p><button id="referenceUpload" type="button">上传教参文件</button> 可多选；也可在教学参考框粘贴文字或截图。</p>
+      <input id="referenceFiles" type="file" accept=".pdf,.docx,.txt,.md,.markdown,.csv,.html,.htm,.png,.jpg,.jpeg,.webp,.bmp,.gif,application/pdf,image/png,image/jpeg,image/webp" multiple hidden>
+      <p class="muted">支持PDF（文字版／扫描版）、Word DOCX、TXT、Markdown、CSV、HTML及PNG／JPG／WebP／BMP／GIF图片。每个文件最多100MB，合计最多250MB；图片不再限五张。读取在浏览器内完成，首次加载组件需要联网。</p>
+      <label for="referenceLanguage">扫描件／图片语言</label><select id="referenceLanguage"><option value="chi_sim">简体中文＋英文</option><option value="chi_tra">繁体中文＋英文</option></select>
+      <div id="referencePreviews"></div><button id="referenceRecognize" type="button">读取文件内容</button><button id="referenceCancel" type="button" disabled>取消读取</button>
+      <p id="referenceStatus" class="status" role="status" aria-live="polite">上传整份教参后，可选择PDF页码，无需逐页截图。</p>
+      <section id="referenceReview" hidden><h3>核对导入文字</h3><p>按文件和页码核对、修改，再选入教学参考。表格、分栏与扫描文字尤其需要校对；低置信度结果默认不选入。</p><div id="referenceResults"></div><button id="referenceApply" type="button">将勾选文字加入教学参考</button></section>
+      <button id="referenceSkip" type="button" hidden>暂不使用未加入的文件内容</button>`;
+    reference.after(box);const $=id=>box.querySelector('#'+id);
+    let items=[],results=[],busy=false,epoch=0,seq=0,worker=null,pdfTask=null,pdfDoc=null,renderTask=null;
+    const say=(s,error=false)=>{$('referenceStatus').textContent=s;$('referenceStatus').className='status'+(error?' error':'');};
+    const changed=()=>reference.dispatchEvent(new Event('input',{bubbles:true}));
+    const node=(tag,text,parent)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(parent)parent.appendChild(n);return n;};
+    function render(){
+      $('referencePreviews').replaceChildren();
+      for(const item of items){const panel=node('section',undefined,$('referencePreviews'));panel.style.cssText='padding:12px;margin:10px 0';
+        node('strong',item.file.name,panel);node('p',item.status||'待读取',panel);
+        if(item.kind==='pdf'){
+          const label=node('label','读取页码（留空为全部，例如3-8,12；按PDF实际页序）',panel);label.htmlFor='refPages'+item.id;
+          const range=node('input',undefined,panel);range.id=label.htmlFor;range.value=item.range;range.placeholder='全部页';range.disabled=busy;range.oninput=()=>{item.range=range.value;item.handled=false;item.status='页码已修改，待读取';changed();};
+          const modeLabel=node('label','PDF读取方式',panel);modeLabel.htmlFor='refMode'+item.id;const mode=node('select',undefined,panel);mode.id=modeLabel.htmlFor;
+          for(const [value,text] of [['auto','自动：先提取文字，扫描页再识别'],['text','只提取原有文字'],['ocr','整页识别：扫描版或原有文字异常']]){const o=node('option',text,mode);o.value=value;}mode.value=item.mode;mode.disabled=busy;mode.onchange=()=>{item.mode=mode.value;item.handled=false;item.status='读取方式已修改，待读取';changed();};
+        }
+        const link=node('a',item.kind==='image'?'查看原图':'打开原文件',panel);link.href=item.url;link.target='_blank';link.rel='noopener';
+        const remove=node('button','移除文件',panel);remove.type='button';remove.disabled=busy;remove.onclick=()=>{if(busy||isGenerating())return;URL.revokeObjectURL(item.url);items=items.filter(x=>x!==item);results=results.filter(x=>x.item!==item);render();renderResults();changed();say('已移除文件；已加入教学参考的文字保留。');};
       }
-      say('已检查'+pending.length+'张截图，加入'+added+'张。'+(failures.length?failures.join('；')+'。请使用放大后重新截取的清晰文字栏，或从原始PDF复制文字。':'请核对错字、标点和表格阅读顺序，再生成教学资料。'),!!failures.length);
-    }catch(e){if(current())say('识别未完成：'+(e.message||'请重试')+' 已成功加入的文字保留。',true);}
-    finally{clearTimeout(timeout);if(current()){const old=worker;worker=null;if(old)old.terminate().catch(()=>{});busy=false;render();}}
-  };
-  render();
-  return {check(){if(busy)throw Error('正在识别参考截图，请等待完成。');if(items.some(x=>!x.done))throw Error('参考截图尚未识别，请点击“识别截图文字”，或移除不需要的截图。');},reset(){stop();items.forEach(x=>URL.revokeObjectURL(x.url));items=[];render();say('截图已清空。');}};
-}
+      $('referenceRecognize').disabled=busy||!items.some(x=>!x.handled);
+      $('referenceCancel').disabled=!busy;
+      for(const id of ['referenceUpload','referenceFiles','referenceLanguage','referenceApply','referenceSkip'])$(id).disabled=busy;
+      $('referenceSkip').hidden=!items.some(x=>!x.handled);
+    }
+    function renderResults(){
+      $('referenceResults').replaceChildren();$('referenceReview').hidden=!results.length;
+      for(const r of results){const section=node('section',undefined,$('referenceResults'));section.style.cssText='padding:12px;margin:8px 0';
+        node('h4',r.label,section);node('p',r.method+(r.confidence===null?'':' · OCR置信度'+r.confidence+'%')+(r.added?' · 已加入':''),section);
+        if(r.warning){const p=node('p',r.warning,section);p.className='error';}
+        const a=node('a','查看原文件'+(r.page?'第'+r.page+'页':''),section);a.href=r.item.url+(r.page?'#page='+r.page:'');a.target='_blank';a.rel='noopener';
+        const label=node('label',undefined,section);const check=node('input',undefined,label);check.type='checkbox';check.checked=r.selected;check.disabled=busy||r.added;label.appendChild(document.createTextNode('选入教学参考'));
+        check.onchange=()=>{r.selected=check.checked;r.item.handled=false;render();};
+        const text=node('textarea',undefined,section);text.setAttribute('aria-label',r.label+'文字');text.value=r.text;text.style.minHeight='170px';text.disabled=busy||r.added;
+        text.oninput=()=>{r.text=text.value;r.item.handled=false;};
+      }
+    }
+    function add(files){
+      if(busy||isGenerating()){say('请等待当前任务完成后再上传文件。',true);return;}
+      const errors=[];
+      for(const file of files){try{
+        const type=kind(file);if(file.size>100*1024*1024)throw Error('文件超过100MB，请另存本课页码后上传。');
+        if(items.reduce((s,x)=>s+x.file.size,0)+file.size>250*1024*1024)throw Error('当前文件合计超过250MB，请分批读取。');
+        if(items.some(x=>x.file.name===file.name&&x.file.size===file.size&&x.file.lastModified===file.lastModified)){errors.push(file.name+'：已经在列表中，未重复添加');continue;}
+        items.push({id:++seq,file,kind:type,url:URL.createObjectURL(file),range:'',mode:'auto',handled:false,status:'待读取'});
+      }catch(e){errors.push(file.name+'：'+e.message);}}
+      render();changed();say(errors.length?errors.join('\n'):'文件已添加。PDF可指定本课页码，然后点击“读取文件内容”。',!!errors.length);
+    }
+    $('referenceUpload').onclick=()=>{if(!busy&&!isGenerating())$('referenceFiles').click();};
+    $('referenceFiles').onchange=e=>{add(Array.from(e.target.files||[]));e.target.value='';};
+    reference.addEventListener('paste',e=>{const files=Array.from(e.clipboardData?.items||[]).filter(x=>x.kind==='file').map(x=>x.getAsFile()).filter(Boolean);if(files.length){e.preventDefault();add(files);}});
+    function stop(){epoch++;busy=false;renderTask?.cancel();renderTask=null;const task=pdfTask,doc=pdfDoc;pdfTask=pdfDoc=null;if(task)Promise.resolve(task.destroy()).catch(()=>{});else if(doc)Promise.resolve(doc.destroy()).catch(()=>{});const w=worker;worker=null;if(w)w.terminate().catch(()=>{});render();renderResults();}
+    $('referenceCancel').onclick=()=>{stop();say('已取消；已经读取的页保留在下方，可校对后加入参考。');};
+    function result(item,page,text,method,confidence=null,warning=''){
+      const existing=results.find(r=>r.item===item&&r.page===page);if(existing?.added)return;
+      const r={item,page,label:item.file.name+(page?' · 第'+page+'页':''),text:text.trim(),method,confidence,warning,selected:!!text.trim()&&!warning,added:false};
+      if(existing)results[results.indexOf(existing)]=r;else results.push(r);
+    }
+    async function ocr(canvas,current){
+      if(!worker){const t=await loadScript('Tesseract','https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js');if(!current())throw Error('读取已取消');
+        const w=await t.createWorker([$('referenceLanguage').value,'eng'],1,{logger:m=>{if(current()&&m.status==='recognizing text')say('正在识别扫描文字：'+Math.round((m.progress||0)*100)+'%');}});
+        if(!current()){await w.terminate();throw Error('读取已取消');}worker=w;await w.setParameters({tessedit_pageseg_mode:'3'});
+      }
+      const data=(await worker.recognize(canvas)).data;const text=String(data?.text||'').trim().replace(/([\u3400-\u9fff]) +(?=[\u3400-\u9fff])/g,'$1');
+      const confidence=Math.round(Number(data?.confidence)||0);return {text,confidence,warning:!text?'未读到文字；可在此补写，或换一种读取方式。':confidence<65?'识别结果不可靠，默认未选入。请对照原文件修改后再勾选。':''};
+    }
+    async function read(item,current){
+      if(item.kind==='pdf'){
+        const lib=await loadPDF();if(!current())return;
+        const task=lib.getDocument({data:new Uint8Array(await item.file.arrayBuffer()),isEvalSupported:false,cMapUrl:PDF_ROOT+'cmaps/',cMapPacked:true,standardFontDataUrl:PDF_ROOT+'standard_fonts/'});pdfTask=task;
+        let protectedPDF=false;task.onPassword=()=>{protectedPDF=true;task.destroy().catch(()=>{});};
+        let pdf;try{pdf=await task.promise;}catch(e){if(pdfTask===task)pdfTask=null;task.destroy().catch(()=>{});throw Error(protectedPDF||e.name==='PasswordException'?'PDF需要密码，请先在本机解锁并另存后上传。':'PDF无法读取：'+e.message);}
+        if(!current()){await pdf.destroy();return;}pdfDoc=pdf;
+        try{const selected=pages(item.range,pdf.numPages);item.status='共'+pdf.numPages+'页，本次读取'+selected.length+'页';render();
+          for(const n of selected){if(!current())return;if(results.some(r=>r.item===item&&r.page===n&&r.added))continue;
+            say(item.file.name+'：读取第'+n+'页（'+(selected.indexOf(n)+1)+ '/' + selected.length+'）');
+            const page=await pdf.getPage(n);const native=pdfText((await page.getTextContent()).items);if(!current())return;
+            if(item.mode==='text'||(item.mode==='auto'&&native.replace(/\s/g,'').length>=40&&!native.includes('\uFFFD'))){result(item,n,native,'直接提取PDF文字',null,native?'':'本页没有可提取文字，可改用“整页识别”。');}
+            else {const base=page.getViewport({scale:1}),scale=Math.min(3,3200/Math.max(base.width,base.height)),viewport=page.getViewport({scale});
+              const canvas=document.createElement('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);
+              renderTask=page.render({canvasContext:canvas.getContext('2d'),viewport,background:'white'});await renderTask.promise;renderTask=null;if(!current())return;
+              const recognized=await ocr(canvas,current);canvas.width=canvas.height=1;if(!current())return;
+              if(recognized.warning&&native.trim())result(item,n,native,'PDF少量原有文字',null,'本页可能包含尚未识别的图片文字，请对照原页核对。');
+              else result(item,n,recognized.text,'扫描页识别',recognized.confidence,recognized.warning);
+            }page.cleanup();renderResults();
+          }
+        }finally{if(pdfDoc===pdf){pdfDoc=pdfTask=null;await pdf.destroy();}}
+      }else if(item.kind==='docx'){
+        const mammoth=await loadScript('mammoth','https://cdn.jsdelivr.net/npm/mammoth@1.9.1/mammoth.browser.min.js');if(!current())return;
+        const d=await mammoth.extractRawText({arrayBuffer:await item.file.arrayBuffer()});if(!current())return;
+        result(item,null,d.value,'Word文字（含表格文字；不提取嵌入图片）',null,d.value.trim()?'':'Word中没有可提取文字；若内容在图片中，请另存为PDF后读取。');
+      }else if(item.kind==='image'){
+        const bitmap=await createImageBitmap(item.file);if(!current()){bitmap.close();return;}
+        const scale=Math.min(3,3200/Math.max(bitmap.width,bitmap.height)),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+        const ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();
+        const r=await ocr(canvas,current);canvas.width=canvas.height=1;if(current())result(item,null,r.text,'图片识别'+(/\.gif$/i.test(item.file.name)?'（首帧）':''),r.confidence,r.warning);
+      }else{let text=decode(await item.file.arrayBuffer());if(!current())return;
+        if(item.kind==='html'){const doc=new DOMParser().parseFromString(text,'text/html');doc.querySelectorAll('script,style,iframe,object,embed').forEach(x=>x.remove());doc.querySelectorAll('br').forEach(x=>x.replaceWith('\n'));doc.querySelectorAll('p,div,li,tr,h1,h2,h3,h4').forEach(x=>x.append('\n'));text=doc.body.textContent||'';}
+        result(item,null,text,'直接读取文本',null,text.trim()?'':'文件没有文字内容。');
+      }
+    }
+    $('referenceRecognize').onclick=async()=>{
+      if(busy||isGenerating())return;const pending=items.filter(x=>!x.handled);if(!pending.length)return;
+      busy=true;const token=++epoch,current=()=>epoch===token;render();renderResults();let timer;
+      try{for(const item of pending){if(!current())return;item.status='正在读取';render();say('正在读取 '+item.file.name+'……');
+          timer=setTimeout(()=>{if(current()){stop();say('本文件读取超过10分钟，已停止；已读取内容保留。可指定较少页码后继续。',true);}},600000);
+          try{await read(item,current);if(current())item.status='已读取，待校对并加入参考';}catch(e){if(current())item.status='读取失败：'+(e.message||'请检查文件后重试');}finally{clearTimeout(timer);}
+          if(current()){render();renderResults();}
+        }
+        if(current())say('读取结束。请在下方核对文字，再点击“将勾选文字加入教学参考”。'+(items.some(x=>x.status.startsWith('读取失败'))?'部分文件读取失败，原因见文件列表。':''));
+      }finally{clearTimeout(timer);if(current()){busy=false;const w=worker;worker=null;if(w)w.terminate().catch(()=>{});render();renderResults();}}
+    };
+    $('referenceApply').onclick=()=>{if(busy||isGenerating())return;const selected=results.filter(r=>r.selected&&!r.added&&r.text.trim());
+      if(!selected.length){say('请先读取文件，并勾选需要加入的文字。',true);return;}
+      reference.value+=(reference.value.trim()?'\n\n':'')+selected.map(r=>'【教学参考：'+r.label+'】\n'+r.text.trim()).join('\n\n');
+      selected.forEach(r=>{r.added=true;r.selected=false;});
+      for(const item of items)if(results.some(r=>r.item===item)&&!item.status.startsWith('读取失败')){item.handled=true;item.status='已处理：使用勾选的文字，其余未加入';}
+      render();renderResults();changed();say('已将'+selected.length+'项文字加入教学参考，共'+reference.value.length+'字。原有文字保留；未勾选内容未加入。');
+    };
+    $('referenceSkip').onclick=()=>{if(busy||isGenerating())return;items.forEach(x=>{if(!x.handled){x.handled=true;x.status='暂不使用未加入内容';}});results.forEach(r=>r.selected=false);render();renderResults();changed();say('未加入的文件内容不参与本次生成；教学参考框里的文字保留。');};
+    render();
+    return {check(){if(busy)throw Error('教参文件仍在读取，请等候完成或取消。');if(items.some(x=>!x.handled))throw Error('请先读取教参文件并将所需文字加入教学参考，或点击“暂不使用未加入的文件内容”。');},reset(){stop();items.forEach(x=>URL.revokeObjectURL(x.url));items=[];results=[];render();renderResults();say('教参文件已清空。');}};
+  }
+  return {mount,kind,pages,decode,pdfText};
+})();
+function mountReferenceImages(reference,isGenerating){return HWTReferenceImport.mount(reference,isGenerating);}
+
+HWT.referenceImport=HWTReferenceImport;
 if(typeof module!=='undefined')module.exports=HWT;
 if(typeof document!=='undefined' && document.getElementById('app')) {
   const $=id=>document.getElementById(id), mode=document.body.dataset.mode, names={vocab:'词语练习生成器',textbook:'课文教学生成器',writing:'作文教学生成器'};
   document.title=names[mode]+'｜华文通';const style=document.createElement('style');style.textContent=HWT.css;document.head.appendChild(style);
-  $('app').innerHTML=`<header><a href="../index.html">返回教师工作台</a><h1>${names[mode]}</h1><p>${mode==='vocab'?'课文语境中的词义、搭配与用法辨析':mode==='textbook'?'整体结构、逐意义段理解与主旨迁移':'按写前、写中或写后目标分别设计'}</p><small>v3.0 · 课文驱动 · 离线学习单</small></header><section id="inputs"><div class="grid"><div><label for="grade">年级</label><select id="grade"><option>中一</option><option>中二</option><option>中三</option><option>中四</option></select></div><div><label for="unit">单元</label><input id="unit"></div><div><label for="minutes">课时（分钟）</label><input id="minutes" type="number" min="30" max="120" value="60"></div>${mode==='writing'?'<div><label for="writing">作文课类型（必须选择）</label><select id="writing"><option value="">请选择</option><option>写前指导</option><option>写中支架</option><option>写后讲评</option></select></div>':''}</div><label for="title">${mode==='writing'?'作文题目':'课文题目'}</label><input id="title"><label for="passage">${mode==='writing'?'题目材料／写作片段／匿名学生作品':'课文原文（必填，保留分段）'}</label><textarea id="passage" style="min-height:230px"></textarea><label for="terms">目标词语${mode==='vocab'?'（必填，最多12个）':'（选填）'}</label><textarea id="terms" placeholder="用顿号、中文或英文逗号、Tab、换行分隔"></textarea><p id="termCount" class="muted"></p><label for="known">已学词语范围</label><textarea id="known" placeholder="例如：中一全部＋中二单元一至六第一课"></textarea><label for="reference">教学参考／重点／学生困难</label><textarea id="reference" placeholder="教师已有的分析、参考答案、要点或评分量表"></textarea><label for="key">DeepSeek API Key</label><input id="key" type="password" autocomplete="off"><p class="muted">只用于本次生成，不保存在下载文件中。学生作品请先匿名化。</p><label><input id="direct" type="checkbox">直接执行，跳过大纲确认</label></section><section><button id="generate">生成教学设计大纲</button><button id="cancel" disabled>取消请求</button><button id="clear">清空</button><div id="status" class="status" role="status" aria-live="polite">工具已就绪，请填写资料。</div></section><section id="outlineBox" hidden><h2>教学设计大纲</h2><textarea id="outline" style="min-height:320px"></textarea><button id="approve">确认大纲并生成资料</button></section><section id="reviewBox" hidden><h2>检查与修改题稿</h2><p>结构检查不能代替教师判断。请核对词义、原文证据、答案唯一性、干扰项和活动难度。</p><div id="audit" class="status"></div><details><summary>修改完整JSON题稿</summary><textarea id="editor" style="min-height:380px"></textarea><button id="validate">检查修改后的题稿</button></details><button id="repair">让AI修正检查发现的问题</button><button id="studentTab">预览学生学习单</button><button id="teacherTab">预览教师参考</button><iframe id="frame" title="教学材料预览" sandbox="allow-scripts allow-downloads"></iframe><label><input id="reviewed" type="checkbox">我已检查内容、答案与解析，确认可用于教学</label><div id="downloads"><button data-file="student">下载复习学习单</button><button data-file="teacher">下载教师参考</button><button data-file="json">下载题库JSON</button><button data-file="core">下载core-questions.js</button><button data-file="live">下载随堂学习单</button><button data-file="ppt">下载教学PPTX</button></div></section>`;
+  $('app').innerHTML=`<header><a href="../index.html">返回教师工作台</a><h1>${names[mode]}</h1><p>${mode==='vocab'?'课文语境中的词义、搭配与用法辨析':mode==='textbook'?'整体结构、逐意义段理解与主旨迁移':'按写前、写中或写后目标分别设计'}</p><small>v3.1 · 多格式教参导入 · 离线学习单</small></header><section id="inputs"><div class="grid"><div><label for="grade">年级</label><select id="grade"><option>中一</option><option>中二</option><option>中三</option><option>中四</option></select></div><div><label for="unit">单元</label><input id="unit"></div><div><label for="minutes">课时（分钟）</label><input id="minutes" type="number" min="30" max="120" value="60"></div>${mode==='writing'?'<div><label for="writing">作文课类型（必须选择）</label><select id="writing"><option value="">请选择</option><option>写前指导</option><option>写中支架</option><option>写后讲评</option></select></div>':''}</div><label for="title">${mode==='writing'?'作文题目':'课文题目'}</label><input id="title"><label for="passage">${mode==='writing'?'题目材料／写作片段／匿名学生作品':'课文原文（必填，保留分段）'}</label><textarea id="passage" style="min-height:230px"></textarea><label for="terms">目标词语${mode==='vocab'?'（必填，最多12个）':'（选填）'}</label><textarea id="terms" placeholder="用顿号、中文或英文逗号、Tab、换行分隔"></textarea><p id="termCount" class="muted"></p><label for="known">已学词语范围</label><textarea id="known" placeholder="例如：中一全部＋中二单元一至六第一课"></textarea><label for="reference">教学参考／重点／学生困难</label><textarea id="reference" placeholder="教师已有的分析、参考答案、要点或评分量表"></textarea><label for="key">DeepSeek API Key</label><input id="key" type="password" autocomplete="off"><p class="muted">只用于本次生成，不保存在下载文件中。学生作品请先匿名化。</p><label><input id="direct" type="checkbox">直接执行，跳过大纲确认</label></section><section><button id="generate">生成教学设计大纲</button><button id="cancel" disabled>取消请求</button><button id="clear">清空</button><div id="status" class="status" role="status" aria-live="polite">工具已就绪，请填写资料。</div></section><section id="outlineBox" hidden><h2>教学设计大纲</h2><textarea id="outline" style="min-height:320px"></textarea><button id="approve">确认大纲并生成资料</button></section><section id="reviewBox" hidden><h2>检查与修改题稿</h2><p>结构检查不能代替教师判断。请核对词义、原文证据、答案唯一性、干扰项和活动难度。</p><div id="audit" class="status"></div><details><summary>修改完整JSON题稿</summary><textarea id="editor" style="min-height:380px"></textarea><button id="validate">检查修改后的题稿</button></details><button id="repair">让AI修正检查发现的问题</button><button id="studentTab">预览学生学习单</button><button id="teacherTab">预览教师参考</button><iframe id="frame" title="教学材料预览" sandbox="allow-scripts allow-downloads"></iframe><label><input id="reviewed" type="checkbox">我已检查内容、答案与解析，确认可用于教学</label><div id="downloads"><button data-file="student">下载复习学习单</button><button data-file="teacher">下载教师参考</button><button data-file="json">下载题库JSON</button><button data-file="core">下载core-questions.js</button><button data-file="live">下载随堂学习单</button><button data-file="ppt">下载教学PPTX</button></div></section>`;
   let controller=null,snapshot=null,draft=null,pkg=null,valid=false;
   const importBox=document.createElement('section');importBox.innerHTML='<h2>继续修改已有题稿</h2><p>可以导入之前下载的JSON或json.txt，不必重新调用AI。导入后可补充课文原文进行核对。</p><button type="button" id="importDraft">导入JSON／TXT题稿</button><input type="file" id="importFile" accept=".json,.txt,application/json,text/plain" hidden>';$('inputs').before(importBox);
   const livePreview=document.createElement('button');livePreview.id='liveTab';livePreview.type='button';livePreview.textContent='预览随堂学习单';$('studentTab').after(livePreview);
@@ -238,7 +368,7 @@ if(typeof document!=='undefined' && document.getElementById('app')) {
     }catch(e){if(e.name==='AbortError')throw Error('请求已取消或超过3分钟。可以重试，已填写资料保留。');throw e;}finally{clearTimeout(timer);controller=null;}
   }
   async function run(fn){
-    if(controller)return;['generate','approve','repair','clear'].forEach(id=>$(id).disabled=true);$('inputs').querySelectorAll('input,textarea,select').forEach(e=>e.disabled=true);$('cancel').disabled=false;
+    if(controller)return;try{referenceImages.check();}catch(e){status(e.message,true);return;}['generate','approve','repair','clear'].forEach(id=>$(id).disabled=true);$('inputs').querySelectorAll('input,textarea,select').forEach(e=>e.disabled=true);$('cancel').disabled=false;
     try{await fn();}catch(e){status(e.message,true);}finally{['generate','approve','repair','clear'].forEach(id=>$(id).disabled=false);$('inputs').querySelectorAll('input,textarea,select').forEach(e=>e.disabled=false);$('cancel').disabled=true;}
   }
   function audit(){
