@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>中二单元六B · 成语专场</title>
+<title>中二单元六B · 词语练习</title>
 <style>
 :root{
   --ink:#241B12; --ink-soft:#5C4C3C;
@@ -215,7 +215,7 @@ button:focus-visible{outline:3px solid var(--blossom); outline-offset:2px}
 
 <header class="hero">
   <p class="eyebrow">中二高级华文 · 年底考试范围</p>
-  <h1>单元六B 成语专场</h1>
+  <h1>单元六B 词语练习</h1>
   <p class="sub">《多元而开放的新加坡》 · 十五词，九个成语 · 四关</p>
   <div class="idbox">
     <p class="idloading" id="idLoading">正在连接班级名单……</p>
@@ -757,7 +757,7 @@ document.getElementById("submitAll").addEventListener("click", ()=>{
   doUpload();
 
   document.getElementById("copyRes").addEventListener("click", async ()=>{
-    const t = `中二单元六B · 成语专场成绩
+    const t = `中二单元六B · 词语练习成绩
 姓名：${store.name||"（未填）"}　班级：${store.class||"（未填）"}　组别：${store.group||"（未填）"}
 等级：${rank}　总分：${sum}/${max}（${pct}%）
 ${Object.keys(total).map(k=>names[k].replace(/　/g," ")+"："+got[k]+"/"+total[k]).join("\n")}
