@@ -10,6 +10,11 @@ const input={mode:'textbook',title:'Engineering fixture',passage:'原文',questi
 const bank={objectives:['理解证据','判断关系'],worksheetMinutes:22,plan:['我做','我们做','你做'].map(stage=>({stage,minutes:20,activity:'测试活动'})),scaffolds:[],questions:Array.from({length:12},(_,i)=>({id:'L'+(i+1),phase:'live',stage:'你做',section:'证据',type:'choice',word:'',skill:'分析',context:'工程测试情境',sourceKind:'transfer',sourceQuote:'',prompt:'工程测试题'+i,hint:'检查对象',english:'Check the subject.',options:['一个合理解释','另一个相关解释','还有一种相关解释','最后一种不同解释'],answer:0,optionReasons:['依据','误区','误区','误区'],misconceptions:['正确','范围','对象','关系'],highDistractor:1,attractionReason:'对象易混',explanation:'工程测试解释',improve:'再看对象',points:1}))};
 const reviewResponse=batch=>({checks:batch.map(q=>({id:q.id,verdict:'pass',reason:'工程测试审查结果'})),global:{verdict:'pass',reason:'工程测试审查结果'}});
 (async()=>{
+await test('batch request has only local count and explicit ids',async()=>{let payload;await HWT.questionRequest(async(system,data)=>{payload={system,data};return {};},input,[{id:'L7'}],{}, {retry:true});assert.equal(payload.data.input.questionCount,1);assert.equal(payload.data.input.totalQuestionCount,12);assert.match(payload.system,/本批共1题/);assert.match(payload.system,/精简重试/);assert.doesNotMatch(payload.system,/格式：\{"objectives/);});
+await test('retry changes request instead of repeating it',async()=>{const retry=[];await HWT.batches([{id:'L1'}],async(b,o)=>{retry.push(o.retry);if(!o.retry)throw HWT.aiError('本批超时','AI_TIMEOUT');return response(b);},HWT.checkQuestions);assert.deepEqual(retry,[false,true]);});
+await test('final error preserves actual failure reason',async()=>{await assert.rejects(HWT.batches([{id:'L1'}],async()=>{throw HWT.aiError('本批请求超过3分钟。','AI_TIMEOUT');},HWT.checkQuestions),e=>e.code==='AI_TIMEOUT'&&e.message.includes('3分钟'));});
+await test('complete reordered responses are aligned without changing question identity',()=>{assert.deepEqual(HWT.checkQuestions({questions:[{id:'L2'},{id:'L1'}]},items.slice(0,2)).questions.map(q=>q.id),['L1','L2']);assert.throws(()=>HWT.checkQuestions({questions:[{id:'L1'},{id:'L1'}]},items.slice(0,2)));});
+await test('AI request selects current model and explicit non-thinking JSON mode',()=>{const p=HWT.aiPayload('JSON',{});assert.equal(p.model,'deepseek-flash');assert.equal(p.thinking.type,'disabled');assert.equal(p.response_format.type,'json_object');assert.equal(HWT.aiPayload('text',{},false).response_format,undefined);});
 await test('ignore absent-word placeholders',()=>assert.deepEqual(HWT.split('无、 暂无,明白\n明白\tn/a'),['明白']));
 await test('truncated output never becomes a bank',()=>assert.throws(()=>HWT.decodeAI({choices:[{finish_reason:'length',message:{content:'{"questions":[]}'}}]}),e=>e.code==='AI_INCOMPLETE'));
 await test('broken JSON is recoverable',()=>assert.throws(()=>HWT.decodeAI({choices:[{finish_reason:'stop',message:{content:'{"questions":['}}]}),e=>e.code==='AI_INCOMPLETE'));
@@ -49,3 +54,4 @@ await test('existing navigation DATA is unchanged by new year placeholders',()=>
 });
 console.log(JSON.stringify({passed:count,liveAI:false,browserDOM:false,database:false}));
 })().catch(e=>{console.error(e);process.exitCode=1;});
+

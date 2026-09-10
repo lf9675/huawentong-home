@@ -9,19 +9,24 @@ async function batches(items,request,check,notify=()=>{},cancelled=()=>false,onP
  const results=[];
  async function one(batch,retried=false){
   if(cancelled())throw Error('已取消，已完成题目保留。');
-  try{const value=check(await request(batch),batch);if(cancelled())throw Error('已取消，已完成题目保留。');results.push(value);onPart(value,batch);}
+  try{const value=check(await request(batch,{retry:retried}),batch);if(cancelled())throw Error('已取消，已完成题目保留。');results.push(value);onPart(value,batch);}
   catch(e){if(cancelled()||!recoverable(e))throw e;
    if(batch.length>1){notify('本批内容不完整，正在自动改为逐题处理……');const mid=Math.ceil(batch.length/2);await one(batch.slice(0,mid));await one(batch.slice(mid));}
    else if(!retried){notify('正在精简并重试第'+batch[0].id+'题，已完成题目保留……');await one(batch,true);}
-   else throw aiError('第'+batch[0].id+'题重试后仍未完整返回。已完成题目保留，点击生成按钮可继续。',e.code);
+   else throw aiError('第'+batch[0].id+'题未完成：'+e.message+' 已完成题目保留，点击生成按钮可继续。',e.code);
   }
  }
  for(let i=0;i<items.length;i+=size)await one(items.slice(i,i+size));
  return results;
 }
-function checkQuestions(value,batch){if(!value||!Array.isArray(value.questions)||value.questions.length!==batch.length||value.questions.some((q,i)=>!q||q.id!==batch[i].id))throw aiError('本批题号或数量不完整。');return value;}
+function checkQuestions(value,batch){
+ if(!value||!Array.isArray(value.questions))throw aiError('AI返回缺少questions题目数组。');
+ const byId=new Map(value.questions.map(q=>[String(q?.id??'').trim(),q]));
+ if(value.questions.length!==batch.length||byId.size!==batch.length||batch.some(q=>!byId.has(String(q.id).trim())))throw aiError('要求题号 '+batch.map(q=>q.id).join('、')+'，但返回的题数或题号不符。');
+ return {...value,questions:batch.map(q=>({...byId.get(String(q.id).trim()),id:q.id}))};
+}
 function decodeAI(data,asJSON=true){
- const choice=data?.choices?.[0];if(choice?.finish_reason==='length')throw aiError('AI输出达到本批长度上限。');
+ const choice=data?.choices?.[0];if(choice?.finish_reason==='length')throw aiError('AI输出达到本批长度上限'+(choice.message?.reasoning_content&&!choice.message?.content?'（仅返回思考内容）':'')+'。');
  if(choice?.finish_reason&&choice.finish_reason!=='stop')throw Error('AI未正常完成本批输出，请检查输入资料后重试。');
  const text=choice?.message?.content;if(typeof text!=='string'||!text.trim())throw aiError('AI本批没有返回完整内容。');
  if(!asJSON)return text;
@@ -29,6 +34,13 @@ function decodeAI(data,asJSON=true){
 }
 async function smallRequest(ask,system,content,asJSON=true){
  try{return await ask(system,content,asJSON);}catch(e){if(!recoverable(e))throw e;return ask(system+'\n上次输出未完整。本次只输出必要字段，每项用一句短句，绝不附加题库或重复原文。',content,asJSON);}
+}
+function aiPayload(system,content,asJSON=true){return {model:'deepseek-flash',thinking:{type:'disabled'},temperature:.25,max_tokens:12000,...(asJSON?{response_format:{type:'json_object'}}:{}),messages:[{role:'system',content:system},{role:'user',content:JSON.stringify(content)}]};}
+// Use a batch-only schema: no full-lesson count or metadata in the output contract.
+function questionRequest(ask,input,batch,context={},options={}){
+ const shape={questions:[{id:batch[0].id,phase:'live',stage:'你做',section:'训练环节',type:'choice',word:'',skill:'目标能力',context:'原句或明确标示的教学示例',sourceKind:'original',sourceQuote:'原文连续引句',prompt:'题干',hint:'不泄题提示',english:'Short English hint.',options:['选项一','选项二','选项三','选项四'],answer:0,optionReasons:['解析一','解析二','解析三','解析四'],misconceptions:['正确','误区二','误区三','误区四'],highDistractor:1,attractionReason:'误选原因',explanation:'证据及推理',improve:'下一步',points:1}]};
+ const instruction='\n本请求只处理完整学习单中的本批题目。全课的题量、阶段占比、词语覆盖等要求在全课汇总时检查，不要在本批补齐全课题目。只返回JSON对象，顶层仅questions。严格按给定batch逐题输出，题号为 '+batch.map(q=>q.id).join('、')+'，本批共'+batch.length+'题。不输出objectives、plan或其他题目。格式：'+JSON.stringify(shape)+'\n开放题type=open，删除选项字段，添加rubric意义点数组，points等于意义点数。保留本批规划的题型、阶段及能力。'+(options.retry?'\n这是失败后的精简重试：每项解析只用一个短句；只引必要证据，不重复原文；完整保留所有字段。':'');
+ return ask(taskRules(input)+instruction,{...context,input:{...input,totalQuestionCount:input.questionCount,questionCount:batch.length},batch},true);
 }
 const sourceText=input=>input.mode==='writing'?[input.writingPrompt,input.passage].filter(Boolean).join('\n'):input.passage;
 const writingRules=`作文教学专用规则，优先替代通用规则中的阅读流程：不按课文逐段理解、词义检测或主旨阅读题组织作文课。教师输入writing为课堂阶段，genre为文体，writingFocus为训练重点，writingPrompt为完整题目。先理解写作任务再设计活动。作文原文题的sourceQuote可引用writingPrompt或passage中的连续原句；覆盖通用模板只允许passage的限制。
@@ -93,14 +105,14 @@ function checkReview(r,ids){if(!r||!Array.isArray(r.checks)||r.checks.length!==i
 async function autoReview(bank,input,ask,notify,onDraft,cancelled=()=>false){let current=bank,last=[];const history=[];
  for(let round=1;round<=3;round++){
   if(cancelled())throw Error('已取消自动审修');current=balance(current);onDraft(current);const mechanical=validate(current,input);const reviews=[];notify('第'+round+'轮：程序检查后，AI正在逐题审查……');
-  await batches(current.questions,batch=>ask(reviewPrompt()+(input.mode==='writing'?'\n'+writingRules:'')+'\n本次每题审查理由简洁，保留关键证据，不重抄题库。',{input,metadata:{objectives:current.objectives,plan:current.plan,scaffolds:current.scaffolds,worksheetMinutes:current.worksheetMinutes,questionOverview:current.questions.map(q=>({id:q.id,prompt:q.prompt,skill:q.skill,stage:q.stage,type:q.type}))},questions:batch,programChecks:mechanical},true),(r,batch)=>checkReview(r,batch.map(q=>q.id)),notify,cancelled,r=>reviews.push(...r.checks,{id:'global',...r.global}));
+  await batches(current.questions,(batch,options)=>ask(reviewPrompt()+(input.mode==='writing'?'\n'+writingRules:'')+'\n只审查本批questions中的题号；全课概览只用于整体检查。'+(options.retry?'重试时每条理由限一句，保留关键证据。':'本次理由简洁，不重抄题库。'),{input,metadata:{objectives:current.objectives,plan:current.plan,scaffolds:current.scaffolds,worksheetMinutes:current.worksheetMinutes,questionOverview:current.questions.map(q=>({id:q.id,prompt:q.prompt,skill:q.skill,stage:q.stage,type:q.type}))},questions:batch,programChecks:mechanical},true),(r,batch)=>checkReview(r,batch.map(q=>q.id)),notify,cancelled,r=>reviews.push(...r.checks,{id:'global',...r.global}));
   if(cancelled())throw Error('已取消自动审修');const conflicts=reviews.filter(r=>r.verdict==='teacher');last=[...mechanical.errors,...reviews.filter(r=>r.verdict!=='pass').map(r=>({id:r.id,message:r.reason}))];history.push({round,issues:last.length});
   if(!last.length)return {bank:current,passed:true,history,issues:[],reviewedAt:new Date().toISOString()};
   if(conflicts.length||round===3)return {bank:current,passed:false,history,issues:last,conflicts};
   notify('第'+round+'轮发现'+last.length+'项问题，AI正在修正……');
   if(last.some(e=>e.id==='global')){const meta=await smallRequest(ask,taskRules(input)+'\n只修正教学元数据，返回objectives、plan、worksheetMinutes、scaffolds；保留现有题号引用，不输出题目。每个支架简短清楚。',{input,previous:{objectives:current.objectives,plan:current.plan,worksheetMinutes:current.worksheetMinutes,scaffolds:current.scaffolds},questionIds:current.questions.map(q=>q.id),issues:last},true);for(const k of ['objectives','plan','worksheetMinutes','scaffolds'])if(k in meta)current[k]=meta[k];}
   const ids=new Set(last.filter(e=>e.id!=='global').map(e=>e.id));const affected=current.questions.filter(q=>last.some(e=>e.id==='global')||ids.has(q.id));
-  await batches(affected,batch=>ask(taskRules(input)+'\n'+schema+'\n只返回{"questions":[本批修正后的完整题目]}。保持题号和数量，逐项解析用一句话，完整保留字段和证据，不重抄整篇课文。',{input,questions:batch,issues:last.filter(e=>e.id==='global'||batch.some(q=>q.id===e.id))},true),checkQuestions,notify,cancelled,fixed=>{for(const q of fixed.questions)current.questions[current.questions.findIndex(x=>x.id===q.id)]=q;onDraft(current);});
+  await batches(affected,(batch,options)=>questionRequest(ask,input,batch,{questions:batch,instruction:'依据issues修正本批题目。',issues:last.filter(e=>e.id==='global'||batch.some(q=>q.id===e.id))},options),checkQuestions,notify,cancelled,fixed=>{for(const q of fixed.questions)current.questions[current.questions.findIndex(x=>x.id===q.id)]=q;onDraft(current);});
  }
  return {bank:current,passed:false,history,issues:last};
 }
@@ -172,7 +184,7 @@ function summarizeReports(files){
  return {lessonId:lesson,records:[...roster.values()],personal:personal.sort((a,b)=>b.percent-a.percent),groups:[...groups.values()].map(g=>({...g,mean:g.total/g.count})).sort((a,b)=>b.mean-a.mean),analysis};
 }
 
-return {esc,json,split,aiError,decodeAI,smallRequest,batches,checkQuestions,taskRules,sourceText,css,rules,schema,focus,positions,balance,validate,reviewPrompt,checkReview,autoReview,doc,student,summarizeReports};
+return {esc,json,split,aiError,decodeAI,smallRequest,batches,checkQuestions,aiPayload,questionRequest,taskRules,sourceText,css,rules,schema,focus,positions,balance,validate,reviewPrompt,checkReview,autoReview,doc,student,summarizeReports};
 })();
 
 // Document parsing happens in the browser. Only explicitly selected text is
@@ -370,7 +382,7 @@ if(typeof document!=='undefined' && document.getElementById('app')) {
  const style=document.createElement('style');style.textContent=HWT.css;document.head.appendChild(style);
  const $=id=>document.getElementById(id),mode=document.body.dataset.mode||'textbook';
  const names={textbook:'课文教学生成器',vocab:'词语练习生成器',writing:'作文教学生成器'};
- $('app').innerHTML=`<header><a href="../index.html">返回教师工作台</a><h1>${names[mode]||names.textbook}</h1><p>只生成随堂学习单 · AI检查并修正题目</p><small>v4.1 · 自动续接题稿 · 单文件学习单</small></header>
+ $('app').innerHTML=`<header><a href="../index.html">返回教师工作台</a><h1>${names[mode]||names.textbook}</h1><p>只生成随堂学习单 · AI检查并修正题目</p><small>v4.2 · 分批生成与故障原因提示 · 单文件学习单</small></header>
  <section id="inputs"><div class="grid"><div><label for="grade">年级</label><select id="grade"><option>中一</option><option>中二</option><option>中三</option><option>中四</option></select></div><div><label for="unit">单元</label><input id="unit"></div><div><label for="minutes">课时（分钟）</label><input id="minutes" type="number" min="30" max="120" value="60"></div><div><label for="questionCount">随堂题量（建议10–12题）</label><input id="questionCount" type="number" min="10" max="30" value="12"></div><div><label for="support">支架密度</label><select id="support"><option value="guided">引导式：中一／需要较多支持</option><option value="concise">精简式：程度较好班级</option></select></div>${mode==='writing'?'<div><label for="writing">这节课做什么？</label><select id="writing"><option>写前指导</option><option>写中支架</option><option>写后讲评</option></select></div><div><label for="genre">作文文体</label><select id="genre"><option>情境记叙文</option><option>记叙文</option><option>材料议论文</option></select></div><div><label for="writingFocus">本课训练重点</label><select id="writingFocus"><option>审题、选材与构思</option><option>情节因果与详略</option><option>人物与场景描写</option><option>开头、结尾与照应</option><option>论点、理由与例证</option><option>范文比较与迁移</option><option>作品诊断与修改</option></select></div>':''}</div>
  <label for="title">${mode==='writing'?'本课名称':'课文题目'}</label><input id="title">${mode==='writing'?'<label for="writingPrompt">完整作文题目与材料</label><textarea id="writingPrompt" placeholder="粘贴完整题目，包括人物、事件、范围和写作要求；材料议论文还须提供材料。"></textarea><p id="writingFlow" class="status"></p>':''}<label id="passageLabel" for="passage">${mode==='writing'?'范文／示范片段（写前可不填）':'课文原文（保留分段）'}</label><textarea id="passage" style="min-height:230px"></textarea><div ${mode==='writing'?'hidden':''}><label for="terms">目标词语${mode==='vocab'?'（必填）':'（选填）'}</label><textarea id="terms" placeholder="用顿号、中文或英文逗号、Tab、换行分隔"></textarea><p id="termCount" class="muted"></p><label for="known">已学词语范围</label><textarea id="known" placeholder="例如：中一全部＋中二单元一至六第一课"></textarea></div><label for="reference">教学参考／重点／学生困难</label><textarea id="reference" placeholder="粘贴文字，或上传PDF、Word、截图等教参；选取的教参优先用于命题。"></textarea><label for="key">DeepSeek API Key</label><input id="key" type="password" autocomplete="off"><p class="muted">用于生成及逐题审修，不写入下载文件。每轮会分批处理，请留意下方进度。</p><label><input id="direct" type="checkbox" checked>直接执行，跳过大纲确认</label></section>
  <section><button id="generate">生成随堂学习单</button><button id="repair" disabled>AI检查题目</button><button id="cancel" disabled>取消</button><button id="clear">清空</button><p id="draftNotice" class="muted"></p><div id="status" class="status" role="status" aria-live="polite">请填写资料。生成后会自动检查、修正、再审查，最多三轮。</div></section>
@@ -402,8 +414,8 @@ if(typeof document!=='undefined' && document.getElementById('app')) {
   const key=$('key').value.trim();if(!key)throw Error('请填写DeepSeek API Key，才能生成和自动审修。');
   const request=new AbortController();controller=request;const timer=setTimeout(()=>request.abort(),180000);
   try{
-   const response=await fetch('https://hwt-ai-proxy.lyqlym2015.workers.dev/',{method:'POST',headers:{'Content-Type':'application/json','x-deepseek-key':key},signal:request.signal,body:JSON.stringify({model:'deepseek-chat',temperature:.25,max_tokens:8000,...(asJSON?{response_format:{type:'json_object'}}:{}),messages:[{role:'system',content:system},{role:'user',content:JSON.stringify(content)}]})});
-   if(!response.ok)throw HWT.aiError('AI服务返回HTTP '+response.status+'，请检查密钥、余额或服务后重试。现有题稿保留。',[429,500,502,503,504].includes(response.status)?'AI_TEMPORARY':'AI_SERVICE');
+   const response=await fetch('https://hwt-ai-proxy.lyqlym2015.workers.dev/',{method:'POST',headers:{'Content-Type':'application/json','x-deepseek-key':key},signal:request.signal,body:JSON.stringify(HWT.aiPayload(system,content,asJSON))});
+   if(!response.ok){const reason={400:'请求参数被拒绝',401:'密钥无效',402:'余额不足',403:'服务拒绝访问',422:'请求格式无法处理',429:'服务繁忙或请求过多',500:'AI服务内部错误',502:'中转连接失败',503:'AI服务暂不可用',504:'中转等待超时'}[response.status]||'服务请求失败';throw HWT.aiError(reason+'（HTTP '+response.status+'）。现有题稿保留。',[429,500,502,503,504].includes(response.status)?'AI_TEMPORARY':'AI_SERVICE');}
    let data;try{data=await response.json();}catch{throw HWT.aiError('AI服务本批响应格式不完整。');}
    if(cancelled)throw Error('已取消，现有题稿保留。');return HWT.decodeAI(data,asJSON);
   }catch(e){if(e.name==='AbortError')throw HWT.aiError(cancelled?'已取消，现有题稿保留。':'本批请求超过3分钟。',cancelled?'CANCELLED':'AI_TIMEOUT');throw e;}finally{clearTimeout(timer);if(controller===request)controller=null;}
@@ -444,7 +456,7 @@ if(typeof document!=='undefined' && document.getElementById('app')) {
   }
   const blueprint=checkpoint.blueprint,done=new Set(checkpoint.full.map(q=>q.id)),remaining=blueprint.questions.filter(q=>!done.has(q.id));
   status('已保留'+checkpoint.full.length+'题，正在继续生成剩余'+remaining.length+'题……');
-  await HWT.batches(remaining,batch=>{status('正在生成 '+batch.map(q=>q.id).join('、')+'；已完成'+checkpoint.full.length+'/'+snapshot.questionCount+'题……');return ask(HWT.taskRules(snapshot)+'\n'+HWT.schema+'\n只输出{"questions":[本批完整题目]}，保持本批题号与数量。每个选项解析一短句，证据只引用必要原句，不重复整篇课文。字段必须完整。',{input:snapshot,approvedOutline:outline,objectives:blueprint.objectives,batch});},HWT.checkQuestions,status,()=>cancelled,part=>{
+  await HWT.batches(remaining,(batch,options)=>{status('正在生成 '+batch.map(q=>q.id).join('、')+'；已完成'+checkpoint.full.length+'/'+snapshot.questionCount+'题……');return HWT.questionRequest(ask,snapshot,batch,{approvedOutline:outline,objectives:blueprint.objectives},options);},HWT.checkQuestions,status,()=>cancelled,part=>{
    checkpoint.full.push(...part.questions);const byId=new Map(checkpoint.full.map(q=>[q.id,q]));setBank({...blueprint,questions:blueprint.questions.filter(q=>byId.has(q.id)).map(q=>byId.get(q.id))});
   });
   // A complete saved/revised bank is preferred over an older generation checkpoint.
@@ -484,7 +496,7 @@ if(typeof document!=='undefined' && document.getElementById('app')) {
    $('terms').value=(lesson.input.terms||[]).join('、');writingFlow();snapshot=readInput();checkpoint=null;outline=null;setBank(lesson.bank);
    status('正在依据错误分析改进题目与测评方向……');
    const improved=[];
-   await HWT.batches(bank.questions,batch=>ask(HWT.taskRules(snapshot)+'\n'+HWT.schema+'\n依据真实错误分析只改进本批题目。保留题号与数量，必要时调整考查重点、情境、干扰项和支架提示；不得为提高正确率而泄题，不把高低正确率直接当题目质量结论。每题解析简明。只输出questions数组。',{input:snapshot,report,statistics:items,questions:batch},true),HWT.checkQuestions,status,()=>cancelled,part=>improved.push(...part.questions));
+   await HWT.batches(bank.questions,(batch,options)=>HWT.questionRequest(ask,snapshot,batch,{report,statistics:items.filter(x=>batch.some(q=>q.id===x.id)),questions:batch,instruction:'依据真实错误分析改进，不以泄题提高正确率，不把高低正确率等同题目质量。'},options),HWT.checkQuestions,status,()=>cancelled,part=>improved.push(...part.questions));
    setBank({...bank,questions:improved});await review();
   }});
  }
