@@ -213,9 +213,10 @@ const HWTReferenceImport=(()=>{
         node('strong',item.file.name,panel);node('p',item.status||'待读取',panel);
         if(item.kind==='pdf'){
           const label=node('label','读取页码（留空为全部，例如3-8,12；按PDF实际页序）',panel);label.htmlFor='refPages'+item.id;
-          const range=node('input',undefined,panel);range.id=label.htmlFor;range.value=item.range;range.placeholder='全部页';range.disabled=busy;range.oninput=()=>{item.range=range.value;item.handled=false;item.status='页码已修改，待读取';changed();};
+          const invalidate=()=>{item.handled=false;item.status='读取设置已修改，待读取';results=results.filter(r=>r.item!==item||r.added);renderResults();$('referenceRecognize').disabled=false;$('referenceSkip').hidden=false;changed();};
+          const range=node('input',undefined,panel);range.id=label.htmlFor;range.value=item.range;range.placeholder='全部页';range.disabled=busy;range.oninput=()=>{item.range=range.value;invalidate();};
           const modeLabel=node('label','PDF读取方式',panel);modeLabel.htmlFor='refMode'+item.id;const mode=node('select',undefined,panel);mode.id=modeLabel.htmlFor;
-          for(const [value,text] of [['auto','自动：先提取文字，扫描页再识别'],['text','只提取原有文字'],['ocr','整页识别：扫描版或原有文字异常']]){const o=node('option',text,mode);o.value=value;}mode.value=item.mode;mode.disabled=busy;mode.onchange=()=>{item.mode=mode.value;item.handled=false;item.status='读取方式已修改，待读取';changed();};
+          for(const [value,text] of [['auto','自动：先提取文字，扫描页再识别'],['text','只提取原有文字'],['ocr','整页识别：扫描版或原有文字异常']]){const o=node('option',text,mode);o.value=value;}mode.value=item.mode;mode.disabled=busy;mode.onchange=()=>{item.mode=mode.value;invalidate();};
         }
         const link=node('a',item.kind==='image'?'查看原图':'打开原文件',panel);link.href=item.url;link.target='_blank';link.rel='noopener';
         const remove=node('button','移除文件',panel);remove.type='button';remove.disabled=busy;remove.onclick=()=>{if(busy||isGenerating())return;URL.revokeObjectURL(item.url);items=items.filter(x=>x!==item);results=results.filter(x=>x.item!==item);render();renderResults();changed();say('已移除文件；已加入教学参考的文字保留。');};
@@ -244,7 +245,7 @@ const HWTReferenceImport=(()=>{
         const type=kind(file);if(file.size>100*1024*1024)throw Error('文件超过100MB，请另存本课页码后上传。');
         if(items.reduce((s,x)=>s+x.file.size,0)+file.size>250*1024*1024)throw Error('当前文件合计超过250MB，请分批读取。');
         if(items.some(x=>x.file.name===file.name&&x.file.size===file.size&&x.file.lastModified===file.lastModified)){errors.push(file.name+'：已经在列表中，未重复添加');continue;}
-        items.push({id:++seq,file,kind:type,url:URL.createObjectURL(file),range:'',mode:'auto',handled:false,status:'待读取'});
+        items.push({id:++seq,file,kind:type,url:URL.createObjectURL(type==='html'?new Blob([file],{type:'text/plain'}):file),range:'',mode:'auto',handled:false,status:'待读取'});
       }catch(e){errors.push(file.name+'：'+e.message);}}
       render();changed();say(errors.length?errors.join('\n'):'文件已添加。PDF可指定本课页码，然后点击“读取文件内容”。',!!errors.length);
     }
@@ -297,7 +298,7 @@ const HWTReferenceImport=(()=>{
         const ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();
         const r=await ocr(canvas,current);canvas.width=canvas.height=1;if(current())result(item,null,r.text,'图片识别'+(/\.gif$/i.test(item.file.name)?'（首帧）':''),r.confidence,r.warning);
       }else{let text=decode(await item.file.arrayBuffer());if(!current())return;
-        if(item.kind==='html'){const doc=new DOMParser().parseFromString(text,'text/html');doc.querySelectorAll('script,style,iframe,object,embed').forEach(x=>x.remove());doc.querySelectorAll('br').forEach(x=>x.replaceWith('\n'));doc.querySelectorAll('p,div,li,tr,h1,h2,h3,h4').forEach(x=>x.append('\n'));text=doc.body.textContent||'';}
+        if(item.kind==='html'){const template=document.createElement('template');template.innerHTML=text;const doc=template.content;doc.querySelectorAll('script,style,iframe,object,embed').forEach(x=>x.remove());doc.querySelectorAll('br').forEach(x=>x.replaceWith('\n'));doc.querySelectorAll('p,div,li,tr,h1,h2,h3,h4').forEach(x=>x.append('\n'));text=doc.textContent||'';}
         result(item,null,text,'直接读取文本',null,text.trim()?'':'文件没有文字内容。');
       }
     }
