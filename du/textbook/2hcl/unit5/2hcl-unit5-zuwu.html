@@ -345,15 +345,32 @@ const FACILITIES = ["邻里中心","图书馆","公园","小贩中心","游乐�
 
 /* ================= 存储 ================= */
 const KEY = "zuwu-worksheet-v1";
+const worksheetStorage = {
+  async get(){
+    try{ if(window.storage){ const r=await window.storage.get(KEY); if(r && r.value) return r.value; } }catch(e){}
+    try{ return localStorage.getItem(KEY); }catch(e){ return null; }
+  },
+  async set(value){
+    try{ if(window.storage){ await window.storage.set(KEY,value); return true; } }catch(e){}
+    try{ localStorage.setItem(KEY,value); return true; }catch(e){ return false; }
+  },
+  async clear(){
+    let ok=true;
+    try{ if(window.storage) await window.storage.delete(KEY); }catch(e){ ok=false; }
+    try{ localStorage.removeItem(KEY); }catch(e){ if(!window.storage) ok=false; }
+    return ok;
+  }
+};
+
 let store = {};
 const flag = document.getElementById("saveflag");
 let saveTimer;
 function save(){
   clearTimeout(saveTimer);
   saveTimer = setTimeout(async ()=>{
-    try{ await window.storage.set(KEY, JSON.stringify(store));
-      flag.textContent="· 已保存"; setTimeout(()=>flag.textContent="",1500);
-    }catch(e){}
+    const saved=await worksheetStorage.set(JSON.stringify(store));
+    flag.textContent=saved ? "· 已保存" : "· Save unavailable on this device";
+    if(saved) setTimeout(()=>flag.textContent="",1500);
   }, 500);
 }
 document.addEventListener("input", e=>{
@@ -524,8 +541,12 @@ ${Object.keys(total).map(k=>names[k].replace(/　/g," ")+"："+got[k]+"/"+total[
 
 document.getElementById("clearAll").addEventListener("click", async ()=>{
   if(!confirm("清空所有作答，重新开始？")) return;
+  clearTimeout(saveTimer);
+  if(!await worksheetStorage.clear()){
+    flag.textContent="· Could not clear saved answers. Please try again.";
+    return;
+  }
   store={};
-  try{ await window.storage.delete(KEY); }catch(e){}
   location.reload();
 });
 
@@ -536,7 +557,7 @@ const obs=new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting) ra
 
 /* ================= 启动 ================= */
 (async function init(){
-  try{ const r=await window.storage.get(KEY); if(r&&r.value) store=JSON.parse(r.value); }catch(e){ store={}; }
+  try{ const raw=await worksheetStorage.get(); if(raw) store=JSON.parse(raw); }catch(e){ store={}; }
   renderMCQ(document.getElementById("vocA"), VOC_A, "a", {letters:true});
   renderMCQ(document.getElementById("vocB"), VOC_B, "b");
   renderMCQ(document.getElementById("vocC"), VOC_C, "c", {letters:true});
