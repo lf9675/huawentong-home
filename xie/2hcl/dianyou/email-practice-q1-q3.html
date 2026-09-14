@@ -1,334 +1,152 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hans-SG">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>私人电邮互动练习｜练习一＋练习三</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="中二私人电邮：找来信依据，自拟要点，解释、修改与独立迁移。">
+<title>私人电邮｜自己想，说明白 · 思考与修改版</title>
 <style>
-:root{
-  --ink:#16324a; --soft:#5c7082; --bg:#eef5fb; --card:#ffffff; --line:#cfdeea;
-  --blue:#2f5f8f; --blue2:#dcecf8; --gold:#c58a2b; --gold2:#fff4dd;
-  --good:#2f7a5a; --goodbg:#e8f5ee; --bad:#b3473d; --badbg:#fcecea;
-  --purple:#67558a; --purplebg:#f0edf7; --shadow:0 10px 30px rgba(29,61,90,.12);
-  --r:16px;
-  --font:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
-  --serif:"Noto Serif SC","Songti SC","SimSun",serif;
-}
-*{box-sizing:border-box}
-body{margin:0;background:linear-gradient(#f7fbff,#e8f2fa 40%,#dbe9f5);font-family:var(--font);color:var(--ink);line-height:1.7}
-.wrap{max-width:960px;margin:auto;padding:24px 18px 80px}
-.hero{padding:28px 0 16px}
-.eyebrow{font-size:12px;letter-spacing:.16em;color:var(--blue);font-weight:800}
-h1{font-family:var(--serif);font-size:clamp(30px,5vw,46px);line-height:1.2;margin:8px 0 6px}.sub{margin:0;color:var(--soft);font-size:17px}
-.topnote{margin-top:18px;background:var(--gold2);border:1px solid #efd5a4;border-left:5px solid var(--gold);padding:14px 16px;border-radius:12px;font-size:15px}
-.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}.tab{border:1px solid var(--line);background:#fff;color:var(--ink);padding:12px 18px;border-radius:999px;font-weight:800;cursor:pointer}.tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
-.lesson{display:none}.lesson.on{display:block}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin:18px 0;box-shadow:var(--shadow)}
-.stepno{font-size:12px;letter-spacing:.12em;color:var(--gold);font-weight:900}.card h2{font-family:var(--serif);font-size:25px;margin:4px 0 8px}.card h3{font-size:18px;color:var(--blue);margin:22px 0 10px}.hint{color:var(--soft);margin:0 0 14px}.key{color:#c0272d;font-weight:800}.en{display:block;font-size:13px;color:var(--soft);font-style:italic;margin-top:2px}
-.mail{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fcfdff}.mailhead{background:var(--blue);color:#fff;padding:9px 14px;font-size:14px;font-weight:800}.mailmeta{background:#edf4fa;padding:10px 14px;font-size:14px;color:var(--soft);border-bottom:1px solid var(--line)}.mailbody{padding:16px;font-family:var(--serif);font-size:16px}.mailbody p{margin:0 0 10px}.mailbody .ind{text-indent:2em}
-.map{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}@media(max-width:760px){.map{grid-template-columns:1fr}}
-.m{background:#f7fbff;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}.m b{display:block;color:var(--blue);font-size:15px}.m span{font-size:13px;color:var(--soft)}
-.q{border:1px solid var(--line);border-radius:12px;padding:14px 15px;margin:12px 0;background:#fbfdff}.q.right{border-color:var(--good);background:var(--goodbg)}.q.wrong{border-color:var(--bad);background:var(--badbg)}
-.stem{font-size:16px;margin:0 0 10px}.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(max-width:700px){.opts{grid-template-columns:1fr}}
-.opt{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:11px 13px;text-align:left;font-size:15px;font-weight:650;cursor:pointer}.opt:hover{border-color:var(--blue)}.opt:disabled{cursor:default;opacity:.72}.opt.picked{background:var(--ink);color:#fff;border-color:var(--ink);opacity:1}
-.fb{display:none;margin-top:10px;font-size:14px;font-weight:700}.q.right .fb,.q.wrong .fb{display:block}.q.right .fb{color:var(--good)}.q.wrong .fb{color:var(--bad)}
-.sortline{display:flex;gap:8px;flex-wrap:wrap}.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-size:14px;font-weight:700;cursor:pointer}.chip.on{background:var(--blue2);border-color:var(--blue);color:var(--blue)}
-.idea-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:720px){.idea-grid{grid-template-columns:1fr}}.idea{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fbfdff}.idea h4{margin:0 0 8px;color:var(--blue)}
-textarea{width:100%;min-height:95px;border:1px solid var(--line);border-radius:10px;padding:11px;font-family:var(--font);font-size:15px;line-height:1.7;resize:vertical;background:#fff}.smallta{min-height:72px}
-.checks{display:grid;gap:8px}.check{border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px 13px;text-align:left;cursor:pointer;font-weight:650}.check.on{background:var(--goodbg);border-color:var(--good);color:#1c5a40}.check.on::before{content:"✓ "}.check:not(.on)::before{content:"○ "}
-.badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:800;background:var(--blue2);color:var(--blue)}
-.rule{background:var(--gold2);border:1px solid #efd5a4;border-radius:12px;padding:13px 15px;margin:10px 0}.rule b{color:#8b5c12}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:760px){.two{grid-template-columns:1fr}}
-.finalbox{background:#f7fbff;border:2px dashed #b9cee0;border-radius:14px;padding:16px}.finalbox h4{margin:0 0 8px;color:var(--blue)}
-.btnbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}.btn{border:0;border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer}.primary{background:var(--blue);color:#fff}.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
-.progress{font-size:13px;color:var(--soft);margin-left:auto}.sectionhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.sectionhead h3{margin:18px 0 10px}.tipbox{background:var(--purplebg);border:1px solid #d8d0e8;border-radius:12px;padding:12px 14px;color:#4d3d6c;font-size:14px}.mini{font-size:13px;color:var(--soft)}
+:root{--ink:#173550;--muted:#52697c;--blue:#1d609b;--pale:#edf5fc;--line:#cfdfeb;--paper:#fff;--amber:#865719;--warm:#fff5e2;--green:#236548;--mint:#edf8f1;--red:#a3312c;--rose:#fff0ee;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);background:#f3f7fb;font-size:17px}*{box-sizing:border-box}body{margin:0;line-height:1.8}button,input,select,textarea{font:inherit;color:inherit}button,a,summary{touch-action:manipulation}button{cursor:pointer;min-height:44px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:9px 14px;line-height:1.6}button:hover{border-color:var(--blue)}button:disabled{cursor:default;opacity:.55}button:focus-visible,a:focus-visible,summary:focus-visible,input:focus,select:focus,textarea:focus{outline:3px solid #d9a744;outline-offset:3px}a{color:var(--blue)}.primary{background:var(--blue);border-color:var(--blue);color:#fff}.selected,[aria-pressed="true"]{background:var(--pale);border-color:var(--blue)}.danger{color:var(--red)}[hidden]{display:none!important}.shell{max-width:1280px;margin:auto;padding:22px 26px 48px}.top{display:flex;gap:14px;justify-content:space-between;align-items:center;flex-wrap:wrap}.brand{font-weight:800;text-decoration:none}.version,.small{font-size:14px;color:var(--muted)}h1{font-size:clamp(28px,4vw,40px);line-height:1.35;margin:18px 0 8px;letter-spacing:.02em}h2{font-size:27px;line-height:1.45;margin:4px 0 12px}h3{font-size:20px;line-height:1.5;margin:20px 0 10px}p{margin:8px 0 14px}.sub,.hint{color:var(--muted)}.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.tabs{margin:20px 0 14px}.tabs button{font-weight:700}.tabs .selected{background:var(--blue);color:white}.steps{display:flex;gap:7px;overflow-x:auto;padding:4px 2px 12px;margin-bottom:12px}.steps button{flex-shrink:0;font-size:15px;padding:8px 12px}.steps [aria-current="step"]{background:var(--ink);color:white;border-color:var(--ink)}.layout{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);gap:22px;align-items:start}.letter{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;position:static}.letter summary{font-weight:800;background:var(--ink);color:#fff;padding:12px 16px;cursor:pointer;min-height:50px}.letter-inner{padding:14px;max-height:none;overflow:visible}.brief{padding:10px 12px;background:var(--warm);font-size:15px;border-radius:8px}.meta{font-size:13px;color:var(--muted);overflow-wrap:anywhere;border-bottom:1px solid var(--line);padding-bottom:12px}.brush{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0}.brush button{font-size:14px;padding:6px 8px;min-height:42px}.mailtext{font-family:"Kaiti SC","STKaiti","KaiTi","Noto Serif CJK SC",serif;font-size:18px;line-height:1.9}.mailtext p{margin:9px 0}.sentence{display:inline;text-align:left;min-height:0;border:0;border-radius:4px;padding:2px 0;font:inherit;line-height:inherit;background:transparent;cursor:pointer;box-decoration-break:clone;-webkit-box-decoration-break:clone}.sentence:hover{background:#eef4f8}.sentence.ask{background:#ffecd0;box-shadow:inset 0 -2px #b97922}.sentence.info{background:#deedf9;box-shadow:inset 0 -2px #3981b1}.sentence.hi{background:#e9ecf1;box-shadow:inset 0 -2px #7b8da0}.sentence small{font:12px system-ui;color:#36506a;margin-right:4px}.mail-close{white-space:pre-line}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px;min-width:0;box-shadow:0 5px 24px #24486508}.kicker{color:var(--blue);font-size:13px;font-weight:800;letter-spacing:.08em}.box{border:1px solid var(--line);border-radius:11px;background:#f8fbfe;padding:14px 16px;margin:14px 0;overflow-wrap:anywhere}.warm{background:var(--warm);border-color:#e7d5b2}.feedback{border-left:4px solid var(--blue);padding:12px 14px;background:var(--pale);margin:14px 0;font-size:16px;overflow-wrap:anywhere}.feedback.good{background:var(--mint);border-color:var(--green)}.feedback.retry{background:var(--rose);border-color:var(--red)}.feedback .en{display:block;font-size:13px;color:var(--green);margin-top:5px}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{display:block;font-size:16px;font-weight:650;margin:14px 0 6px}input,select,textarea{width:100%;max-width:100%;border:1px solid #b8ccd9;border-radius:9px;padding:10px;background:#fff;line-height:1.7;font-size:17px}textarea{resize:vertical;min-height:84px}textarea.long{min-height:205px}select{min-height:46px}details.help{border:1px solid var(--line);border-radius:10px;padding:10px 13px;margin:12px 0;background:#f8fbfd}details.help summary{cursor:pointer;color:var(--blue);font-weight:700;min-height:28px}blockquote{margin:12px 0;border-left:3px solid #9cbacf;padding:8px 14px;background:#f5f9fc;overflow-wrap:anywhere}.flow{display:grid;gap:9px}.flow>div{padding:10px 13px;border-left:3px solid #bdd5e7;background:#f6faff}.flow b{color:var(--blue)}.choices{display:grid;gap:9px}.choices button{text-align:left;font-size:16px}.choices button.ok{background:var(--mint);border-color:var(--green)}.choices button.no{background:var(--rose);border-color:var(--red)}.navbottom{display:flex;justify-content:space-between;gap:14px;margin-top:22px}.pointnav button{font-size:15px}.tags{display:flex;gap:8px;flex-wrap:wrap}.tag{background:var(--pale);border:1px solid var(--line);padding:4px 10px;border-radius:20px;font-size:14px}.mark-sentence{display:block;width:100%;text-align:left;margin:8px 0;padding:12px;background:#fff}.mark-sentence.ispoint{border-left:5px solid var(--blue)}.mark-sentence.iswhy{border-left:5px solid var(--green);background:var(--mint)}.mark-sentence.ispoint.iswhy{box-shadow:inset 5px 0 var(--blue);border-right:5px solid var(--green)}.diff-old{border-left:3px solid #b8554d;padding:7px 12px;background:var(--rose);margin:5px 0}.diff-new{border-left:3px solid var(--green);padding:7px 12px;background:var(--mint);margin:5px 0}.record{border-top:1px solid var(--line);padding:12px 0}.record p{white-space:pre-wrap;margin:5px 0}.toolbar{margin:14px 0}.teacher{margin:16px 0;font-size:15px}.teacher summary{cursor:pointer;color:var(--muted)}#saveStatus{font-size:13px;color:var(--muted)}#saveStatus.error{color:var(--red);font-weight:700}.footer{font-size:13px;color:var(--muted);margin-top:24px}.skip{position:absolute;left:12px;top:-70px}.skip:focus{top:12px;background:white;z-index:10;padding:12px}.notice{font-size:14px;padding:8px 0;color:var(--muted)}#printout{display:none}.copypanel textarea{min-height:170px}.counts{display:grid;grid-template-columns:1fr 1fr;gap:10px}.count{padding:12px;background:var(--pale);border-radius:10px}.count strong{display:block;font-size:22px}.stamp{font-size:13px;color:var(--muted)}
+body.large .panel,body.large .hint,body.large label,body.large input,body.large select,body.large textarea,body.large .choices button,body.large .mark-sentence{font-size:20px}body.large .mailtext{font-size:21px}body.large .feedback{font-size:19px}
+@media(max-width:1000px){.layout{grid-template-columns:1fr}.letter{position:static}.letter-inner{max-height:none;overflow:visible}.panel{padding:22px}.shell{padding:18px 20px}.letter summary{display:block}.letter summary::after{content:" · 点此展开／收起";font-size:13px;font-weight:400}.steps{margin-bottom:8px}}
+@media(max-width:540px){.shell{padding:14px 12px 32px}.panel{padding:18px 15px}.twocol{grid-template-columns:1fr}h2{font-size:24px}.version{font-size:12px}.row button{flex-grow:1}.navbottom button{font-size:15px}.letter-inner{padding:12px}.counts{grid-template-columns:1fr 1fr}.mailtext{font-size:18px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
+@media print{body{background:white;color:#111;font-size:11pt}.shell{display:none}#printout{display:block;white-space:pre-wrap;overflow-wrap:anywhere;font-family:"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}#printout h1{font-size:19pt}#printout h2{font-size:15pt}#printout .record{break-inside:avoid} @page{size:A4;margin:16mm}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="hero">
-    <div class="eyebrow">Higher Chinese · Private Email · Thinking First</div>
-    <h1>私人电邮：要点我自己想得出来</h1>
-    <p class="sub">只练附件中的<strong>练习一</strong>和<strong>练习三</strong>。重点不是抄范文，而是学会：<strong>读懂来信 → 认清问题 → 自己想出合题要点 → 检查要点能不能用</strong>。</p>
-    <div class="topnote"><b>课堂目标：</b>每个问题至少想出 <b>2 个有效要点</b>。每个要点都必须真的在回答对方的问题，而且要能用来写成一段。</div>
-  </header>
-
-  <div class="tabs">
-    <button class="tab on" data-tab="l1">练习一 · VIA 社区服务</button>
-    <button class="tab" data-tab="l3">练习三 · 新组屋区</button>
-  </div>
-
-  <section class="lesson on" id="l1">
-    <div class="card">
-      <div class="stepno">THE LETTER</div><h2>练习一：兴文的来信</h2>
-      <div class="mail">
-        <div class="mailhead">主题：分享心得</div>
-        <div class="mailmeta">发件人：洪兴文　→　收件人：许静婷　｜　日期：2019 年 9 月 25 日</div>
-        <div class="mailbody">
-          <p>静婷：</p>
-          <p class="ind">好久没有给你写电邮了，别来无恙？</p>
-          <p class="ind">升上中二后，大家的学习、生活都变得非常忙碌，相信你也一样。</p>
-          <p class="ind">从去年开始，我的学校开展了一个名为“德育在于行动”的社区服务计划，要求每个班级必须参加，而各个班级也可以选择所服务的对象以及要进行的义工活动。作为班长，我觉得这是一个很有意义的计划，不仅能培养同学们正确的价值观，也能锻炼大家组织活动的能力。但班上很多同学都不愿意参与这项计划，认为学生就应该只专注于学业，不应该把时间浪费在义工活动上。</p>
-          <p class="ind"><b>我知道你曾经参加过很多“德育在于行动”的社区服务活动，你可以跟我分享你的经历吗？你认为有什么方法能鼓励我的同学更积极地参与这项计划？</b></p>
-          <p class="ind">希望早日收到你的电邮。</p>
-          <p class="ind">祝好！<br>兴文</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="stepno">STEP 1</div><h2>挖讯息：哪一句要拿来用？</h2>
-      <p class="hint">电邮题目没有废话。先判断：这是<strong>讯息</strong>、<strong>问题</strong>，还是<strong>寒暄</strong>。</p>
-      <div id="l1-info"></div>
-    </div>
-
-    <div class="card">
-      <div class="stepno">STEP 2</div><h2>认题型：两个问题，写法不一样</h2>
-      <div class="map">
-        <div class="m"><b>① 挖讯息</b><span>他告诉我什么？</span></div>
-        <div class="m"><b>② 认题型</b><span>他要我做什么？</span></div>
-        <div class="m"><b>③ 想要点</b><span>从哪里找内容？</span></div>
-        <div class="m"><b>④ 查要点</b><span>真的答题吗？</span></div>
-        <div class="m"><b>⑤ 写成段</b><span>怎样展开？</span></div>
-      </div>
-      <div id="l1-type"></div>
-    </div>
-
-    <div class="card">
-      <div class="stepno">STEP 3A</div><h2>第一问：分享经历，不要写成流水账</h2>
-      <p class="hint">兴文不是随便想听一个故事。他想知道：<span class="key">“参加 VIA 到底有什么实际意义？”</span> 所以经历要选能帮助他理解同学为什么值得参加的。</p>
-      <div class="rule"><b>想经历的路线：</b>为什么参加 → 服务谁 → 做了什么 → 遇到什么情况 → 结果怎样 → <b>我有什么收获</b></div>
-      <div id="l1-exp"></div>
-      <h3>现在轮到你：先选一种你愿意分享的 VIA 经历</h3>
-      <div class="sortline" id="l1-expchips">
-        <button class="chip">陪伴乐龄人士</button><button class="chip">环保清洁活动</button><button class="chip">食物捐赠与分类</button><button class="chip">社区活动协助</button>
-      </div>
-      <div class="idea-grid" style="margin-top:12px">
-        <div class="idea"><h4>① 经过要点</h4><textarea class="smallta" data-save="l1exp1" placeholder="我参加了什么活动？我具体做了什么？"></textarea></div>
-        <div class="idea"><h4>② 收获要点</h4><textarea class="smallta" data-save="l1exp2" placeholder="这次经历让我学到什么？为什么这点能回应兴文？"></textarea></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="stepno">STEP 3B</div><h2>第二问：怎样鼓励同学积极参与？</h2>
-      <p class="hint">先别急着想“方法”。先问：<strong>同学为什么不愿意？</strong> 兴文已经给了线索——<span class="key">他们觉得应该只专注学业，VIA 会浪费时间。</span></p>
-      <div class="rule"><b>想建议的路线：</b>先找“不愿参加的原因” → 再倒推“怎样解决这个原因” → 建议必须是兴文或班级做得到的。</div>
-      <div id="l1-adv"></div>
-      <h3>自己想两个建议</h3>
-      <div class="idea-grid">
-        <div class="idea"><h4>建议一</h4><textarea class="smallta" data-save="l1adv1" placeholder="同学的问题是什么？兴文可以怎么做？为什么有用？"></textarea></div>
-        <div class="idea"><h4>建议二</h4><textarea class="smallta" data-save="l1adv2" placeholder="换一个不同角度：怎样让同学愿意参加？"></textarea></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="stepno">STEP 4</div><h2>查要点：像在回答，不等于真的答到了</h2>
-      <div id="l1-check"></div>
-      <h3>把你刚才的 4 个要点再量一次</h3>
-      <div class="checks" id="l1-self">
-        <button class="check">第一问至少有 2 个要点，而且都是真实经历中的内容</button>
-        <button class="check">我写了“做了什么”，也写了“从中学到什么”</button>
-        <button class="check">第二问的建议针对“怕浪费时间 / 只重学业”等真实问题</button>
-        <button class="check">建议是兴文或班级能做得到的，不是政府或学校高层才做得到</button>
-        <button class="check">我用了来信里的讯息，不是换一个题目也能直接套用</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="stepno">OUTPUT</div><h2>我的构思卡</h2>
-      <div class="finalbox"><h4>只写要点，不写完整电邮</h4>
-        <textarea data-save="l1final" placeholder="第一问：经历要点1…… / 经历要点2……\n第二问：建议要点1…… / 建议要点2……"></textarea>
-      </div>
-    </div>
-  </section>
-
-  <section class="lesson" id="l3">
-    <div class="card">
-      <div class="stepno">THE LETTER</div><h2>练习三：国平的来信</h2>
-      <div class="mail">
-        <div class="mailhead">主题：请提供建议</div>
-        <div class="mailmeta">发件人：linguoping@kgoomail.com　→　收件人：zhengjinhua@kgoomail.com　｜　日期：2025 年 9 月 23 日</div>
-        <div class="mailbody">
-          <p>锦华：</p>
-          <p class="ind">你最近过得还好吗？好久没有跟你联系了，希望你一切顺利。</p>
-          <p class="ind">你上次提到自己和家人搬进了新的组屋区，对整体环境还算满意。<b>你可以跟我分享你喜欢社区里的哪些设施？另外，你觉得你的组屋区需要有什么改进的地方？</b></p>
-          <p class="ind">期待你的回信，也欢迎你寄几张你家附近的照片给我看看哦！</p>
-          <p class="ind">祝好！<br>国平</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="stepno">STEP 1</div><h2>挖讯息：题目短，反而更容易漏</h2>
-      <p class="hint">这封信虽然短，但至少有三类重要讯息：<strong>已经搬家</strong>、<strong>整体还算满意</strong>、<strong>两个问题</strong>。</p>
-      <div id="l3-info"></div>
-    </div>
-
-    <div class="card">
-      <div class="stepno">STEP 2</div><h2>认题型：不是“万能建议题”</h2>
-      <p class="hint">第一问要分享自己住区里的设施；第二问要指出需要改善的地方。<span class="key">不要把第二问误写成“政府应该怎样改善新加坡所有组屋区”。</span></p>
-      <div id="l3-type"></div>
-    </div>
-
-    <div class="card">
-      <div class="stepno">STEP 3A</div><h2>第一问：喜欢哪些设施？怎样才不空泛？</h2>
-      <p class="hint">“我喜欢公园，因为很好”太空。要点必须回答：<strong>是什么设施 → 我怎样使用 → 为什么喜欢</strong>。</p>
-      <div class="two">
-        <div class="tipbox"><b>路线 A：日常使用</b><br>我常在哪里？做什么？它给我什么方便？</div>
-        <div class="tipbox"><b>路线 B：家庭 / 邻里</b><br>这个设施怎样让家人或邻居有更多互动？</div>
-      </div>
-      <div id="l3-fac"></div>
-      <h3>自己想两个设施要点</h3>
-      <div class="idea-grid">
-        <div class="idea"><h4>设施一</h4><textarea class="smallta" data-save="l3fac1" placeholder="设施是什么？我怎样使用？为什么喜欢？"></textarea></div>
-        <div class="idea"><h4>设施二</h4><textarea class="smallta" data-save="l3fac2" placeholder="换一个不同功能的设施。"></textarea></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="stepno">STEP 3B</div><h2>第二问：哪里需要改进？先找“问题”，再说“为什么”</h2>
-      <p class="hint">题目问的是“需要有什么改进的地方”，所以你要先指出<strong>目前哪里不够好</strong>，再解释它带来什么不便。可以顺带提出改进方向，但不要离开自己的组屋区。</p>
-      <div class="rule"><b>想要点的路线：</b>现在有什么问题 → 谁受到影响 → 造成什么不便 → 可以往什么方向改善</div>
-      <div id="l3-imp"></div>
-      <h3>自己想两个改进要点</h3>
-      <div class="idea-grid">
-        <div class="idea"><h4>改进一</h4><textarea class="smallta" data-save="l3imp1" placeholder="目前哪里不够好？为什么需要改进？"></textarea></div>
-        <div class="idea"><h4>改进二</h4><textarea class="smallta" data-save="l3imp2" placeholder="换一个不同方面的问题。"></textarea></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="stepno">STEP 4</div><h2>查要点：有没有把来信的信息用起来？</h2>
-      <div id="l3-check"></div>
-      <h3>最后自查</h3>
-      <div class="checks" id="l3-self">
-        <button class="check">第一问至少 2 个设施，而且每个都写“怎样使用 + 为什么喜欢”</button>
-        <button class="check">第二问至少 2 个需要改进的地方，而且不是泛泛讲整个新加坡</button>
-        <button class="check">我没有把“整体环境还算满意”写成“这里什么都很差”</button>
-        <button class="check">我的要点来自真实组屋生活，符合中学生和家庭日常</button>
-        <button class="check">四个要点彼此不同，没有换词重复同一个意思</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="stepno">OUTPUT</div><h2>我的构思卡</h2>
-      <div class="finalbox"><h4>只写要点，不写完整电邮</h4>
-        <textarea data-save="l3final" placeholder="第一问：设施要点1…… / 设施要点2……\n第二问：改进要点1…… / 改进要点2……"></textarea>
-      </div>
-    </div>
-  </section>
-
-  <div class="btnbar"><button class="btn primary" id="summaryBtn">检查我有没有想够要点</button><button class="btn secondary" id="clearBtn">清空重做</button></div>
-  <div id="summary" class="card" style="display:none"></div>
-</div>
+<a class="skip" href="#work">跳到练习</a>
+<div class="shell">
+<div class="top"><a class="brand" href="../../../#2/email/0">← 华文通 · 中二私人电邮</a><span class="version">思考与修改版 v2.0</span></div>
+<h1>自己想，说明白</h1><p class="sub">从来信找依据，让要点站得住脚，再把解释补完整。</p>
+<div class="row"><span id="saveStatus" role="status">作答只保存在本机浏览器，不会自动交给老师。</span><button id="fontBtn" class="small">放大文字</button></div>
+<details class="teacher"><summary>教师使用说明／资料依据</summary><div class="box">两题可分开上课。建议先做第1—4步，再用下一课完成辨析、成段、修改与迁移；按学生情况调整，不设倒计时。先让学生说或写，卡住时才开提示。<br>原题依据《中二年底电邮练习》第1、3页；流程、六类电邮、每问至少两个要点、每个要点一段及“衔接过渡→要点→解释”依据《私人电邮笔记》。笔记“每段最少5行”用于提醒展开，本网页不按屏幕行数或字数判定质量。示范及迁移来信均为本页新增的教学材料，不是原题事实。<br>四选一仅保留4题，错后可订正。开放作答只作字段、引用与重复等结构提醒，不能自动判定合题，更不是AI评分。迁移初稿、修改前后和提示使用记录可导出，由老师结合文本核对。原版记录单独保留，不会算作新版已掌握。</div></details>
+<div id="legacy"></div>
+<div class="row tabs" aria-label="选择练习"><button data-lesson="l1">练习一 · VIA 社区服务</button><button data-lesson="l3">练习三 · 新组屋区</button></div>
+<nav class="steps" id="steps" aria-label="学习步骤"></nav>
+<div class="layout"><details class="letter" id="letter" open><summary id="letterTitle">原题与来信 · 随时可查</summary><div class="letter-inner" id="letterContent"></div></details><main id="work" tabindex="-1"><div class="panel" id="panel"></div><div class="navbottom"><button id="prev">← 上一步</button><button id="next" class="primary">下一步 →</button></div></main></div>
+<p class="footer">不设排行榜，不用字数换取“合格”。保存的是你的思考过程，不是系统认定的能力等级。</p>
+<noscript><p>请启用浏览器的 JavaScript，才能使用互动与本地保存功能。</p></noscript>
+</div><div id="printout"></div>
 <script>
-const STORE='email-q1-q3-v1';
-let S={};try{S=JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e){S={}};
-const save=()=>localStorage.setItem(STORE,JSON.stringify(S));
-
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
-  document.querySelectorAll('.lesson').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on');document.getElementById(b.dataset.tab).classList.add('on');
-});
-
-document.querySelectorAll('[data-save]').forEach(el=>{
-  const k=el.dataset.save;if(S[k])el.value=S[k];
-  el.addEventListener('input',()=>{S[k]=el.value;save()});
-});
-document.querySelectorAll('.chip').forEach((b,i)=>{
-  const k='chip_'+i;if(S[k])b.classList.add('on');
-  b.onclick=()=>{b.classList.toggle('on');S[k]=b.classList.contains('on')?1:0;save()}
-});
-document.querySelectorAll('.check').forEach((b,i)=>{
-  const k='chk_'+i;if(S[k])b.classList.add('on');
-  b.onclick=()=>{b.classList.toggle('on');S[k]=b.classList.contains('on')?1:0;save()}
-});
-
-function mcq(hostId,data,prefix){
-  const host=document.getElementById(hostId);
-  data.forEach((q,i)=>{
-    const d=document.createElement('div');d.className='q';
-    d.innerHTML=`<p class="stem">${i+1}. ${q.stem}</p><div class="opts"></div><div class="fb"></div>`;
-    const bar=d.querySelector('.opts'),fb=d.querySelector('.fb'),key=prefix+i;
-    const lock=(j)=>{
-      [...bar.children].forEach((x,n)=>{x.disabled=true;if(n===j)x.classList.add('picked')});
-      const ok=j===q.ans;d.classList.add(ok?'right':'wrong');
-      fb.innerHTML=(ok?'✓ 对了。':'✗ 再想想。')+q.fb;
-    };
-    q.opts.forEach((t,j)=>{const b=document.createElement('button');b.className='opt';b.textContent='ABCD'[j]+'　'+t;b.onclick=()=>{if(S[key]!==undefined)return;S[key]=j;save();lock(j)};bar.appendChild(b)});
-    host.appendChild(d);if(S[key]!==undefined)lock(S[key]);
-  });
-}
-
-const l1Info=[
-{stem:'「升上中二后，大家的学习、生活都变得非常忙碌。」这句最有用的地方是什么？',opts:['说明兴文不喜欢上学','暗示同学担心时间不够','证明 VIA 一定没意义','只是寒暄，不必理会'],ans:1,fb:'这句与后文“只专注学业、不要浪费时间”连起来，说明同学的核心顾虑是时间和学业。'},
-{stem:'「作为班长，我觉得这是一个很有意义的计划。」回答时应该怎样处理？',opts:['完全不用理会他的看法','回应他的处境和看法','批评他太爱管同学','只抄回这句话即可'],ans:1,fb:'兴文是班长，又认同 VIA。你的回信应帮助他解决“怎样带动同学”的困难。'},
-{stem:'来信真正要求你回答几个问题？',opts:['一个，只分享经历','两个：经历＋鼓励方法','三个：学业＋义工＋班长','四个，每段都要回答'],ans:1,fb:'两个核心问题都必须回答：分享经历；提出鼓励同学参与的方法。'}
-];
-const l1Type=[
-{stem:'第一问「可以跟我分享你的经历吗？」最适合归为哪一类？',opts:['分享经验类','谈看法类','劝慰类','报告生活类'],ans:0,fb:'分享经验要围绕对方真正需要的经验，写时间、地点、人物、经过、结果和收获。'},
-{stem:'第二问「有什么方法能鼓励我的同学更积极参与？」属于哪一类？',opts:['分享经验类','建议类','报告生活类','劝慰类'],ans:1,fb:'建议要针对对方的问题、能解决问题、而且对方做得到。'},
-{stem:'这封回信整体上属于哪一种？',opts:['只写经历即可','只写建议即可','分享经验＋建议的混合类','谈看法＋劝慰的混合类'],ans:2,fb:'两个问题类型不同，所以要先拆任务，再分别构思。'}
-];
-const l1Exp=[
-{stem:'哪一个“经历”最适合拿来回应兴文？',opts:['周末跟家人去商场买东西','参加清洁活动后更懂团队合作','考试前熬夜温习拿到高分','放学后和朋友去打篮球'],ans:1,fb:'要选与 VIA 有关、而且能说明“为什么值得参加”的经历。'},
-{stem:'分享 VIA 经历时，哪一项最不能缺？',opts:['当天穿什么衣服','活动后得到什么收获','天气到底热不热','回家搭哪一路巴士'],ans:1,fb:'兴文想用你的经历来鼓励同学，所以“收获/成长”比无关细节重要。'},
-{stem:'以下哪一组最像合格的经历要点？',opts:['地点很多＋人物很多','经过清楚＋收获相关','写得很长＋成语很多','故事刺激＋结果夸张'],ans:1,fb:'不是越戏剧化越好，而是要真实、清楚、能回应兴文的问题。'}
-];
-const l1Adv=[
-{stem:'同学认为“学生只应该专注学业”。最直接的鼓励方法是哪一个？',opts:['告诉他们义工比考试重要','说明 VIA 也能培养能力且合理安排时间','要求班长每天点名批评','请校长强迫所有人参加'],ans:1,fb:'先回应他们真正的顾虑：学业和时间。说明活动并非“浪费时间”，而是能培养价值观与组织能力。'},
-{stem:'哪一条建议是兴文“做得到”的？',opts:['教育部修改全国政策','政府增加社区预算','班上先让同学选择服务对象','媒体多报道义工活动'],ans:2,fb:'建议对象是兴文。他能做的是班级层面的行动，不是政府层面的措施。'},
-{stem:'如果同学觉得活动无聊，哪一条建议更有针对性？',opts:['让同学参与选择义工活动','不停强调这是学校规定','告诉他们不参加会失败','把活动全部交给老师'],ans:0,fb:'让同学有选择权，较能提高投入感；而且题目已说明班级可以选择服务对象和活动。'},
-{stem:'哪一条不是好建议？',opts:['分享自己参与后的收获','让同学分工承担不同任务','安排活动时顾及考试时间','说不参加就是没有爱心'],ans:3,fb:'贴标签和指责很难真正解决同学的顾虑，也不利于鼓励参与。'}
-];
-const l1Check=[
-{stem:'“我参加过一次义工活动，很开心，所以你叫大家参加就好。”最大问题是什么？',opts:['太多细节','经历没有具体内容与收获','建议太多','格式不正确'],ans:1,fb:'只说“很开心”太空，兴文无法从中看出这项活动为什么值得参加。'},
-{stem:'“可以请政府规定所有学生每月做十小时义工。”为什么不合格？',opts:['太短','没有例子','兴文做不到','没有写时间'],ans:2,fb:'给朋友的建议，必须是对方或班级实际能执行的动作。'},
-{stem:'“先让同学参与选择服务对象，再把活动排在考试后。”为什么较好？',opts:['因为句子最长','同时回应兴趣与时间顾虑','因为有两个连接词','因为提到了考试'],ans:1,fb:'它直接对应来信里的真实问题：同学担心浪费时间，也可能缺乏参与感。'}
-];
-
-const l3Info=[
-{stem:'「你上次提到自己和家人搬进了新的组屋区」告诉你什么？',opts:['只能写学校生活','内容必须围绕新组屋区','一定要写搬家过程','必须批评旧住区'],ans:1,fb:'回信内容要落在“新的组屋区”，不能泛泛谈社区。'},
-{stem:'「对整体环境还算满意」对第二问有什么限制？',opts:['可以把社区写得一无是处','应写局部可改进之处','第二问可以不回答','只能写优点不能写缺点'],ans:1,fb:'整体“还算满意”，所以第二问宜写局部问题，不宜自相矛盾地说整个社区很糟。'},
-{stem:'这封信有几个真正需要回答的问题？',opts:['一个','两个','三个','四个'],ans:1,fb:'① 喜欢哪些设施；② 哪些地方需要改进。'}
-];
-const l3Type=[
-{stem:'第一问「分享你喜欢社区里的哪些设施」最接近哪一种任务？',opts:['报告生活／分享个人情况','劝慰类','纯建议类','辩论类'],ans:0,fb:'重点是分享自己实际生活中的设施与感受。'},
-{stem:'第二问「觉得组屋区需要有什么改进的地方」最合适的写法是？',opts:['只列问题，不解释','指出问题＋说明为什么需要改进','大谈全国房屋政策','只写自己不满意'],ans:1,fb:'先说哪里不足，再解释对居民造成什么不便；可顺带提出改进方向。'},
-{stem:'这封回信最容易犯的错误是什么？',opts:['把“自己的组屋区”写成全国问题','没有写天气','没有写学校功课','没有写搬家箱子'],ans:0,fb:'题目范围很明确，是“你的组屋区”。'}
-];
-const l3Fac=[
-{stem:'哪一个设施要点最具体？',opts:['这里的设施很好','楼下有有盖走道，下雨也能去巴士站','社区很方便','我很喜欢这里'],ans:1,fb:'设施是什么、怎样使用、带来什么方便，都看得见。'},
-{stem:'哪一个设施最适合中学生真实生活？',opts:['私人游艇码头','学校旁的社区篮球场','豪华高尔夫会所','大型赌场接驳点'],ans:1,fb:'要符合真实的新加坡中学生生活逻辑。'},
-{stem:'写“社区图书馆/阅读角”时，怎样展开才够具体？',opts:['那里很好，我很喜欢','我放学会去自习，也能借书','图书馆非常有意义','大家都知道阅读重要'],ans:1,fb:'把“设施”变成真实使用情景，内容就不空泛。'}
-];
-const l3Imp=[
-{stem:'哪一个“需要改进”的要点最合题？',opts:['全国房价太高','楼下巴士站遮雨棚太短','学校功课太多','手机应用广告太多'],ans:1,fb:'它属于自己组屋区的真实设施问题，而且可以说明居民受影响。'},
-{stem:'如果写“儿童游乐场太小”，下一步最好解释什么？',opts:['我小时候很可爱','放学后很多孩子同时使用，空间拥挤','新加坡天气很热','每个人都应该运动'],ans:1,fb:'解释“为什么需要改进”——谁受影响、造成什么不便。'},
-{stem:'哪一个说法与“整体环境还算满意”最协调？',opts:['这里几乎什么都不好','整体不错，只是晚上照明不足','这里完全不适合居住','所有设施都应该重建'],ans:1,fb:'既承接“整体满意”，又指出局部可改善之处，逻辑一致。'}
-];
-const l3Check=[
-{stem:'“我喜欢社区的设施，因为很方便。”最大问题是什么？',opts:['没有称呼','没有说清什么设施、怎样方便','句子太短不能用','必须加入成语'],ans:1,fb:'要点需要具体：设施＋使用情景＋喜欢的原因。'},
-{stem:'“政府应该改善所有组屋区的交通。”为什么不理想？',opts:['没有分段','范围太大，离开自己的组屋区','用了“政府”两个字','没有写日期'],ans:1,fb:'对方问的是“你的组屋区需要改进什么”，不是全国政策。'},
-{stem:'哪一组四个要点更完整？',opts:['公园好／交通好／环境好／设施好','有盖走道方便／篮球场常用／夜间照明不足／垃圾桶太少','社区不错／我很满意／邻居友善／交通方便','巴士站／公园／学校／商场'],ans:1,fb:'既有两个具体优点，也有两个具体改进点，而且彼此不重复。'}
-];
-
-mcq('l1-info',l1Info,'l1i');mcq('l1-type',l1Type,'l1t');mcq('l1-exp',l1Exp,'l1e');mcq('l1-adv',l1Adv,'l1a');mcq('l1-check',l1Check,'l1c');
-mcq('l3-info',l3Info,'l3i');mcq('l3-type',l3Type,'l3t');mcq('l3-fac',l3Fac,'l3f');mcq('l3-imp',l3Imp,'l3p');mcq('l3-check',l3Check,'l3c');
-
-document.getElementById('summaryBtn').onclick=()=>{
-  const vals=['l1exp1','l1exp2','l1adv1','l1adv2','l3fac1','l3fac2','l3imp1','l3imp2'];
-  const filled=vals.filter(k=>(S[k]||'').trim().length>=8).length;
-  const box=document.getElementById('summary');box.style.display='block';
-  let msg='';
-  if(filled>=8)msg='你已经为两题都准备了至少 4 个可用要点。下一步才是把每个要点写成段。';
-  else if(filled>=5)msg='大部分要点已经有了。再补齐空白处，并检查每个要点是否真的回答题目。';
-  else msg='目前要点还不够。先不要写完整电邮，回到“想要点”部分，把每一问至少想出两个要点。';
-  box.innerHTML=`<div class="stepno">CHECK</div><h2>构思完成度</h2><p><span class="badge">${filled} / 8 个自拟要点已写</span></p><p>${msg}</p><p class="mini">提醒：这里检查的是“有没有想出内容”，不是正式作文评分。</p>`;
-  box.scrollIntoView({behavior:'smooth'});
+'use strict';
+// Single-file, offline-capable worksheet. No network calls or student-data uploads.
+const VERSION='2.0', KEY='hwt-email-q1-q3-thinking-v2', OLDKEY='email-q1-q3-v1';
+const STEPS=['挖讯息','认题型·用讯息','我做·我们做','自己想要点','辨错·查重复','写成段','查自己·改一处','独立迁移','我的构思卡'];
+const TYPES=['报告生活类','分享经验类','建议类','劝慰类','话题讨论类','混合类'];
+const D={
+l1:{title:'练习一 · VIA 社区服务',me:'静婷',to:'兴文',brief:'兴文和静婷是小学同学。最近，兴文因为班上同学不愿意参与学校开展的“德育在于行动”社区服务计划（VIA）而感到苦恼。为此，他写了以下电邮向静婷请教。假设你是静婷，请写一则电邮回复兴文。',meta:'发件人：洪兴文 <hongxw@kgoomail.com>\n收件人：许静婷 <xujingting@kgoomail.com>\n日期：2019年9月25日　主题：分享心得',salute:'静婷：',closing:'　　祝好！\n兴文',
+sentences:[
+['hi','好久没有给你写电邮了，别来无恙？',1],
+['busy','升上中二后，大家的学习、生活都变得非常忙碌，相信你也一样。',2],
+['must','从去年开始，我的学校开展了一个名为“德育在于行动”的社区服务计划，要求每个班级必须参加，',3],
+['choice','而各个班级也可以选择所服务的对象以及要进行的义工活动。',3],
+['leader','作为班长，我觉得这是一个很有意义的计划，不仅能培养同学们正确的价值观，也能锻炼大家组织活动的能力。',3],
+['concern','但班上很多同学都不愿意参与这项计划，认为学生就应该只专注于学业，不应该把时间浪费在义工活动上。',3],
+['q1','我知道你曾经参加过很多“德育在于行动”的社区服务活动，你可以跟我分享你的经历吗？',4],
+['q2','你认为有什么方法能鼓励我的同学更积极地参与这项计划？',4],
+['request','我想听听你的建议。',4],['close','希望早日收到你的电邮。',5]],
+infos:['busy','must','choice','leader','concern'],asks:['q1','q2'],extras:['request'],greetings:['hi','close'],
+tasks:['分享VIA经历','鼓励同学积极参与的方法'],typeAnswers:[[1],[2]],typeNote:'整封信是分享经验＋建议的混合类。先简短回应兴文的苦恼；正文仍须分别完成两个主要任务。',
+limits:'“每班必须参加”不等于“每人积极投入”。可写主动承担工作、提出意见、认真完成任务；不能只重复“学校要规定参加”。班长可提议、协调、征询意见，不能单方面决定校规或服务单位的安排。',
+inference:'“同学觉得活动无聊”是合理推想，不是来信明说的事实。可用“如果有些同学……”提出补充办法；优先回应忙碌、只重学业和觉得浪费时间这些明确信息。',
+model:[['取内容','示例背景：上学期，老师带领我们为附近居民进行社区清洁。'],['抓行动','两组同学重复清理同一区域。我和组员重新划分范围，再各自负责一部分。'],['看结果','重新分工后，我们在约定时间内完成了任务。'],['说收获','这让我明白合作不只是一起动手，还要先协调分工。具体行动支持了这个收获。']],
+modelTitle:'教师示范：从具体经历找出一个可展开的重点',
+bridgeBefore:'兴文让同学参与选择服务活动',bridgeAfter:'同学更愿意主动承担工作',bridgePrompt:'中间为什么会有这个变化？别只重复“提高积极性”。',bridgeRef:'同学能表达兴趣和特长，较容易找到愿意承担的工作，因此不再只是被动接受安排。',
+pointTitles:['第一问 · 经历重点一','第一问 · 经历重点二','第二问 · 建议一','第二问 · 建议二'],
+labels:[['这一经历最值得分享的重点是什么？','当时我具体做了什么？结果怎样？','这件具体事情让我学到什么？为什么能帮助兴文？'],['要点','具体行动与结果','相关收获及其依据'],['要解决同学的什么顾虑？提出什么办法？','兴文先做什么？需要与谁商量？','这个动作先改变什么，再怎样促进参与？'],['要点','具体做法','为什么有效']],
+hints:[['先想一次活动中的一个小片段：我负责什么？碰到什么情况？','再想：我如何调整？结果怎样？收获应由这件事推出。'],['可以用同一活动的另一个重点，也可以用另一项经历。不要把“经过”和“收获”拆开凑两点。','给两个经历重点各起一个小标题：它们需要不同的具体行动来支持吗？'],['把顾虑说准确：是不觉得值得，还是担心时间冲突？','从兴文能做的动作出发：征询、协调、说明、商量。动作怎样减少刚才的顾虑？'],['先比较建议一。第二条究竟解决了什么不同问题？','只换服务对象或活动名称，未必换了方法；看它们为什么能起作用。']],
+planNote:'每问准备两个重点，每点各成段。经历可以来自同一次活动的不同重点，也可来自不同活动；每一点都要有具体内容和相应结果／收获。不是把“经过”和“收获”两个标签当成两个合格要点。',
+quizzes:[
+{stem:'同学认为VIA没有学习价值。邀请学长分享时，哪项安排最直接回应这个看法？',opts:['请学长讲清服务中学到的能力','请学长逐项介绍参与过的活动','请学长重点展示收到过的奖状','请学长详细说明活动当天流程'],ans:0,fb:['以具体经历说明如何学到能力，才能回应“没有学习价值”。这只是一个思路，还要交代经历与能力的联系。','你选的是“参与过的活动”。活动名称多，不等于说明学到什么；请找能回应“学习价值”的内容。','你选的是“收到过的奖状”。获奖可以吸引注意，但没有直接解释活动本身能带来什么学习。','你选的是“当天流程”。流程让人知道怎样参加，却未说明为什么值得花时间。']},
+{stem:'建议一是“让同学选择服务对象”，建议二是“让同学选择义工活动”。判断是否重复，最应看什么？',opts:['服务对象不同因此属于不同角度','先后次序不同因此可以分成两段','两条都靠选择权提高参与意愿','两条都符合题目所以不需要调整'],ans:2,fb:['对象与活动名称虽不同，仍需比较它们起作用的原因；不能只看名词。','换先后次序并不必然产生不同角度；请比较两个方法的作用。','两条都通过选择权增加参与意愿，可能适合合并，再提出回应另一顾虑的方法；并非所有带“选择”的建议都必须合并。','两条都相关，也可能重复。相关性与是否有不同内容，是两个检查。']}],
+transfer:'【教师另拟迁移来信，不是原卷练习二】\n明轩：\n班上准备举办旧书交换活动，我负责协调。有些同学怕筹备活动占用复习时间，也担心自己的书没人喜欢。我记得你参加过类似活动，能分享一次相关经历吗？你觉得我怎样才能让同学愿意认真参与筹备？\n期待你的回信！\n立扬',transferMe:'明轩',transferTo:'立扬'},
+l3:{title:'练习三 · 新组屋区',me:'锦华',to:'国平',brief:'根据以下电子邮件的内容，写一个电邮给对方。',meta:'发件人：linguoping@kgoomail.com\n收件人：zhengjinhua@kgoomail.com\n日期：2025年9月23日　主题：请提供建议',salute:'锦华：',closing:'祝好！\n国平',
+sentences:[['hi','你最近过得还好吗？好久没有跟你联系了，希望你一切顺利。',1],['home','你上次提到自己和家人搬进了新的组屋区，',2],['satisfied','对整体环境还算满意。',2],['q1','你可以跟我分享你喜欢社区里的哪些设施？',2],['q2','另外，你觉得你的组屋区需要有什么改进的地方？',2],['photo','期待你的回信，也欢迎你寄几张你家附近的照片给我看看哦！',3]],
+infos:['home','satisfied'],asks:['q1','q2'],extras:['photo'],greetings:['hi'],
+tasks:['分享喜欢的住区设施与理由','指出住区可改进之处并说明原因'],typeAnswers:[[0,1],[4,2]],typeNote:'第一问可按报告生活写设施、使用情景与感受；用分享个人经验的方式展开也可以。第二问重在改进意见：指出不足，说明影响，可提出改进方向。不要只凭“请提供建议”这个主题判断整封信。',
+limits:'范围是“自己的组屋区”。整体满意仍可指出值得认真改善的问题，但不能前后矛盾。第二问是在分享改进意见，不是要求国平亲自施工；可以合理提出由相关管理单位处理的方向。',
+inference:'“新的组屋区”不一定是“刚建好的组屋区”，也不代表设施一定不足。社区篮球场、图书馆等只是可能素材；先确认它属于你构思的住区，并说明自己怎样使用。',
+model:[['定设施','示例：我喜欢连接住家与巴士站的有盖走道。'],['写使用','下雨的早晨，我上学时会沿着这条走道去等车。'],['解释方便','它减少了我露天步行的路段，不必为了避雨绕远路。'],['回到感受','这种日常便利，才说明我为什么喜欢它；不只写“设施很好”。']],
+modelTitle:'教师示范：从日常使用找出喜欢的原因',
+bridgeBefore:'住区一段常用走道晚上照明不足',bridgeAfter:'我建议相关单位检查并改善这段走道的照明',bridgePrompt:'为什么有必要改善？写清受影响的人与具体不便，不要转去泛谈运动的好处。',bridgeRef:'夜间经过的居民不容易看清路面，行走时更担心绊倒。因此，检查并改善这段照明能回应实际使用困难。',
+pointTitles:['第一问 · 喜欢的设施一','第一问 · 喜欢的设施二','第二问 · 改进意见一','第二问 · 改进意见二'],
+labels:[['我喜欢哪一项具体设施？','我或家人什么时候、怎样使用？','它具体减少了什么麻烦／带来什么帮助？'],['要点','使用情景','喜欢的理由'],['自己住区哪里不足？需要怎样改善？','谁在什么情况下受到影响？','问题造成什么不便？改善为什么有帮助？'],['要点','具体影响','改进理由']],
+hints:[['从自己日常出行、休闲或学习的一个时刻回想，不必先找“大设施”。','和没有它时比较：少了什么麻烦？为什么这对你重要？'],['不要只换一个设施名称。找一个不同的使用情景与喜欢的原因。','它在哪里？你怎样使用？“很好、方便”需要具体解释。'],['先说住区中的一处实际问题，再说受影响的人。','改进方向要回应那个问题；可以由相关单位处理，不要求朋友亲自完成。'],['先比较意见一：地点、问题、影响或改善方式是否实质不同？','“这里都不好”与整体满意不协调；可以认真指出一处不足，而不否定整个住区。']],
+planNote:'第一问两个不同设施要点，各写使用情景和喜欢的理由；第二问两个改进意见，各写本区问题与具体影响，并可提出改善方向。别用“邻居友善”代替设施，也别把全国政策当成本区的问题。',
+quizzes:[
+{stem:'锦华认为本区一段常用走道夜间照明不足。哪条最直接回应“住区需要怎样改进”？',opts:['我可以提醒家人夜间尽量结伴出行','居民可以改在白天使用这段走道','全国组屋区都应统一提高照明标准','相关单位可检查这段走道的照明'],ans:3,fb:['“结伴出行”是应对办法，但没有改变照明不足这个住区问题；再找直接改善问题的方向。','“改在白天使用”避开了困难，却没有处理居民仍需夜间通行的需求。','这扩大成全国标准，离开了自己的住区；本题不要求讨论全国政策。','意见针对本区这段走道，且交由合适主体处理。锦华不必亲自装灯；还应说明居民受到什么影响。']},
+{stem:'“游乐场器材需要维修，因为运动有益健康。”要使解释支持“需要维修”，最应补什么？',opts:['游乐场一般能提供哪些游玩项目','器材损坏怎样影响孩子安全使用','不同年龄孩子分别喜欢什么运动','社区运动对孩子成长有哪些好处'],ans:1,fb:['介绍游玩项目能说明设施有什么，却未解释损坏为什么需要处理。','应从器材损坏说到使用困难或安全顾虑，再连回维修；这才是支持本要点的理由。','运动喜好与维修理由不是同一件事；请回到“器材损坏”的影响。','健康与成长虽有关，但它们不能代替损坏器材造成的实际影响。']}],
+transfer:'【教师另拟迁移来信，不是原卷练习二】\n佳宁：\n听说你经常和家人到附近的民众俱乐部，觉得整体环境不错。我准备周末带弟弟去看看。你最喜欢那里的哪些设施？你认为那里还有什么地方需要改进？\n等你的回信！\n以安',transferMe:'佳宁',transferTo:'以安'}
 };
-document.getElementById('clearBtn').onclick=()=>{if(confirm('清空全部作答，重新开始？')){localStorage.removeItem(STORE);location.reload()}};
+const $=s=>document.querySelector(s), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let S={version:VERSION,active:'l1',l1:{},l3:{}}, storageOK=true, old=null, brush='ask', markMode='point';
+try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&x.version===VERSION&&typeof x.l1==='object'&&typeof x.l3==='object')S=x;old=JSON.parse(localStorage.getItem(OLDKEY)||'null')}catch(e){storageOK=false}
+if(!['l1','l3'].includes(S.active))S.active='l1';
+try{const q=new URL(location.href).searchParams.get('lesson');if(q==='1'||q==='3')S.active='l'+q}catch(e){}
+function s(){return S[S.active]}function d(){return D[S.active]}function val(k){return s()[k]??''}function txt(k){return String(val(k)).trim()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));storageOK=true}catch(e){storageOK=false}$('#saveStatus').textContent=storageOK?'已在本机浏览器保存 · 不会自动交给老师，请在最后导出。':'本机保存不可用：请在最后复制或导出记录，关闭页面可能丢失。';$('#saveStatus').classList.toggle('error',!storageOK)}
+function set(k,v){s()[k]=v;save()}
+function input(k,label,placeholder='',rows=2){return `<label for="f-${k}">${esc(label)}</label><textarea id="f-${k}" data-field="${k}" rows="${rows}" maxlength="${rows>3?2000:600}" ${rows>3?'class="long"':''} placeholder="${esc(placeholder)}">${esc(val(k))}</textarea>`}
+function select(k,label,options){return `<label for="f-${k}">${esc(label)}</label><select id="f-${k}" data-field="${k}"><option value="">请选择</option>${options.map(x=>{const a=Array.isArray(x)?x:[x,x];return `<option value="${esc(a[0])}" ${String(val(k))===String(a[0])?'selected':''}>${esc(a[1])}</option>`}).join('')}</select>${k==='evidence'||k.endsWith('source')?`<blockquote id="preview-${k}" class="small" ${val(k)?'':'hidden'}>${esc(sourceText(val(k)))}</blockquote>`:''}`}
+function sourceText(id){return d().sentences.find(x=>x[0]===id)?.[1]||''}
+function sourceOptions(){return d().sentences.filter(x=>!d().greetings.includes(x[0])).map(x=>[x[0],x[1]])}
+function feedback(id,text,kind=''){const el=$('#'+id);if(el)el.innerHTML=`<div class="feedback ${kind}" role="status">${text}</div>`}
+function header(n,title,hint){return `<div class="row"><div class="kicker">第 ${n+1} 步 / ${STEPS.length} · ${esc(d().title)}</div><button data-action="showLetter" class="small">查看本页来信</button></div><h2>${title}</h2><p class="hint">${hint}</p>`}
+function button(action,text,extra='',cls=''){return `<button data-action="${action}" ${extra} class="${cls}">${text}</button>`}
+function renderLetter(){const transfer=Number(val('step'))===7;$('#letterTitle').textContent=transfer?'新的迁移来信 · 可查阅':'原题与来信 · 随时可查';if(transfer){$('#letterContent').innerHTML=`<div class="mailtext" style="white-space:pre-wrap">${esc(d().transfer)}</div><button data-action="returnTask">返回当前任务 →</button>`;return}
+const tags=s().tags||{};let paras='';let last=null;d().sentences.forEach(([id,text,p])=>{if(p!==last){if(last!==null)paras+='</p>';paras+='<p>';last=p}const t=tags[id]||'';paras+=`<button class="sentence ${t}" data-sentence="${id}" aria-label="${esc(text)} 当前：${{ask:'问题',info:'讯息',hi:'寒暄／附带回应'}[t]||'未标'}" aria-pressed="${!!t}">${esc(text)}${t?`<small>〔${{ask:'问',info:'讯',hi:'寒'}[t]}〕</small>`:''}</button>`});paras+='</p>';
+$('#letterContent').innerHTML=`<div class="brief">${esc(d().brief)}</div><p class="meta" style="white-space:pre-line">${esc(d().meta)}</p><div class="brush" aria-label="标注工具">${[['ask','问题'],['info','讯息'],['hi','寒暄／小请求'],['clear','擦除']].map(([k,t])=>`<button data-brush="${k}" aria-pressed="${brush===k}">${t}</button>`).join('')}</div><p class="small">先选标签，再点来信。再点同一句可取消。问题须回答；重要讯息用来限制答案；寒暄和小请求简短回应。</p><div class="mailtext"><p>${esc(d().salute)}</p>${paras}<p class="mail-close">${esc(d().closing)}</p></div><button data-action="returnTask">返回当前任务 →</button>`}
+function render(){document.body.classList.toggle('large',!!S.large);const n=Math.max(0,Math.min(8,Number(val('step'))||0));s().step=n;document.querySelectorAll('[data-lesson]').forEach(b=>{b.classList.toggle('selected',b.dataset.lesson===S.active);b.setAttribute('aria-pressed',String(b.dataset.lesson===S.active))});$('#steps').innerHTML=STEPS.map((t,i)=>`<button data-step="${i}" ${i===n?'aria-current="step"':''}>${i+1} ${t}</button>`).join('');renderLetter();$('#panel').innerHTML=pages[n]();$('#prev').disabled=n===0;$('#next').disabled=n===8;$('#next').textContent=n===7?'整理我的构思卡 →':'下一步 →';if(innerWidth<=1000)$('#letter').open=n===0||n===7;else $('#letter').open=true;save()}
+function go(n){set('step',Math.max(0,Math.min(8,n)));render();$('#work').focus({preventScroll:true});$('#work').scrollIntoView({block:'start',behavior:'auto'})}
+const pages=[
+()=>header(0,'先找：我到底要回复什么？','原题没有替你画重点。请先标出请求，再用自己的短语写任务。')+`<div class="box">从来信里点出主要请求；再标出会改变你答案的讯息。问号不一定都是正文问题，同一个请求也可能重复出现。</div><div class="twocol">${input('me','我在回信中是谁？','只写名字',1)}${input('to','我写给谁？','只写名字',1)}</div>${input('task1','我需要回答的第一件事','用自己的短语，不必抄整句',1)}${input('task2','我需要回答的第二件事','它与第一件事有什么不同？',1)}${button('checkRead','对照原文检查','','primary')}<div id="readFeedback"></div>`+ (val('readChecked')?`<div class="box"><b>上次已对照过原题。</b>改动标注后，可再检查。开放的任务概括仍须自己与原句核对。</div>`:''),
+()=>header(1,'讯息不是抄下来，而是用起来','先判断每问的写法，再说明一条来信讯息怎样影响答案。')+`<div class="twocol">${select('type1','第一问属于什么类型？',TYPES)}${select('type2','第二问属于什么类型？',TYPES)}</div>${button('checkType','核对写法')}<div id="typeFeedback"></div><h3>让一条讯息变成写作限制</h3>${select('evidence','选一句会影响回答的原文',sourceOptions())}${input('evidenceUse','这句话使我必须写什么，或不能怎样写？','不是再抄一遍原句，而是说明它对答案的要求')}${button('checkEvidence','检查我的依据')}<div id="evidenceFeedback"></div><details class="help" data-hint="scope"><summary>想过以后，再看范围提醒</summary><p>${esc(d().limits)}</p><p>${esc(d().inference)}</p></details>${input('smallReply',S.active==='l1'?'用一句话回应兴文的处境和感受':'照片邀请怎么回应？只用一句话','这部分需回应，但不是另写两个正文要点',1)}`,
+()=>header(2,'我做一遍，你补中间一步','先看一个要点怎样产生。示范只教方法，不是要求你照用的标准答案。')+`<details class="help" data-hint="model"><summary>${esc(d().modelTitle)}</summary><p class="small">教学虚构示例，不是原题已发生的事实。</p><div class="flow">${d().model.map(([a,b])=>`<div><b>${esc(a)}</b><br>${esc(b)}</div>`).join('')}</div></details><h3>我们做：把“为什么”补出来</h3><div class="flow"><div>${esc(d().bridgeBefore)}</div><div>↓ 中间缺了一步</div><div>${esc(d().bridgeAfter)}</div></div>${input('bridge',d().bridgePrompt,'只补中间的原因，先用自己的话说清楚')}${button('bridgeCheck','先检查我的解释')} ${button('bridgeRef','写过后，比较一种解释')}<div id="bridgeFeedback"></div><div id="bridgeReference">${val('bridgeSeen')?`<div class="box"><b>一种可能的解释</b><p>${esc(d().bridgeRef)}</p><p class="small">不唯一。比较：你的句子有没有说明中间如何发生变化？</p></div>`:''}</div>`,
+()=>{let i=Math.max(0,Math.min(3,Number(val('pointIndex'))||0));const labels=d().labels[i];const level=Number(val('hint'+i))||0;return header(3,'现在，自己产生内容','每次只想一个要点。第一点有较具体追问，第二点逐步减少提示。')+`<div class="box">${esc(d().planNote)}</div>${S.active==='l1'&&i<2?input('context','经历的简短背景','时间、地点、服务对象；两点使用不同活动时分别注明',1):''}<div class="row pointnav">${d().pointTitles.map((t,j)=>`<button data-point="${j}" aria-pressed="${j===i}">${esc(t)}</button>`).join('')}</div><h3>${esc(d().pointTitles[i])}</h3>${select('p'+i+'source','这一点回应了哪句来信？',sourceOptions())}${input('p'+i+'point',labels[0],'一句核心意思，不只写主题名')}${input('p'+i+'detail',labels[1],'只选支持这一个要点的内容')}${input('p'+i+'why',labels[2],'让对方看见内容之间的联系')}${select('p'+i+'origin','这一个要点怎么来的？',[['own','自己想到的'],['hint','看追问后想到的'],['model','参考示范后改写的']])}<div class="row toolbar">${button('pointCheck','检查这个要点','','primary')}${button('pointHint',level>=2?'收起提示':'卡住了？看一级追问')}</div>${level?`<div class="box warm">${d().hints[i].slice(0,level).map(x=>`<p>${esc(x)}</p>`).join('')}</div>`:''}<div id="pointFeedback"></div><p class="notice">这里检查字段、引用和明显重复，不按字数判断“合格”，也不会自动代写。</p>`},
+()=>header(4,'像在回答，不等于解释到位','只有两道近似错例。答错可以改；选对后，还要回头检查自己的内容。')+d().quizzes.map((q,i)=>{const a=(s().quiz||{})[i];return `<div class="box"><h3>${i+1}. ${esc(q.stem)}</h3><div class="choices">${q.opts.map((o,j)=>`<button data-quiz="${i}" data-choice="${j}" ${a?.last===j?`class="${j===q.ans?'ok':'no'}" aria-pressed="true"`:'aria-pressed="false"'}>${'ABCD'[j]}　${esc(o)}</button>`).join('')}</div><div id="quizFeedback${i}">${a?`<div class="feedback ${a.last===q.ans?'good':'retry'}">${a.last===q.ans?'判断有依据。':'还需调整，可直接改选。'}${esc(q.fb[a.last])}</div>`:''}</div></div>`}).join('')+`<h3>更重要的是：检查自己的两点</h3><div class="twocol"><blockquote>${esc(txt('p2point')||'建议／改进意见一还未写')}</blockquote><blockquote>${esc(txt('p3point')||'建议／改进意见二还未写')}</blockquote></div>${input('difference','这两点分别解决什么不同问题？','分别用一个短语说清，不只比较名称')}${button('checkDifference','检查是否只是换词')}<div id="differenceFeedback"></div><p>${button('backPoints','回到自己的要点，作修改')}</p>`,
+()=>header(5,'把自己的一个要点写成段','只写一个小段，整封电邮留给纸笔。不要让漂亮句子代替解释。')+`${select('paraChoice','选自己的一点来写',d().pointTitles.map((x,i)=>[String(i),x]))}<div id="chosenPoint">${chosenPoint()}</div><details class="help" data-hint="paragraph"><summary>需要时看段落支架</summary><p><b>衔接过渡 → 要点 → 解释</b></p><p>${S.active==='l1'?'经历：具体行动→结果→由此产生的收获。建议：动作→怎样回应顾虑→为什么有助参与。':'设施：使用情景→具体帮助→喜欢的理由。改进：不足→受影响的人及不便→改善方向。'}</p><p>不是每段机械回答所有问题；所写的每一句都应服务这个要点。</p></details>${input('draft','我的第一稿','先说核心意思，再用具体内容和理由展开',6)}${button('freezeDraft',val('original')?'第一稿已留底，前往修改':'保存第一稿，准备修改','','primary')}<div id="draftFeedback"></div>${val('original')?'<p class="small">首次保存的第一稿已留底，不会被后面的修改覆盖。</p>':''}`,
+()=>{const orig=txt('original');return header(6,'指出哪一句，再改清楚','不能只勾“我有解释”。先在自己的第一稿中指出要点句和解释句。')+(!orig?`<div class="box">还没有保存第一稿。先回第6步，选自己的要点写一个小段。</div>${button('backDraft','回去写第一稿')}`:`<div class="row"><button data-mark="point" aria-pressed="${markMode==='point'}">标要点句</button><button data-mark="why" aria-pressed="${markMode==='why'}">标解释句</button></div><div id="originalSentences">${renderSentences(orig,false)}</div>${button('noWhy','原稿还没有解释句')}<div id="noWhyNotice">${(s().marks||{}).why==='missing'?'<p class="small">已记录：你认为原稿缺少解释句。请在修改稿中补写。</p>':''}</div>${select('issue','我最想检查／修改的问题',[['cause','解释只重复了要点'],['action','没有具体行动／使用情景'],['evidence','收获没有经历支持'],['scope','对象或范围偏离来信'],['duplicate','两个要点意思重复'],['language','内容已有，但表达不清楚'],['test','继续检验理由是否成立']])}${input('revisionPlan','我准备改哪里，补什么？','指出自己的词句，再说一个具体改法')}${input('revised','我的修改稿','保留中心，修改需要调整的地方',6)}${button('checkRevision','比较前后改动','','primary')}<div id="revisionFeedback"></div><div id="diff"></div><h3>用修改稿里的句子作证</h3><p class="small">点出现在最能解释“为什么”的一句；修改稿改变后，请重新标。</p><div id="revisedSentences">${renderSentences(txt('revised'),true)}</div>${input('proof','选中的这句怎样支持我的要点？','例如：它补出了什么中间原因？不要只写“更具体了”')}`)},
+()=>header(7,'换一封信，还能自己想吗？','迁移来信可查阅，但不再提供内容选项或答案。允许用短语，最后解释一个要点。')+`<p class="small">请以${esc(d().transferMe)}的身份回复${esc(d().transferTo)}。以下是另拟练习，不替代附件原题。首次保存的作答会留底，后改另记。</p>${input('trTask1','这封新来信的第一项任务','自己概括',1)}${input('trTask2','这封新来信的第二项任务','自己概括',1)}<div class="twocol">${input('tr0','第一问 · 要点一','自行构思')}${input('tr1','第一问 · 要点二','与上一点不同')}${input('tr2','第二问 · 要点一','自行构思')}${input('tr3','第二问 · 要点二','与上一点不同')}</div>${input('trWhy','选其中一点，写清支持它的解释','注明解释哪一点，再写具体内容及原因',4)}${button('freezeTransfer',val('transferFirst')?'首次作答已留底，查看记录':'保存首次独立作答','','primary')}<div id="transferFeedback"></div><p class="notice">这一步不自动宣布你已掌握。老师会看新题的任务是否拆对、要点是否恰当、解释是否成立。</p>`,
+()=>header(8,'带走你的思考，不是一个分数','两题记录独立。可以只导出今天完成的一题；未做的部分会如实标出。')+summaryHTML()+`<h3>转到纸笔前，再查格式</h3><div class="box">检查日期、主题、称呼、开头、结束语、祝颂语和署名。依题目身份：本题称呼${esc(d().to)}，署名${esc(d().me)}。<br>开头：问候→引出话题→说明电邮目的。结束语可用笔记中的“好了，我就写到这里。希望早日收到你的电邮。”具体排版依教师笔记，不套英文书信格式。</div><div class="row toolbar">${button('export','导出本题学习记录','','primary')}${button('copy','复制给老师')}${button('print','打印本题构思卡')}</div><div id="copyPanel"></div><p class="small">导出包含来信依据、四个要点、解释、提示使用、初稿与修改稿，以及首次迁移作答。不会自动上传。</p><details class="help"><summary>重新开始／旧版记录</summary><p>只清空当前这题的新版记录，另一题与旧版均保留。建议先导出。</p>${button('reset','清空本题新版作答','','danger')}</details>`
+];
+function chosenPoint(){const i=val('paraChoice');if(i==='')return '<p class="small">请先选自己的一点。</p>';return `<div class="box"><b>${esc(d().pointTitles[Number(i)])}</b><p>${esc(txt('p'+i+'point')||'要点尚未填写')}</p><p>${esc(txt('p'+i+'detail')||'具体内容尚未填写')}</p><p>${esc(txt('p'+i+'why')||'解释尚未填写')}</p></div>`}
+function sentences(text){return (text.match(/[^。！？!?；\n]+[。！？!?；]?/g)||[]).map(x=>x.trim()).filter(Boolean)}
+function renderSentences(text,revised){const lines=sentences(text);if(!lines.length)return '<p class="small">还没有文字。</p>';const marks=s().marks||{};return lines.map((x,i)=>`<button class="mark-sentence ${!revised&&marks.point===i?'ispoint':''} ${(!revised&&marks.why===i)||(revised&&val('revisedWhy')===i)?'iswhy':''}" data-${revised?'revised-line':'line'}="${i}" aria-pressed="${revised?val('revisedWhy')===i:marks.point===i||marks.why===i}">${esc(x)}${!revised&&marks.point===i?'〔要点〕':''}${(!revised&&marks.why===i)||(revised&&val('revisedWhy')===i)?'〔解释〕':''}</button>`).join('')}
+function normalize(v){return String(v||'').replace(/[\s\p{P}\p{S}]/gu,'')}
+function alike(a,b){a=normalize(a);b=normalize(b);if(!a||!b)return false;if(a===b)return true;if(Math.min(a.length,b.length)<10)return false;const grams=t=>new Set(Array.from({length:t.length-1},(_,i)=>t.slice(i,i+2)));const A=grams(a),B=grams(b);return 2*[...A].filter(x=>B.has(x)).length/(A.size+B.size)>.82}
+function pointStatus(i){return ['point','detail','why','source','origin'].every(k=>txt('p'+i+k))}
+function summaryHTML(){const n=[0,1,2,3].filter(pointStatus).length;return `<div class="counts"><div class="count"><strong>${n} / 4</strong>信息栏已填齐的要点</div><div class="count"><strong>${txt('original')?'已留底':'未留底'}</strong>第一稿</div><div class="count"><strong>${txt('original')&&txt('revised')&&normalize(txt('original'))!==normalize(txt('revised'))?'有文字改动':'未记录改动'}</strong>修改稿</div><div class="count"><strong>${val('transferFirst')?'已留底':'未留底'}</strong>首次迁移作答</div></div><div class="feedback"><b>内容质量：待核对。</b>“已填齐”只表示已有文字和来源记录，不表示扣题、解释合理或已经掌握。</div>${d().pointTitles.map((t,i)=>`<div class="record"><h3>${esc(t)}</h3><p><b>依据：</b>${esc(sourceText(val('p'+i+'source'))||'未选')}</p><p><b>要点：</b>${esc(txt('p'+i+'point')||'未写')}</p><p><b>具体内容：</b>${esc(txt('p'+i+'detail')||'未写')}</p><p><b>解释：</b>${esc(txt('p'+i+'why')||'未写')}</p><p class="small">来源：${esc({own:'自己想到',hint:'看追问后想到',model:'参考示范后改写'}[val('p'+i+'origin')]||'未注明')}；已打开追问：${val('hintUsed'+i)||0}级</p></div>`).join('')}`}
+function recordText(){const r=s(),dd=d(),get=k=>String(r[k]??'').trim()||'（未写）';let out=[dd.title+'｜思考与修改版 v'+VERSION,'说明：本记录不含自动内容评分；是否扣题、解释合理，须结合文本核对。','【任务】','身份：'+get('me')+' → '+get('to'),'第一问：'+get('task1'),'第二问：'+get('task2'),'类型：'+get('type1')+'／'+get('type2'),'【依据与限制】',sourceText(r.evidence)||'（未选依据）',get('evidenceUse'),'简短回应：'+get('smallReply'),'【共构的中间解释】',get('bridge'),'看过解释参考：'+(r.bridgeSeen?'是':'否'),'【经历背景】',get('context')];dd.pointTitles.forEach((t,i)=>out.push('\n【'+t+'】','来信依据：'+(sourceText(r['p'+i+'source'])||'（未选）'),'要点：'+get('p'+i+'point'),'具体内容：'+get('p'+i+'detail'),'解释：'+get('p'+i+'why'),'来源：'+({own:'自己想到',hint:'看追问后想到',model:'参考示范后改写'}[r['p'+i+'origin']]||'未注明'),'打开追问级数：'+(r['hintUsed'+i]||0)));out.push('\n【两点的不同】',get('difference'),'【诊断题】');dd.quizzes.forEach((q,i)=>{const a=(r.quiz||{})[i];out.push((i+1)+'. '+q.stem,a?'首次：'+'ABCD'[a.first]+'；目前：'+'ABCD'[a.last]+'；尝试：'+a.tries+'次；当前'+(a.last===q.ans?'正确':'需订正'):'未答')});out.push('\n【段落】','使用要点：'+((r.originalChoice!==undefined?dd.pointTitles[Number(r.originalChoice)]:r.paraChoice!==undefined&&r.paraChoice!==''?dd.pointTitles[Number(r.paraChoice)]:'未选')||'未选'),'首次保存的第一稿：',get('original'),'初稿标出的要点：'+(sentences(r.original||'')[(r.marks||{}).point]||'未标'),'初稿标出的解释：'+((r.marks||{}).why==='missing'?'自查：原稿缺少解释句':sentences(r.original||'')[(r.marks||{}).why]||'未标'),'修改计划：'+get('revisionPlan'),'修改稿：',get('revised'),'修改后选作证据的解释句：'+(sentences(r.revised||'')[r.revisedWhy]||'未标'),'这句如何支持要点：'+get('proof'),'\n【独立迁移来信】',dd.transfer,'【首次迁移作答】',r.transferFirst?['保存时间：'+r.transferFirst['保存时间'],...['trTask1','trTask2','tr0','tr1','tr2','tr3','trWhy'].map((k,i)=>['任务一','任务二','第一问要点一','第一问要点二','第二问要点一','第二问要点二','解释'][i]+'：'+r.transferFirst[k])].join('\n'):'未保存','【当前迁移作答】');['trTask1','trTask2','tr0','tr1','tr2','tr3','trWhy'].forEach((k,i)=>out.push(['任务一','任务二','第一问要点一','第一问要点二','第二问要点一','第二问要点二','解释'][i]+'：'+get(k)));out.push('【提示记录】',Object.keys(r).filter(k=>k.startsWith('seen_')).map(k=>k.slice(5)).join('、')||'没有打开可折叠提示的记录','\n请教师分别核对：任务与范围／要点及其不同／内容联系／解释是否成立／修改是否有效／语言是否清楚。');return out.join('\n')}
+const actions={
+showLetter(){$('#letter').open=true;$('#letter').scrollIntoView({block:'start',behavior:'auto'})},returnTask(){$('#work').focus({preventScroll:true});$('#work').scrollIntoView({block:'start',behavior:'auto'})},
+checkRead(){const tags=s().tags||{},miss=d().asks.filter(x=>tags[x]!=='ask');let issues=[];if(txt('me')!==d().me&&txt('me')!==(S.active==='l1'?'许静婷':'锦华'))issues.push('回信身份应为'+d().me+'；不是来信的发件人。');if(txt('to')!==d().to&&txt('to')!==(S.active==='l1'?'洪兴文':'国平'))issues.push('回信写给'+d().to+'。');if(miss.length)issues.push('主要请求还需标为“问题”：'+miss.map(sourceText).map(esc).join('／'));const extra=d().sentences.filter(x=>tags[x[0]]==='ask'&&!d().asks.includes(x[0]));if(extra.length)issues.push('你还标了：'+extra.map(x=>'“'+esc(x[1])+'”').join('、')+'。请区分寒暄、重复请求或附带邀请，不把它们当作另一个需两点展开的主问。');if(!d().infos.some(x=>tags[x]==='info'))issues.push('再找一条影响答案的背景／限制，标为“讯息”。');if(!txt('task1')||!txt('task2'))issues.push('用自己的短语把两项主要任务写下来。');set('readChecked',true);feedback('readFeedback',(issues.length?issues.map(x=>'<p>'+x+'</p>').join(''):'<p>身份和两个主要请求的标注对应原题。</p>')+`<p><b>任务对照：</b>${d().tasks.map(esc).join('；')}。你的任务概括须包含这些意思；这里不自动判断自由表达。</p>`);},
+checkType(){let ok=d().typeAnswers.every((indices,i)=>indices.some(j=>TYPES[j]===val('type'+(i+1))));feedback('typeFeedback',`<p>${ok?'你选的类型可作为这题的写作路线。':'不要只记题型名称。请先看每问实际要求。'}</p><p>${esc(d().typeNote)}</p><p>请用下面的“讯息→写作限制”说明你的理解。</p>`,ok?'good':'');},
+checkEvidence(){const id=val('evidence');if(!id){feedback('evidenceFeedback','先选一句原文，再说明它怎样限制答案。');return}if(!txt('evidenceUse')){feedback('evidenceFeedback',`你选了“${esc(sourceText(id))}”。还没有说明它与答案的关系；补一句“因此，我应……／不能……”。`);return}const copied=alike(sourceText(id),txt('evidenceUse'));feedback('evidenceFeedback',`<p><b>你用的原句：</b>${esc(sourceText(id))}</p><p><b>你的解释：</b>${esc(txt('evidenceUse'))}</p><p>${copied?'两段文字很接近，可能只重复原文。请改写成它对回信内容的要求。':'已记录你的联系，但未判定联系成立。请指出：它具体改变了哪个要点？若换一句原文，这个要求还一样吗？'}</p>`);},
+bridgeCheck(){const t=txt('bridge');feedback('bridgeFeedback',t?`你补了“${esc(t)}”。请检验：这句话解释的是中间如何变化，还是只换词说“有用／喜欢／积极”？把缺失的一个中间原因补清楚。`:'中间一栏还空着。先用一句自己的话连接上、下两步，不必写整段。');},
+bridgeRef(){if(!txt('bridge')){feedback('bridgeFeedback','先写下你的尝试，再看参考；一两句即可。');return}set('bridgeSeen',true);$('#bridgeReference').innerHTML=`<div class="box"><b>一种可能的解释，不是唯一答案</b><p>${esc(d().bridgeRef)}</p><p>比较后回到自己的句子：保留合理内容，补出缺少的一步。</p></div>`;},
+pointHint(){const i=Number(val('pointIndex'))||0,n=Number(val('hint'+i))||0;set('hint'+i,n>=2?0:n+1);set('hintUsed'+i,Math.max(Number(val('hintUsed'+i))||0,n>=2?2:n+1));render();},
+pointCheck(){const i=Number(val('pointIndex'))||0,k='p'+i;let msg='';const a=txt(k+'point'),b=txt(k+'detail'),c=txt(k+'why'),src=txt(k+'source');if(!a)msg='要点栏还没有内容。先用一句话说你最想回答什么。';else if(!src)msg=`你写的要点是“${esc(a)}”。先选一句来信，说明这一点在回应什么。`;else if(src===d().asks[i<2?1:0])msg=`你选择的原句“${esc(sourceText(src))}”属于另一问。请为当前这点找直接依据，或把内容放回相应任务。`;else if(!b)msg=`你写了“${esc(a)}”，但具体内容栏还空着。${esc(d().labels[i][1])}`;else if(!c)msg=`你的具体内容是“${esc(b)}”。解释栏还空着：${esc(d().labels[i][2])}`;else if(alike(a,c)||alike(b,c))msg=`你写的解释“${esc(c)}”与前面的文字很相近，可能仍在重复。请补一个结果、原因或实际影响，不只换词。`;else if(i%2&&alike(a,txt('p'+(i-1)+'point')))msg=`“${esc(a)}”与前一点的要点文字很相近。请比较它们的具体内容及起作用的原因；相近只是提醒，不自动判重复。`;else if(d().extras.includes(src))msg=`你选的是“${esc(sourceText(src))}”。这是重复请求或附带邀请；给这个正文要点找更直接的主要请求或背景依据。`;else msg=`三个内容栏已有文字，<b>尚未判定合题或解释合理</b>。你写的解释是“${esc(c)}”。请对照自己的要点，回答：${esc(d().hints[i][1])}`;feedback('pointFeedback',msg);},
+checkDifference(){const a=txt('p2point'),b=txt('p3point');feedback('differenceFeedback',!a||!b?'先写出两个建议／改进意见，再比较它们。':alike(a,b)?`两条要点的文字很相近：“${esc(a)}”／“${esc(b)}”。请说明各自解决的不同问题；若没有实质区别，合并后重想一点。`:`你写的区别是“${esc(txt('difference')||'尚未填写')}”。没有完全相同的文字，不代表角度不同；请比较具体问题和作用，不能只比较名称。`);},
+noWhy(){const m=s().marks||(s().marks={});m.why='missing';save();$('#originalSentences').innerHTML=renderSentences(txt('original'),false);$('#noWhyNotice').innerHTML='<p class="small">已记录：原稿缺少解释句。接下来补出支持要点的原因。</p>'},
+backPoints(){go(3)},backDraft(){go(5)},
+freezeDraft(){if(txt('original')){go(6);return}const i=val('paraChoice');if(i===''||!txt('p'+i+'point')||!txt('draft')){feedback('draftFeedback','先选自己已经写出的一个要点，并写下第一稿。不会按字数判断是否合格。');return}set('originalChoice',i);set('original',txt('draft'));set('revised',txt('draft'));set('originalAt',new Date().toISOString());go(6)},
+checkRevision(){const a=txt('original'),b=txt('revised'),marks=s().marks||{};let msg='';if(marks.point===undefined||marks.why===undefined)msg='先在第一稿中分别点出要点句和解释句。找不到解释句，本身就是一个需要补写的地方。';else if(!txt('revisionPlan'))msg='你已经标出了句子。现在指出准备改哪里、补什么，再比较修改。';else if(!b||normalize(a)===normalize(b))msg='还没有实质文字改动。请按自己的修改计划调整；只改标点不代表解释已经补全。';else msg='已记录前后文字变化，<b>不等于修改一定有效</b>。接着点出修改稿中最能解释“为什么”的句子，并说明它怎样支持要点。';feedback('revisionFeedback',msg);const before=sentences(a),after=sentences(b);$('#diff').innerHTML=`<h3>文字对照</h3>${before.filter(x=>!after.includes(x)).map(x=>`<div class="diff-old">原稿：${esc(x)}</div>`).join('')}${after.filter(x=>!before.includes(x)).map(x=>`<div class="diff-new">改稿：${esc(x)}</div>`).join('')}`;$('#revisedSentences').innerHTML=renderSentences(b,true);},
+freezeTransfer(){if(val('transferFirst')){feedback('transferFeedback','首次迁移作答已留底；现在的改动另存，不覆盖首次记录。老师可比较两次文字。');return}const ks=['trTask1','trTask2','tr0','tr1','tr2','tr3','trWhy'];if(ks.some(k=>!txt(k))){feedback('transferFeedback','还有未填写的任务、要点或解释。可以用短语，填齐后保存首次尝试；不要求达到任何字数。');return}const snap={保存时间:new Date().toISOString()};ks.forEach(k=>snap[k]=txt(k));set('transferFirst',snap);feedback('transferFeedback','首次作答已留底。内容是否恰当、解释是否成立，仍待老师核对；不能由“已填齐”推出已掌握。');},
+export(){const blob=new Blob([recordText()],{type:'text/plain;charset=utf-8'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=(S.active==='l1'?'练习一_VIA':'练习三_新组屋区')+'_思考与修改记录.txt';a.click();setTimeout(()=>URL.revokeObjectURL(u),1500)},
+async copy(){try{await navigator.clipboard.writeText(recordText());$('#copyPanel').innerHTML='<p role="status">已复制，可贴给老师。请确认提交的是当前这一题。</p>'}catch(e){$('#copyPanel').innerHTML='<div class="copypanel"><label for="copyText">浏览器未允许自动复制，请全选下面文字后复制。</label><textarea id="copyText" readonly>'+esc(recordText())+'</textarea></div>';$('#copyText').focus();$('#copyText').select()}},
+print(){preparePrint();window.print()},
+reset(){if(confirm('只清空当前这题的新版记录？另一题和旧版不变。建议先导出。')){S[S.active]={};save();render()} }
+};
+function preparePrint(){$('#printout').textContent=recordText()}
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.lesson){S.active=b.dataset.lesson;render();return}if(b.dataset.step!==undefined){go(Number(b.dataset.step));return}if(b.dataset.brush){brush=b.dataset.brush;renderLetter();return}if(b.dataset.sentence){const tags=s().tags||(s().tags={});const id=b.dataset.sentence;tags[id]=brush==='clear'||tags[id]===brush?'':brush;save();renderLetter();return}if(b.dataset.point!==undefined){set('pointIndex',Number(b.dataset.point));render();return}if(b.dataset.quiz!==undefined){const i=Number(b.dataset.quiz),j=Number(b.dataset.choice),q=d().quizzes[i];const all=s().quiz||(s().quiz={}),a=all[i];all[i]={first:a?.first??j,last:j,tries:(a?.tries||0)+1};save();const container=b.closest('.choices');container.querySelectorAll('button').forEach((x,n)=>{x.classList.toggle('ok',n===j&&j===q.ans);x.classList.toggle('no',n===j&&j!==q.ans);x.setAttribute('aria-pressed',String(n===j))});feedback('quizFeedback'+i,(j===q.ans?'判断有依据。':'还需调整，可直接改选。')+esc(q.fb[j]),j===q.ans?'good':'retry');return}if(b.dataset.mark){markMode=b.dataset.mark;document.querySelectorAll('[data-mark]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.mark===markMode)));return}if(b.dataset.line!==undefined){const m=s().marks||(s().marks={}),i=Number(b.dataset.line);if(m[markMode]===i)delete m[markMode];else m[markMode]=i;save();$('#originalSentences').innerHTML=renderSentences(txt('original'),false);return}if(b.dataset.revisedLine!==undefined){const i=Number(b.dataset.revisedLine);set('revisedWhy',val('revisedWhy')===i?'':i);$('#revisedSentences').innerHTML=renderSentences(txt('revised'),true);return}if(b.dataset.action&&actions[b.dataset.action])actions[b.dataset.action]()});
+document.addEventListener('input',e=>{const k=e.target.dataset.field;if(!k)return;set(k,e.target.value);if(k==='revised'){set('revisedWhy','');const el=$('#revisedSentences');if(el)el.innerHTML=renderSentences(e.target.value,true);const diff=$('#diff');if(diff)diff.innerHTML='';const fb=$('#revisionFeedback');if(fb)fb.innerHTML=''}if(k.startsWith('p')){const f=$('#pointFeedback');if(f)f.innerHTML=''}});
+document.addEventListener('change',e=>{const k=e.target.dataset.field;if(!k)return;set(k,e.target.value);if(k==='paraChoice')$('#chosenPoint').innerHTML=chosenPoint();if(k==='evidence'||k.endsWith('source')){const el=$('#preview-'+k);if(el){el.textContent=sourceText(e.target.value);el.hidden=!e.target.value}}});
+document.addEventListener('toggle',e=>{if(e.target.open&&e.target.dataset.hint)set('seen_'+e.target.dataset.hint,true)},true);
+$('#prev').onclick=()=>go((Number(val('step'))||0)-1);$('#next').onclick=()=>go((Number(val('step'))||0)+1);
+$('#fontBtn').onclick=()=>{S.large=!S.large;document.body.classList.toggle('large',!!S.large);$('#fontBtn').textContent=S.large?'恢复字号':'放大文字';save()};
+window.addEventListener('beforeprint',preparePrint);
+if(old&&typeof old==='object'){const keys=['l1exp1','l1exp2','l1adv1','l1adv2','l1final','l3fac1','l3fac2','l3imp1','l3imp2','l3final'];$('#legacy').innerHTML='<details class="help"><summary>找到旧版作答：保留查看，不计入新版</summary><p class="small">这些是旧版原文，尚未按新版方法检查。</p><textarea readonly aria-label="旧版作答" style="min-height:180px">'+esc(keys.filter(k=>old[k]).map(k=>k+'：'+old[k]).join('\n')||'旧版只有选择或勾选记录，没有自拟文字。')+'</textarea></details>'}
+if(S.large){document.body.classList.add('large');$('#fontBtn').textContent='恢复字号'}
+render();
 </script>
-</body>
-</html>
+</body></html>
