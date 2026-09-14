@@ -1,425 +1,55 @@
-<!doctype html>
-<html lang="zh-SG">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>德士司机和渐冻症的我｜中二考前强化阅读理解</title>
-  <style>
-    :root {
-      --navy:#123e59; --blue:#246785; --teal:#087d73; --teal2:#dff4ef;
-      --ink:#173348; --muted:#5d7383; --line:#cbdde6; --paper:#fffefb;
-      --sky:#edf6fa; --cream:#fff4d6; --green:#e7f6f1; --red:#a53e32;
-      --shadow:0 12px 30px rgba(21,61,82,.10); --radius:18px;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:#eaf3f7;color:var(--ink);font-family:"SimSun","Songti SC","STSong","Noto Serif CJK SC",serif;line-height:1.68}
-    button,select,textarea,input{font:inherit;color:inherit}
-    button{cursor:pointer}
-    .topbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);padding:12px 3vw;backdrop-filter:blur(10px)}
-    .toprow{display:flex;align-items:center;gap:18px;max-width:1600px;margin:auto}
-    .brand{font-weight:900;font-size:1.25rem;color:var(--navy);white-space:nowrap}
-    .progress-track{height:10px;border-radius:99px;background:#dce9ef;flex:1;overflow:hidden}
-    #progress{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--teal));transition:.35s}
-    .count{white-space:nowrap;color:var(--muted)}
-    .top-actions{display:flex;gap:8px}
-    .outline{border:1px solid var(--line);border-radius:10px;background:white;padding:7px 13px;color:var(--navy)}
-    .method{max-width:1600px;margin:18px auto 14px;padding:0 3vw}
-    .hero{background:linear-gradient(135deg,#fff 20%,#e9f8f5);border:1px solid var(--line);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow)}
-    h1{font-size:clamp(1.65rem,3vw,2.55rem);line-height:1.2;margin:0 0 6px;color:var(--navy)}
-    .lead{margin:0;color:var(--muted)}
-    .process{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
-    .process-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
-    .process-card b{display:block;color:var(--navy)}
-    .en{display:block;color:#657b8a;font-size:.83em;line-height:1.35;margin-top:2px}
-    .workspace{display:grid;grid-template-columns:minmax(430px,.92fr) minmax(550px,1.08fr);gap:16px;max-width:1600px;margin:0 auto 50px;padding:0 3vw;align-items:start}
-    .pane{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .passage-pane{position:sticky;top:78px;max-height:calc(100vh - 94px);overflow:auto;padding:22px}
-    .pane-title{margin:0;color:var(--navy);font-size:1.45rem}
-    .small-note{margin:4px 0 16px;color:var(--muted);font-size:.93rem}
-    .selection-note{position:sticky;top:-22px;z-index:5;margin:-2px -2px 14px;background:var(--cream);border-left:4px solid #e5aa2e;padding:9px 12px;border-radius:8px;display:none}
-    .selection-note.show{display:block}
-    .para{padding:15px 12px;border-top:1px dashed var(--line);font-size:1.05rem;font-family:"STKaiti","KaiTi","Kaiti SC","DFKai-SB",serif}
-    .para:first-of-type{border-top:0}
-    .pnum{float:left;width:29px;height:29px;border-radius:9px;background:#e5f2f7;color:var(--navy);display:grid;place-items:center;font-weight:900;margin:2px 9px 0 0}
-    .frag{display:inline;border-radius:5px;padding:2px 1px;border-bottom:2px dotted #4e91a8;cursor:grab;transition:.15s}
-    .frag:hover,.frag.selected{background:#fff0b9;box-shadow:0 0 0 2px #fff0b9}
-    .frag::after{content:" 拖/drag";font-size:.64em;color:#518097;white-space:nowrap}
-    .vocab{border:0;border-bottom:2px dotted var(--teal);background:transparent;padding:0 1px;color:#0b625e;font-weight:650}
-    .vocab-pop{position:fixed;z-index:50;max-width:310px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 34px rgba(17,56,76,.22);padding:12px 44px 12px 14px;display:none}
-    .vocab-pop.show{display:block}
-    .vocab-pop strong{color:var(--teal)}
-    .speak{position:absolute;right:8px;top:8px;border:0;border-radius:50%;width:32px;height:32px;background:var(--sky)}
-    .task-pane{padding:0;overflow:hidden}
-    .stage-nav{display:grid;grid-template-columns:repeat(4,1fr);background:#f7fbfd;border-bottom:1px solid var(--line)}
-    .stage-btn{border:0;border-right:1px solid var(--line);background:transparent;padding:12px 5px;font-weight:800;color:#5b7180;line-height:1.3}
-    .stage-btn:last-child{border-right:0}
-    .stage-btn.active{background:var(--navy);color:white}
-    .stage-btn.done::before{content:"✓ ";color:var(--teal)}
-    .stage-btn.active.done::before{color:#b9f4e6}
-    .stage{display:none;padding:24px}
-    .stage.active{display:block}
-    h2{font-size:1.55rem;color:var(--navy);margin:0 0 4px;line-height:1.3}
-    h3{font-size:1.17rem;color:var(--navy);margin:22px 0 8px}
-    .instruction{background:var(--cream);border-left:4px solid #e4ad36;border-radius:0 12px 12px 0;padding:11px 14px;margin:14px 0;color:#344a58}
-    .activity{border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0;background:#fff}
-    .row{display:grid;grid-template-columns:1fr minmax(190px,.8fr);gap:10px;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line)}
-    .row:last-child{border-bottom:0}
-    select,input,textarea{border:1.5px solid #abc6d3;border-radius:10px;background:white;padding:9px 11px;width:100%}
-    textarea{min-height:88px;resize:vertical}
-    input:focus,textarea:focus,select:focus{outline:3px solid #d6f1ec;border-color:var(--teal)}
-    .primary{border:0;border-radius:10px;background:var(--navy);color:white;font-weight:800;padding:10px 17px;margin-top:10px}
-    .secondary{border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--navy);font-weight:750;padding:8px 12px}
-    .feedback{display:none;margin-top:12px;padding:11px 13px;border-radius:10px;background:var(--sky)}
-    .feedback.show{display:block}
-    .feedback.ok{background:var(--green);color:#08675f}
-    .feedback.bad{background:#fff0ed;color:#83372e}
-    .map-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-    .map-card{border:1px solid var(--line);border-radius:12px;padding:13px;background:#fafdfe}
-    .map-card b{color:var(--navy)}
-    .question-card .tag{display:inline-block;font-size:.82rem;font-weight:800;background:#e6f2f7;color:var(--navy);border-radius:99px;padding:3px 9px;margin:3px 4px 3px 0}
-    .answer-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
-    .answer-step{border:1px solid var(--line);border-radius:12px;padding:10px;background:#f8fbfc}
-    .answer-step b{font-size:1.25rem;color:var(--navy)}
-    .question-card{border:1px solid var(--line);border-radius:16px;margin:15px 0;padding:17px;background:white}
-    .question-card h3{margin:0 0 6px;font-size:1.22rem;font-family:"STKaiti","KaiTi","Kaiti SC","DFKai-SB",serif;line-height:1.65}
-    .question-card input,.question-card textarea,.question-card select{font-family:"STKaiti","KaiTi","Kaiti SC","DFKai-SB",serif;font-size:1.02rem}
-    .qkey{color:#b3261e;background:#fff0c9;border-radius:4px;padding:0 3px;font-weight:900}
-    .task-analysis{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:9px 0}
-    .task-analysis div{background:#f5fafc;border:1px solid #d5e4eb;border-radius:9px;padding:8px 9px;font-size:.91rem}
-    .task-analysis b{display:block;color:var(--teal)}
-    .misread-box{border:1px solid #edc7c1;background:#fff5f3;border-radius:10px;padding:10px 12px;margin:10px 0;color:#71372f}
-    .method-tips{background:#fff8e7;border-left:4px solid #dfaa36;border-radius:0 10px 10px 0;padding:10px 12px;margin:10px 0}
-    .method-tips ol{margin:5px 0 0;padding-left:1.4em}
-    .logic-note{background:#f1f7fa;border-radius:10px;padding:9px 11px;margin:9px 0;font-size:.93rem}
-    .field-label{display:block;font-weight:850;color:var(--navy);margin:13px 0 5px}
-    .dropzone{min-height:88px;border:2px dashed #78a9bb;border-radius:12px;background:#f7fcfe;padding:10px;transition:.15s}
-    .dropzone.over{background:#e4f6f1;border-color:var(--teal)}
-    .dropzone .placeholder{color:#6b818d;font-size:.9rem;pointer-events:none}
-    .chip{display:flex;align-items:flex-start;gap:7px;background:#fff;border:1px solid #bdd6df;border-radius:9px;padding:7px 9px;margin:5px 0;font-size:.9rem}
-    .chip span{font-family:"STKaiti","KaiTi","Kaiti SC","DFKai-SB",serif}
-    .chip button{margin-left:auto;border:0;background:#edf3f6;border-radius:50%;min-width:25px;height:25px}
-    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .hint{display:none;background:var(--cream);border-radius:10px;padding:10px;margin-top:8px;color:#5c4a21}
-    .hint.show{display:block}
-    .model{display:none;background:var(--green);border-left:4px solid var(--teal);padding:12px;border-radius:0 10px 10px 0;margin-top:10px}
-    .model.show{display:block}
-    .model-analysis{font-family:"SimSun","Songti SC","STSong","Noto Serif CJK SC",serif;background:rgba(255,255,255,.58);border:1px solid #bfe0d8;border-radius:9px;padding:10px 12px;margin-bottom:10px}
-    .model-analysis p{margin:7px 0}
-    .source-label{display:inline-block;border-radius:99px;padding:2px 8px;margin-right:5px;font-size:.82rem;font-weight:850;color:white}
-    .source-label.direct{background:#1f6685}.source-label.infer{background:#8a4b92}.source-label.explain{background:#9a681a}.source-label.process{background:#55717e}
-    .model-answer{font-family:"STKaiti","KaiTi","Kaiti SC","DFKai-SB",serif;font-size:1.05rem;line-height:1.8;background:#fff;border-radius:9px;padding:11px 13px}
-    .compare-note{font-family:"SimSun","Songti SC","STSong","Noto Serif CJK SC",serif;margin-top:9px;padding-top:8px;border-top:1px dashed #91c8bb;color:#355564}
-    .formal-text,.activity .row>span,.activity .row>label,.activity select,.map-card b,.model-answer,.chip span{font-family:"STKaiti","KaiTi","Kaiti SC","DFKai-SB",serif}
-    .explanation,.instruction,.task-analysis,.logic-note,.field-label,.method-tips,.misread-box,.exam-note,.hint,.feedback,.compare-note,.footer-note,.en,.small-note{font-family:"SimSun","Songti SC","STSong","Noto Serif CJK SC",serif}
-    .status-pill{display:inline-block;border-radius:99px;background:#edf3f6;color:#5d7280;font-size:.78rem;padding:2px 8px;margin-left:5px}
-    .exam-note{font-size:.9rem;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
-    .review-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .review{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
-    .review b{color:var(--navy)}
-    .footer-note{font-size:.87rem;color:var(--muted);margin-top:18px}
-    @media(max-width:1050px){
-      .workspace{grid-template-columns:1fr}.passage-pane{position:relative;top:auto;max-height:640px}.process{grid-template-columns:repeat(2,1fr)}
-    }
-    @media(max-width:680px){
-      .toprow{flex-wrap:wrap}.brand{width:100%}.top-actions{margin-left:auto}.method,.workspace{padding-left:10px;padding-right:10px}
-      .hero,.stage,.passage-pane{padding:16px}.process,.map-grid,.two-col,.review-grid,.task-analysis{grid-template-columns:1fr}
-      .stage-nav{overflow:auto;grid-template-columns:repeat(4,minmax(108px,1fr))}.row{grid-template-columns:1fr}.answer-steps{grid-template-columns:repeat(2,1fr)}
-    }
-    @media print{
-      body{background:white}.topbar,.stage-nav,.primary,.secondary,.hint,.feedback,.model,.selection-note,.speak{display:none!important}
-      .method,.workspace{max-width:none;margin:0;padding:0}.hero,.pane{box-shadow:none;border-color:#999}.workspace{display:block}.passage-pane{position:static;max-height:none;margin-bottom:14px}
-      .stage{display:block!important;break-before:page}.stage[data-stage="1"],.stage[data-stage="2"]{display:none!important}
-      .dropzone,textarea,input{background:white!important}.frag::after{display:none}.vocab{border:0;color:inherit}.question-card{break-inside:avoid}
-    }
-  </style>
-</head>
-<body>
-  <header class="topbar">
-    <div class="toprow">
-      <div class="brand">记叙文阅读方法</div>
-      <div class="progress-track" aria-label="学习进度"><div id="progress"></div></div>
-      <div class="count">已完成 <span id="doneCount">0</span>/4</div>
-      <div class="top-actions"><button class="outline" onclick="window.print()">打印</button><button class="outline" id="resetBtn">重置</button></div>
-    </div>
-  </header>
+<!doctype html><html lang="zh-SG"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>德士司机和渐冻症的我｜理解与独立作答</title>
+<style>
+:root{--ink:#173753;--blue:#195eb0;--paper:#fff;--line:#d6e1ed;--muted:#52687e;--kai:STKaiti,KaiTi,'Kaiti SC',DFKai-SB,serif;--song:SimSun,'Songti SC',STSong,'Noto Serif CJK SC',serif}*{box-sizing:border-box}body{margin:0;background:#f3f7fc;color:var(--ink);font:17px/1.7 var(--song)}button,input,textarea{font:inherit}button,a{touch-action:manipulation}button{cursor:pointer;border:1px solid var(--line);border-radius:9px;background:white;color:var(--blue);padding:9px 13px;min-height:44px}button:hover{background:#eaf2ff}button:focus-visible,a:focus-visible,textarea:focus-visible,.sentence:focus-visible{outline:3px solid #df9b20;outline-offset:3px}.primary{background:var(--blue);color:white}.primary:hover{background:#174a84}.kai,h1,h3,.answer,.evidence-text,.passage{font-family:var(--kai)}.song,.en,.label{font-family:var(--song)}.en{display:block;color:var(--muted);font-size:.86em;line-height:1.45;margin:3px 0 9px}.qkey{color:#ad2533;background:#fff0f0;font-weight:bold;border-bottom:1px solid #d69aa0}header{max-width:1500px;margin:auto;padding:25px 25px 12px}h1{font-size:clamp(25px,3vw,38px);margin:5px 0}h2{font-size:22px;margin:8px 0}h3{font-size:22px;line-height:1.65;margin:12px 0}.topline,.tools,.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}a{color:var(--blue)}nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}nav button[aria-current=true]{background:var(--ink);color:white}.layout{max-width:1500px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:20px;padding:12px 25px 40px}aside{position:sticky;top:12px;align-self:start;max-height:calc(100dvh - 24px);overflow:auto;background:white;border:1px solid var(--line);border-radius:16px;padding:22px}main{min-width:0}.card{background:white;border:1px solid var(--line);border-radius:16px;padding:23px;margin-bottom:20px}.passage{font-size:22px;line-height:2}.para{margin:20px 0}.pnum{font:14px var(--song);color:#63778d;margin-right:9px}.sentence{cursor:pointer;border-radius:3px}.sentence:hover{background:#edf4fc}.sentence.selected{background:#fff0be;outline:1px solid #dcae43}.vocab{font-family:var(--kai);font-size:inherit;line-height:inherit;border:0;border-bottom:1px dashed #6280a0;border-radius:0;padding:0;min-height:0;color:inherit;background:none}.target{text-decoration:underline;text-underline-offset:6px;text-decoration-color:#34639a}.note,.feedback{background:#edf4fc;padding:12px;border-radius:9px;margin:12px 0}.feedback:empty{display:none}.mode{color:#53667a;font-size:14px}.evidence{border:2px dashed #afc3d9;padding:12px;border-radius:10px;margin:8px 0}.evidence:focus-within{border-color:var(--blue)}.chip{background:#f6f8fc;padding:8px;margin:8px 0;border:1px solid var(--line);border-radius:8px}.chip .actions button{font-size:13px;padding:3px 8px;min-height:32px}.chips:empty:after{content:'可选草稿区 · Optional planning';color:#63778d;font-size:14px}textarea{width:100%;display:block;border:1px solid #9db4ca;border-radius:9px;min-height:140px;padding:12px;font:21px/1.7 var(--kai);resize:vertical;color:var(--ink);background:white}textarea::placeholder{font:16px/1.6 var(--song);color:#657789}textarea.short{min-height:95px}.model{border-top:2px solid #bbd0e7;margin-top:20px;padding-top:16px}.answer{font-size:21px;background:#f7faff;padding:15px;border-left:3px solid var(--blue)}label{display:block;margin-top:12px}.checks label{font-size:15px}.checks input{margin-right:8px;min-width:20px;min-height:20px;vertical-align:middle}details{margin:12px 0}summary{cursor:pointer;color:var(--blue);padding:8px 0}.selection{position:sticky;top:-22px;background:#fff6d9;padding:10px;z-index:2;font-size:15px}.selection:empty{display:none}dialog{border:1px solid var(--line);border-radius:14px;max-width:600px;width:calc(100% - 30px);max-height:85vh;overflow:auto;color:var(--ink);font-family:var(--song)}dialog::backdrop{background:#17375355}.status{font-size:14px;color:var(--muted)}[hidden]{display:none!important}.record{padding:12px 0;border-bottom:1px solid var(--line)}.save-alert{color:#962d20}.jump{font-size:14px}.teacher-evidence{font-family:var(--kai)}
+@media(max-width:760px){.layout{grid-template-columns:1fr;padding:10px}.card{padding:17px}aside{position:relative;top:0;max-height:52vh;padding:17px}header{padding:18px}.passage{font-size:21px}nav button{flex:1 1 43%;font-size:15px}}
+@media print{body{background:white;color:black;font-size:12pt}header,aside,main,.layout{display:block;max-width:none;padding:0;margin:0}aside{position:static;max-height:none;overflow:visible;border:0}.card{break-inside:avoid;border:1px solid #aaa}.tools,nav,.actions,button,.selection,.hint,.feedback,.no-print{display:none!important}.stage[hidden]{display:block!important}.model[hidden]{display:none!important}.passage,.answer,textarea{font-size:14pt}textarea{height:auto;min-height:90px}.en{font-size:10pt}h1{font-size:22pt}dialog{display:none!important}}
+</style>
+<header><div class="topline"><a href="/#2/reading/1">← 中二考前强化阅读理解</a><span class="mode">阅读工作坊 · v6</span></div><h1>德士司机和渐冻症的我</h1><p>读懂前后变化，说明依据，独立写出答案。<span class="en">Read the change, explain your evidence, and write independently.</span></p><div class="tools"><button id="print">打印 / Print</button><button id="export">下载学习记录 / Export</button><button id="teacher">教师说明 / Teacher</button><button id="reset">重新开始 / Reset</button><span id="saveStatus" role="status" class="status"></span></div><nav aria-label="学习阶段"><button data-stage="0">1 读懂与连接<br>Read & connect</button><button data-stage="1">2 审题与作答<br>Read & answer</button><button data-stage="2">3 新材料独立练习<br>Transfer</button><button data-stage="3">4 订正与记录<br>Review</button></nav></header>
+<div class="layout"><aside id="passagePane"><h2 id="passageTitle">完整篇章 / Full text</h2><p id="passageGuide">先通读。证据可以点选、拖放，也可以划选一小段再按“选取划线文字”。<span class="en">Read first. Click or drag a sentence, or select a shorter passage and use the button below.</span></p><button id="capture">选取划线文字 / Use selection</button><div id="selection" class="selection" role="status"></div><div id="original" class="passage"></div><div id="transferText" class="passage" hidden></div></aside><main id="tasks"></main></div>
+<dialog id="wordDialog"><h2 id="wordTitle" class="kai"></h2><div id="wordBody"></div><div class="actions"><button id="speak">朗读 / Listen</button><button id="wordClose">关闭 / Close</button></div><p id="speechStatus" role="status"></p></dialog>
+<dialog id="teacherDialog"><h2>教学与验收说明</h2><p>先让学生读完，再把第3段作为师生讨论点。Q46及Q47(a)是先尝试再看示范；Q47(b)、Q48、Q49逐步减少帮助。最后的新编短文用于观察迁移，不等同于一次正式考试。<span class="en">Discuss P3 after reading. Use Q46 and Q47(a) as models after an attempt, then fade support. The original short transfer text is a learning check, not a formal exam.</span></p><p>网页不自动判断意义得分。请分别观察：信息是否相关、推断是否有根据、答案是否回应题目。首次答案、提示记录和订正理由可下载；“有记录”不代表“已掌握”。<span class="en">The page does not award semantic marks. Check relevance, justified inference and response to the question. Export first attempts, help use and revision reasons. Recorded work does not mean mastery.</span></p><p>Q49沿用原参考的四个意义方向：猜疑司机、对母亲不耐烦、误会绕路、敌意和粗鲁行为。全文依据保留供核对，不强制学生逐条拖入；同义合理答案由教师裁决。<span class="en">Q49 retains the four reference directions. The full evidence inventory is for review, not a compulsory drag count. The teacher judges equivalent answers.</span></p><details><summary>Q49 全文依据备查 / Evidence inventory</summary><ul class="teacher-evidence"><li>第1段：眉毛微动后，猜司机纳闷。</li><li>第2段：嫌母亲啰嗦，不耐烦地转头。</li><li>第3段：把注视理解成看不起、鄙视。</li><li>第4段：把绕路理解成欺负、坑钱；产生攻击冲动。</li><li>第5段：把钱丢给司机；司机退钱并帮助下车。</li><li>第6段：司机说明道路整修和妻子的经历，免费帮助并鼓励作者。</li><li>第7段：作者反省。</li></ul></details><p>身体疾病与品格不能画等号。“心病”只解释本文人物的自省。作者评价也须与情节核对。<span class="en">Illness does not determine character. Interpret this narrator’s reflection, and check judgements against events.</span></p><p>教师说明含答案，请勿在学生独立练习时投屏。<span class="en">This guide contains answers. Do not project it during independent work.</span></p><button id="teacherClose">关闭 / Close</button></dialog>
+<script id="data" type="application/json">{"paras": ["经过一番折腾，妈妈好不容易才将我弄上车的。我瞥了一下等候的司机，只见他的眉毛微微动了一下。我想，他一定是在纳闷，好手好脚的人为什么不自己用走的？一个将近1.7米的年轻人，竟然要一个年老而且身高只有1.5米的老妇人连拉带拖地塞进德士里。", "“麻烦您送他到台大医院，这是我的电话，麻烦一有什么问题，请务必打电话给我，谢谢！他身体……”没想到母亲在离开家门前还特别地向德士司机拜托。“真是的，干嘛这么啰嗦，我又不是小孩子了！”我不耐烦地转过头去，不想去看妈妈。", "在路途上，那司机大概以为我是个二十几岁长不大的小孩子，他一定打从心底看不起我。一路上，他以一种近乎诡异的眼光从后视镜中注视着我，那应该就是鄙视吧！他一直盯着我瞧，我只好努力地转动不甚灵活的脖子来回避这种尴尬。可想而知，此时我的脸一定是乌云密布。", "经过每次必经的百货公司，我发现他竟然绕道而行，真是太过分了！我怎么会遇到这么没有道德的德士司机，竟然想要欺负患上“渐冻症”的我，想要坑我的钱！他到底有没有良心啊！如果他也尝尝这种痛苦，他就不会这么对待我！我的内心充满愤怒，双手紧握着拳头，真希望自己的手能够有力量挥舞出去，但是我不能。", "总算到了目的地。我拿出了钱，颤巍巍地丢在他的身上。只见他默默地捡起钱，却折好放回我的上衣口袋，把助行器打开架好，小心地把我抱出车外。", "当我用力地拖着助行器时，他竟哭了：“我太太也是这种病，也是和你一样，慢慢地全身都不能动，上星期在台大医院火化了。以后别走忠孝西路来这里，那路在整修不好走，一路颠簸你的身体会更痛。小老弟，我不收你的钱，你要加油。”说完边用力地向我挥手，似乎想借此给我一些支持的力量。一股暖流流进我的内心，我的眼眶开始模糊。", "看着计程车渐渐远去，我终于明白我真正病得严重的不是身体，其实是我的心。"], "vocab": {"折腾": ["反复处理，很费力", "much trouble; takes effort"], "瞥": ["很快看一眼", "glance"], "纳闷": ["觉得奇怪", "wonder; feel puzzled"], "连拉带拖": ["又拉又拖", "pull and drag"], "啰嗦": ["说太多、重复", "long-winded; repetitive"], "不耐烦": ["觉得烦，不愿继续", "impatient"], "打从心底": ["从内心深处", "from the bottom of one's heart"], "诡异": ["奇怪得不自然", "strange and unsettling"], "鄙视": ["看不起", "look down on"], "尴尬": ["不自然、不自在", "awkward"], "乌云密布": ["本义：天空布满黑云；这里描写什么？", "Literally: dark clouds fill the sky. What is described here?"], "绕道而行": ["换一条较远的路", "take a detour"], "坑我的钱": ["骗取或多收我的钱", "cheat me out of money"], "颤巍巍": ["颤抖、不稳", "trembling and unsteady"], "暖流": ["本义：温暖的水流；这里流进哪里？", "Literally: a warm current. Where does it flow here?"], "眼眶开始模糊": ["眼眶：眼睛周围；模糊：看不清楚。请联系前后文。", "Eye area; blurred vision. Use the surrounding sentences."], "可想而知": ["可以想象得到", "one can imagine"], "助行器": ["帮助站立和走路的工具", "walking frame"], "颠簸": ["上下摇动，不平稳", "bumpy movement"], "渐冻症": ["文中指使身体逐渐难以活动的疾病", "the illness that gradually limits movement in this story"]}, "tasks": [{"id": "read", "title": "读准第3段：司机<span class=\"qkey\">做了什么<\/span>？作者<span class=\"qkey\">怎样理解<\/span>？指出一个词，说明这种理解<span class=\"qkey\">是谁的判断<\/span>。", "stage": 0, "guide": "先通读七段。每段停一下，口头说“发生的事＋人物反应”；这里只写第3段这一处关键区别。", "eng": "Read all seven paragraphs. Briefly say the event and response in each. Write only this key distinction.", "answer": "司机从后视镜注视作者。作者把注视理解成鄙视。“应该……吧”说明这是作者的判断，不能据此断定司机真的鄙视他。", "analysis": "Direct info：注视是篇章叙述的动作。看法及来源：鄙视是作者赋予动作的意思；“应该……吧”留下不确定性。", "ae": "Direct info: the look is narrated. View and source: contempt is the narrator’s interpretation; the wording signals uncertainty.", "hints": [["把动作和动作的意思分开。", "Separate an action from its possible meaning."], ["比较“注视着我”和“应该……吧”。", "Compare the act of looking with the uncertain wording."]], "compare": ["我有没有把动作与解释分开？ / Did I separate action and interpretation?", "我有没有说明是谁的判断并指出用词？ / Did I identify the thinker and a wording clue?"], "evidence": 0, "mode": "练习 / Practice"}, {"id": "whole", "title": "联系前后文：第4段的<span class=\"qkey\">绕路<\/span>，到第6段有了怎样的<span class=\"qkey\">新解释<\/span>？这使作者的态度发生了什么<span class=\"qkey\">变化<\/span>？", "stage": 0, "guide": "用“原来以为……后来得知……于是……”连接前后，不必概括全文。", "eng": "Link the earlier belief, later information and changed response. No whole-text summary is needed.", "answer": "作者原以为司机绕路是为了欺负他、坑他的钱，十分愤怒。后来得知原路整修，司机是为了减轻颠簸带来的痛苦才绕路，作者因而感动，并反省自己的猜疑。", "analysis": "Direct info：前面的指责、后面的道路说明和作者的反应。信息整合：用后文解释同一件事，呈现心理变化。司机的说明是信息来源，不是与“事实／看法”并列的第三种内容类别。", "ae": "Direct info includes the accusation, road explanation and response. Synthesis links them. Who says something and what kind of claim it is are separate questions.", "hints": [["找同一件事前后不同的解释。", "Find two interpretations of the same event."], ["比较第4段作者的想法与第6段司机的话，再读结尾。", "Compare P4 with the driver’s words in P6, then read the ending."]], "compare": ["我有没有讲清改变看法的新信息？ / Did I identify the information that changed the belief?"], "evidence": 0, "mode": "练习 / Practice"}, {"id": "q46", "title": "Q46 <span class=\"qkey\">为什么<\/span>作者<span class=\"qkey\">一开始<\/span>会<span class=\"qkey\">觉得<\/span>德士司机会打从心底<span class=\"qkey\">看不起他<\/span>？（4分）", "stage": 1, "guide": "先选相关原文，再回答。写完后看示范，特别比较“作者看到什么”与“作者为何这样想”。", "eng": "Select relevant text and answer first. Then compare the observation with the reasons for the thought.", "answer": "作者是一个二十几岁、将近1.7米、看起来好手好脚的年轻人（1），却要一个年老而且身高只有1.5米的老妇人（1）连拉带拖地把他塞进德士里（1）；上车后，母亲还特别拜托司机照顾他（1）。因此，作者觉得司机会把自己看成一个长不大、不能照顾自己的年轻人，从而看不起他。", "analysis": "Direct info＋信息处理：四个要点是作者年轻且看似好手好脚、母亲年老矮小、母亲连拉带拖地把他弄上车、母亲特别拜托司机照顾他。眉毛微动只是触发猜测的反应，含义不明确，不能代替这些原因。删去电话、目的地等无关细节，并把“我”换成作者。", "ae": "Use four direct details: the apparently able young man, his elderly small mother, her effort getting him in, and her request for care. The eyebrow movement only triggers the thought. Remove irrelevant details and clarify “I”.", "hints": [["题目问的是作者为什么这样想，不能只写他看到了什么。", "Explain why he thought this, not just what he saw."], ["回看第1—2段：作者的外表、母亲的情况和她的照顾。", "Revisit P1–2: his appearance, his mother’s situation and her care."]], "compare": ["四个原因是否齐全？ / Are all four reasons included?", "是否把反应当成原因，或抄入无关信息？ / Did I confuse a trigger with a reason or copy irrelevant details?"], "evidence": 1, "mode": "先尝试，再看示范 / Try, then study"}, {"id": "q47a", "title": "Q47（a）请结合上下文解释：“<span class=\"qkey\">可想而知<\/span>，此时我的脸一定是<span class=\"qkey\">乌云密布<\/span>。”（2分）", "stage": 1, "guide": "先自己把两个关键词换成日常说法，再看方法示范。原文对应句已画线。", "eng": "Try replacing both expressions with everyday wording, then study the model. The sentence is underlined in the passage.", "answer": "“可想而知”在这里指可以想象得到（1）；“乌云密布”在这里指此时“我”的脸色一定不太好看（1）。", "analysis": "语境解释：“可想而知”换成“可以想象得到”；“乌云密布”联系“我的脸”，说清脸色不好看。只解释指定词义，不增加修辞作用分析。", "ae": "Contextual meaning: “one can imagine”; his face must look gloomy. Explain the target meanings, not the literary effect.", "hints": [["看两个词分别修饰什么。", "Identify what each expression describes."], ["“乌云”是在天空，还是用来形容脸？", "Are these clouds in the sky, or describing his face?"]], "compare": ["两个词在语境中的意思是否都解释了？ / Did I explain both meanings in context?"], "evidence": 0, "mode": "先尝试，再看示范 / Try, then study"}, {"id": "q47b", "title": "Q47（b）请结合上下文解释：“一股<span class=\"qkey\">暖流<\/span>流进我的内心，我的<span class=\"qkey\">眼眶开始模糊<\/span>。”（2分）", "stage": 1, "guide": "沿用(a)的方法，独立解释两个关键词。需要时可请求提示；使用情况会记录。", "eng": "Apply the method from (a) to both expressions. Optional hints are recorded.", "answer": "德士司机的关心和鼓励让“我”感到温暖、深受感动（1），感动得眼眶含泪（1）。", "analysis": "语境解释：“暖流”联系司机的关心，指心里温暖、感动；“眼眶模糊”指感动得眼里含泪。可用意思相同的表达，不要求命中固定字词。", "ae": "The warm current means feeling touched by the driver’s care; blurred eyes mean tears of emotion. Equivalent wording is acceptable.", "hints": [["看司机刚刚说了什么、做了什么。作者如何回应？", "What has the driver just done and said? How does the narrator respond?"], ["先想心里的感受，再想什么会让眼睛看不清楚。", "Consider his feelings, then what could blur his vision."]], "compare": ["有没有解释两个词，而非重复原句？ / Did I explain both expressions instead of repeating them?"], "evidence": 0, "mode": "减少提示，自主作答 / Apply independently"}, {"id": "q48", "title": "Q48 你认为文中的德士司机是个<span class=\"qkey\">怎么样的人<\/span>？试写出<span class=\"qkey\">两点<\/span>并<span class=\"qkey\">举例说明<\/span>。（4分）", "stage": 1, "guide": "先选言行，再想“他考虑到什么需要／怎样对待别人”，最后判断特点。评价要与情节相符，并联系文章中心。完整答案写两个特点，各配例子。", "eng": "Choose actions, explain the need or attitude they reveal, then infer traits. Check judgements against events and the main idea. Give two traits with examples.", "answer": "司机是一个体贴的人（1）。他知道道路整修会使作者因颠簸而更加痛苦，所以特意绕路（1）。他也是一个善良的人（1）。他把车费放回作者口袋，不收作者的钱，并鼓励作者加油（1）。", "analysis": "Direct info：司机的具体言行。Inference：由言行概括特点。关键联系是他考虑到乘客的身体需要，所以绕路可以支持“体贴”；免费帮助和鼓励可以支持“善良”。也接受有相配依据的细心、宽容等不同特点。作者的评价仍须由情节核对，误会时的指责不能直接采用。", "ae": "Actions are direct info; traits are inferences. Considering the passenger’s pain supports “considerate”; free help and encouragement support “kind”. Other distinct traits need matching evidence. Check the narrator’s judgement against events.", "hints": [["不能只写“他帮助人”。这件事如何体现你选的特点？", "Explain how the particular action supports your chosen trait."], ["对照绕路的用意、下车时的动作与司机的话，找不同方面。", "Compare the purpose of the detour, the help getting out and his words. Find distinct aspects."]], "compare": ["两个特点是否有区别，例子是否配得上？ / Are the traits distinct and supported?", "是否把作者的早期误解当成事实？ / Did I treat an early assumption as fact?"], "evidence": 2, "mode": "减少提示，自主作答 / Apply independently"}, {"id": "q49", "title": "Q49 <span class=\"qkey\">为什么<\/span>作者认为“我真正病得严重的<span class=\"qkey\">不是身体，其实是我的心<\/span>”？请<span class=\"qkey\">结合文章内容<\/span>加以说明。（4分）", "stage": 1, "guide": "先看全文，按不同意思整理依据。删去重复表现，解释“心病”和醒悟原因。证据区是草稿，不规定拖入数量。", "eng": "Review the whole text, group distinct ideas, remove repetition and explain the metaphor and realisation. The evidence area is optional planning, with no required count.", "answer": "作者因患病而敏感多疑，认定司机看不起他；母亲关心他，他却嫌母亲啰嗦；司机绕路，他误以为司机要欺负他、坑钱；他还产生攻击冲动，并把钱丢在司机身上。后来，他明白司机绕路是为了减轻他的痛苦，还免费帮助、鼓励他，才反省自己以猜疑和敌意误解别人的善意。这就是他所说的“心病”。", "analysis": "信息整合＋Inference：把表现归为猜疑别人、对母亲不耐烦、误会绕路、以敌意待人四个意义方向，再以司机的善意说明作者为何醒悟。找遍全文是为了不漏重要方向，不是把每个相似细节都抄进答案。“心病”是本文人物的自省，不是对患病者的品格判断。", "ae": "Group evidence into suspicion, impatience with his mother, misreading the detour and hostility. Contrast this with kindness to explain the realisation. Search broadly but remove repetition. The metaphor is this narrator’s reflection, not a judgement of people with illness.", "hints": [["相似的猜测可以合并；不要漏掉对不同人的态度和实际行为。", "Group similar suspicions; also consider attitudes to different people and actual behaviour."], ["看作者对母亲、司机目光、绕路和付钱的反应，再与真相对照。", "Review the mother, the look, the detour and payment, then contrast with the truth."]], "compare": ["是否解释了“心病”，覆盖不同意义方向并说明醒悟？ / Did I explain the metaphor, distinct evidence and realisation?", "哪些细节重复，可以合并？ / Which repeated details can I combine?"], "evidence": 1, "mode": "减少提示，自主作答 / Apply independently"}, {"id": "transfer", "title": "新材料：为什么“我”<span class=\"qkey\">原先准备责问他的话<\/span>，后来<span class=\"qkey\">说不出口了<\/span>？请结合<span class=\"qkey\">前后内容<\/span>说明。", "stage": 2, "guide": "这是新编短文，不是原考题。先独立作答，不提供定位或答案提示；可使用仅解释语言的词语辅助。", "eng": "This is an original transfer exercise, not an exam question. Answer independently without location or answer hints. Language-only support is available.", "answer": "“我”原以为阿杰拿走练习本是为了抄答案，想责问他。后来听到他请老师补批练习本，并看到他提醒自己看批注、提议一起请教，才明白他是在帮助自己订正。“我”意识到误会了他，因此不好意思再责问。", "analysis": "Direct info：拿本子、送去补批、提醒订正。作者看法：以为抄答案。Inference：“说不出口”联系前后，解释为明白自己误会了对方而不好意思。只写“阿杰帮助她”会漏掉先前误会及转变。", "ae": "Direct info: taking the book, requesting marking and helping with corrections. The copying claim is an assumption. Infer embarrassment from recognising the misunderstanding; include the earlier belief and change.", "hints": [], "compare": ["是否写出原来的误会、新的依据和转变原因？ / Did I explain the belief, new evidence and change?"], "evidence": 0, "mode": "练习 / Practice"}], "transfer": "午休时，我看见阿杰从我的桌上拿走练习本，快步走出教室。我心想：“他一定又要抄我的答案！”我追到办公室门口，却听见他对老师说：“这本还没批改，刚才收作业时漏了。她下午要订正，麻烦您看看。”回教室后，他把练习本放回我的桌上，指着老师的批注说：“这里我也不懂，等会儿一起问老师吧。”我原先准备责问他的话，忽然说不出口了。", "version": "2026-09-reading-v6"}</script>
+<script>
+'use strict';
+const D=JSON.parse(document.querySelector('#data').textContent),KEY='hwt-taxi-workshop-v6', $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)], esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let S={stage:0,work:{},help:[],selected:''},storageOK=true,selectionRange='',wordRead='';
+try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&v.work&&Array.isArray(v.help))S={...S,...v};}catch(e){storageOK=false;}
+function work(id){return S.work[id]||(S.work[id]={draft:'',evidence:[[],[]],bridge:'',hints:0,first:null,revealed:false,revision:'',reason:'',checks:[],revised:false});}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));$('#saveStatus').textContent='已在本机保存 / Saved on this device';}catch(e){storageOK=false;$('#saveStatus').textContent='本机保存不可用，请下载记录 / Storage unavailable; export your work';$('#saveStatus').classList.add('save-alert');}}
+function pair(z,e){z=z.replace(/“([^”]+)”/g,'<span class="kai">“$1”</span>');return `<p>${z}<span class="en">${e}</span></p>`;}
+const target=['可想而知，此时我的脸一定是乌云密布。','一股暖流流进我的内心，我的眼眶开始模糊。'];
+function decorate(text){let out='',i=0,words=Object.keys(D.vocab).sort((a,b)=>b.length-a.length);while(i<text.length){const v=words.find(w=>text.startsWith(w,i));if(v){out+=`<button class="vocab" data-word="${esc(v)}">${esc(v)}</button>`;i+=v.length;}else out+=esc(text[i++]);}return out;}
+D.paras.forEach((p,i)=>{let parts=p.match(/[^。！？；]+[。！？；]?/g)||[p];let n=0;$('#original').insertAdjacentHTML('beforeend',`<p class="para" id="p${i+1}"><span class="pnum">${i+1}</span>${parts.map(t=>`<span class="sentence ${target.some(x=>t.includes(x))?'target':''}" tabindex="0" draggable="true" data-sentence="p${i+1}s${n++}">${decorate(t)}</span>`).join('')}</p>`);});
+$('#transferText').innerHTML='<p>'+esc(D.transfer).replace('批注','<button class="vocab" data-word="批注">批注</button>').replace('责问','<button class="vocab" data-word="责问">责问</button>')+'</p>';
+D.vocab['批注']=['写在文章旁边的意见','written comments'];D.vocab['责问']=['带着责备去问','question someone accusingly'];
+function render(){
+$('#tasks').innerHTML=[0,1,2].map(stage=>`<section class="stage" data-panel="${stage}" ${stage!==S.stage?'hidden':''}>${D.tasks.filter(t=>t.stage===stage).map(t=>card(t)).join('')}</section>`).join('')+`<section class="stage card" data-panel="3" ${S.stage!==3?'hidden':''}><h2>订正与学习记录 / Review</h2>${pair('回看你的首次答案和修改理由。先解决理解问题，再改表达；未掌握的地方请带到课堂讨论。','Review the first answer and revision reason. Resolve meaning before polishing wording. Bring unresolved questions to class.')}<div id="records"></div><button class="primary" id="export2">下载学习记录 / Export work</button>${pair('记录只保存在这台设备的这个浏览器；不会自动送给老师。下载文件可交给老师查看。','Records stay in this browser on this device; they are not sent automatically. Export the file to share with your teacher.')}</section>`;
+bindCards();showStage(S.stage);renderRecords();$('#export2').onclick=exportWork;}
+function card(t){let w=work(t.id);return `<article class="card" id="${t.id}"><div class="mode">${t.mode}</div><h3>${t.title}</h3>${pair(t.guide,t.eng)}${t.evidence?Array.from({length:t.evidence},(_,i)=>`<div class="evidence" data-id="${t.id}" data-bin="${i}" tabindex="0"><b>Direct info ${t.evidence>1?i+1:''} · 原文草稿</b><span class="en">Add relevant text; remove or shorten it before writing.</span><div class="chips"></div><button class="add">加入所选原文 / Add selected text</button></div>`).join(''):''}${t.id==='q48'?`<label for="q48-bridge">解释一个联系 / Explain one link</label><span class="en">What need or attitude does an action reveal? How does it support a trait?</span><textarea class="short bridge" id="q48-bridge" placeholder="这件事说明他考虑到……，因此可以看出他……">${esc(w.bridge)}</textarea>`:''}
+${t.hints.length?`<div class="actions"><button class="hintBtn">需要提示 / Hint</button><span class="status hintCount"></span></div><div class="hint note" hidden></div>`:''}
+<label for="${t.id}-draft">完整答案 / Your answer</label><textarea class="draft" id="${t.id}-draft" placeholder="${t.id==='q48'?'他是一个……的人。当作者……，司机……；或者司机说……。另一特点也要配例子。':'先写自己的理解；可以不完全正确。Write your own understanding first.'}">${esc(w.draft)}</textarea><p class="status" id="${t.id}-status"></p><div class="actions"><button class="primary submit">保存尝试并比较 / Save & compare</button></div><div class="feedback" role="status"></div>
+<div class="model" ${w.revealed?'':'hidden'}><b>答案来源与解析 / How the answer is formed</b>${pair(t.analysis,t.ae)}<b>参考答案 / Reference</b><div class="answer">${sourceAnswer(t)}</div><div class="checks">${t.compare.map((c,i)=>`<label><input type="checkbox" data-check="${i}" ${w.checks.includes(i)?'checked':''}>${esc(c)}</label>`).join('')}</div>${pair('比较意思，不必照抄措辞。网页没有给本题判分；勾选是你的自查，教师确认是否正确。','Compare meanings, not exact wording. This is self-review, not an automatic score; the teacher checks correctness.')}<label for="${t.id}-revision">修改后的完整答案 / Revised answer</label><textarea class="revision" id="${t.id}-revision" placeholder="需要修改时再写；保留首次答案供比较。">${esc(w.revision)}</textarea><label for="${t.id}-reason">为什么这样改？ / Why revise?</label><textarea class="short reason" id="${t.id}-reason" placeholder="原来我……；现在根据……改成……。若不需修改，说明哪处依据支持原答。">${esc(w.reason)}</textarea><button class="saveRevision">记录订正 / Record revision</button><details><summary>查看首次尝试 / First attempt</summary><div class="first answer"></div></details></div></article>`;}
+function sourceAnswer(t){const tag=x=>`<span class="song status">〔${x}〕</span>`;if(t.id==='q48'){return tag('Inference')+'司机是一个体贴的人（1）。'+tag('Direct info')+'他知道道路整修会使作者因颠簸而更加痛苦，所以特意绕路（1）。<br>'+tag('Inference')+'他也是一个善良的人（1）。'+tag('Direct info')+'他把车费放回作者口袋，不收作者的钱，并鼓励作者加油（1）。';}if(t.id==='q49'){return tag('Inference')+'作者因患病而敏感多疑。'+tag('Direct info · 信息整理')+'他认定司机看不起他；母亲关心他，他却嫌母亲啰嗦；司机绕路，他误以为司机要欺负他、坑钱；他还产生攻击冲动，并把钱丢在司机身上。'+tag('Direct info · 对照')+'后来，他明白司机绕路是为了减轻他的痛苦，还免费帮助、鼓励他。'+tag('Inference · 综合解释')+'他才反省自己以猜疑和敌意误解别人的善意。这就是他所说的“心病”。';}return tag(t.id.startsWith('q47')?'语境解释 / Contextual meaning':t.id==='q46'?'Direct info · 信息处理':'参考表达 / Possible response')+esc(t.answer);}
+function showStage(n){S.stage=Number(n);if(![0,1,2,3].includes(S.stage))S.stage=0;$$('[data-panel]').forEach(x=>x.hidden=Number(x.dataset.panel)!==S.stage);$$('nav button').forEach(x=>x.setAttribute('aria-current',Number(x.dataset.stage)===S.stage));$('#original').hidden=S.stage===2;$('#transferText').hidden=S.stage!==2;$('#passageTitle').textContent=S.stage===2?'新编短文 / New text':'完整篇章 / Full text';$('#capture').hidden=S.stage===2;$('#selection').hidden=S.stage===2;$('#passageGuide').hidden=S.stage===2;if(S.stage===3)renderRecords();save();}
+function select(text){S.selected=text;$('#selection').textContent='已选 / Selected: '+text;save();}
+document.addEventListener('selectionchange',()=>{const sel=window.getSelection();if(sel&&sel.rangeCount&&!sel.isCollapsed){const range=sel.getRangeAt(0);if($('#original').contains(range.startContainer)&&$('#original').contains(range.endContainer))selectionRange=sel.toString();}});
+$('#capture').onpointerdown=e=>e.preventDefault();$('#capture').onclick=()=>{if(selectionRange.trim())select(selectionRange.trim());else $('#selection').textContent='请先划选左侧原文 / Select passage text first';};
+$$('.sentence').forEach(el=>{el.onclick=e=>{if(e.target.closest('.vocab')||window.getSelection().toString().trim())return;$$('.sentence').forEach(s=>s.classList.remove('selected'));el.classList.add('selected');select(el.textContent);};el.onkeydown=e=>{if(e.target===el&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(el.textContent);}};el.ondragstart=e=>{e.dataTransfer.setData('text/plain',el.textContent);select(el.textContent);};});
+function renderChips(box){const w=work(box.dataset.id),i=Number(box.dataset.bin);box.querySelector('.chips').innerHTML=w.evidence[i].map((text,j)=>`<div class="chip"><div class="evidence-text">${esc(text)}</div><div class="actions"><button data-remove="${j}" aria-label="删除这条证据">删除 / Remove</button><button data-edit="${j}">删减 / Shorten</button><button data-up="${j}" ${j===0?'disabled':''}>上移 / Up</button></div></div>`).join('');box.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{w.evidence[i].splice(+b.dataset.remove,1);renderChips(box);save();});box.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>{let j=+b.dataset.up;[w.evidence[i][j-1],w.evidence[i][j]]=[w.evidence[i][j],w.evidence[i][j-1]];renderChips(box);save();});box.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{const j=+b.dataset.edit,chip=b.closest('.chip');chip.innerHTML=`<textarea class="short trim" aria-label="删减证据">${esc(w.evidence[i][j])}</textarea><button class="done">保存删减 / Save</button>`;chip.querySelector('.done').onclick=()=>{const v=chip.querySelector('textarea').value.trim();if(v)w.evidence[i][j]=v;else w.evidence[i].splice(j,1);renderChips(box);save();};});}
+function add(box,text){if(!text.trim()){$('#selection').textContent='请先选取原文 / Select text first';return;}if(!D.paras.some(p=>p.includes(text.trim()))){$('#selection').textContent='请从左侧原文选取；自己的解释写在答案里 / Select original text; put explanations in your answer';return;}const a=work(box.dataset.id).evidence[+box.dataset.bin];if(!a.includes(text.trim()))a.push(text.trim());renderChips(box);save();}
+function hint(t,el){const w=work(t.id);if(w.hints<t.hints.length){w.hints++;S.help.push({task:t.id,type:'hint',level:w.hints,time:new Date().toISOString(),beforeFirst:!w.first});}const h=t.hints[w.hints-1];el.querySelector('.hint').innerHTML=pair(...h);el.querySelector('.hint').hidden=false;el.querySelector('.hintCount').textContent=`已用 ${w.hints}/${t.hints.length} · Help recorded`;save();}
+function enough(s){return /[\p{L}\p{N}]/u.test(s.trim());}
+function bindCards(){D.tasks.forEach(t=>{const el=document.getElementById(t.id),w=work(t.id);for(const name of ['draft','bridge','revision','reason']){const f=el.querySelector('.'+name);if(f)f.oninput=()=>{w[name]=f.value;if(name==='revision'||name==='reason')w.revised=false;save();};}el.querySelectorAll('.evidence').forEach(box=>{renderChips(box);box.querySelector('.add').onclick=()=>add(box,S.selected||'');box.ondragover=e=>e.preventDefault();box.ondrop=e=>{e.preventDefault();add(box,e.dataTransfer.getData('text/plain'));};});const hb=el.querySelector('.hintBtn');if(hb){hb.onclick=()=>hint(t,el);if(w.hints){const h=t.hints[Math.min(w.hints,t.hints.length)-1];el.querySelector('.hint').innerHTML=pair(...h);el.querySelector('.hint').hidden=false;el.querySelector('.hintCount').textContent='已用 '+w.hints+' · Help recorded';}}el.querySelector('.submit').onclick=()=>{
+ const fb=el.querySelector('.feedback');if(!enough(w.draft)){fb.innerHTML=pair('请先写自己的理解；不必等到完全正确。连续点击不会打开答案。','Write your own understanding first; it need not be correct. Repeated clicks do not reveal the reference.');return;}
+ if(t.id==='q48'&&!enough(w.bridge)){fb.innerHTML=pair('请先用一句话说明一个行为怎样支持特点。','First explain how one action supports a trait.');return;}
+ if(!w.first)w.first={answer:w.draft,bridge:w.bridge,evidence:JSON.parse(JSON.stringify(w.evidence)),time:new Date().toISOString(),help:S.help.filter(h=>h.beforeFirst&&(h.task===t.id||h.task==='passage'))};w.revealed=true;el.querySelector('.model').hidden=false;el.querySelector('.first').textContent=w.first.answer;fb.innerHTML=pair('已保存首次尝试并打开参考。请对照证据和意思订正；这不是自动判对。','Your first attempt is saved. Compare evidence and meaning with the reference; this is not an automatic correctness judgement.');if(t.id==='q46'&&w.evidence.flat().some(x=>x.includes('眉毛')))fb.innerHTML+=pair('你选入了眉毛微动。请核对：它说明看到的反应，还是解释为什么会被看不起？','You selected the eyebrow movement. Does it show a reaction, or explain a reason for being looked down on?');save();updateStatus(t.id);};
+ el.querySelector('.saveRevision').onclick=()=>{if(!enough(w.reason)){el.querySelector('.feedback').innerHTML=pair('请说明修改理由；若保留原答，指出支持它的依据。','Explain the revision, or identify evidence supporting an unchanged answer.');return;}w.revised=true;w.revisedAt=new Date().toISOString();save();updateStatus(t.id);el.querySelector('.feedback').innerHTML=pair('已记录订正理由，供老师核对。','Your revision reason is recorded for teacher review.');};el.querySelectorAll('[data-check]').forEach(c=>c.onchange=()=>{w.checks=[...el.querySelectorAll('[data-check]:checked')].map(x=>+x.dataset.check);save();});el.querySelector('.first').textContent=w.first?.answer||'';updateStatus(t.id);});}
+function updateStatus(id){const w=work(id);document.getElementById(id+'-status').textContent=w.revised?'已记录订正 · Revision recorded':w.revealed?'已看参考，待比较 · Reference opened':w.first?'已有首次尝试 · First attempt saved':'尚未提交 · Not submitted';}
+function renderRecords(){if(!$('#records'))return;$('#records').innerHTML=D.tasks.map(t=>{const w=work(t.id);return `<div class="record"><b class="kai">${t.id.toUpperCase()}</b> · ${w.revised?'已记录订正 / Revised':w.first?'已保存尝试 / Attempt saved':'尚未作答 / Not submitted'}<br><span class="status">本题提示 ${w.hints} · Hints used</span>${w.first?`<details><summary>首次与订正 / Compare drafts</summary><div class="answer">${esc(w.first.answer)}</div><div class="answer">${esc(w.revision||'（保留原答 / Unchanged）')}</div><p>${esc(w.reason||'尚未写订正理由 / No revision reason yet')}</p><p class="status">首次作答前的辅助记录 ${w.first.help.length} · Recorded help before first attempt</p></details>`:''}<button class="jump" data-go="${t.id}">回到本题 / Return</button></div>`;}).join('');$$('[data-go]').forEach(b=>b.onclick=()=>{let t=D.tasks.find(t=>t.id===b.dataset.go);showStage(t.stage);document.getElementById(t.id).scrollIntoView({block:'start'});});}
+function exportWork(){const body=D.tasks.map(t=>{const w=work(t.id);return `<section><h2>${esc(plainTitle(t.title))}</h2><p>首次尝试前使用提示 / Help before first attempt: ${w.first?.help.length||0}</p><h3>首次答案 / First attempt</h3><pre>${esc(w.first?.answer||'尚未提交 / Not submitted')}</pre><h3>当前草稿 / Current draft</h3><pre>${esc(w.draft)}</pre><h3>原文证据 / Evidence</h3><pre>${esc(w.evidence.flat().join('\n'))}</pre><h3>言行与特点的联系 / Reasoning link</h3><pre>${esc(w.bridge)}</pre><h3>订正与理由 / Revision and reason</h3><pre>${esc(w.revision||'保留原答或尚未订正 / Unchanged or not revised')}\n${esc(w.reason)}</pre><p>${w.revised?'已记录订正 / Revision recorded':'待核对 / Pending review'}</p></section>`;}).join('');const content='<!doctype html><html lang="zh-SG"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>阅读学习记录</title><style>body{max-width:900px;margin:30px auto;padding:20px;font-family:SimSun,"Songti SC",serif;line-height:1.7}pre{white-space:pre-wrap;font-family:STKaiti,KaiTi,serif;font-size:20px;background:#f3f7fc;padding:14px}section{border-bottom:1px solid #ccc;padding:15px 0}h2{font-family:STKaiti,KaiTi,serif}h3{font-size:16px}</style><h1>德士司机和渐冻症的我 · 学习记录</h1><p>学习过程记录，不是自动评分。Learning record, not automatic marks.</p><p>'+esc(new Date().toLocaleString())+'</p>'+body+'<h2>辅助使用记录 / Help log</h2><pre>'+esc(JSON.stringify(S.help,null,2))+'</pre></html>';const blob=new Blob([content],{type:'text/html;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='taxi-reading-record.html';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
 
-  <section class="method">
-    <div class="hero">
-      <h1 class="formal-text">德士司机和渐冻症的我</h1>
-      <p class="lead">阅读答案要有根据：先找篇章直接信息（direct information），需要时才作合理推断（inference）。</p>
-      <div class="process">
-        <div class="process-card"><b>1 逐段读懂</b>谁？发生什么？人物有什么反应？<span class="en">Understand each paragraph: Who? What happened? How did the character react?</span></div>
-        <div class="process-card"><b>2 连接全文</b>事情怎样发展？人物前后怎样变化？<span class="en">Connect the text: How did events and feelings change?</span></div>
-        <div class="process-card"><b>3 审题定位</b>题目问什么？范围、数量、要求是什么？<span class="en">Read the question: What, where, how many, and what form?</span></div>
-        <div class="process-card"><b>4 回文作答</b>找直接信息；必要时推断；组织答案。<span class="en">Return to the text: Find direct information, infer if needed, then answer.</span></div>
-      </div>
-    </div>
-  </section>
-
-  <main class="workspace">
-    <article class="pane passage-pane" id="passagePane">
-      <h2 class="pane-title">篇章</h2>
-      <p class="small-note">点虚线词语看中英文解释和听发音。拖动有“拖/drag”的原文；iPad也可先点原文，再点右边答案框。</p>
-      <div class="selection-note" id="selectionNote">已选择原文：<span id="selectedText"></span></div>
-
-      <div class="para"><span class="pnum">1</span>经过一番<button class="vocab" data-zh="反复处理，很费力" data-en="much trouble; takes effort">折腾</button>，妈妈好不容易才将我弄上车的。我<button class="vocab" data-zh="很快看一眼" data-en="glance">瞥</button>了一下等候的司机，<span class="frag" draggable="true" data-id="f15">只见他的眉毛微微动了一下。</span><span class="frag" draggable="true" data-id="f14">我想，他一定是在<button class="vocab" data-zh="觉得奇怪" data-en="wonder; feel puzzled">纳闷</button>，</span><span class="frag" draggable="true" data-id="f1a">好手好脚的人为什么不自己用走的？一个将近1.7米的年轻人，</span>竟然要<span class="frag" draggable="true" data-id="f1b">一个年老而且身高只有1.5米的老妇人</span><span class="frag" draggable="true" data-id="f1c"><button class="vocab" data-zh="又拉又拖" data-en="pull and drag">连拉带拖</button>地塞进德士里。</span></div>
-
-      <div class="para"><span class="pnum">2</span><span class="frag" draggable="true" data-id="f2">“麻烦您送他到台大医院，这是我的电话，麻烦一有什么问题，请务必打电话给我，谢谢！他身体……”没想到母亲在离开家门前还特别地向德士司机拜托。</span><span class="frag" draggable="true" data-id="f3">“真是的，干嘛这么<button class="vocab" data-zh="说太多、重复" data-en="long-winded; repetitive">啰嗦</button>，我又不是小孩子了！”我<button class="vocab" data-zh="觉得烦，不愿继续" data-en="impatient">不耐烦</button>地转过头去，不想去看妈妈。</span></div>
-
-      <div class="para"><span class="pnum">3</span>在路途上，那司机大概以为我是个二十几岁长不大的小孩子，<span class="frag" draggable="true" data-id="f4">他一定<button class="vocab" data-zh="从内心深处" data-en="from the bottom of one's heart">打从心底</button>看不起我。</span>一路上，<span class="frag" draggable="true" data-id="f5">他以一种近乎<button class="vocab" data-zh="奇怪得不自然" data-en="strange and unsettling">诡异</button>的眼光从后视镜中注视着我，那应该就是<button class="vocab" data-zh="看不起" data-en="look down on">鄙视</button>吧！</span>他一直盯着我瞧，我只好努力地转动不甚灵活的脖子来回避这种<button class="vocab" data-zh="不自然、不自在" data-en="awkward">尴尬</button>。<span class="frag" draggable="true" data-id="f6">可想而知，此时我的脸一定是<button class="vocab" data-zh="这里指脸色不好看" data-en="here: a dark, gloomy expression">乌云密布</button>。</span></div>
-
-      <div class="para"><span class="pnum">4</span><span class="frag" draggable="true" data-id="f7">经过每次必经的百货公司，我发现他竟然<button class="vocab" data-zh="换一条较远的路" data-en="take a detour">绕道而行</button>，真是太过分了！我怎么会遇到这么没有道德的德士司机，竟然想要欺负患上“渐冻症”的我，想要<button class="vocab" data-zh="骗取或多收我的钱" data-en="cheat me out of money">坑我的钱</button>！他到底有没有良心啊！如果他也尝尝这种痛苦，他就不会这么对待我！我的内心充满愤怒，双手紧握着拳头，真希望自己的手能够有力量挥舞出去，但是我不能。</span></div>
-
-      <div class="para"><span class="pnum">5</span><span class="frag" draggable="true" data-id="f8">总算到了目的地。我拿出了钱，<button class="vocab" data-zh="颤抖、不稳" data-en="trembling and unsteady">颤巍巍</button>地丢在他的身上。</span><span class="frag" draggable="true" data-id="f9">只见他默默地捡起钱，却折好放回我的上衣口袋，把助行器打开架好，小心地把我抱出车外。</span></div>
-
-      <div class="para"><span class="pnum">6</span>当我用力地拖着助行器时，他竟哭了：“我太太也是这种病，也是和你一样，慢慢地全身都不能动，上星期在台大医院火化了。<span class="frag" draggable="true" data-id="f10">以后别走忠孝西路来这里，那路在整修不好走，一路颠簸你的身体会更痛。</span><span class="frag" draggable="true" data-id="f11">小老弟，我不收你的钱，你要加油。”说完边用力地向我挥手，似乎想借此给我一些支持的力量。</span><span class="frag" draggable="true" data-id="f12">一股<button class="vocab" data-zh="温暖、感动的感觉" data-en="a warm, touched feeling">暖流</button>流进我的内心，我的<button class="vocab" data-zh="眼里有泪，看不清楚" data-en="eyes blurred with tears">眼眶开始模糊</button>。</span></div>
-
-      <div class="para"><span class="pnum">7</span><span class="frag" draggable="true" data-id="f13">看着计程车渐渐远去，我终于明白我真正病得严重的不是身体，其实是我的心。</span></div>
-    </article>
-
-    <section class="pane task-pane">
-      <nav class="stage-nav" aria-label="学习步骤">
-        <button class="stage-btn active" data-target="1">1 读段落<span class="en">Paragraphs</span></button>
-        <button class="stage-btn" data-target="2">2 连全文<span class="en">Whole text</span></button>
-        <button class="stage-btn" data-target="3">3 审题与作答<span class="en">Read & answer</span></button>
-        <button class="stage-btn" data-target="4">4 检查<span class="en">Review</span></button>
-      </nav>
-
-      <section class="stage active" data-stage="1">
-        <h2>第一步：逐段理解</h2><span class="en">Step 1: Understand each paragraph.</span>
-        <div class="instruction">先弄清每段“发生什么”和“作者怎样想”。不要急着看题目。<span class="en">First understand what happened and what the narrator thought. Do not rush to the questions.</span></div>
-        <h3>A. 每段主要写什么？</h3>
-        <div class="activity" id="paraActivity">
-          <div class="row"><label for="p1">第1段</label><select id="p1" data-answer="a"><option value="">选择最完整的概括</option><option value="a">母亲费力把作者弄上车；作者猜司机看不起他</option><option value="b">司机拒绝载作者去医院</option><option value="c">母亲责怪司机没有耐心</option></select></div>
-          <div class="row"><label for="p2">第2段</label><select id="p2" data-answer="b"><option value="">选择最完整的概括</option><option value="a">作者要求母亲陪他去医院</option><option value="b">母亲拜托司机照顾作者；作者感到不耐烦</option><option value="c">司机嫌母亲说话啰嗦</option></select></div>
-          <div class="row"><label for="p3">第3段</label><select id="p3" data-answer="c"><option value="">选择最完整的概括</option><option value="a">司机公开嘲笑作者</option><option value="b">作者与司机发生争吵</option><option value="c">作者把司机的注视理解成鄙视</option></select></div>
-          <div class="row"><label for="p4">第4段</label><select id="p4" data-answer="a"><option value="">选择最完整的概括</option><option value="a">作者把绕路理解成欺负和坑钱，十分愤怒</option><option value="b">司机向作者解释绕路原因</option><option value="c">作者要求司机更换路线</option></select></div>
-          <div class="row"><label for="p5">第5段</label><select id="p5" data-answer="b"><option value="">选择最完整的概括</option><option value="a">作者拒绝付车费</option><option value="b">作者愤怒丢钱；司机退钱并细心帮助他</option><option value="c">司机把作者送回家</option></select></div>
-          <div class="row"><label for="p6">第6段</label><select id="p6" data-answer="c"><option value="">选择最完整的概括</option><option value="a">司机责怪作者不懂事</option><option value="b">作者安慰失去妻子的司机</option><option value="c">司机说明真相并鼓励作者；作者深受感动</option></select></div>
-          <div class="row"><label for="p7">第7段</label><select id="p7" data-answer="a"><option value="">选择最完整的概括</option><option value="a">作者反省自己的“心病”</option><option value="b">作者发现自己的身体已经康复</option><option value="c">作者埋怨司机离开得太快</option></select></div>
-          <button class="primary" data-check="paragraphs">检查段意</button><div class="feedback" id="paragraphFeedback"></div>
-        </div>
-
-        <h3>B. 这是事实，还是看法？是谁的看法？</h3>
-        <div class="instruction">“事实”是篇章写明发生的事；“看法”是人物对事情的解释或判断。<span class="en">A fact is stated as happening. A view is a character's interpretation or judgement.</span></div>
-        <div class="activity" id="factActivity">
-          <div class="row"><span>司机的眉毛微微动了一下。</span><select data-answer="fact"><option value="">请选择</option><option value="fact">篇章写明的事实 / stated fact</option><option value="author">作者的看法或猜测 / narrator's view</option><option value="driver">司机的说明或看法 / driver's statement</option></select></div>
-          <div class="row"><span>他一定是在纳闷。</span><select data-answer="author"><option value="">请选择</option><option value="fact">篇章写明的事实 / stated fact</option><option value="author">作者的看法或猜测 / narrator's view</option><option value="driver">司机的说明或看法 / driver's statement</option></select></div>
-          <div class="row"><span>我又不是小孩子了。</span><select data-answer="author"><option value="">请选择</option><option value="fact">篇章写明的事实 / stated fact</option><option value="author">作者的看法或猜测 / narrator's view</option><option value="driver">司机的说明或看法 / driver's statement</option></select></div>
-          <div class="row"><span>司机从后视镜中注视着我。</span><select data-answer="fact"><option value="">请选择</option><option value="fact">篇章写明的事实 / stated fact</option><option value="author">作者的看法或猜测 / narrator's view</option><option value="driver">司机的说明或看法 / driver's statement</option></select></div>
-          <div class="row"><span>那应该就是鄙视吧！</span><select data-answer="author"><option value="">请选择</option><option value="fact">篇章写明的事实 / stated fact</option><option value="author">作者的看法或猜测 / narrator's view</option><option value="driver">司机的说明或看法 / driver's statement</option></select></div>
-          <div class="row"><span>司机绕道而行。</span><select data-answer="fact"><option value="">请选择</option><option value="fact">篇章写明的事实 / stated fact</option><option value="author">作者的看法或猜测 / narrator's view</option><option value="driver">司机的说明或看法 / driver's statement</option></select></div>
-          <div class="row"><span>司机想要欺负我、坑我的钱。</span><select data-answer="author"><option value="">请选择</option><option value="fact">篇章写明的事实 / stated fact</option><option value="author">作者的看法或猜测 / narrator's view</option><option value="driver">司机的说明或看法 / driver's statement</option></select></div>
-          <div class="row"><span>忠孝西路在整修，一路颠簸身体会更痛。</span><select data-answer="driver"><option value="">请选择</option><option value="fact">篇章写明的事实 / stated fact</option><option value="author">作者的看法或猜测 / narrator's view</option><option value="driver">司机的说明或看法 / driver's statement</option></select></div>
-          <button class="primary" data-check="facts">检查判断</button><div class="feedback" id="factFeedback"></div>
-        </div>
-      </section>
-
-      <section class="stage" data-stage="2">
-        <h2>第二步：连接全文</h2><span class="en">Step 2: Connect the whole text.</span>
-        <div class="instruction">把段落连起来，看事情的发展和作者的心理变化。<span class="en">Link the paragraphs to see how events and feelings change.</span></div>
-        <div class="map-grid">
-          <div class="map-card"><b>第1—2段：上车</b><select data-map-answer="a"><option value="">作者怎样？</option><option value="a">尴尬、自尊受挫、不耐烦</option><option value="b">轻松、兴奋</option><option value="c">感激、安心</option></select><span class="en">Getting in: embarrassed, self-conscious and impatient.</span></div>
-          <div class="map-card"><b>第3—4段：途中</b><select data-map-answer="b"><option value="">作者怎样？</option><option value="a">放心、信任</option><option value="b">敏感、猜疑、愤怒</option><option value="c">感动、内疚</option></select><span class="en">During the ride: sensitive, suspicious and angry.</span></div>
-          <div class="map-card"><b>第5—6段：到达</b><select data-map-answer="c"><option value="">作者怎样？</option><option value="a">更加生气</option><option value="b">毫无反应</option><option value="c">意外、感动</option></select><span class="en">On arrival: surprised and moved.</span></div>
-          <div class="map-card"><b>第7段：回望</b><select data-map-answer="a"><option value="">作者怎样？</option><option value="a">反省、醒悟</option><option value="b">埋怨、失望</option><option value="c">骄傲、满足</option></select><span class="en">Reflection: he realises his mistake.</span></div>
-        </div>
-        <button class="primary" data-check="whole">检查全文理解</button><div class="feedback" id="wholeFeedback"></div>
-        <div class="model" id="wholeModel"><b>全文核心：</b>文章写作者因患病而敏感多疑，误解司机的善意，知道真相后感动并反省自己。<span class="en">The narrator's illness makes him sensitive and suspicious. He misreads the driver's kindness, then reflects after learning the truth.</span><br><b>心理变化：</b>尴尬、不耐烦 → 敏感、猜疑 → 愤怒、敌意 → 感动 → 反省<span class="en">embarrassed and impatient → suspicious → angry and hostile → moved → reflective</span></div>
-      </section>
-
-      <section class="stage" data-stage="3">
-        <h2>第三步：审题、找答案、作答</h2><span class="en">Step 3: Read the question, find evidence, and answer.</span>
-        <div class="instruction">每做一题，就完成同一个小循环：看清关键词 → 找有关原文 → 判断是否需要推断 → 写成答案。<span class="en">For each question: read the keywords → find relevant text → infer only if needed → write the answer.</span></div>
-        <div class="answer-steps">
-          <div class="answer-step"><b>圈</b> 圈出真正回答题目的信息<span class="en">Circle relevant information.</span></div>
-          <div class="answer-step"><b>删</b> 删掉背景、重复和无关细节<span class="en">Remove irrelevant details.</span></div>
-          <div class="answer-step"><b>换</b> 补足指代，把隐含意思说清楚<span class="en">Rephrase and clarify.</span></div>
-          <div class="answer-step"><b>合</b> 按得分点合成完整答案<span class="en">Combine into a complete answer.</span></div>
-        </div>
-        <p class="exam-note">操作方法：把左边标出的原文拖进“直接信息”；iPad可先点原文，再点答案框。解释／推断必须自己写。系统只检查信息方向和答案结构，意思是否准确仍要由老师判断。<span class="en">Drag or tap text evidence into Direct information. Write the explanation/inference yourself. The tool checks direction and structure; your teacher confirms meaning.</span></p>
-
-        <div class="question-card" id="q46">
-          <h3>Q46 <span class="qkey">为什么</span>作者<span class="qkey">一开始</span>会<span class="qkey">觉得</span>德士司机会打从心底<span class="qkey">看不起他</span>？（4分）</h3>
-          <div class="task-analysis"><div><b>问法 / What</b>“为什么”＝找原因<span class="en">Why = find the reasons.</span></div><div><b>范围 / Where</b>“一开始”＝第1—2段<span class="en">At first = Paragraphs 1–2.</span></div><div><b>目标 / Need</b>找出四个原因<span class="en">Find four reasons.</span></div></div>
-          <div class="logic-note"><b>找法：</b>先找“我想”后面的内容。作者已经替司机想出了“为什么看不起他”；把这些原因筛选出来，不要只抄司机的一个表情。<span class="en">Read what follows “I thought”. The narrator imagines the reasons for being looked down on. Select those reasons, not merely the driver's expression.</span></div>
-          <div class="misread-box"><b>常见误区：“司机的眉毛微微动了一下”为什么不是答案？</b><br>这是作者看见的<strong>反应</strong>，但动作本身意思不明确，不能说明司机为什么会看不起他。真正的原因在后面的“我想……”之中。<span class="en">A raised eyebrow is only a reaction with no definite meaning. It does not explain why the driver might look down on him.</span></div>
-          <label class="field-label">Direct information｜从第1—2段找齐四个得分信息</label>
-          <div class="dropzone" tabindex="0" data-accept="f1a,f1b,f1c,f2" data-min="4" data-reject="f15"><span class="placeholder">把四项有关原文放在这里 / Add four relevant details</span></div>
-          <button class="secondary hint-btn">需要提示 / Need a hint</button><div class="hint">按对比找：①作者是什么样的年轻人？②母亲是什么样的老妇人？③母亲怎样把他弄上车？④上车后，母亲还做了什么？<span class="en">Compare the two sides: What kind of young man is the narrator? What kind of woman is his mother? How did she get him into the taxi? What else did she do?</span></div>
-          <label class="field-label">完整答案 / Final answer</label><textarea class="final-answer" data-save data-minchars="35" data-keywords="年轻人|二十几岁|1.7米|170公分;老妇人|母亲|妈妈;连拉带拖|塞进德士;拜托|照顾" placeholder="因为……又因为……所以……"></textarea>
-          <p class="exam-note"><b>写答案时：</b>把原文的“我”换成“作者／他”；删去电话号码、目的地等不回答题目的细节。附件参考答案特别注明：直接照抄“我”而不改代词，不能得分。<span class="en">In your answer, change “I” to “the narrator/he” and remove details that do not answer the question, such as the phone number and destination.</span></p>
-          <button class="primary qcheck">检查作答</button><div class="feedback"></div><div class="model">
-            <div class="model-analysis"><b>答案来源 / Where the answer comes from</b><p><span class="source-label direct">Direct info</span>四个得分点都由第1—2段直接写明：年轻人、年老矮小的老妇人、连拉带拖上车、母亲特别拜托司机照顾。<span class="en">All four scoring points are directly stated in P1–2.</span></p><p><span class="source-label process">信息处理</span>本题不需要另作推断；只须删去无关细节、把“我”换成“作者／他”，再合成原因答案。<span class="en">No extra inference is needed. Remove irrelevant details, change “I” to “the narrator/he”, and combine the reasons.</span></p></div>
-            <div class="model-answer"><b>参考答案：</b>作者是一个二十几岁、将近1.7米、看起来好手好脚的年轻人（1），却要一个年老而且身高只有1.5米的老妇人（1）连拉带拖地把他塞进德士里（1）；上车后，母亲还特别拜托司机照顾他（1）。因此，作者觉得司机会把自己看成一个长不大、不能照顾自己的年轻人，从而看不起他。</div>
-            <div class="compare-note"><b>请比较：</b>你的答案是否写齐四点？有没有误写“眉毛微动”？有没有把“我”改成“作者／他”？<span class="en">Compare: Did you include all four points, omit the eyebrow detail, and change “I” to “the narrator/he”?</span></div>
-          </div>
-        </div>
-
-        <div class="question-card" id="q47a">
-          <h3>Q47（a）请结合上下文解释：“<span class="qkey">可想而知</span>，此时我的脸一定是<span class="qkey">乌云密布</span>。”（2分）</h3>
-          <div class="task-analysis"><div><b>问法 / What</b>解释语境中的意思<span class="en">Explain the meaning in context.</span></div><div><b>范围 / Where</b>第3段目标句<span class="en">The target sentence in P3.</span></div><div><b>目标 / Need</b>两个关键词，各1分<span class="en">Two phrases, one mark each.</span></div></div>
-          <div class="logic-note"><b>答题逻辑：</b>分别解释两个关键词在句中的意思；一处1分。不要把答案扩写成修辞作用题。<span class="en">Logic: Explain the two key phrases separately in context. One mark each.</span></div>
-          <div class="two-col"><div><label class="field-label">“可想而知”指什么？</label><input data-save data-minchars="4" data-keywords="可以想象|想象得到" placeholder="换成普通的说法"></div><div><label class="field-label">“乌云密布”指什么？</label><input data-save data-minchars="6" data-keywords="脸色;不好看|不太好看|难看|阴沉" placeholder="联系‘我的脸’解释"></div></div>
-          <label class="field-label">完整答案 / Final answer</label><textarea class="final-answer" data-save data-minchars="14" data-keywords="可以想象|想象得到;脸色;不好看|不太好看|难看|阴沉" placeholder="把两个关键词的意思合成一句完整答案。"></textarea>
-          <button class="secondary hint-btn">需要提示 / Need a hint</button><div class="hint">“可想而知”不是情绪；把它换成常用说法。“乌云”不是真的在脸上，要写“脸色”怎样。<span class="en">“可想而知” is not a feeling. Replace it with an everyday expression. “乌云” is not really on the face; explain how the face looked.</span></div>
-          <button class="primary qcheck">检查作答</button><div class="feedback"></div><div class="model">
-            <div class="model-analysis"><b>答案来源 / Where the answer comes from</b><p><span class="source-label explain">语境解释</span>本题不是摘录 Direct info，也不需要推断；要把两个关键词分别换成符合语境的普通说法。<span class="en">This is contextual explanation, not evidence extraction or inference. Replace each phrase with a clear meaning that fits the sentence.</span></p></div>
-            <div class="model-answer"><b>参考答案：</b>“可想而知”在这里指可以想象得到（1）；“乌云密布”在这里指此时“我”的脸色一定不太好看（1）。</div>
-            <div class="compare-note"><b>请比较：</b>你的完整答案是否分别解释了两个关键词，而不是只写“作者很生气”？<span class="en">Compare: Did you explain both phrases separately instead of only saying that the narrator was angry?</span></div>
-          </div>
-        </div>
-
-        <div class="question-card" id="q47b">
-          <h3>Q47（b）请结合上下文解释：“一股<span class="qkey">暖流</span>流进我的内心，我的<span class="qkey">眼眶开始模糊</span>。”（2分）</h3>
-          <div class="task-analysis"><div><b>问法 / What</b>解释语境中的意思<span class="en">Explain the meaning in context.</span></div><div><b>范围 / Where</b>第6段目标句<span class="en">The target sentence in P6.</span></div><div><b>目标 / Need</b>感动＋流泪<span class="en">Feeling moved + tears.</span></div></div>
-          <div class="logic-note"><b>答题逻辑：</b>联系司机的关心和鼓励，分别说明“暖流”和“眼眶模糊”的语境义。<span class="en">Logic: Explain “warm current” and “blurred eyes” in context.</span></div>
-          <div class="two-col"><div><label class="field-label">“暖流”指什么？</label><input data-save data-minchars="4" data-keywords="温暖|感动" placeholder="作者心里有什么感觉？"></div><div><label class="field-label">“眼眶模糊”指什么？</label><input data-save data-minchars="4" data-keywords="泪|流泪|含泪" placeholder="眼睛为什么模糊？"></div></div>
-          <label class="field-label">完整答案 / Final answer</label><textarea class="final-answer" data-save data-minchars="14" data-keywords="司机|举动|关心|鼓励;感动|温暖;泪|流泪|含泪" placeholder="把司机的举动、作者的感动和流泪写成完整答案。"></textarea>
-          <button class="secondary hint-btn">需要提示 / Need a hint</button><div class="hint">先看第6段：司机怎样关心、鼓励作者？“眼眶模糊”常与眼泪有关。<span class="en">Look at Paragraph 6: How did the driver care for and encourage the narrator? “Blurred eyes” is related to tears.</span></div>
-          <button class="primary qcheck">检查作答</button><div class="feedback"></div><div class="model">
-            <div class="model-analysis"><b>答案来源 / Where the answer comes from</b><p><span class="source-label explain">语境解释</span>“暖流”要联系司机的举动，解释为作者感到温暖、感动；“眼眶模糊”要解释为感动得流泪。<span class="en">Link “warm current” to the driver's actions and the narrator's feeling; explain “blurred eyes” as tears caused by being moved.</span></p></div>
-            <div class="model-answer"><b>参考答案：</b>德士司机的关心和鼓励让“我”感到温暖、深受感动（1），感动得眼眶含泪（1）。</div>
-            <div class="compare-note"><b>请比较：</b>你的答案有没有写出“谁的举动”“作者怎样感受”和“眼眶为什么模糊”？<span class="en">Compare: Did you state whose actions caused the feeling, how the narrator felt, and why his eyes blurred?</span></div>
-          </div>
-        </div>
-
-        <div class="question-card" id="q48">
-          <h3>Q48 你认为文中的德士司机是个<span class="qkey">怎么样的人</span>？试写出<span class="qkey">两点</span>并<span class="qkey">举例说明</span>。（4分）</h3>
-          <div class="task-analysis"><div><b>问法 / What</b>判断人物主要特点<span class="en">Identify the main character traits.</span></div><div><b>数量 / How many</b>两个不同特点<span class="en">Give two different traits.</span></div><div><b>目标 / Need</b>特点（1）＋例子（1）× 2<span class="en">Trait (1) + example (1), twice.</span></div></div>
-          <div class="method-tips"><b>怎样判断人物特点？</b><ol><li><b>先看人物做了什么、说了什么：</b>从言行举止找 evidence，再判断这些行为说明什么特点。<span class="en">First, use the character's actions and words as evidence.</span></li><li><b>再看作者的真实评价：</b>必须是作者了解真相后的评价，不是人物误会时的猜测。<span class="en">Next, use the narrator's informed judgement, not an earlier misunderstanding.</span></li><li><b>最后联系中心：</b>选择最能解释关键情节、最能表现文章中心的主要特点。<span class="en">Finally, choose traits central to the key events and main idea.</span></li></ol></div>
-          <div class="misread-box"><b>本文要特别小心：</b>“没有道德”“想坑我的钱”是作者误会司机时的看法，不是真实评价，不能用来判断司机。作者后来明白真相，因此要以第5—6段的言行来判断。<span class="en">Be careful: “unethical” and “trying to cheat me” are the narrator's mistaken views, not the driver's true traits. Judge the driver from his actions and words in Paragraphs 5–6.</span></div>
-          <div class="logic-note"><b>答题逻辑：</b>证据（做了／说了什么）→ 推断（说明什么特点）→ 检查特点与例子是否配得上。<span class="en">Evidence (action or words) → inference (trait) → check that each example truly supports the trait.</span></div>
-          <div class="two-col"><div><label class="field-label">Direct info 1｜行为一</label><div class="dropzone" tabindex="0" data-accept="f9,f10,f11" data-min="1"><span class="placeholder">拖入司机的一个行为</span></div><label class="field-label">Inference 1｜说明什么特点？</label><input data-save data-minchars="2" placeholder="例：……的人"></div><div><label class="field-label">Direct info 2｜行为二</label><div class="dropzone" tabindex="0" data-accept="f9,f10,f11" data-min="1"><span class="placeholder">拖入司机的另一个行为</span></div><label class="field-label">Inference 2｜说明什么特点？</label><input data-save data-minchars="2" placeholder="必须与第一点不同"></div></div>
-          <button class="secondary hint-btn">需要提示 / Need a hint</button><div class="hint">第5—6段：司机怎样减少作者的身体痛苦？他又怎样帮助和鼓励作者？先写行为，再选准确的特点词。<span class="en">In Paragraphs 5–6, how did the driver reduce the narrator's pain, help him and encourage him? Write the action first, then choose a suitable trait.</span></div>
-          <label class="field-label">完整答案 / Final answer</label><textarea class="final-answer" data-save data-minchars="42" placeholder="他是一个……的人。概括司机做的事：当作者……，司机……；或者概括司机说的话：“……”。&#10;&#10;他也是一个……的人。当作者……，司机……；或者司机说：“……”。"></textarea>
-          <button class="primary qcheck">检查作答</button><div class="feedback"></div><div class="model">
-            <div class="model-analysis"><b>答案来源 / Where the answer comes from</b><p><span class="source-label direct">Direct info</span>司机为了减少颠簸而绕路；他退还车费、帮助作者下车并鼓励作者。<span class="en">The driver took a detour to reduce pain, returned the fare, helped the narrator out, and encouraged him.</span></p><p><span class="source-label infer">Inference</span>从这些言行推断司机“体贴、善良”。人物特点不是原文直接写出的词，必须由行为支持。<span class="en">Infer “considerate” and “kind” from these actions and words. The traits must be supported by evidence.</span></p><p><span class="source-label process">可接受特点</span>有同理心、有爱心、乐于助人、贴心、细心、包容、耐心、脾气好；例子必须与特点配得上。<span class="en">Other acceptable traits include empathetic, caring, helpful, thoughtful, patient and forgiving, when matched with suitable evidence.</span></p></div>
-            <div class="model-answer"><b>参考答案：</b>司机是一个体贴的人（1）。他知道道路整修会使作者因颠簸而更加痛苦，所以特意绕路（1）。他也是一个善良的人（1）。他把车费放回作者口袋，不收作者的钱，并鼓励作者加油（1）。</div>
-            <div class="compare-note"><b>请比较：</b>你写的两个特点是否不同？每个例子是否真的能够证明前面的特点？<span class="en">Compare: Are your two traits different, and does each example truly prove its trait?</span></div>
-          </div>
-        </div>
-
-        <div class="question-card" id="q49">
-          <h3>Q49 <span class="qkey">为什么</span>作者认为“我真正病得严重的<span class="qkey">不是身体，其实是我的心</span>”？请<span class="qkey">结合文章内容</span>加以说明。（4分）</h3>
-          <div class="task-analysis"><div><b>问法 / What</b>解释“心病”的深层意思<span class="en">Explain the deeper meaning of “sick heart”.</span></div><div><b>范围 / Where</b>“结合文章”＝跨全文<span class="en">Use evidence across the whole text.</span></div><div><b>目标 / Need</b>用表现证明，再与真相对照<span class="en">Prove it with signs, then contrast with the truth.</span></div></div>
-          <div class="logic-note"><b>答题逻辑：</b>先解释“心病”，再用全文中所有重要表现来证明，接着用司机的真实行为作对照，最后说明作者为什么醒悟。<span class="en">Logic: Define the “sick heart”, support it with all major signs across the text, contrast them with the driver's real actions, then explain the realisation.</span></div>
-          <label class="field-label">Direct info A｜“内心病了”的表现（跨段找全）</label><div class="dropzone" tabindex="0" data-accept="f14,f3,f4,f5,f7,f8" data-min="6"><span class="placeholder">从最初猜测、对母亲、司机目光、绕路、付钱等反应中找证据</span></div>
-          <label class="field-label">Direct info B｜司机真实做了什么？</label><div class="dropzone" tabindex="0" data-accept="f9,f10,f11" data-min="2"><span class="placeholder">拖入至少两项形成对照</span></div>
-          <label class="field-label">Inference / explanation｜从这些直接信息可以推断作者的“心”有什么问题？</label><textarea data-save data-minchars="24" placeholder="从原文中的关键词和作者的看法概括：他为什么会把善意看成恶意？"></textarea>
-          <button class="secondary hint-btn">需要提示 / Need a hint</button><div class="hint">检查是否找全：①对母亲不耐烦；②认定司机看不起、鄙视他；③认定绕路是欺负、坑钱；④产生愤怒和攻击冲动；⑤把钱丢在司机身上。再与司机退钱、帮助、绕路的真实用意、鼓励作者作对照。<span class="en">Check that you found all major signs: impatience with his mother; assuming contempt; misreading the detour as cheating; anger and an urge to attack; throwing the money. Then contrast these with the driver's refund, help, caring detour and encouragement.</span></div>
-          <label class="field-label">完整答案 / Final answer</label><textarea class="final-answer" data-save data-minchars="80" placeholder="心病是什么 → 文中所有主要表现 → 司机的真相 → 作者的醒悟"></textarea>
-          <p class="exam-note"><b>推断边界：</b>篇章没有直接说明司机为什么从后视镜看作者。可以根据后文推断他可能在关注作者的状况，但不能把这个推断写成篇章明说的事实。<span class="en">Inference boundary: The text does not directly state why the driver looked in the mirror. “He may have been checking on the narrator” is a reasonable inference, not direct information.</span></p>
-          <button class="primary qcheck">检查作答</button><div class="feedback"></div><div class="model">
-            <div class="model-analysis"><b>答案来源 / Where the answer comes from</b><p><span class="source-label direct">Direct info</span>作者嫌母亲啰嗦；认定司机看不起、鄙视他；把绕路看成欺负和坑钱；产生攻击冲动并把钱丢给司机。<span class="en">The narrator rejected his mother's care, assumed contempt, misread the detour as cheating, became hostile, and threw the fare at the driver.</span></p><p><span class="source-label direct">Direct info（对照）</span>司机绕路是为了减少作者的痛苦，还退钱、帮助并鼓励他。<span class="en">In contrast, the driver detoured to reduce pain, returned the fare, helped, and encouraged him.</span></p><p><span class="source-label infer">Inference</span>把两组信息对照，可以推断“心病”是疾病造成的自卑、敏感、猜疑、偏见和敌意，使作者把善意误解成恶意。<span class="en">The contrast supports the inference that his “sick heart” means insecurity, suspicion, prejudice and hostility that turned kindness into imagined harm.</span></p></div>
-            <div class="model-answer"><b>参考答案：</b>作者因身体生病而变得自卑、敏感，认为别人都用看不起或鄙视的眼光对待他（1）：司机只是眉毛微动、从后视镜看他，他便猜司机在纳闷并认定司机鄙视自己。母亲细心照顾他，他却嫌母亲啰嗦并不耐烦地转过头（1）。司机为了减少颠簸而绕路，他却猜疑司机要欺负他、坑他的钱（1），甚至希望司机也尝尝患病的痛苦、产生攻击冲动，并把钱丢在想帮助他的司机身上，以非常不礼貌的态度对待他（1）。后来作者知道司机的行为都是善意，才明白自己的猜疑、偏见和敌意使他误解了别人；这就是比身体疾病更严重的“心病”。</div>
-            <div class="compare-note"><b>请比较：</b>你的答案有没有写“心病是什么”、主要表现、司机行为的真相，以及作者为什么醒悟？<span class="en">Compare: Did you explain the “sick heart”, its main signs, the truth about the driver, and the narrator's realisation?</span></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="stage" data-stage="4">
-        <h2>第四步：交卷前检查</h2><span class="en">Step 4: Review before submitting.</span>
-        <div class="instruction">不要只问“写了多少”，要问“每一句是否回答题目，并有篇章根据”。<span class="en">Do not only ask “How much did I write?” Ask whether every sentence answers the question and is supported by the text.</span></div>
-        <div class="review-grid">
-          <label class="review"><input type="checkbox" data-review> <b>答对所问</b><br>原因、句意、人物或深层含义，没有答成别的题。<span class="en">I answered the exact question type.</span></label>
-          <label class="review"><input type="checkbox" data-review> <b>信息找对</b><br>直接信息来自正确段落，而且与题目有关。<span class="en">My direct information is relevant and correctly located.</span></label>
-          <label class="review"><input type="checkbox" data-review> <b>推断合理</b><br>推断由原文支持，没有把猜测当成事实。<span class="en">My inference is supported; I did not present a guess as fact.</span></label>
-          <label class="review"><input type="checkbox" data-review> <b>答案完整</b><br>点数足够，人物特点与例子相配，句意关键词逐一解释。<span class="en">I covered all required points and matched evidence accurately.</span></label>
-        </div>
-        <button class="primary" data-check="review">完成学习单</button><div class="feedback" id="reviewFeedback"></div>
-        <p class="footer-note">教师使用建议：课堂先让学生独立完成右栏；第一次错误只指出方向，第二次提示段落或关键词，第三次才显示完整解析。开放书写由系统检查结构，意义得分点由教师最后确认。<span class="en">Teacher note: Let students work independently first. Give direction after the first error, a paragraph or keyword after the second, and the full explanation only after the third. The teacher confirms the final meaning and marks.</span></p>
-      </section>
-    </section>
-  </main>
-
-  <div class="vocab-pop" id="vocabPop" role="dialog" aria-live="polite"><strong id="vocabTerm"></strong><div id="vocabZh"></div><span class="en" id="vocabEn"></span><button class="speak" id="speakBtn" aria-label="播放解释">🔊</button></div>
-
-  <script>
-    const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-    const state={selected:null, completed:new Set(JSON.parse(localStorage.getItem('hcl-completed-v5')||'[]')), attempts:{}, qpassed:new Set(), part1:{paragraphs:false,facts:false}};
-    const fragText={}; $$('.frag').forEach(f=>fragText[f.dataset.id]=f.innerText.replace(/\s*拖\/drag\s*/g,'').trim());
-
-    function saveState(){localStorage.setItem('hcl-completed-v5',JSON.stringify([...state.completed]));updateProgress()}
-    function updateProgress(){
-      $('#doneCount').textContent=state.completed.size; $('#progress').style.width=(state.completed.size/4*100)+'%';
-      $$('.stage-btn').forEach(b=>b.classList.toggle('done',state.completed.has(b.dataset.target)));
-    }
-    function goStage(n){$$('.stage-btn').forEach(b=>b.classList.toggle('active',b.dataset.target===String(n)));$$('.stage').forEach(s=>s.classList.toggle('active',s.dataset.stage===String(n)));window.scrollTo({top:$('.workspace').offsetTop-76,behavior:'smooth'})}
-    $$('.stage-btn').forEach(b=>b.addEventListener('click',()=>goStage(b.dataset.target)));
-
-    $$('[data-save]').forEach((el,i)=>{const k='hcl-v5-field-'+i;el.value=localStorage.getItem(k)||'';el.addEventListener('input',()=>localStorage.setItem(k,el.value))});
-
-    function showFeedback(el,msg,ok=false){el.innerHTML=msg;el.className='feedback show '+(ok?'ok':'bad')}
-    function attempt(key){state.attempts[key]=(state.attempts[key]||0)+1;return state.attempts[key]}
-
-    $('[data-check="paragraphs"]').addEventListener('click',()=>{
-      const sels=$$('#paraActivity select'), wrong=sels.filter((s)=>s.value!==s.dataset.answer), n=attempt('paragraphs');
-      if(!wrong.length){showFeedback($('#paragraphFeedback'),'正确。你已把七段的情节和心理变化连起来。<span class="en">Correct. You connected the events and the narrator\'s changing feelings.</span>',true);state.part1.paragraphs=true;if(state.part1.facts)state.completed.add('1');saveState();return}
-      if(n===1) showFeedback($('#paragraphFeedback'),'还有段落没有抓住“发生什么 + 作者怎样想”。再读该段首尾。<span class="en">Some paragraphs are still missing the event and the narrator\'s reaction. Reread the beginning and end.</span>');
-      else if(n===2) showFeedback($('#paragraphFeedback'),'请重看第 '+wrong.map(s=>s.id.replace('p','')).join('、')+' 段。概括要同时保留主要事件和人物反应。<span class="en">Reread Paragraph(s) '+wrong.map(s=>s.id.replace('p','')).join(', ')+'. Include both the main event and the character\'s reaction.</span>');
-      else showFeedback($('#paragraphFeedback'),'参考段落线：上车并猜测 → 对母亲不耐烦 → 把注视理解成鄙视 → 把绕路理解成坑钱 → 司机退钱帮助 → 真相与感动 → 反省。<span class="en">Text line: getting in and guessing → impatience with his mother → misreading the look as contempt → misreading the detour as cheating → refund and help → truth and emotion → reflection.</span>');
-    });
-    $('[data-check="facts"]').addEventListener('click',()=>{
-      const sels=$$('#factActivity select'), wrong=sels.filter(s=>s.value!==s.dataset.answer), n=attempt('facts');
-      if(!wrong.length){showFeedback($('#factFeedback'),'正确。“微动、注视、绕路”是写明的行为；“一定、应该、吧、想要坑钱”是作者的解释；路况和颠簸是司机的说明。<span class="en">Correct. Notice how “must”, “should” and “probably” often signal the narrator\'s judgement.</span>',true);state.part1.facts=true;if(state.part1.paragraphs)state.completed.add('1');saveState();return}
-      if(n===1) showFeedback($('#factFeedback'),'先问：这句话是写发生的行为，还是人物对行为的解释？<span class="en">Ask first: does this sentence state an action, or interpret an action?</span>');
-      else if(n===2) showFeedback($('#factFeedback'),'留意“一定、应该、吧、想要”这些判断词；也留意引号里是谁在说话。<span class="en">Notice judgement words such as “must”, “should”, “probably” and “want to”. Also check who is speaking inside quotation marks.</span>');
-      else showFeedback($('#factFeedback'),'答案顺序：事实、作者看法、作者看法、事实、作者看法、事实、作者看法、司机说明。<span class="en">Order: fact, narrator\'s view, narrator\'s view, fact, narrator\'s view, fact, narrator\'s view, driver\'s statement.</span>');
-    });
-    $('[data-check="whole"]').addEventListener('click',()=>{
-      const sels=$$('[data-map-answer]'), mapsOk=sels.every(s=>s.value===s.dataset.mapAnswer), n=attempt('whole');
-      if(mapsOk){showFeedback($('#wholeFeedback'),'正确。你已经看清事情的发展和作者的心理变化。现在可以进入“审题与作答”。',true);$('#wholeModel').classList.add('show');state.completed.add('2');saveState();return}
-      if(n===1) showFeedback($('#wholeFeedback'),'再检查每一阶段：当时发生什么？作者的心情怎样？<span class="en">Check each stage again: What happened, and how did the narrator feel?</span>');
-      else if(n===2) showFeedback($('#wholeFeedback'),'心理变化提示：不耐烦 → 猜疑愤怒 → 感动 → 反省。<span class="en">Feeling line: impatient → suspicious and angry → moved → reflective.</span>');
-      else {showFeedback($('#wholeFeedback'),'请对照下方全文核心，修改后再提交。<span class="en">Compare your choices with the whole-text summary below, revise, and try again.</span>');$('#wholeModel').classList.add('show')}
-    });
-
-    function selectFrag(f){$$('.frag').forEach(x=>x.classList.remove('selected'));state.selected=f.dataset.id;f.classList.add('selected');$('#selectedText').textContent=fragText[state.selected].slice(0,45)+(fragText[state.selected].length>45?'……':'');$('#selectionNote').classList.add('show')}
-    $$('.frag').forEach(f=>{
-      f.addEventListener('click',e=>{if(e.target.closest('.vocab'))return;selectFrag(f)});
-      f.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',f.dataset.id);selectFrag(f)});
-    });
-    function addChip(zone,id){
-      if(!id||zone.querySelector(`[data-chip="${id}"]`))return;
-      const chip=document.createElement('div');chip.className='chip';chip.dataset.chip=id;chip.innerHTML=`<span>${fragText[id]}</span><button aria-label="删除">×</button>`;chip.querySelector('button').onclick=()=>chip.remove();zone.appendChild(chip);
-      const p=zone.querySelector('.placeholder');if(p)p.style.display='none';
-    }
-    $$('.dropzone').forEach(z=>{
-      z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('over')});z.addEventListener('dragleave',()=>z.classList.remove('over'));
-      z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('over');addChip(z,e.dataTransfer.getData('text/plain'))});
-      z.addEventListener('click',e=>{if(e.target.closest('.chip'))return;if(state.selected)addChip(z,state.selected)});
-    });
-
-    function validateKeywords(el){
-      if(!el.dataset.keywords)return true; const text=el.value.trim();
-      return el.dataset.keywords.split(';').every(group=>group.split('|').some(k=>text.includes(k)));
-    }
-    $$('.qcheck').forEach(btn=>btn.addEventListener('click',()=>{
-      const card=btn.closest('.question-card'), key=card.id, zones=$$('.dropzone',card), fields=$$('textarea,input',card), problems=[];
-      zones.forEach(z=>{const chosen=$$('.chip',z).map(c=>c.dataset.chip), accepted=z.dataset.accept.split(',');const correct=chosen.filter(x=>accepted.includes(x)).length;if(correct<Number(z.dataset.min)||chosen.some(x=>!accepted.includes(x)))problems.push('direct')});
-      fields.forEach(f=>{if(f.value.trim().length<Number(f.dataset.minchars||0)||!validateKeywords(f))problems.push('writing')});
-      if(key==='q48'){const zs=$$('.dropzone',card);const a=$$('.chip',zs[0]).map(c=>c.dataset.chip),b=$$('.chip',zs[1]).map(c=>c.dataset.chip);if(a.some(x=>b.includes(x)))problems.push('repeat')}
-      const fb=$('.feedback',card), model=$('.model',card), finalField=$('.final-answer',card), hasWrittenFinal=finalField&&finalField.value.trim().length>=Math.max(8,Number(finalField.dataset.minchars||8)), n=attempt(key);
-      if(hasWrittenFinal)model.classList.add('show');
-      if(!problems.length){showFeedback(fb,'信息方向和答案结构完整。现在逐句检查：推断是否由原文支持，表达是否准确。<span class="en">Your evidence direction and answer structure are complete. Now check whether every inference is text-supported and clearly expressed.</span>',true);model.classList.add('show');state.qpassed.add(key);if(['q46','q47a','q47b','q48','q49'].every(id=>state.qpassed.has(id))){state.completed.add('3');saveState()}return}
-      const choseRejected=zones.some(z=>z.dataset.reject && $$('.chip',z).some(c=>z.dataset.reject.split(',').includes(c.dataset.chip)));
-      const compareText=hasWrittenFinal?'参考答案已显示，请逐点比较。<br>':'';
-      if(n===1){showFeedback(fb,compareText+(choseRejected?'“司机的眉毛微微动了一下”只是一个意思不明确的反应，不能回答“为什么看不起”。请继续读“我想……”后面列出的原因。<span class="en">The eyebrow movement is an unclear reaction. It does not answer why the driver might look down on him. Read the reasons after “I thought”.</span>':problems.includes('direct')?'先检查直接信息：是否来自正确段落，而且真正回答题目？<span class="en">Check whether the direct information comes from the correct paragraph and answers the question.</span>':'直接信息已有。请把解释／推断和完整答案写清楚。<span class="en">The direct information is present. Now write the explanation or inference and the complete answer clearly.</span>'));}
-      else if(n===2){const hint=$('.hint',card);hint.classList.add('show');showFeedback(fb,problems.includes('repeat')?'两个人物特点要用不同的行为支持，请更换其中一项。<span class="en">Use different actions to support the two traits.</span>':'已打开第二层提示：按提示回到相关段落找关键词，再修改。<span class="en">The second hint is open. Return to the suggested paragraph, find the keywords, and revise.</span>');}
-      else {showFeedback(fb,'请阅读完整解析，对照“直接信息 → 解释／推断 → 答案”修改自己的答案。<span class="en">Read the full analysis and revise using direct information → explanation or inference → final answer.</span>');model.classList.add('show')}
-    }));
-    $$('.hint-btn').forEach(b=>b.addEventListener('click',()=>b.nextElementSibling.classList.toggle('show')));
-
-    $('[data-check="review"]').addEventListener('click',()=>{const checks=$$('[data-review]');if(checks.every(c=>c.checked)){showFeedback($('#reviewFeedback'),'完成。你已经按“读懂篇章—审清题目—找直接信息—合理推断—组织答案”的流程检查。<span class="en">Completed. You reviewed the text, question, evidence, inference and final answer.</span>',true);state.completed.add('4');saveState()}else showFeedback($('#reviewFeedback'),'请逐项检查并勾选；没有完成的项目要回到相应答案修改。<span class="en">Check every item. Return to the relevant answer and revise anything that is incomplete.</span>')});
-
-    let speechData=null; const pop=$('#vocabPop');
-    $$('.vocab').forEach(v=>v.addEventListener('click',e=>{e.stopPropagation();speechData={term:v.textContent,zh:v.dataset.zh,en:v.dataset.en};$('#vocabTerm').textContent=v.textContent;$('#vocabZh').textContent=v.dataset.zh;$('#vocabEn').textContent=v.dataset.en;const r=v.getBoundingClientRect();pop.style.left=Math.min(r.left,window.innerWidth-330)+'px';pop.style.top=Math.min(r.bottom+7,window.innerHeight-125)+'px';pop.classList.add('show')}));
-    document.addEventListener('click',e=>{if(!e.target.closest('.vocab-pop')&&!e.target.closest('.vocab'))pop.classList.remove('show')});
-    $('#speakBtn').addEventListener('click',()=>{if(!speechData||!('speechSynthesis'in window))return;speechSynthesis.cancel();const zh=new SpeechSynthesisUtterance(speechData.term+'：'+speechData.zh);zh.lang='zh-CN';const en=new SpeechSynthesisUtterance(speechData.en);en.lang='en-US';zh.onend=()=>speechSynthesis.speak(en);speechSynthesis.speak(zh)});
-    $('#resetBtn').addEventListener('click',()=>{if(!confirm('要清除这份学习单的作答和进度吗？'))return;Object.keys(localStorage).filter(k=>k==='hcl-completed-v5'||k.startsWith('hcl-v5-field-')).forEach(k=>localStorage.removeItem(k));location.reload()});
-    updateProgress();
-  </script>
-</body>
-</html>
+function plainTitle(s){const el=document.createElement('div');el.innerHTML=s;return el.textContent;}
+$$('.vocab').forEach(b=>b.onclick=e=>{e.stopPropagation();const word=b.dataset.word,[zh,en]=D.vocab[word];$('#wordTitle').textContent=word;$('#wordBody').innerHTML=pair(esc(zh),esc(en));wordRead={word,zh,en};$('#speechStatus').textContent='';S.help.push({task:S.stage===2?'transfer':'passage',type:'vocabulary',word,time:new Date().toISOString(),beforeFirst:S.stage===2?!work('transfer').first:true});$('#wordDialog').showModal();save();});
+$('#speak').onclick=()=>{if(!('speechSynthesis' in window)){$('#speechStatus').textContent='语音不可用，请看中英文解释 / Audio unavailable; read the explanation';return;}speechSynthesis.cancel();const a=new SpeechSynthesisUtterance(wordRead.word+'。'+wordRead.zh),b=new SpeechSynthesisUtterance(wordRead.en);a.lang='zh-CN';b.lang='en-US';a.onend=()=>speechSynthesis.speak(b);a.onerror=b.onerror=()=>$('#speechStatus').textContent='语音未能播放；文字解释仍可使用 / Audio failed; text remains available';speechSynthesis.speak(a);};
+$('#wordClose').onclick=()=>{if('speechSynthesis'in window)speechSynthesis.cancel();$('#wordDialog').close();};$('#teacher').onclick=()=>{S.help.push({task:'passage',type:'teacher-guide',time:new Date().toISOString(),beforeFirst:true});save();$('#teacherDialog').showModal();};$('#teacherClose').onclick=()=>$('#teacherDialog').close();$('#print').onclick=()=>window.print();$('#export').onclick=exportWork;$('#reset').onclick=()=>{if(confirm('清除此版本的本机答案和记录？可先下载备份。\nClear this version’s local work? Export first if needed.')){S={stage:0,work:{},help:[],selected:''};selectionRange='';$('#selection').textContent='';$$('.selected').forEach(e=>e.classList.remove('selected'));save();render();}};$$('nav button').forEach(b=>b.onclick=()=>showStage(b.dataset.stage));render();if(S.selected)$('#selection').textContent='已选 / Selected: '+S.selected;
+</script></html>
