@@ -1,0 +1,97 @@
+name: Hezuo R3 isolated validation
+on:
+  push:
+    branches: [qa/hezuo-r3-20260914]
+    paths: [du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser test tools
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Native browser and deployment checks
+        run: |
+          cat > /tmp/hezuo_validate.py <<'PY'
+          import json, pathlib, threading, http.server, functools, hashlib, time, urllib.request
+          from playwright.sync_api import sync_playwright
+          root=pathlib.Path.cwd(); base='du/exam/2hcl/yilunwen/'; student=base+'2024-2hcl-yilunwen-hezuo.html'; teacher=base+'2024-2hcl-yilunwen-hezuo-teacher.html'
+          server=http.server.ThreadingHTTPServer(('127.0.0.1',8765),functools.partial(http.server.SimpleHTTPRequestHandler,directory=str(root)))
+          threading.Thread(target=server.serve_forever,daemon=True).start();out=root/'hezuo-qa';out.mkdir(exist_ok=True)
+          checks=[]; errors=[]
+          def ok(name,test):
+              assert test,name
+              checks.append(name)
+              print('PASS:',name,flush=True)
+          with sync_playwright() as pw:
+              browser=pw.chromium.launch();ctx=browser.new_context(viewport={'width':1024,'height':768},accept_downloads=True)
+              p=ctx.new_page();p.on('pageerror',lambda e:errors.append(str(e)));p.goto('http://127.0.0.1:8765/'+student)
+              ok('expected build loaded',p.evaluate("D.version==='HEZUO-20260914-R3'"))
+              ok('native storage available',p.locator('#storageWarning').is_hidden())
+              ok('reference absent before submission',p.locator('.model').count()==0)
+              for text in ['', '  ', '。。。', '\u200b']:
+                  p.locator('[data-field=explain]').fill(text);p.locator('#submitFirst').click()
+                  ok('blank cannot unlock reference '+repr(text),p.evaluate('work().first===null') and p.locator('#viewReference').count()==0)
+              p.locator('[data-target-group="0"]').click();el=p.locator('#source-p1s5');el.evaluate('(e)=>e.scrollIntoView({block:"center"})')
+              r=el.evaluate('(e)=>{let r=e.getClientRects()[0];return {x:r.x,y:r.y,h:r.height}}');p.mouse.click(r['x']+3,r['y']+r['h']/2)
+              ok('real text click collects source',p.evaluate('work().draft.evidence.length===1'))
+              p.evaluate('''()=>{const e=document.querySelector('#source-p1s4'),r=document.createRange();r.setStart(e.firstChild,0);r.setEnd(e.firstChild,4);getSelection().removeAllRanges();getSelection().addRange(r);captureSelection()}''')
+              p.locator('#selectionBtn').click();ok('native selection keeps short excerpt',p.evaluate('work().draft.evidence.some(e=>e.text==="作为军人")'))
+              p.locator('[data-ev-action=trim]').first.click();p.locator('#trimText').fill('并非原文');p.locator('#applyTrim').click();ok('invented evidence rejected',p.locator('#trimDialog').is_visible());p.locator('[data-close=trimDialog]').click()
+              p.locator('[data-hint="hint-1"] summary').click();p.wait_for_timeout(100)
+              p.locator('[data-field=explain]').fill('身份不同，但都需要与人配合完成任务，例子支持合作不可缺少。');p.locator('#submitFirst').click()
+              first=p.evaluate('JSON.stringify(work().first)');p.locator('#viewReference').click();p.locator('#startRevision').click()
+              p.locator('[data-field=explain]').fill('学生、运动员和军人的共同点是靠配合完成各自任务，支持不同身份都需要合作。');p.locator('#saveRevision').click();ok('revision needs reason',p.evaluate('work().revisions.length===0'))
+              p.locator('#revisionReason').fill('补全身份例子和共同任务之间的联系。');p.locator('#saveRevision').click();ok('first answer immutable',p.evaluate('JSON.stringify(work().first)')==first)
+              p.reload();ok('real reload restores first and revision',p.evaluate('JSON.stringify(work().first)')==first and p.evaluate('work().revisions.length===1'))
+              ok('help history survives reload',p.evaluate('work().hints.length>0'))
+              p.evaluate("goTask('R2')")
+              for sid in ['p2s1','p2s3','p2s4']:p.locator('[data-role-source="'+sid+'"][data-role-value="定义"]').click()
+              ok('roles not graded before own submission',p.locator('.role.correct,.role.wrong').count()==0)
+              p.locator('#submitFirst').click();p.locator('#viewReference').click();ok('limited label feedback after reference',p.locator('.role.correct').count()==1 and p.locator('.role.wrong').count()==2)
+              p.evaluate("goTask('Q52')");ok('independent question has no location hint',p.locator('[data-hint]').count()==0)
+              p.evaluate("goTask('T1')");ok('new transfer text and no hidden model',p.locator('.model').count()==0 and p.locator('[data-hint]').count()==0 and '新编练习' in p.locator('#passage').inner_text())
+              p.evaluate("goTask('Q53')");p.locator('[data-field=answer]').fill('测试完整答案首行\n'+('\n'.join('第%d行。'%i for i in range(30)))+'\n测试完整答案末行')
+              with p.expect_download() as dl:p.locator('#exportBtn').click()
+              dl.value.save_as(out/'learning-record.html');record=(out/'learning-record.html').read_text();ok('readable record includes first and revision', '补全身份例子' in record and '测试完整答案末行' in record)
+              p.evaluate('preparePrint()');p.pdf(path=str(out/'print-check.pdf'),format='A4');ok('print packet retains full answer', '测试完整答案末行' in p.locator('#printRoot').text_content())
+              for width,height in [(1024,768),(1180,820),(390,844)]:
+                  p.set_viewport_size({'width':width,'height':height});a=p.locator('#reader').bounding_box();m=p.locator('#main').bounding_box()
+                  ok('no horizontal overflow '+str(width),p.evaluate('document.documentElement.scrollWidth<=innerWidth'))
+                  ok('responsive columns '+str(width),(a['x']+a['width']<=m['x']+2) if width>799 else (m['y']>=a['y']+a['height']-2))
+              p.set_viewport_size({'width':1024,'height':768});p.evaluate("goTask('R3')");p.wait_for_timeout(4500);p.screenshot(path=str(out/'tablet.png'),full_page=True)
+              p.evaluate("localStorage.setItem('other-worksheet','keep')");p.locator('#resetBtn').click();p.locator('#confirmReset').click();ok('reset does not delete other worksheets',p.evaluate("localStorage.getItem('other-worksheet')==='keep'"))
+              p.reload();ok('reset persists across reload',p.evaluate('D.tasks.every(t=>!state.tasks[t.id].first)'))
+              p.goto('http://127.0.0.1:8765/'+teacher);ok('teacher answers present', '共14分' in p.inner_text('body'));ok('no JavaScript errors',not errors);browser.close()
+          local_hashes={name:hashlib.sha256((root/name).read_bytes()).hexdigest() for name in [student,teacher]}
+          def read(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'Hezuo-Validation','Cache-Control':'no-cache'})
+              return urllib.request.urlopen(req,timeout=25).read()
+          online={}
+          for name in [student,teacher]:
+              gh=read('https://raw.githubusercontent.com/lf9675/huawentong-home/main/'+name+'?qa='+str(time.time()))
+              if hashlib.sha256(gh).hexdigest()!=local_hashes[name]:
+                  online[name]='main not yet promoted; native pre-publication tests completed'
+                  continue
+              for attempt in range(10):
+                  data=read('https://huawentong-home.lyqlym2015.workers.dev/'+name+'?qa='+str(time.time()))
+                  digest=hashlib.sha256(data).hexdigest()
+                  if digest==local_hashes[name]:break
+                  time.sleep(12)
+              online[name]={'sha256':digest,'matches':digest==local_hashes[name]}
+              ok('live bytes equal tested repository file '+name,digest==local_hashes[name])
+          result={'checks':checks,'page_errors':errors,'sha256':local_hashes,'online':online}
+          (out/'result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2));print('HEZUO_QA_RESULT='+json.dumps(result,ensure_ascii=False),flush=True)
+          PY
+          python /tmp/hezuo_validate.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hezuo-r3-native-validation
+          path: hezuo-qa
+          retention-days: 7
