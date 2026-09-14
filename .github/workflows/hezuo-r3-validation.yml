@@ -2,25 +2,36 @@ name: Hezuo R3 isolated validation
 on:
   push:
     branches: [qa/hezuo-r3-20260914]
-    paths: [du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html]
+    paths:
+      - tests/hezuo-r3/**
+      - .github/workflows/hezuo-r3-validation.yml
 permissions:
-  contents: read
+  contents: write
 jobs:
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
+      - name: Assemble the two standalone pages
+        run: |
+          python tests/hezuo-r3/build.py
+          cp tests/hezuo-r3/2024-2hcl-yilunwen-hezuo.html du/exam/2hcl/yilunwen/
+          cp tests/hezuo-r3/2024-2hcl-yilunwen-hezuo-teacher.html du/exam/2hcl/yilunwen/
       - name: Install browser test tools
         run: |
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Native browser and deployment checks
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           cat > /tmp/hezuo_validate.py <<'PY'
-          import json, pathlib, threading, http.server, functools, hashlib, time, urllib.request
+          import json, pathlib, threading, http.server, functools, hashlib, time, urllib.request, os
           from playwright.sync_api import sync_playwright
           root=pathlib.Path.cwd(); base='du/exam/2hcl/yilunwen/'; student=base+'2024-2hcl-yilunwen-hezuo.html'; teacher=base+'2024-2hcl-yilunwen-hezuo-teacher.html'
+          expected={student:'8f0bcedabefedc11bb651242626197be3c618172a1b36b9495b4689a6241154d',teacher:'14de1fc0d71645e42cedb669c76ae820980d3c928f2d487aaff195df3931b364'}
+          for path,digest in expected.items():assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, 'Staged source differs from locally reviewed files: '+path
           server=http.server.ThreadingHTTPServer(('127.0.0.1',8765),functools.partial(http.server.SimpleHTTPRequestHandler,directory=str(root)))
           threading.Thread(target=server.serve_forever,daemon=True).start();out=root/'hezuo-qa';out.mkdir(exist_ok=True)
           checks=[]; errors=[]
@@ -69,6 +80,13 @@ jobs:
               p.reload();ok('reset persists across reload',p.evaluate('D.tasks.every(t=>!state.tasks[t.id].first)'))
               p.goto('http://127.0.0.1:8765/'+teacher);ok('teacher answers present', '共14分' in p.inner_text('body'));ok('no JavaScript errors',not errors);browser.close()
           local_hashes={name:hashlib.sha256((root/name).read_bytes()).hexdigest() for name in [student,teacher]}
+          blobs={}
+          for name in [student,teacher]:
+              # Retain only immutable file blobs. No branch or production ref is changed here.
+              body=json.dumps({'content':(root/name).read_text(),'encoding':'utf-8'}).encode()
+              req=urllib.request.Request('https://api.github.com/repos/lf9675/huawentong-home/git/blobs',data=body,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'},method='POST')
+              blobs[name]=json.load(urllib.request.urlopen(req,timeout=30))['sha']
+          print('VERIFIED_BLOBS='+json.dumps(blobs),flush=True)
           def read(url):
               req=urllib.request.Request(url,headers={'User-Agent':'Hezuo-Validation','Cache-Control':'no-cache'})
               return urllib.request.urlopen(req,timeout=25).read()
@@ -85,7 +103,7 @@ jobs:
                   time.sleep(12)
               online[name]={'sha256':digest,'matches':digest==local_hashes[name]}
               ok('live bytes equal tested repository file '+name,digest==local_hashes[name])
-          result={'checks':checks,'page_errors':errors,'sha256':local_hashes,'online':online}
+          result={'checks':checks,'page_errors':errors,'sha256':local_hashes,'blobs':blobs,'online':online}
           (out/'result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2));print('HEZUO_QA_RESULT='+json.dumps(result,ensure_ascii=False),flush=True)
           PY
           python /tmp/hezuo_validate.py
