@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-SG">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>私人电邮互动练习｜练习一＋练习三</title>
+<style>
+:root{
+  --ink:#16324a; --soft:#5c7082; --bg:#eef5fb; --card:#ffffff; --line:#cfdeea;
+  --blue:#2f5f8f; --blue2:#dcecf8; --gold:#c58a2b; --gold2:#fff4dd;
+  --good:#2f7a5a; --goodbg:#e8f5ee; --bad:#b3473d; --badbg:#fcecea;
+  --purple:#67558a; --purplebg:#f0edf7; --shadow:0 10px 30px rgba(29,61,90,.12);
+  --r:16px;
+  --font:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --serif:"Noto Serif SC","Songti SC","SimSun",serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(#f7fbff,#e8f2fa 40%,#dbe9f5);font-family:var(--font);color:var(--ink);line-height:1.7}
+.wrap{max-width:960px;margin:auto;padding:24px 18px 80px}
+.hero{padding:28px 0 16px}
+.eyebrow{font-size:12px;letter-spacing:.16em;color:var(--blue);font-weight:800}
+h1{font-family:var(--serif);font-size:clamp(30px,5vw,46px);line-height:1.2;margin:8px 0 6px}.sub{margin:0;color:var(--soft);font-size:17px}
+.topnote{margin-top:18px;background:var(--gold2);border:1px solid #efd5a4;border-left:5px solid var(--gold);padding:14px 16px;border-radius:12px;font-size:15px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}.tab{border:1px solid var(--line);background:#fff;color:var(--ink);padding:12px 18px;border-radius:999px;font-weight:800;cursor:pointer}.tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.lesson{display:none}.lesson.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin:18px 0;box-shadow:var(--shadow)}
+.stepno{font-size:12px;letter-spacing:.12em;color:var(--gold);font-weight:900}.card h2{font-family:var(--serif);font-size:25px;margin:4px 0 8px}.card h3{font-size:18px;color:var(--blue);margin:22px 0 10px}.hint{color:var(--soft);margin:0 0 14px}.key{color:#c0272d;font-weight:800}.en{display:block;font-size:13px;color:var(--soft);font-style:italic;margin-top:2px}
+.mail{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fcfdff}.mailhead{background:var(--blue);color:#fff;padding:9px 14px;font-size:14px;font-weight:800}.mailmeta{background:#edf4fa;padding:10px 14px;font-size:14px;color:var(--soft);border-bottom:1px solid var(--line)}.mailbody{padding:16px;font-family:var(--serif);font-size:16px}.mailbody p{margin:0 0 10px}.mailbody .ind{text-indent:2em}
+.map{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}@media(max-width:760px){.map{grid-template-columns:1fr}}
+.m{background:#f7fbff;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}.m b{display:block;color:var(--blue);font-size:15px}.m span{font-size:13px;color:var(--soft)}
+.q{border:1px solid var(--line);border-radius:12px;padding:14px 15px;margin:12px 0;background:#fbfdff}.q.right{border-color:var(--good);background:var(--goodbg)}.q.wrong{border-color:var(--bad);background:var(--badbg)}
+.stem{font-size:16px;margin:0 0 10px}.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(max-width:700px){.opts{grid-template-columns:1fr}}
+.opt{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:11px 13px;text-align:left;font-size:15px;font-weight:650;cursor:pointer}.opt:hover{border-color:var(--blue)}.opt:disabled{cursor:default;opacity:.72}.opt.picked{background:var(--ink);color:#fff;border-color:var(--ink);opacity:1}
+.fb{display:none;margin-top:10px;font-size:14px;font-weight:700}.q.right .fb,.q.wrong .fb{display:block}.q.right .fb{color:var(--good)}.q.wrong .fb{color:var(--bad)}
+.sortline{display:flex;gap:8px;flex-wrap:wrap}.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-size:14px;font-weight:700;cursor:pointer}.chip.on{background:var(--blue2);border-color:var(--blue);color:var(--blue)}
+.idea-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:720px){.idea-grid{grid-template-columns:1fr}}.idea{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fbfdff}.idea h4{margin:0 0 8px;color:var(--blue)}
+textarea{width:100%;min-height:95px;border:1px solid var(--line);border-radius:10px;padding:11px;font-family:var(--font);font-size:15px;line-height:1.7;resize:vertical;background:#fff}.smallta{min-height:72px}
+.checks{display:grid;gap:8px}.check{border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px 13px;text-align:left;cursor:pointer;font-weight:650}.check.on{background:var(--goodbg);border-color:var(--good);color:#1c5a40}.check.on::before{content:"✓ "}.check:not(.on)::before{content:"○ "}
+.badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:800;background:var(--blue2);color:var(--blue)}
+.rule{background:var(--gold2);border:1px solid #efd5a4;border-radius:12px;padding:13px 15px;margin:10px 0}.rule b{color:#8b5c12}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:760px){.two{grid-template-columns:1fr}}
+.finalbox{background:#f7fbff;border:2px dashed #b9cee0;border-radius:14px;padding:16px}.finalbox h4{margin:0 0 8px;color:var(--blue)}
+.btnbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}.btn{border:0;border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer}.primary{background:var(--blue);color:#fff}.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.progress{font-size:13px;color:var(--soft);margin-left:auto}.sectionhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.sectionhead h3{margin:18px 0 10px}.tipbox{background:var(--purplebg);border:1px solid #d8d0e8;border-radius:12px;padding:12px 14px;color:#4d3d6c;font-size:14px}.mini{font-size:13px;color:var(--soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Higher Chinese · Private Email · Thinking First</div>
+    <h1>私人电邮：要点我自己想得出来</h1>
+    <p class="sub">只练附件中的<strong>练习一</strong>和<strong>练习三</strong>。重点不是抄范文，而是学会：<strong>读懂来信 → 认清问题 → 自己想出合题要点 → 检查要点能不能用</strong>。</p>
+    <div class="topnote"><b>课堂目标：</b>每个问题至少想出 <b>2 个有效要点</b>。每个要点都必须真的在回答对方的问题，而且要能用来写成一段。</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab on" data-tab="l1">练习一 · VIA 社区服务</button>
+    <button class="tab" data-tab="l3">练习三 · 新组屋区</button>
+  </div>
+
+  <section class="lesson on" id="l1">
+    <div class="card">
+      <div class="stepno">THE LETTER</div><h2>练习一：兴文的来信</h2>
+      <div class="mail">
+        <div class="mailhead">主题：分享心得</div>
+        <div class="mailmeta">发件人：洪兴文　→　收件人：许静婷　｜　日期：2019 年 9 月 25 日</div>
+        <div class="mailbody">
+          <p>静婷：</p>
+          <p class="ind">好久没有给你写电邮了，别来无恙？</p>
+          <p class="ind">升上中二后，大家的学习、生活都变得非常忙碌，相信你也一样。</p>
+          <p class="ind">从去年开始，我的学校开展了一个名为“德育在于行动”的社区服务计划，要求每个班级必须参加，而各个班级也可以选择所服务的对象以及要进行的义工活动。作为班长，我觉得这是一个很有意义的计划，不仅能培养同学们正确的价值观，也能锻炼大家组织活动的能力。但班上很多同学都不愿意参与这项计划，认为学生就应该只专注于学业，不应该把时间浪费在义工活动上。</p>
+          <p class="ind"><b>我知道你曾经参加过很多“德育在于行动”的社区服务活动，你可以跟我分享你的经历吗？你认为有什么方法能鼓励我的同学更积极地参与这项计划？</b></p>
+          <p class="ind">希望早日收到你的电邮。</p>
+          <p class="ind">祝好！<br>兴文</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stepno">STEP 1</div><h2>挖讯息：哪一句要拿来用？</h2>
+      <p class="hint">电邮题目没有废话。先判断：这是<strong>讯息</strong>、<strong>问题</strong>，还是<strong>寒暄</strong>。</p>
+      <div id="l1-info"></div>
+    </div>
+
+    <div class="card">
+      <div class="stepno">STEP 2</div><h2>认题型：两个问题，写法不一样</h2>
+      <div class="map">
+        <div class="m"><b>① 挖讯息</b><span>他告诉我什么？</span></div>
+        <div class="m"><b>② 认题型</b><span>他要我做什么？</span></div>
+        <div class="m"><b>③ 想要点</b><span>从哪里找内容？</span></div>
+        <div class="m"><b>④ 查要点</b><span>真的答题吗？</span></div>
+        <div class="m"><b>⑤ 写成段</b><span>怎样展开？</span></div>
+      </div>
+      <div id="l1-type"></div>
+    </div>
+
+    <div class="card">
+      <div class="stepno">STEP 3A</div><h2>第一问：分享经历，不要写成流水账</h2>
+      <p class="hint">兴文不是随便想听一个故事。他想知道：<span class="key">“参加 VIA 到底有什么实际意义？”</span> 所以经历要选能帮助他理解同学为什么值得参加的。</p>
+      <div class="rule"><b>想经历的路线：</b>为什么参加 → 服务谁 → 做了什么 → 遇到什么情况 → 结果怎样 → <b>我有什么收获</b></div>
+      <div id="l1-exp"></div>
+      <h3>现在轮到你：先选一种你愿意分享的 VIA 经历</h3>
+      <div class="sortline" id="l1-expchips">
+        <button class="chip">陪伴乐龄人士</button><button class="chip">环保清洁活动</button><button class="chip">食物捐赠与分类</button><button class="chip">社区活动协助</button>
+      </div>
+      <div class="idea-grid" style="margin-top:12px">
+        <div class="idea"><h4>① 经过要点</h4><textarea class="smallta" data-save="l1exp1" placeholder="我参加了什么活动？我具体做了什么？"></textarea></div>
+        <div class="idea"><h4>② 收获要点</h4><textarea class="smallta" data-save="l1exp2" placeholder="这次经历让我学到什么？为什么这点能回应兴文？"></textarea></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stepno">STEP 3B</div><h2>第二问：怎样鼓励同学积极参与？</h2>
+      <p class="hint">先别急着想“方法”。先问：<strong>同学为什么不愿意？</strong> 兴文已经给了线索——<span class="key">他们觉得应该只专注学业，VIA 会浪费时间。</span></p>
+      <div class="rule"><b>想建议的路线：</b>先找“不愿参加的原因” → 再倒推“怎样解决这个原因” → 建议必须是兴文或班级做得到的。</div>
+      <div id="l1-adv"></div>
+      <h3>自己想两个建议</h3>
+      <div class="idea-grid">
+        <div class="idea"><h4>建议一</h4><textarea class="smallta" data-save="l1adv1" placeholder="同学的问题是什么？兴文可以怎么做？为什么有用？"></textarea></div>
+        <div class="idea"><h4>建议二</h4><textarea class="smallta" data-save="l1adv2" placeholder="换一个不同角度：怎样让同学愿意参加？"></textarea></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stepno">STEP 4</div><h2>查要点：像在回答，不等于真的答到了</h2>
+      <div id="l1-check"></div>
+      <h3>把你刚才的 4 个要点再量一次</h3>
+      <div class="checks" id="l1-self">
+        <button class="check">第一问至少有 2 个要点，而且都是真实经历中的内容</button>
+        <button class="check">我写了“做了什么”，也写了“从中学到什么”</button>
+        <button class="check">第二问的建议针对“怕浪费时间 / 只重学业”等真实问题</button>
+        <button class="check">建议是兴文或班级能做得到的，不是政府或学校高层才做得到</button>
+        <button class="check">我用了来信里的讯息，不是换一个题目也能直接套用</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stepno">OUTPUT</div><h2>我的构思卡</h2>
+      <div class="finalbox"><h4>只写要点，不写完整电邮</h4>
+        <textarea data-save="l1final" placeholder="第一问：经历要点1…… / 经历要点2……\n第二问：建议要点1…… / 建议要点2……"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <section class="lesson" id="l3">
+    <div class="card">
+      <div class="stepno">THE LETTER</div><h2>练习三：国平的来信</h2>
+      <div class="mail">
+        <div class="mailhead">主题：请提供建议</div>
+        <div class="mailmeta">发件人：linguoping@kgoomail.com　→　收件人：zhengjinhua@kgoomail.com　｜　日期：2025 年 9 月 23 日</div>
+        <div class="mailbody">
+          <p>锦华：</p>
+          <p class="ind">你最近过得还好吗？好久没有跟你联系了，希望你一切顺利。</p>
+          <p class="ind">你上次提到自己和家人搬进了新的组屋区，对整体环境还算满意。<b>你可以跟我分享你喜欢社区里的哪些设施？另外，你觉得你的组屋区需要有什么改进的地方？</b></p>
+          <p class="ind">期待你的回信，也欢迎你寄几张你家附近的照片给我看看哦！</p>
+          <p class="ind">祝好！<br>国平</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stepno">STEP 1</div><h2>挖讯息：题目短，反而更容易漏</h2>
+      <p class="hint">这封信虽然短，但至少有三类重要讯息：<strong>已经搬家</strong>、<strong>整体还算满意</strong>、<strong>两个问题</strong>。</p>
+      <div id="l3-info"></div>
+    </div>
+
+    <div class="card">
+      <div class="stepno">STEP 2</div><h2>认题型：不是“万能建议题”</h2>
+      <p class="hint">第一问要分享自己住区里的设施；第二问要指出需要改善的地方。<span class="key">不要把第二问误写成“政府应该怎样改善新加坡所有组屋区”。</span></p>
+      <div id="l3-type"></div>
+    </div>
+
+    <div class="card">
+      <div class="stepno">STEP 3A</div><h2>第一问：喜欢哪些设施？怎样才不空泛？</h2>
+      <p class="hint">“我喜欢公园，因为很好”太空。要点必须回答：<strong>是什么设施 → 我怎样使用 → 为什么喜欢</strong>。</p>
+      <div class="two">
+        <div class="tipbox"><b>路线 A：日常使用</b><br>我常在哪里？做什么？它给我什么方便？</div>
+        <div class="tipbox"><b>路线 B：家庭 / 邻里</b><br>这个设施怎样让家人或邻居有更多互动？</div>
+      </div>
+      <div id="l3-fac"></div>
+      <h3>自己想两个设施要点</h3>
+      <div class="idea-grid">
+        <div class="idea"><h4>设施一</h4><textarea class="smallta" data-save="l3fac1" placeholder="设施是什么？我怎样使用？为什么喜欢？"></textarea></div>
+        <div class="idea"><h4>设施二</h4><textarea class="smallta" data-save="l3fac2" placeholder="换一个不同功能的设施。"></textarea></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stepno">STEP 3B</div><h2>第二问：哪里需要改进？先找“问题”，再说“为什么”</h2>
+      <p class="hint">题目问的是“需要有什么改进的地方”，所以你要先指出<strong>目前哪里不够好</strong>，再解释它带来什么不便。可以顺带提出改进方向，但不要离开自己的组屋区。</p>
+      <div class="rule"><b>想要点的路线：</b>现在有什么问题 → 谁受到影响 → 造成什么不便 → 可以往什么方向改善</div>
+      <div id="l3-imp"></div>
+      <h3>自己想两个改进要点</h3>
+      <div class="idea-grid">
+        <div class="idea"><h4>改进一</h4><textarea class="smallta" data-save="l3imp1" placeholder="目前哪里不够好？为什么需要改进？"></textarea></div>
+        <div class="idea"><h4>改进二</h4><textarea class="smallta" data-save="l3imp2" placeholder="换一个不同方面的问题。"></textarea></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stepno">STEP 4</div><h2>查要点：有没有把来信的信息用起来？</h2>
+      <div id="l3-check"></div>
+      <h3>最后自查</h3>
+      <div class="checks" id="l3-self">
+        <button class="check">第一问至少 2 个设施，而且每个都写“怎样使用 + 为什么喜欢”</button>
+        <button class="check">第二问至少 2 个需要改进的地方，而且不是泛泛讲整个新加坡</button>
+        <button class="check">我没有把“整体环境还算满意”写成“这里什么都很差”</button>
+        <button class="check">我的要点来自真实组屋生活，符合中学生和家庭日常</button>
+        <button class="check">四个要点彼此不同，没有换词重复同一个意思</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stepno">OUTPUT</div><h2>我的构思卡</h2>
+      <div class="finalbox"><h4>只写要点，不写完整电邮</h4>
+        <textarea data-save="l3final" placeholder="第一问：设施要点1…… / 设施要点2……\n第二问：改进要点1…… / 改进要点2……"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <div class="btnbar"><button class="btn primary" id="summaryBtn">检查我有没有想够要点</button><button class="btn secondary" id="clearBtn">清空重做</button></div>
+  <div id="summary" class="card" style="display:none"></div>
+</div>
+<script>
+const STORE='email-q1-q3-v1';
+let S={};try{S=JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e){S={}};
+const save=()=>localStorage.setItem(STORE,JSON.stringify(S));
+
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.lesson').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');document.getElementById(b.dataset.tab).classList.add('on');
+});
+
+document.querySelectorAll('[data-save]').forEach(el=>{
+  const k=el.dataset.save;if(S[k])el.value=S[k];
+  el.addEventListener('input',()=>{S[k]=el.value;save()});
+});
+document.querySelectorAll('.chip').forEach((b,i)=>{
+  const k='chip_'+i;if(S[k])b.classList.add('on');
+  b.onclick=()=>{b.classList.toggle('on');S[k]=b.classList.contains('on')?1:0;save()}
+});
+document.querySelectorAll('.check').forEach((b,i)=>{
+  const k='chk_'+i;if(S[k])b.classList.add('on');
+  b.onclick=()=>{b.classList.toggle('on');S[k]=b.classList.contains('on')?1:0;save()}
+});
+
+function mcq(hostId,data,prefix){
+  const host=document.getElementById(hostId);
+  data.forEach((q,i)=>{
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML=`<p class="stem">${i+1}. ${q.stem}</p><div class="opts"></div><div class="fb"></div>`;
+    const bar=d.querySelector('.opts'),fb=d.querySelector('.fb'),key=prefix+i;
+    const lock=(j)=>{
+      [...bar.children].forEach((x,n)=>{x.disabled=true;if(n===j)x.classList.add('picked')});
+      const ok=j===q.ans;d.classList.add(ok?'right':'wrong');
+      fb.innerHTML=(ok?'✓ 对了。':'✗ 再想想。')+q.fb;
+    };
+    q.opts.forEach((t,j)=>{const b=document.createElement('button');b.className='opt';b.textContent='ABCD'[j]+'　'+t;b.onclick=()=>{if(S[key]!==undefined)return;S[key]=j;save();lock(j)};bar.appendChild(b)});
+    host.appendChild(d);if(S[key]!==undefined)lock(S[key]);
+  });
+}
+
+const l1Info=[
+{stem:'「升上中二后，大家的学习、生活都变得非常忙碌。」这句最有用的地方是什么？',opts:['说明兴文不喜欢上学','暗示同学担心时间不够','证明 VIA 一定没意义','只是寒暄，不必理会'],ans:1,fb:'这句与后文“只专注学业、不要浪费时间”连起来，说明同学的核心顾虑是时间和学业。'},
+{stem:'「作为班长，我觉得这是一个很有意义的计划。」回答时应该怎样处理？',opts:['完全不用理会他的看法','回应他的处境和看法','批评他太爱管同学','只抄回这句话即可'],ans:1,fb:'兴文是班长，又认同 VIA。你的回信应帮助他解决“怎样带动同学”的困难。'},
+{stem:'来信真正要求你回答几个问题？',opts:['一个，只分享经历','两个：经历＋鼓励方法','三个：学业＋义工＋班长','四个，每段都要回答'],ans:1,fb:'两个核心问题都必须回答：分享经历；提出鼓励同学参与的方法。'}
+];
+const l1Type=[
+{stem:'第一问「可以跟我分享你的经历吗？」最适合归为哪一类？',opts:['分享经验类','谈看法类','劝慰类','报告生活类'],ans:0,fb:'分享经验要围绕对方真正需要的经验，写时间、地点、人物、经过、结果和收获。'},
+{stem:'第二问「有什么方法能鼓励我的同学更积极参与？」属于哪一类？',opts:['分享经验类','建议类','报告生活类','劝慰类'],ans:1,fb:'建议要针对对方的问题、能解决问题、而且对方做得到。'},
+{stem:'这封回信整体上属于哪一种？',opts:['只写经历即可','只写建议即可','分享经验＋建议的混合类','谈看法＋劝慰的混合类'],ans:2,fb:'两个问题类型不同，所以要先拆任务，再分别构思。'}
+];
+const l1Exp=[
+{stem:'哪一个“经历”最适合拿来回应兴文？',opts:['周末跟家人去商场买东西','参加清洁活动后更懂团队合作','考试前熬夜温习拿到高分','放学后和朋友去打篮球'],ans:1,fb:'要选与 VIA 有关、而且能说明“为什么值得参加”的经历。'},
+{stem:'分享 VIA 经历时，哪一项最不能缺？',opts:['当天穿什么衣服','活动后得到什么收获','天气到底热不热','回家搭哪一路巴士'],ans:1,fb:'兴文想用你的经历来鼓励同学，所以“收获/成长”比无关细节重要。'},
+{stem:'以下哪一组最像合格的经历要点？',opts:['地点很多＋人物很多','经过清楚＋收获相关','写得很长＋成语很多','故事刺激＋结果夸张'],ans:1,fb:'不是越戏剧化越好，而是要真实、清楚、能回应兴文的问题。'}
+];
+const l1Adv=[
+{stem:'同学认为“学生只应该专注学业”。最直接的鼓励方法是哪一个？',opts:['告诉他们义工比考试重要','说明 VIA 也能培养能力且合理安排时间','要求班长每天点名批评','请校长强迫所有人参加'],ans:1,fb:'先回应他们真正的顾虑：学业和时间。说明活动并非“浪费时间”，而是能培养价值观与组织能力。'},
+{stem:'哪一条建议是兴文“做得到”的？',opts:['教育部修改全国政策','政府增加社区预算','班上先让同学选择服务对象','媒体多报道义工活动'],ans:2,fb:'建议对象是兴文。他能做的是班级层面的行动，不是政府层面的措施。'},
+{stem:'如果同学觉得活动无聊，哪一条建议更有针对性？',opts:['让同学参与选择义工活动','不停强调这是学校规定','告诉他们不参加会失败','把活动全部交给老师'],ans:0,fb:'让同学有选择权，较能提高投入感；而且题目已说明班级可以选择服务对象和活动。'},
+{stem:'哪一条不是好建议？',opts:['分享自己参与后的收获','让同学分工承担不同任务','安排活动时顾及考试时间','说不参加就是没有爱心'],ans:3,fb:'贴标签和指责很难真正解决同学的顾虑，也不利于鼓励参与。'}
+];
+const l1Check=[
+{stem:'“我参加过一次义工活动，很开心，所以你叫大家参加就好。”最大问题是什么？',opts:['太多细节','经历没有具体内容与收获','建议太多','格式不正确'],ans:1,fb:'只说“很开心”太空，兴文无法从中看出这项活动为什么值得参加。'},
+{stem:'“可以请政府规定所有学生每月做十小时义工。”为什么不合格？',opts:['太短','没有例子','兴文做不到','没有写时间'],ans:2,fb:'给朋友的建议，必须是对方或班级实际能执行的动作。'},
+{stem:'“先让同学参与选择服务对象，再把活动排在考试后。”为什么较好？',opts:['因为句子最长','同时回应兴趣与时间顾虑','因为有两个连接词','因为提到了考试'],ans:1,fb:'它直接对应来信里的真实问题：同学担心浪费时间，也可能缺乏参与感。'}
+];
+
+const l3Info=[
+{stem:'「你上次提到自己和家人搬进了新的组屋区」告诉你什么？',opts:['只能写学校生活','内容必须围绕新组屋区','一定要写搬家过程','必须批评旧住区'],ans:1,fb:'回信内容要落在“新的组屋区”，不能泛泛谈社区。'},
+{stem:'「对整体环境还算满意」对第二问有什么限制？',opts:['可以把社区写得一无是处','应写局部可改进之处','第二问可以不回答','只能写优点不能写缺点'],ans:1,fb:'整体“还算满意”，所以第二问宜写局部问题，不宜自相矛盾地说整个社区很糟。'},
+{stem:'这封信有几个真正需要回答的问题？',opts:['一个','两个','三个','四个'],ans:1,fb:'① 喜欢哪些设施；② 哪些地方需要改进。'}
+];
+const l3Type=[
+{stem:'第一问「分享你喜欢社区里的哪些设施」最接近哪一种任务？',opts:['报告生活／分享个人情况','劝慰类','纯建议类','辩论类'],ans:0,fb:'重点是分享自己实际生活中的设施与感受。'},
+{stem:'第二问「觉得组屋区需要有什么改进的地方」最合适的写法是？',opts:['只列问题，不解释','指出问题＋说明为什么需要改进','大谈全国房屋政策','只写自己不满意'],ans:1,fb:'先说哪里不足，再解释对居民造成什么不便；可顺带提出改进方向。'},
+{stem:'这封回信最容易犯的错误是什么？',opts:['把“自己的组屋区”写成全国问题','没有写天气','没有写学校功课','没有写搬家箱子'],ans:0,fb:'题目范围很明确，是“你的组屋区”。'}
+];
+const l3Fac=[
+{stem:'哪一个设施要点最具体？',opts:['这里的设施很好','楼下有有盖走道，下雨也能去巴士站','社区很方便','我很喜欢这里'],ans:1,fb:'设施是什么、怎样使用、带来什么方便，都看得见。'},
+{stem:'哪一个设施最适合中学生真实生活？',opts:['私人游艇码头','学校旁的社区篮球场','豪华高尔夫会所','大型赌场接驳点'],ans:1,fb:'要符合真实的新加坡中学生生活逻辑。'},
+{stem:'写“社区图书馆/阅读角”时，怎样展开才够具体？',opts:['那里很好，我很喜欢','我放学会去自习，也能借书','图书馆非常有意义','大家都知道阅读重要'],ans:1,fb:'把“设施”变成真实使用情景，内容就不空泛。'}
+];
+const l3Imp=[
+{stem:'哪一个“需要改进”的要点最合题？',opts:['全国房价太高','楼下巴士站遮雨棚太短','学校功课太多','手机应用广告太多'],ans:1,fb:'它属于自己组屋区的真实设施问题，而且可以说明居民受影响。'},
+{stem:'如果写“儿童游乐场太小”，下一步最好解释什么？',opts:['我小时候很可爱','放学后很多孩子同时使用，空间拥挤','新加坡天气很热','每个人都应该运动'],ans:1,fb:'解释“为什么需要改进”——谁受影响、造成什么不便。'},
+{stem:'哪一个说法与“整体环境还算满意”最协调？',opts:['这里几乎什么都不好','整体不错，只是晚上照明不足','这里完全不适合居住','所有设施都应该重建'],ans:1,fb:'既承接“整体满意”，又指出局部可改善之处，逻辑一致。'}
+];
+const l3Check=[
+{stem:'“我喜欢社区的设施，因为很方便。”最大问题是什么？',opts:['没有称呼','没有说清什么设施、怎样方便','句子太短不能用','必须加入成语'],ans:1,fb:'要点需要具体：设施＋使用情景＋喜欢的原因。'},
+{stem:'“政府应该改善所有组屋区的交通。”为什么不理想？',opts:['没有分段','范围太大，离开自己的组屋区','用了“政府”两个字','没有写日期'],ans:1,fb:'对方问的是“你的组屋区需要改进什么”，不是全国政策。'},
+{stem:'哪一组四个要点更完整？',opts:['公园好／交通好／环境好／设施好','有盖走道方便／篮球场常用／夜间照明不足／垃圾桶太少','社区不错／我很满意／邻居友善／交通方便','巴士站／公园／学校／商场'],ans:1,fb:'既有两个具体优点，也有两个具体改进点，而且彼此不重复。'}
+];
+
+mcq('l1-info',l1Info,'l1i');mcq('l1-type',l1Type,'l1t');mcq('l1-exp',l1Exp,'l1e');mcq('l1-adv',l1Adv,'l1a');mcq('l1-check',l1Check,'l1c');
+mcq('l3-info',l3Info,'l3i');mcq('l3-type',l3Type,'l3t');mcq('l3-fac',l3Fac,'l3f');mcq('l3-imp',l3Imp,'l3p');mcq('l3-check',l3Check,'l3c');
+
+document.getElementById('summaryBtn').onclick=()=>{
+  const vals=['l1exp1','l1exp2','l1adv1','l1adv2','l3fac1','l3fac2','l3imp1','l3imp2'];
+  const filled=vals.filter(k=>(S[k]||'').trim().length>=8).length;
+  const box=document.getElementById('summary');box.style.display='block';
+  let msg='';
+  if(filled>=8)msg='你已经为两题都准备了至少 4 个可用要点。下一步才是把每个要点写成段。';
+  else if(filled>=5)msg='大部分要点已经有了。再补齐空白处，并检查每个要点是否真的回答题目。';
+  else msg='目前要点还不够。先不要写完整电邮，回到“想要点”部分，把每一问至少想出两个要点。';
+  box.innerHTML=`<div class="stepno">CHECK</div><h2>构思完成度</h2><p><span class="badge">${filled} / 8 个自拟要点已写</span></p><p>${msg}</p><p class="mini">提醒：这里检查的是“有没有想出内容”，不是正式作文评分。</p>`;
+  box.scrollIntoView({behavior:'smooth'});
+};
+document.getElementById('clearBtn').onclick=()=>{if(confirm('清空全部作答，重新开始？')){localStorage.removeItem(STORE);location.reload()}};
+</script>
+</body>
+</html>
