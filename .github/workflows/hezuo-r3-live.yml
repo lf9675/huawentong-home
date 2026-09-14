@@ -1,0 +1,56 @@
+name: Hezuo R3 live acceptance
+on:
+  push:
+    branches: [qa/hezuo-r3-20260914]
+    paths: [.github/workflows/hezuo-r3-live.yml]
+permissions:
+  contents: read
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Install browser
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Verify published HTML and interactions
+        run: |
+          python - <<'PY'
+          from playwright.sync_api import sync_playwright
+          import json,hashlib,pathlib
+          base='https://huawentong-home.lyqlym2015.workers.dev/du/exam/2hcl/yilunwen/'
+          expected={'2024-2hcl-yilunwen-hezuo.html':'8f0bcedabefedc11bb651242626197be3c618172a1b36b9495b4689a6241154d','2024-2hcl-yilunwen-hezuo-teacher.html':'14de1fc0d71645e42cedb669c76ae820980d3c928f2d487aaff195df3931b364'}
+          report={'checks':[],'hashes':{},'page_errors':[]};out=pathlib.Path('hezuo-live-qa');out.mkdir()
+          def ok(name,result):
+              assert result,name
+              report['checks'].append(name);print('PASS',name,flush=True)
+          with sync_playwright() as pw:
+              b=pw.chromium.launch();ctx=b.new_context(viewport={'width':1024,'height':768},accept_downloads=True);p=ctx.new_page()
+              p.on('pageerror',lambda e:report['page_errors'].append(str(e)))
+              for file,digest in expected.items():
+                  response=p.goto(base+file+'?v=3',wait_until='networkidle');ok('HTTP 200 '+file,response.status==200)
+                  actual=hashlib.sha256(response.body()).hexdigest();report['hashes'][file]=actual;ok('exact tested HTML '+file,actual==digest)
+              p.goto(base+'2024-2hcl-yilunwen-hezuo.html?v=3',wait_until='networkidle')
+              ok('live JS renders all five paragraphs',p.locator('.para').count()==5 and p.locator('[data-task=R1]').count()==1)
+              ok('reference not exposed on fresh visit',p.locator('.model').count()==0)
+              p.locator('[data-target-group="0"]').click();el=p.locator('#source-p1s5');el.evaluate('(e)=>e.scrollIntoView({block:"center"})');r=el.evaluate('(e)=>{let r=e.getClientRects()[0];return {x:r.x,y:r.y,h:r.height}}');p.mouse.click(r['x']+3,r['y']+r['h']/2)
+              ok('live evidence selection',p.evaluate('work().draft.evidence.length===1'))
+              p.locator('[data-field=explain]').fill('线上验收：不同身份都要配合完成任务。');p.locator('#submitFirst').click();first=p.evaluate('JSON.stringify(work().first)')
+              p.reload(wait_until='networkidle');ok('live origin storage and real reload',p.evaluate('JSON.stringify(work().first)')==first and p.locator('#storageWarning').is_hidden())
+              p.locator('#viewReference').click();p.locator('#startRevision').click();p.locator('[data-field=explain]').fill('线上验收订正：这些身份不同，但完成任务都需要合作。');p.locator('#revisionReason').fill('说明三个例子与主张之间的联系。');p.locator('#saveRevision').click()
+              ok('live revision preserves first',p.evaluate('JSON.stringify(work().first)')==first and p.evaluate('work().revisions.length===1'))
+              with p.expect_download() as d:p.locator('#exportBtn').click()
+              d.value.save_as(out/'live-record.html');ok('live readable record download','线上验收订正' in (out/'live-record.html').read_text())
+              p.evaluate('preparePrint()');p.pdf(path=str(out/'live-print.pdf'),format='A4')
+              p.evaluate("goTask('T1')");ok('live independent transfer loaded','新编练习' in p.locator('#passage').inner_text() and p.locator('.model').count()==0)
+              p.evaluate("goTask('R3')");p.wait_for_timeout(4500);p.screenshot(path=str(out/'live-tablet.png'),full_page=True)
+              ok('no live browser errors',not report['page_errors']);b.close()
+          (out/'result.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print('HEZUO_LIVE_RESULT='+json.dumps(report,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hezuo-r3-live-acceptance
+          path: hezuo-live-qa
+          retention-days: 7
