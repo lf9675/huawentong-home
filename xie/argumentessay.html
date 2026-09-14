@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>材料议论文 · 闯关学堂</title>
+<link rel="canonical" href="/xie/argumentessay.html">
+<style>
+:root{
+  --green:#2B5E50; --green-dk:#1E463B; --green-lt:#E8F0EC;
+  --red:#C13B2A; --red-lt:#FBEBE7;
+  --paper:#F7F3EA; --grid:#E4DAC6; --ink:#2A2724; --gray:#6E675C;
+  --gold:#C9972F; --ok:#2E7D46; --ok-lt:#E7F3EA;
+  --blue:#315F83; --blue-lt:#EDF3F7;
+  --purple:#6C4B8D; --purple-lt:#F2EDF6;
+  --card:#FFFFFF; --radius:14px;
+  --shadow:0 2px 10px rgba(42,39,36,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:17px;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+  background:var(--paper);color:var(--ink);line-height:1.65;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px);
+  background-size:100% 2.6rem;background-attachment:fixed;
+}
+button{font-family:inherit}
+.wrap{max-width:940px;margin:0 auto;padding:16px 16px 90px}
+
+/* top */
+.topbar{
+  background:var(--green);color:#fff;border-radius:var(--radius);
+  padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  box-shadow:var(--shadow)
+}
+.topbar h1{font-size:1.35rem;letter-spacing:.05em}
+.topbar .sub{font-size:.8rem;color:#CFE0D7;letter-spacing:.04em}
+.badge{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{background:rgba(255,255,255,.15);border-radius:999px;padding:4px 12px;font-size:.82rem;font-weight:700}
+.pill.star{background:var(--gold);color:#fff}.pill.lvl{background:#fff;color:var(--green)}
+.btn-small{background:none;border:1px solid rgba(255,255,255,.55);color:#fff;border-radius:999px;padding:4px 11px;font-size:.78rem;cursor:pointer}
+.btn-small:hover{background:rgba(255,255,255,.15)}
+
+/* stepper */
+.stepper{display:flex;gap:6px;margin:14px 0;flex-wrap:wrap}
+.step{
+  flex:1 1 95px;min-width:88px;border:none;cursor:pointer;
+  background:#fff;border-radius:10px;padding:7px 4px;
+  font-size:.76rem;color:var(--gray);border-bottom:3px solid var(--grid);
+  transition:.15s
+}
+.step b{display:block;font-size:.9rem;color:var(--ink)}
+.step.cur{background:var(--green);border-bottom-color:var(--green-dk);color:#fff}
+.step.cur b{color:#fff}.step.done b::after{content:" ✓";color:var(--ok)}
+.step.cur.done b::after{color:#BFE3C8}.step:disabled{cursor:not-allowed;opacity:.58}
+.step:focus-visible,.btn:focus-visible,.opt:focus-visible,.tok:focus-visible,.order-item:focus-visible,.multi-opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* cards */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 26px;margin-bottom:16px}
+.card-tag{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.13em;color:#fff;background:var(--green);border-radius:6px;padding:2px 11px;margin-bottom:9px}
+.card-tag.red{background:var(--red)}
+.notes h2{font-size:1.24rem;color:var(--green-dk);margin-bottom:10px}
+.notes h3{font-size:1rem;color:var(--blue);margin:12px 0 5px}
+.notes p,.notes li{font-size:.98rem;margin-bottom:7px}.notes ul,.notes ol{padding-left:1.35em}
+.kw{color:var(--red);font-weight:700}.soft{color:var(--gray);font-size:.88rem}
+.en{color:var(--gray);font-size:.8em;font-weight:400}
+.motto{display:inline-block;background:var(--green-lt);color:var(--green-dk);border:1.5px dashed var(--green);border-radius:8px;padding:2px 10px;font-weight:700;letter-spacing:.12em;margin:2px 3px}
+.notes table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.92rem}
+.notes th,.notes td{border:1px solid var(--grid);padding:7px 9px;text-align:left;vertical-align:top}
+.notes th{background:var(--green-lt);color:var(--green-dk);white-space:nowrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.chip{background:var(--paper);border:1px solid var(--grid);border-radius:999px;padding:3px 10px;font-size:.83rem}
+.callout{background:var(--gold-lt,#FFF6DF);border:1px solid #E2CFA3;border-left:5px solid var(--gold);border-radius:9px;padding:9px 12px;margin:9px 0;font-size:.92rem}
+.logic{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin:7px 0}.logic span{background:var(--blue-lt);color:var(--blue);border-radius:999px;padding:3px 9px;font-size:.84rem;font-weight:700}.logic i{font-style:normal;color:var(--red);font-weight:900}
+
+/* quiz */
+.quiz .qcount{font-size:.83rem;color:var(--gray);float:right}
+.qtext{font-size:1.08rem;font-weight:700;margin:6px 0 13px}
+.qtext .ti{color:var(--green-dk);background:var(--green-lt);border-radius:6px;padding:1px 6px}
+.opts{display:grid;gap:9px}
+.opt{
+  text-align:left;font-size:.98rem;line-height:1.55;background:var(--paper);
+  border:2px solid var(--grid);border-radius:10px;padding:10px 13px 10px 43px;
+  cursor:pointer;position:relative;transition:.15s;color:var(--ink)
+}
+.opt::before{
+  content:attr(data-l);position:absolute;left:11px;top:9px;width:24px;height:24px;border-radius:50%;
+  background:#fff;border:1.5px solid var(--grid);font-weight:700;font-size:.83rem;
+  display:flex;align-items:center;justify-content:center;color:var(--gray)
+}
+.opt:hover:not(:disabled){border-color:var(--green);background:#fff}
+.opt.right{border-color:var(--ok);background:var(--ok-lt)}
+.opt.right::before{background:var(--ok);border-color:var(--ok);color:#fff;content:"✓"}
+.opt.wrong{border-color:var(--red);background:var(--red-lt);animation:shake .25s}
+.opt.wrong::before{background:var(--red);border-color:var(--red);color:#fff;content:"✗"}
+.opt:disabled{cursor:default;opacity:.9}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@media(prefers-reduced-motion:reduce){.opt.wrong{animation:none}}
+
+.fb{border-radius:10px;padding:11px 14px;margin-top:13px;font-size:.93rem;display:none}
+.fb.show{display:block}.fb.good{background:var(--ok-lt);border-left:5px solid var(--ok)}.fb.bad{background:var(--red-lt);border-left:5px solid var(--red)}
+.fb b.t{display:block;margin-bottom:3px}.fb .fb-en{display:block;color:#507061;font-size:.78rem;font-style:italic;margin-top:4px}
+.q-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+
+/* circle words */
+.paper-line{background:#FDFBF5;border:1px solid var(--grid);border-radius:10px;padding:16px 14px;margin:8px 0 12px;display:flex;flex-wrap:wrap;gap:6px 2px;align-items:center}
+.tok{
+  font-family:"Kaiti SC","KaiTi","STKaiti","DFKai-SB",serif;font-size:1.22rem;letter-spacing:.05em;line-height:1.4;
+  background:none;border:2.5px solid transparent;border-radius:45% 55% 48% 52% / 55% 46% 54% 45%;
+  padding:2px 7px;cursor:pointer;color:var(--ink);transition:.12s
+}
+.tok.punct{cursor:default;padding:2px 1px}.tok:not(.punct):hover{background:var(--green-lt)}
+.tok.sel{border-color:var(--red);transform:rotate(-1deg)}.tok.hit{border-color:var(--ok);background:var(--ok-lt);transform:none}
+.tok.extra{border-color:var(--gray);background:#EEE;text-decoration:line-through;text-decoration-color:var(--red)}
+.circle-tip{font-size:.84rem;color:var(--gray);margin-bottom:6px}
+
+/* order */
+.order-bank,.order-answer{display:flex;gap:7px;flex-wrap:wrap;min-height:54px;border-radius:10px;padding:9px;margin:8px 0}
+.order-bank{background:var(--paper);border:1px solid var(--grid)}.order-answer{background:var(--blue-lt);border:1px dashed var(--blue)}
+.order-item{background:#fff;border:1.5px solid var(--grid);border-radius:9px;padding:8px 10px;cursor:pointer;font-size:.9rem;line-height:1.4}
+.order-item:hover{border-color:var(--green)}.order-item.chosen{border-color:var(--blue);background:#fff}
+.slot-label{font-size:.82rem;color:var(--gray);font-weight:700}
+
+/* multi select */
+.multi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:8px;margin-top:9px}
+.multi-opt{border:2px solid var(--grid);background:var(--paper);border-radius:10px;padding:10px;cursor:pointer;text-align:center;font-weight:700;color:var(--ink)}
+.multi-opt.sel{border-color:var(--red);background:var(--red-lt)}.multi-opt.hit{border-color:var(--ok);background:var(--ok-lt)}
+
+/* buttons */
+.btnrow{display:flex;gap:9px;margin-top:14px;flex-wrap:wrap}
+.btn{font-size:.96rem;font-weight:700;cursor:pointer;border:none;border-radius:10px;padding:9px 22px;transition:.15s}
+.btn.primary{background:var(--green);color:#fff}.btn.primary:hover{background:var(--green-dk)}
+.btn.ghost{background:#fff;color:var(--green);border:2px solid var(--green)}.btn.ghost:hover{background:var(--green-lt)}
+.btn.red{background:var(--red);color:#fff}.btn:disabled{opacity:.42;cursor:default}
+.navrow{display:flex;justify-content:space-between;gap:10px;margin-top:4px}
+
+/* hero */
+.hero{text-align:center;padding:50px 20px 42px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-top:18px}
+.hero .kai{font-family:"Kaiti SC","KaiTi","STKaiti",serif;font-size:2.45rem;color:var(--green-dk);letter-spacing:.09em;margin-bottom:7px}
+.hero .kai .r{color:var(--red)}.hero p{color:var(--gray);margin-bottom:22px}
+.startbox{max-width:540px;margin:0 auto;background:var(--paper);border:2px solid var(--green);border-radius:var(--radius);padding:19px}
+.startbox b{display:block;font-size:1.35rem;color:var(--green-dk);margin-bottom:5px}.startbox span{display:block;font-size:.88rem;color:var(--gray);margin-bottom:14px}
+.flow{margin-top:28px;font-size:.83rem;color:var(--gray)}.flow .motto{font-size:.78rem}
+
+/* result */
+.result .big{font-size:2rem;color:var(--green-dk);text-align:center;margin:8px 0}.result .stars{text-align:center;font-size:1.4rem;color:var(--gold);margin-bottom:6px}
+.result .msg{text-align:center;color:var(--gray);margin-bottom:18px}.recap{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px;margin:13px 0}
+.recap .rc{background:var(--paper);border:1px solid var(--grid);border-radius:10px;padding:10px 12px;font-size:.87rem}
+.recap .rc b{color:var(--green-dk)}.check li{margin-bottom:6px;list-style:none}.check li::before{content:"□ ";color:var(--green);font-weight:700}
+.stationdone{text-align:center;padding:28px 10px}.stationdone .em{font-size:2.1rem}.stationdone h3{color:var(--green-dk);margin:7px 0 4px}.stationdone p{color:var(--gray);margin-bottom:14px}
+
+/* glossary */
+.modal{position:fixed;inset:0;background:rgba(20,24,22,.45);z-index:50;display:none;padding:18px;align-items:center;justify-content:center}
+.modal.show{display:flex}.modalbox{background:#fff;width:min(680px,100%);max-height:82vh;overflow:auto;border-radius:16px;box-shadow:0 14px 50px rgba(0,0,0,.22);padding:20px}
+.modalhead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}.modalhead h2{color:var(--green-dk);font-size:1.2rem}
+.close{border:none;background:var(--red-lt);color:var(--red);border-radius:999px;padding:6px 11px;cursor:pointer}
+.termrow{padding:10px 0;border-bottom:1px dashed var(--grid)}.termrow b{color:var(--blue)}.termrow em{font-style:normal;color:var(--gray);font-size:.8rem}
+.speak{border:1px solid #A9C7B6;background:#fff;color:var(--green);border-radius:999px;padding:3px 8px;font-size:.75rem;cursor:pointer;margin-left:6px}
+
+footer{margin-top:25px;text-align:center;font-size:.74rem;color:var(--gray)}
+@media(max-width:720px){
+  html{font-size:15.5px}.card{padding:16px}.tok{font-size:1.1rem}
+  .notes table{font-size:.86rem}.notes th,.notes td{padding:6px}
+  .badge{margin-left:0}.topbar{align-items:flex-start}.navrow{flex-direction:column}
+  .navrow .btn{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="topbar" id="topbar" style="display:none">
+  <div>
+    <h1>材料议论文 · 闯关学堂</h1>
+    <div class="sub">先学要点，再做练习 · 一关一关说清道理</div>
+  </div>
+  <div class="badge">
+    <span class="pill lvl" id="stationPill">第 1 / 8 关</span>
+    <span class="pill star">⭐ 一次答对 <span id="starCount">0</span></span>
+    <button class="btn-small" id="btnGlossary">EN / 🔊 术语</button>
+    <button class="btn-small" id="btnQuit">↩ 重新开始</button>
+  </div>
+</div>
+
+<div class="stepper" id="stepper" style="display:none"></div>
+
+<div class="hero" id="home">
+  <div class="kai">材料议论文 · <span class="r">闯关学堂</span></div>
+  <p>八个关卡，21 题挑战。练的不是背模板，而是：看懂材料 → 想清道理 → 写出有说服力的文章。</p>
+  <div class="startbox">
+    <b>中学高级华文 · 通用复习</b>
+    <span>适合写前复习，也适合考前自测。答错可以改正，不计时。</span>
+    <button class="btn primary" id="btnStart">开始闯关 →</button>
+  </div>
+  <div class="flow">
+    核心路线：
+    <span class="motto">读题读材料</span>→
+    <span class="motto">七问想内容</span>→
+    <span class="motto">PEEL 说清楚</span>→
+    <span class="motto">检查扣题</span>
+  </div>
+</div>
+
+<div id="main" style="display:none">
+  <div class="card notes" id="notesCard"></div>
+  <div class="card quiz" id="quizCard"></div>
+  <div class="navrow">
+    <button class="btn ghost" id="btnPrev">← 上一关</button>
+    <button class="btn ghost" id="btnNext">下一关 →</button>
+  </div>
+</div>
+
+<div id="end" style="display:none"></div>
+
+<footer>材料议论文 · 完整复习笔记 · 课堂互动版</footer>
+</div>
+
+<div class="modal" id="glossary" aria-hidden="true">
+  <div class="modalbox">
+    <div class="modalhead">
+      <h2>术语小词典 · 不懂才打开</h2>
+      <button class="close" id="closeGlossary">关闭</button>
+    </div>
+    <div id="glossaryBody"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* =====================================================
+   八个关卡：严格依据材料议论文复习笔记
+===================================================== */
+const NOTES = [
+{
+ short:"① 认识文体",
+ title:"第一关　什么是材料议论文？先守住两条铁律",
+ html:`
+  <p>材料议论文：试卷先给你一段<span class="kw">材料</span>（新闻、现象、故事或观点），再要求你<span class="kw">根据材料含义</span>写议论文。</p>
+  <table>
+   <tr><th>两条铁律</th><th>你必须做到</th><th>踩线后果</th></tr>
+   <tr><td><b class="kw">根据材料</b></td><td>论点从材料来，不写背好的另一篇</td><td>抛开材料，另起炉灶</td></tr>
+   <tr><td><b class="kw">以议论为主</b></td><td>重点讲道理，故事只作例子</td><td>故事占大半篇＝以叙代议</td></tr>
+  </table>
+  <div class="callout">一句话：<b>材料决定你谈什么，议论决定你怎么证明。</b></div>`
+},
+{
+ short:"② 审题定向",
+ title:"第二关　审题：题目和材料都要读",
+ html:`
+  <p>审题约用 <b>5 分钟</b>。先处理题目，再处理材料。</p>
+  <h3>① 看题目要求</h3>
+  <p>圈出<span class="kw">限制词</span>（如“中学生”“如何”）和<span class="kw">关键词</span>（如“阅读习惯”“安全上网”）。</p>
+  <h3>② 看材料</h3>
+  <ul>
+   <li>找关键词、关键句；“但是／然而”后面常有重点。</li>
+   <li>看材料已经给了哪些<span class="kw">分论点方向</span>。</li>
+   <li>材料点到的重点，原则上<span class="kw">不能漏</span>。</li>
+  </ul>
+  <h3>③ 定中心论点 + 分题型</h3>
+  <table>
+   <tr><th>题型</th><th>你要先做什么</th></tr>
+   <tr><td><b>建议类</b>：“如何／怎样……”</td><td>想<span class="kw">谁应该做什么</span>，而且做法要具体</td></tr>
+   <tr><td><b>看法类</b>：“谈谈你的看法／是否同意”</td><td>先<span class="kw">明确立场</span>，再找支持立场的理由</td></tr>
+  </table>
+  <p>⚠ 看法类不能机械套“个人—学校—家庭—政府”。</p>`
+},
+{
+ short:"③ 七问思考",
+ title:"第三关　脑袋空白？按七问一步一步想",
+ html:`
+  <p>很多同学不是不会写，而是不知道<span class="kw">下一步该想什么</span>。七问就是你的思考路线：</p>
+  <table>
+   <tr><th>#</th><th>问自己</th><th>它帮你想什么</th></tr>
+   <tr><td>1</td><td><b>是什么？</b></td><td>文章到底在讨论什么</td></tr>
+   <tr><td>2</td><td><b>为什么？</b></td><td>原因为什么出现、为什么重要</td></tr>
+   <tr><td>3</td><td><b>谁负责？</b></td><td>建议类常从不同主体找分论点</td></tr>
+   <tr><td>4</td><td><b>怎么做？</b></td><td>把“努力”追问成具体行动</td></tr>
+   <tr><td>5</td><td><b>为什么有效？</b></td><td>建立做法和结果之间的逻辑</td></tr>
+   <tr><td>6</td><td><b>有什么例子？</b></td><td>找真实、能证明观点的例子</td></tr>
+   <tr><td>7</td><td><b>例子证明什么？</b></td><td>分析例子，回到分论点</td></tr>
+  </table>
+  <div class="logic"><span>是什么</span><i>→</i><span>为什么</span><i>→</i><span>谁负责</span><i>→</i><span>怎么做</span><i>→</i><span>为什么有效</span><i>→</i><span>例子</span><i>→</i><span>证明什么</span></div>
+  <p>高手不是想得越多越好，而是会删。<b>每写一句，问：“这句话在回答哪一个问题？”答不上来，就删。</b></p>`
+},
+{
+ short:"④ 分论点布局",
+ title:"第四关　分论点和文章结构：先搭骨架",
+ html:`
+  <p>文章总框架：<span class="motto">引论</span>→<span class="motto">本论</span>→<span class="motto">结论</span></p>
+  <table>
+   <tr><th>位置</th><th>任务</th></tr>
+   <tr><td>开头</td><td>简引材料／话题 → 提出中心论点</td></tr>
+   <tr><td>第二段</td><td>必要时简写问题的影响／危害，<b>不要抢走正文重心</b></td></tr>
+   <tr><td>本论</td><td><b class="kw">重点</b>：3～4 个分论点，每段完整论证</td></tr>
+   <tr><td>结尾</td><td>总结 → 重申 → 展望／呼吁</td></tr>
+  </table>
+  <p>一般程度学生：<b>写好 3 个分论点已经足够</b>。材料点到的角度必须写，材料没点到的角度才考虑扩展。</p>
+  <div class="callout"><b>建议类：</b>可问“谁应该行动？”；<b>看法类：</b>先表态，再用几个不同理由支持立场。</div>`
+},
+{
+ short:"⑤ 开头结尾",
+ title:"第五关　开头和结尾：短、准、扣题",
+ html:`
+  <h3>开头三步：引 → 析 → 提</h3>
+  <ol>
+   <li><b class="kw">引</b>：简要引材料，不可整段照抄。</li>
+   <li><b class="kw">析</b>：点出材料反映的问题／意义。</li>
+   <li><b class="kw">提</b>：亮出中心论点。</li>
+  </ol>
+  <p>开头通常控制在<span class="kw">四五行以内</span>。</p>
+  <p>可以从四种角度起笔：</p>
+  <div class="chips"><span class="chip">解释关键词</span><span class="chip">从重要性谈起</span><span class="chip">描述社会现象</span><span class="chip">指出现有问题</span></div>
+  <h3>结尾三步：总结 → 重申 → 展望／呼吁</h3>
+  <p>结尾要<span class="kw">回扣材料</span>，也要回应开头，不能突然换话题。</p>`
+},
+{
+ short:"⑥ PEEL 论证",
+ title:"第六关　PEEL：把一个分论点说清楚",
+ html:`
+  <table>
+   <tr><th>步骤</th><th>你在做什么</th><th>自问</th></tr>
+   <tr><td><b style="color:var(--blue)">P · Point</b></td><td>一句明确、具体的分论点</td><td>本段到底要证明什么？</td></tr>
+   <tr><td><b style="color:var(--green)">E · Explain</b></td><td>阐释关键词和逻辑</td><td>为什么？怎么发生？为什么有效？</td></tr>
+   <tr><td><b style="color:var(--gold)">E · Example</b></td><td>举真实、相关的例子</td><td>什么例子能证明？</td></tr>
+   <tr><td><b style="color:var(--purple)">L · Link</b></td><td>分析例子，回扣分论点</td><td>这个例子说明什么？</td></tr>
+  </table>
+  <div class="callout"><b>例子不是论证的终点，分析才是。</b> 只摆例子不分析，就是“有例无析”。</div>
+  <p>例子优先：自己／身边 → 校园 → 新闻 → 社会现象 → 名人。无法确认真实性时，不要编数字、编新闻、编名人经历。</p>`
+},
+{
+ short:"⑦ 高分表达",
+ title:"第七关　高分标准：说清楚，比说漂亮更重要",
+ html:`
+  <table>
+   <tr><th>方面</th><th>高分表现</th></tr>
+   <tr><td><b>内容</b></td><td>论点切合材料；推理一步一步站得住脚</td></tr>
+   <tr><td><b>语言</b></td><td>严谨、清楚、逻辑通顺、用词准确</td></tr>
+   <tr><td><b>篇幅</b></td><td>完整收尾；例子分析充分，不草草结束</td></tr>
+  </table>
+  <p>语言先求准确，再求生动。不要为了“像高华”硬塞成语和华丽句子。</p>
+  <ul>
+   <li>少用“一定、所有、绝对”等过强的词；可用“往往、大多、可能、一定程度上”。</li>
+   <li>一句话不要拖得太长；连接词要用对。</li>
+   <li>同一个意思不要换五种说法反复讲。</li>
+  </ul>
+  <p>好文章的标准：<span class="motto">论证有力</span><span class="motto">说理透彻</span></p>`
+},
+{
+ short:"⑧ 作文医生",
+ title:"第八关　作文医生：五大陷阱 + 考场流程",
+ html:`
+  <h3>五大失分陷阱</h3>
+  <ol>
+   <li><b class="kw">抛开材料</b>——写成背好的文章。</li>
+   <li><b class="kw">以叙代议</b>——故事占了大半篇。</li>
+   <li><b class="kw">有例无析</b>——例子堆砌，没有说明它证明什么。</li>
+   <li><b class="kw">论点转移／矛盾</b>——写着写着换了中心。</li>
+   <li><b class="kw">开头照抄材料</b>——浪费篇幅，也看不出概括能力。</li>
+  </ol>
+  <h3>考场三步</h3>
+  <div class="logic"><span>5～7 分钟：审题＋提纲</span><i>→</i><span>写作：引论＋PEEL＋结论</span><i>→</i><span>3 分钟：检查</span></div>
+  <p>检查重点：<b>论点扣材料吗？每段有分析吗？结尾有回扣吗？</b></p>`
+}
+];
+
+/* =====================================================
+   21题：16道四选一 + 5道交互题
+   16道MCQ答案分布 A/B/C/D 各4题
+===================================================== */
+const BANKS = [
+[
+ {t:"mcq",ans:0,q:"材料议论文最重要的第一条铁律是什么？",
+  opts:["论点必须从材料中来，不可另起炉灶","正文一定安排四个分论点才完整","每个分论点都必须引用名人故事","开头必须先解释题目所有关键词"],
+  why:"材料是文章的出发点。论点必须回应材料，不能把背好的文章硬套进去。",hint:"先看“材料议论文”里的“材料”两个字。"},
+ {t:"mcq",ans:2,q:"哪一种写法属于“以叙代议”？",
+  opts:["开头用两三句简要引出材料内容","本论举例之后继续分析其中道理","故事写了大半篇，真正议论很少","结尾总结分论点并再次回应题目"],
+  why:"议论文以说理为主。故事只能当论据，不能反过来占据文章大部分篇幅。",hint:"想一想：这篇文章的主角应该是“道理”还是“故事”？"},
+],
+[
+ {t:"mcq",ans:1,q:"题目“如何培养中学生的阅读习惯”属于哪一类？",
+  opts:["看法类，先判断阅读利大还是弊大","建议类，正文重点提出具体做法","记叙类，正文重点交代事情经过","说明类，正文重点解释阅读的定义"],
+  why:"题干出现“如何”，要回答“谁应该做什么，以及为什么有效”。",hint:"抓住题干里的“如何”。"},
+ {t:"mcq",ans:3,q:"材料已写“学生自律、学校教育、家庭引导”，列提纲时哪种处理最稳妥？",
+  opts:["只写学生一方，因为个人最重要","只写学校一方，避免分论点重复","改写政府媒体，显示角度更有新意","三方都要回应，再考虑合理扩展"],
+  why:"材料明确给出的重点角度原则上不能漏。扩展可以有，但先把材料点写完整。",hint:"材料明确给你的角度，是提示，不是可以随意丢掉的信息。"},
+ {t:"circle",
+  q:"请圈出这道题最需要注意的三个题干词：",
+  tokens:["根据以下材料","，","写一篇文章","，","谈谈","如何","培养","中学生","的","阅读习惯","。"],
+  targets:["如何","中学生","阅读习惯"],
+  why:"“如何”决定题型；“中学生”限制对象；“阅读习惯”限定核心话题。"},
+],
+[
+ {t:"mcq",ans:2,q:"七问中的“为什么这个做法有效？”主要帮助你写哪一部分？",
+  opts:["确定文章到底讨论的核心话题","寻找哪些人物应该承担责任","解释做法和结果之间的逻辑","准备一个可以放进文章的例子"],
+  why:"“为什么有效”正是论证中的 Explain：说明这个方法为何能产生你说的效果。",hint:"它不是找例子，而是在解释方法和结果之间的桥。"},
+ {t:"mcq",ans:0,q:"例子写完后，下一步最应该追问什么？",
+  opts:["这个例子到底证明了什么道理","还能不能再补两个类似的例子","能不能换一些更华丽的词语","要不要把故事细节写得更长一些"],
+  why:"例子之后一定要回答“So What”：这个例子说明什么？为什么能证明本段观点？",hint:"例子不是终点。想想第七问。"},
+ {t:"order",q:"把“七问思考流程”按笔记顺序排好：",
+  items:["是什么？","为什么？","谁负责？","怎么做？","为什么有效？","有什么例子？","例子证明什么？"],
+  shuffle:[3,0,5,2,6,1,4],
+  why:"完整思路是：是什么 → 为什么 → 谁负责 → 怎么做 → 为什么有效 → 有什么例子 → 例子证明什么。"},
+],
+[
+ {t:"mcq",ans:3,q:"看法类题目最不适合哪一种做法？",
+  opts:["先把自己的立场写得清楚明确","用几个不同理由支持自己的立场","根据材料关键词逐层说明理由","不先表态，直接套个人学校家庭政府"],
+  why:"看法类的第一任务是表态。不能不管题目就机械套主体框架。",hint:"建议类常问“谁做什么”，看法类先问“我怎么看”。"},
+ {t:"mcq",ans:1,q:"一般程度学生安排本论，哪一种做法最稳妥？",
+  opts:["分论点越多越好，尽量写到五个","写好三个清楚而不重复的分论点","每一段同时写两个不同中心思想","把材料原句分成三段直接加以改写"],
+  why:"笔记指出，一般同学写好三个分论点已经足够；关键是清楚、不重复、论证完整。",hint:"数量不是高分关键，完整和有逻辑才是。"},
+ {t:"multi",q:"材料说：学生要坚持培养兴趣，学校要创造阅读环境，家庭也要支持配合。哪些角度是材料明确给出的？",
+  opts:["学生自己","学校","家庭","政府部门","社交媒体平台"],targets:[0,1,2],
+  why:"学生、学校、家庭是材料明确点出的三方，应优先写入提纲。"},
+],
+[
+ {t:"mcq",ans:0,q:"开头三步“引—析—提”中的“引”应该怎样写？",
+  opts:["简要引述材料重点，不整段照抄","详细复制材料内容，确保没有遗漏","先连续举两个例子再说明主题","先写一句响亮口号吸引阅卷老师"],
+  why:"“引”只负责把材料或话题引进来，要简洁。整段照抄材料是失分陷阱。",hint:"“引”不是“抄”。"},
+ {t:"mcq",ans:2,q:"以下哪一种开头最容易失分？",
+  opts:["解释核心词语后马上提出中心","描述相关现象后简洁引出观点","照抄材料半页以后才提出观点","指出目前问题后直接表明立场"],
+  why:"开头照抄材料既浪费篇幅，也显示不出概括能力。",hint:"笔记的五大陷阱里有一条直接谈开头。"},
+ {t:"order",q:"把这个“阅读习惯”开头按“引—析—提”排好：",
+  items:[
+   "材料指出，中学生学业忙，也常受游戏和短视频吸引。",
+   "可见，培养阅读习惯不能只靠一句“多读书”，还要解决兴趣和环境问题。",
+   "因此，中学生、学校和家庭都应共同努力，帮助中学生养成阅读习惯。"
+  ],
+  shuffle:[2,0,1],
+  why:"先简引材料，再点出材料反映的问题，最后亮出中心论点。"},
+],
+[
+ {t:"mcq",ans:1,q:"以下哪一句最适合作为 PEEL 的 P（分论点）？",
+  opts:["青少年需要培养一些重要的能力","学校应教学生核实信息来源，减少误信","网络世界既有很多好处也有坏处","我们大家都应该一起努力解决问题"],
+  why:"好的 P 必须明确具体、扣题。第二项写清“谁做什么”和目标。",hint:"问自己：读完这一句，知道这一段要证明什么吗？"},
+ {t:"mcq",ans:3,q:"学生写“家长一定要以身作则。”然后直接写下一点，主要缺什么？",
+  opts:["缺少一个更吸引人的段落标题","缺少两个成语让语言更有文采","缺少更长的故事让内容更丰富","缺少为什么有效以及具体论证"],
+  why:"只有“要这样做”还不够。要解释为什么有效，并用例子和分析让观点站得住。",hint:"回想 PEEL 里的 E、E、L。"},
+ {t:"order",q:"把下面四句排成一段完整的 PEEL：",
+  items:[
+   "中学生应该持之以恒地培养阅读兴趣。",
+   "因为阅读兴趣要靠日积月累慢慢养成，不能只靠别人强迫。",
+   "例如，可以每天睡前读十五分钟，从自己喜欢的书开始。",
+   "坚持下来，阅读会从“要我读”慢慢变成“我要读”，习惯也更容易形成。"
+  ],
+  shuffle:[2,0,3,1],
+  why:"先提出观点，再解释为什么，然后举例，最后说明例子证明什么并回扣观点。"},
+],
+[
+ {t:"mcq",ans:2,q:"以下哪一种例子处理最可靠？",
+  opts:["编一个调查百分比，让论证看起来专业","杜撰名人故事，增加文章的说服力","用真实校园经历，并解释它证明什么","连续罗列三则新闻，但不作任何分析"],
+  why:"真实、相关、能分析的例子最有说服力。无法确认的数字、新闻和名人经历不能乱编。",hint:"真实比“看起来厉害”更重要。"},
+ {t:"mcq",ans:0,q:"哪一句议论文语言最稳妥？",
+  opts:["网络游戏往往会影响部分学生学习","网络游戏一定毁掉所有学生的前途","所有短视频都会让青少年失去自律","任何学生只要上网就肯定容易受骗"],
+  why:"议论文要严谨，不要轻易使用“一定、所有、任何、肯定”等绝对化词语。",hint:"哪一句给事实留下了合理余地？"},
+],
+[
+ {t:"mcq",ans:3,q:"题目问“如何培养阅读习惯”，学生大篇幅写“不阅读以后找不到工作”，主要病在哪里？",
+  opts:["例子太少，所以文章内容不够丰富","语言太简单，所以不像高级华文","结尾太短，所以没有完整收束文章","重心写偏，主要回答了为什么要读"],
+  why:"题目问“怎样培养”，正文就要把力量放在方法上；阅读好处只能辅助，不能喧宾夺主。",hint:"先看题目问的是“如何”还是“为什么”。"},
+ {t:"mcq",ans:1,q:"交卷前，哪一组最值得优先检查？",
+  opts:["成语够不够多，句子够不够华丽","分论点扣材料、例子有分析、结尾回扣","有没有写到四个分论点和三个名人","每一段字数是否完全一样长短整齐"],
+  why:"检查首先看有没有答对题、论证是否完整、结尾是否回扣，而不是形式上的华丽或整齐。",hint:"内容正确和逻辑完整优先于语言装饰。"},
+]
+];
+
+const GLOSSARY = [
+ ["材料议论文","source-based argumentative writing","根据给出的材料来提出观点并进行论证的文章。"],
+ ["论点","claim / point","你要证明的观点。分论点就是一段要证明的小观点。"],
+ ["论据","evidence","用来支持论点的事实、例子、现象等。"],
+ ["阐释","explain / elaboration","把“为什么”“怎样发生”“为什么有效”说清楚。"],
+ ["回扣","link back","在段尾把例子和分析重新连回本段观点或题目。"],
+ ["可操作","practical / actionable","不是口号，而是现实中能够真正执行的具体做法。"],
+ ["以叙代议","story replaces reasoning","故事写很多，但真正说理很少。"],
+ ["有例无析","example without analysis","举了例子，却没有说明这个例子证明什么。"]
+];
+
+const TOTAL = BANKS.reduce((n,b)=>n+b.length,0);
+let station=0, taskIndex=0, stars=0, solved=0;
+const doneStations=new Set();
+const solvedTasks=new Set();
+const wrongSeen=new Set();
+
+const home=document.getElementById("home");
+const main=document.getElementById("main");
+const end=document.getElementById("end");
+const topbar=document.getElementById("topbar");
+const stepper=document.getElementById("stepper");
+const notesCard=document.getElementById("notesCard");
+const quizCard=document.getElementById("quizCard");
+const starCount=document.getElementById("starCount");
+const stationPill=document.getElementById("stationPill");
+const btnPrev=document.getElementById("btnPrev");
+const btnNext=document.getElementById("btnNext");
+
+function taskKey(){return `${station}-${taskIndex}`}
+
+function start(){
+ home.style.display="none";end.style.display="none";
+ topbar.style.display="flex";stepper.style.display="flex";main.style.display="block";
+ station=0;taskIndex=0;stars=0;solved=0;
+ doneStations.clear();solvedTasks.clear();wrongSeen.clear();
+ starCount.textContent="0";
+ renderStepper();renderStation();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function renderStepper(){
+ stepper.innerHTML="";
+ NOTES.forEach((n,i)=>{
+  const b=document.createElement("button");
+  b.className="step"+(i===station?" cur":"")+(doneStations.has(i)?" done":"");
+  b.innerHTML=`<b>${i+1}</b>${n.short.replace(/^[①-⑧]\s*/,"")}`;
+  b.disabled=!(i===station||doneStations.has(i));
+  b.addEventListener("click",()=>{if(!b.disabled){station=i;taskIndex=0;renderStepper();renderStation();window.scrollTo({top:0,behavior:"smooth"})}});
+  stepper.appendChild(b);
+ });
+ stationPill.textContent=`第 ${station+1} / 8 关`;
+}
+
+function renderStation(){
+ const n=NOTES[station];
+ notesCard.innerHTML=`<span class="card-tag">学习要点</span><h2>${n.title}</h2>${n.html}`;
+ taskIndex=0;
+ renderTask();
+ updateNav();
+}
+
+function overallTaskNumber(){
+ let n=0;
+ for(let i=0;i<station;i++) n+=BANKS[i].length;
+ return n+taskIndex+1;
+}
+
+function renderTask(){
+ if(taskIndex>=BANKS[station].length){renderStationDone();return}
+ const t=BANKS[station][taskIndex];
+ const qn=overallTaskNumber();
+ quizCard.innerHTML=`<span class="card-tag red">马上练</span><span class="qcount">本关 ${taskIndex+1}/${BANKS[station].length} · 总进度 ${qn}/${TOTAL}</span><div class="qtext">${t.q}</div>`;
+ if(t.t==="mcq") renderMCQ(t);
+ if(t.t==="circle") renderCircle(t);
+ if(t.t==="order") renderOrder(t);
+ if(t.t==="multi") renderMulti(t);
+}
+
+function markWrong(key){wrongSeen.add(key)}
+function markSolved(key){
+ if(solvedTasks.has(key)) return;
+ solvedTasks.add(key);solved++;
+ if(!wrongSeen.has(key)){stars++;starCount.textContent=stars}
+}
+
+function goodFeedback(text,en=""){
+ return `<div class="fb good show"><b class="t">✓ 想对了</b>${text}${en?`<span class="fb-en">${en}</span>`:""}</div>`;
+}
+function badFeedback(text){
+ return `<div class="fb bad show"><b class="t">还没对，再试一次</b>${text}</div>`;
+}
+function nextTaskButton(){
+ const b=document.createElement("button");b.className="btn primary";b.textContent="下一题 →";
+ b.onclick=()=>{taskIndex++;renderTask();window.scrollTo({top:quizCard.offsetTop-12,behavior:"smooth"})};
+ return b;
+}
+
+function renderMCQ(t){
+ const key=taskKey();
+ const opts=document.createElement("div");opts.className="opts";
+ t.opts.forEach((o,i)=>{
+  const b=document.createElement("button");b.className="opt";b.dataset.l=String.fromCharCode(65+i);b.innerHTML=o;
+  b.onclick=()=>{
+   if(i===t.ans){
+    b.classList.add("right");opts.querySelectorAll("button").forEach(x=>x.disabled=true);
+    markSolved(key);
+    const fb=document.createElement("div");fb.innerHTML=goodFeedback(t.why,station===5?"PEEL: Point → Explain → Example → Link / So What?":"");quizCard.appendChild(fb.firstElementChild);
+    const row=document.createElement("div");row.className="q-actions";row.appendChild(nextTaskButton());quizCard.appendChild(row);
+   }else{
+    markWrong(key);b.classList.add("wrong");b.disabled=true;
+    let old=quizCard.querySelector(".fb.bad");if(old)old.remove();
+    const fb=document.createElement("div");fb.innerHTML=badFeedback(t.hint||"再回到上面的学习要点找线索。");quizCard.appendChild(fb.firstElementChild);
+   }
+  };opts.appendChild(b);
+ });
+ quizCard.appendChild(opts);
+}
+
+function renderCircle(t){
+ const key=taskKey();
+ const tip=document.createElement("div");tip.className="circle-tip";tip.textContent="点击词语，用红笔圈起来；可以再次点击取消。";
+ const paper=document.createElement("div");paper.className="paper-line";
+ t.tokens.forEach(tok=>{
+  if(/[，。；？！、]/.test(tok)){const s=document.createElement("span");s.className="tok punct";s.textContent=tok;paper.appendChild(s);return}
+  const b=document.createElement("button");b.className="tok";b.textContent=tok;b.dataset.tok=tok;
+  b.onclick=()=>b.classList.toggle("sel");paper.appendChild(b);
+ });
+ const row=document.createElement("div");row.className="q-actions";
+ const check=document.createElement("button");check.className="btn primary";check.textContent="检查圈词";
+ check.onclick=()=>{
+  const selected=[...paper.querySelectorAll(".tok.sel")].map(x=>x.dataset.tok);
+  const ok=selected.length===t.targets.length && t.targets.every(x=>selected.includes(x));
+  paper.querySelectorAll(".tok").forEach(x=>{x.classList.remove("hit","extra")});
+  if(ok){
+   paper.querySelectorAll(".tok.sel").forEach(x=>x.classList.add("hit"));
+   check.disabled=true;markSolved(key);
+   let old=quizCard.querySelector(".fb");if(old)old.remove();
+   const fb=document.createElement("div");fb.innerHTML=goodFeedback(t.why,"Keywords decide the task, target group and topic.");quizCard.appendChild(fb.firstElementChild);
+   row.appendChild(nextTaskButton());
+  }else{
+   markWrong(key);
+   paper.querySelectorAll(".tok.sel").forEach(x=>{if(!t.targets.includes(x.dataset.tok))x.classList.add("extra")});
+   let old=quizCard.querySelector(".fb");if(old)old.remove();
+   const fb=document.createElement("div");fb.innerHTML=badFeedback("想三件事：题目问什么？写谁？讨论什么核心话题？");quizCard.appendChild(fb.firstElementChild);
+  }
+ };
+ row.appendChild(check);quizCard.append(tip,paper,row);
+}
+
+function renderOrder(t){
+ const key=taskKey();
+ const bank=document.createElement("div");bank.className="order-bank";
+ const ans=document.createElement("div");ans.className="order-answer";
+ const lab1=document.createElement("div");lab1.className="slot-label";lab1.textContent="待选择（按你认为正确的顺序点击）";
+ const lab2=document.createElement("div");lab2.className="slot-label";lab2.textContent="你的顺序：";
+ const order=t.shuffle.map(i=>t.items[i]);
+ order.forEach(txt=>{
+  const b=document.createElement("button");b.className="order-item";b.textContent=txt;b.dataset.txt=txt;
+  b.onclick=()=>{b.classList.add("chosen");ans.appendChild(b)};
+  bank.appendChild(b);
+ });
+ ans.addEventListener("click",e=>{const b=e.target.closest(".order-item");if(b){b.classList.remove("chosen");bank.appendChild(b)}});
+ const row=document.createElement("div");row.className="q-actions";
+ const check=document.createElement("button");check.className="btn primary";check.textContent="检查顺序";
+ const reset=document.createElement("button");reset.className="btn ghost";reset.textContent="重新排列";
+ reset.onclick=()=>{[...ans.querySelectorAll(".order-item")].forEach(b=>{b.classList.remove("chosen");bank.appendChild(b)})};
+ check.onclick=()=>{
+  const picked=[...ans.querySelectorAll(".order-item")].map(x=>x.dataset.txt);
+  if(picked.length!==t.items.length){
+   markWrong(key);showOneBad("还没有排完。把所有卡片都放到“你的顺序”里。");return;
+  }
+  const ok=picked.every((x,i)=>x===t.items[i]);
+  if(ok){
+   markSolved(key);check.disabled=true;reset.disabled=true;[...ans.querySelectorAll("button")].forEach(b=>b.disabled=true);
+   removeFB();const fb=document.createElement("div");fb.innerHTML=goodFeedback(t.why);quizCard.appendChild(fb.firstElementChild);row.appendChild(nextTaskButton());
+  }else{
+   markWrong(key);showOneBad("顺序还不对。回到学习要点，看每一步是在什么时候出现的。");reset.onclick();
+  }
+ };
+ row.append(check,reset);quizCard.append(lab1,bank,lab2,ans,row);
+}
+
+function renderMulti(t){
+ const key=taskKey();
+ const grid=document.createElement("div");grid.className="multi-grid";
+ t.opts.forEach((o,i)=>{const b=document.createElement("button");b.className="multi-opt";b.textContent=o;b.dataset.i=i;b.onclick=()=>b.classList.toggle("sel");grid.appendChild(b)});
+ const row=document.createElement("div");row.className="q-actions";
+ const check=document.createElement("button");check.className="btn primary";check.textContent="检查选择";
+ check.onclick=()=>{
+  const picked=[...grid.querySelectorAll(".multi-opt.sel")].map(x=>+x.dataset.i);
+  const ok=picked.length===t.targets.length&&t.targets.every(x=>picked.includes(x));
+  grid.querySelectorAll(".multi-opt").forEach(x=>x.classList.remove("hit"));
+  if(ok){
+   markSolved(key);check.disabled=true;grid.querySelectorAll("button").forEach(x=>x.disabled=true);
+   t.targets.forEach(i=>grid.querySelector(`[data-i="${i}"]`).classList.add("hit"));
+   removeFB();const fb=document.createElement("div");fb.innerHTML=goodFeedback(t.why,"Use the angles explicitly given by the material first.");quizCard.appendChild(fb.firstElementChild);row.appendChild(nextTaskButton());
+  }else{
+   markWrong(key);showOneBad("材料原句点到了哪几方？不要把材料没有写的主体也当成“必须写”。");
+  }
+ };
+ row.appendChild(check);quizCard.append(grid,row);
+}
+
+function removeFB(){quizCard.querySelectorAll(".fb").forEach(x=>x.remove())}
+function showOneBad(msg){removeFB();const d=document.createElement("div");d.innerHTML=badFeedback(msg);quizCard.appendChild(d.firstElementChild)}
+
+function renderStationDone(){
+ doneStations.add(station);renderStepper();
+ quizCard.innerHTML=`<div class="stationdone"><div class="em">✅</div><h3>第 ${station+1} 关完成</h3><p>${station===7?"八关都走完了。现在做最后检查。":"先把这一关的口诀在脑中说一次，再继续。"}</p></div>`;
+ const row=document.createElement("div");row.className="btnrow";row.style.justifyContent="center";
+ if(station<7){
+  const b=document.createElement("button");b.className="btn primary";b.textContent="进入下一关 →";b.onclick=()=>{station++;taskIndex=0;renderStepper();renderStation();window.scrollTo({top:0,behavior:"smooth"})};row.appendChild(b);
+ }else{
+  const b=document.createElement("button");b.className="btn primary";b.textContent="查看闯关结果 →";b.onclick=showEnd;row.appendChild(b);
+ }
+ quizCard.appendChild(row);updateNav();
+}
+
+function updateNav(){
+ btnPrev.disabled=station===0;
+ btnPrev.onclick=()=>{if(station>0){station--;taskIndex=0;renderStepper();renderStation();window.scrollTo({top:0,behavior:"smooth"})}};
+ btnNext.disabled=!doneStations.has(station)||station===7;
+ btnNext.onclick=()=>{if(doneStations.has(station)&&station<7){station++;taskIndex=0;renderStepper();renderStation();window.scrollTo({top:0,behavior:"smooth"})}};
+}
+
+function showEnd(){
+ main.style.display="none";stepper.style.display="none";end.style.display="block";
+ stationPill.textContent="复习完成";
+ const pct=Math.round(stars/TOTAL*100);
+ let msg=pct>=85?"审题和论证骨架已经很稳，可以进入真题练习。":pct>=65?"主要框架已经掌握，建议重做答错较多的关卡。":"先别急着写整篇作文，再走一次七问和 PEEL。";
+ end.innerHTML=`<div class="card result">
+  <span class="card-tag">闯关结果</span>
+  <div class="big">21 / 21 题已完成</div>
+  <div class="stars">⭐ 一次答对 ${stars} / ${TOTAL}（${pct}%）</div>
+  <div class="msg">${msg}</div>
+  <div class="recap">
+   <div class="rc"><b>审题</b><br>题目关键词＋材料方向＋题型</div>
+   <div class="rc"><b>想内容</b><br>七问：是什么→为什么→谁→怎么做→为什么有效→例子→证明什么</div>
+   <div class="rc"><b>写本论</b><br>PEEL：观点→阐释→例子→分析回扣</div>
+   <div class="rc"><b>检查</b><br>扣材料｜有分析｜不跑题｜语言清楚</div>
+  </div>
+  <h3 style="color:var(--green-dk);margin:14px 0 8px">交卷前最后检查</h3>
+  <ul class="check">
+   <li>题目问什么，我就重点回答什么。</li>
+   <li>材料明确给出的重点角度，我没有漏。</li>
+   <li>中心论点清楚，分论点不重复、不转移。</li>
+   <li>每段不只有“观点＋例子”，还有为什么和例子分析。</li>
+   <li>真实例子优先，不乱编数据、新闻和名人经历。</li>
+   <li>结尾回扣材料和中心，没有突然换话题。</li>
+   <li>语言准确、清楚，不靠堆成语和绝对化词语撑场面。</li>
+  </ul>
+  <h3 style="color:var(--green-dk);margin:14px 0 8px">平时怎么练</h3>
+  <div class="chips">
+   <span class="chip">引—析—提开头专项</span>
+   <span class="chip">七问 3 分钟口头练</span>
+   <span class="chip">原因→影响→建议→例子心智图</span>
+   <span class="chip">真实例子库</span>
+   <span class="chip">让 AI 只提问、不直接给答案</span>
+  </div>
+  <div class="btnrow" style="justify-content:center;margin-top:20px">
+   <button class="btn primary" onclick="start()">重新闯关</button>
+   <button class="btn ghost" id="resultGlossary">再看术语词典</button>
+  </div>
+ </div>`;
+ document.getElementById("resultGlossary").onclick=openGlossary;
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function openGlossary(){
+ const body=document.getElementById("glossaryBody");body.innerHTML="";
+ GLOSSARY.forEach(([zh,en,def])=>{
+  const row=document.createElement("div");row.className="termrow";
+  row.innerHTML=`<b>${zh}</b>　<em>${en}</em><button class="speak" data-speak="${def.replace(/"/g,"&quot;")}">🔊 中文</button><br>${def}`;
+  body.appendChild(row);
+ });
+ const modal=document.getElementById("glossary");modal.classList.add("show");modal.setAttribute("aria-hidden","false");
+}
+function closeGlossary(){const modal=document.getElementById("glossary");modal.classList.remove("show");modal.setAttribute("aria-hidden","true");if("speechSynthesis" in window)speechSynthesis.cancel()}
+
+document.getElementById("btnStart").onclick=start;
+document.getElementById("btnQuit").onclick=()=>{if(confirm("要重新开始吗？当前进度会清空。")){main.style.display="none";end.style.display="none";topbar.style.display="none";stepper.style.display="none";home.style.display="block";window.scrollTo({top:0,behavior:"smooth"})}};
+document.getElementById("btnGlossary").onclick=openGlossary;
+document.getElementById("closeGlossary").onclick=closeGlossary;
+document.getElementById("glossary").onclick=e=>{if(e.target.id==="glossary")closeGlossary()};
+document.addEventListener("click",e=>{
+ const s=e.target.closest("[data-speak]");if(!s)return;
+ if(!("speechSynthesis" in window)){alert("这个浏览器暂不支持语音朗读。");return}
+ speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(s.dataset.speak);u.lang="zh-CN";u.rate=.9;speechSynthesis.speak(u)
+});
+</script>
+</body>
+</html>
