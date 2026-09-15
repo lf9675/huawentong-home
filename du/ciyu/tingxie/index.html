@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-SG">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-width=1.0">
+    <title>新加坡中学华文 - 自动听写系统</title>
+    <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; display: flex; height: 100vh; overflow: hidden; color: #333; }
+        
+        /* 左侧菜单栏样式 */
+        .sidebar { width: 350px; background: white; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; transition: transform 0.4s ease; z-index: 100; }
+        .sidebar.hidden { transform: translateX(-100%); position: absolute; height: 100%; }
+        .sidebar h2 { color: #2c3e50; margin-top: 0; font-size: 22px; }
+        .menu-container { flex: 1; overflow-y: auto; border: 1px solid #eee; padding: 10px; border-radius: 5px; background: #fafafa; }
+        
+        /* 树状菜单样式 */
+        .tree-node { margin-bottom: 5px; }
+        .tree-node label { cursor: pointer; display: flex; align-items: center; padding: 4px 0; font-weight: bold; color: #34495e; }
+        .tree-node label:hover { background-color: #ecf0f1; }
+        .tree-children { margin-left: 25px; display: none; border-left: 1px dashed #bdc3c7; padding-left: 10px; }
+        .tree-node.expanded > .tree-children { display: block; }
+        
+        .unit-node label { font-weight: normal; color: #2980b9; }
+        .lesson-node label { font-weight: normal; color: #7f8c8d; font-size: 14px; }
+        .toggle-icon { display: inline-block; width: 16px; text-align: center; margin-right: 5px; cursor: pointer; color: #7f8c8d; font-size: 12px; }
+
+        /* 控制按钮 */
+        .controls { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+        button { padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; width: 100%; }
+        #start-btn { background-color: #27ae60; color: white; }
+        #start-btn:hover { background-color: #219150; }
+        #stop-btn { background-color: #e74c3c; color: white; }
+        #stop-btn:hover { background-color: #c0392b; }
+
+        /* 主显示区 */
+        .main-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f4f7f6; position: relative; padding: 20px; transition: margin-left 0.4s ease; }
+        
+        /* 顶部工具栏 (含汉堡按钮和进度条) */
+        .top-bar { position: absolute; top: 20px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: center; }
+        #toggle-menu-btn { background: white; color: #2c3e50; border: 1px solid #bdc3c7; width: auto; padding: 8px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: none; }
+        #toggle-menu-btn:hover { background: #ecf0f1; }
+        #progress { font-size: 18px; font-weight: bold; color: #8e44ad; background: white; padding: 8px 20px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        /* 听写与比较区域 */
+        #status { font-size: 24px; color: #2980b9; font-weight: bold; text-align: center; margin-bottom: 30px; }
+        
+        #display-area { text-align: center; display: none; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        #word-text { font-size: 36px; color: #34495e; margin-bottom: 20px; font-weight: bold; letter-spacing: 2px; }
+        #character-container { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .hanzi-box { width: 150px; height: 150px; border: 2px dashed #bdc3c7; border-radius: 10px; background: #fafafa; }
+        
+        /* 比较学习区特有样式 */
+        #comparison-area { display: none; text-align: center; background: #fffde7; padding: 40px 60px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border: 2px solid #f1c40f; }
+        .compare-title { font-size: 28px; color: #d35400; margin-bottom: 30px; font-weight: bold; }
+        .compare-group { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+        .compare-word { font-size: 56px; font-weight: bold; color: #2c3e50; letter-spacing: 5px; background: white; padding: 10px 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .highlight-char { color: #e74c3c; } /* 共用字标红 */
+    </style>
+</head>
+<body>
+
+    <div class="sidebar" id="sidebar">
+        <h2>📚 选择听写范围</h2>
+        <p style="font-size:13px; color:#666; margin-top:0;">点击 <b>[+]</b> 展开层级，勾选复选框进行选择。</p>
+        
+        <div class="menu-container" id="menu-container">
+            </div>
+        
+        <div class="controls">
+            <button id="start-btn">▶ 开始听写</button>
+            <button id="stop-btn">⏹ 暂停 / 重置</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <button id="toggle-menu-btn">≡ 展开菜单</button>
+            <div id="progress" style="display:none;">进度: 0 / 0</div>
+        </div>
+
+        <div id="status">👈 请在左侧勾选想要听写的课文，然后点击“开始”</div>
+        
+        <div id="display-area">
+            <div id="word-text"></div>
+            <div id="character-container"></div>
+        </div>
+
+        <div id="comparison-area">
+            <div class="compare-title">✨ 发现形近/同部件字，请比较学习！ ✨</div>
+            <div class="compare-group" id="compare-group"></div>
+        </div>
+    </div>
+
+    <script>
+        // 1. 完整词语数据源
+        const vocabData = {
+            "中一": {
+                "单元一": {
+                    "第一课": ["淘气","惹","两肋插刀","科技","来者不拒","口头禅","小事一桩","人缘","红润","直率","沉默寡言","争辩","冤枉","推荐"],
+                    "第二课": ["捣乱","瞬间","兴致勃勃","粘","黏糊糊","蛋液","狼狈","讥讽","口吻","赌气","嚷","拉扯","手足无措"],
+                    "第三课": ["审案","律师","拔刀相助","振振有词","心虚","哑口无言","判决","错误","泄气"],
+                    "第四课": ["皱纹","哄堂大笑","标准","金属","绰号","离谱","叛逆","发誓","牢记","磨","持之以恒","鸦雀无声"]
+                },
+                "单元二": {
+                    "第一课": ["葡萄","象征","风俗","辞旧迎新","燃放","翩翩起舞","瓶瓶罐罐","厄运","前夕","预示","兆头","农历","忙碌","遥远","恭敬","亲戚","诸事大吉","元旦"],
+                    "第二课": ["贼","圣诞","结婚","嫁","视讯","酷","承诺","剃","蒸腾","佳肴","叽叽喳喳","缺席","悦耳"],
+                    "第三课": ["饺子","剁肉","馅料","莫名其妙","偷龙转凤"],
+                    "第四课": ["天涯海角","分割","嚼","溢","盏"]
+                },
+                "单元三": {
+                    "第一课": ["魅力","悠久","遗产","巴刹","饱经风霜","同胞","融合","浓郁","皇宫","城堡","时尚","彩绘","探索","娘惹","拍摄"],
+                    "第二课": ["镶嵌","横梁","玻璃","循环","映衬","山谷","盎然","株","松懈","领略","设施"],
+                    "第三课": ["殖民地","投降","棕色","氧化","里程碑","尤其","发掘"],
+                    "第四课": ["擅长","紧凑","打道回府","杂技","甩","薄","不偏不倚","咖喱","沾","泡沫","赞不绝口"]
+                },
+                "单元四": {
+                    "第一课": ["一寸光阴一寸金","一诺千金","言出必行","起码","开卷有益","新颖","戏剧","工作坊","尴尬","维护","友谊","一帆风顺","有效","策略","嘉宾","辅导员"],
+                    "第二课": ["赖床","辫子","恐惧","夹袄","滋味","催促","哀求","挪窝","藤鞭","抡","挨打","狼狈","女佣","雨篷","缘故","泪痕","嗓子眼","包袱"],
+                    "第三课": ["人人皆晓","讲究","何必","当铺","记账","亏损","撇","慢条斯理","起航","一命呜呼","称赞"],
+                    "第四课": ["寓言","纯金","帐篷","徒劳无功","缓慢","机械","蓬头垢面","气馁","颤","梦寐以求","踪影","乞丐"]
+                },
+                "单元五": {
+                    "第一课": ["剩","牙膏","橡皮擦","薯条","番茄酱","偶尔","晋级","企业"],
+                    "第二课": ["牧场","潜水","腾空而起","收拢","艘","屁股","翘","潜水艇","悠然自得","大白鲨","袭击","安然无恙","牙齿","一马平川","浑身","颁布","手势","泛"],
+                    "第三课": ["拜访","中央","漫步","绞尽脑汁","华侨","由衷","摩天大楼","独树一帜","金字塔","抨击","挫折"],
+                    "第四课": ["大名鼎鼎","书籍","传播","胶泥","材料","工匠","雕刻","凸起","铁框","蜡","熔化","窍门","文稿","陷入","飞跃"]
+                },
+                "单元六": {
+                    "第一课": ["油漆","栏杆","拆卸","宿舍","凭","欣慰","订购","攒钱","有朝一日","范围","特殊","警惕","不堪设想","均衡","脂肪"],
+                    "第二课": ["截至","行驶","延误","稳定","漏夜","轨道","凌晨","就绪","隧道","扫描","顺畅","投入","全力以赴","职业","故障","岗位","奉献"],
+                    "第三课": ["新谣","芝麻","琐事","朗朗上口","繁荣昌盛","平凡","光芒","埋葬","火炬","贸易","间隙","撤离","倒塌","威胁","镇静","移民","牺牲","家喻户晓","挑战"]
+                }
+            },
+            "中二": {
+                "单元一": {
+                    "第一课": ["疲惫","犹豫","不分青红皂白","内疚","不妨","匿名","监督","窒息","代沟","上瘾","疏远","迎刃而解"],
+                    "第二课": ["崇拜","爱不释手","碰钉子","泼冷水","抽屉","精疲力竭","衰老","抑郁","启齿","扪心自问","害羞","懊恼","伺机","疙瘩","心不在焉","破天荒","仓促"],
+                    "第三课": ["战战兢兢","钥匙","锁","安抚","何况","和事佬","惊讶","斑","缠绕","搂"],
+                    "第四课": ["臃肿","庸俗","枚","戒指","身躯","姿势","熬","打瞌睡","蹒跚","惺忪","光辉"]
+                },
+                "单元二": {
+                    "第一课": ["捐款","拯救","优惠","券","四肢","敏捷","穿梭","辨识","馋","捧跤","凶猛"],
+                    "第二课": ["光泽","缩","枕","啾啾","仰","凝望","鸟笼","隔","惩罚","畏罪潜逃","喵","衔","搞","谴责","估计"],
+                    "第三课": ["光彩夺目","小心翼翼","褐","盘旋","愣","傻","啼","鸣","面面相觑","揪心"],
+                    "第四课": ["茂盛","扒开","娇嫩","掀开","啄","俯下","蹦来蹦去","涂上颜色","绒毛","呼唤","肩头"]
+                },
+                "单元三": {
+                    "第一课": ["因素","水喉","艰巨","昂贵","消耗","干旱","扩大","蓄水池","洗澡","浴室","趋势"],
+                    "第二课": ["媒体","塑料","吨","廉价","风靡","垄断","提供","危害","焚烧","烟尘","毒","土壤","遏制","税","倡导","逐渐","机构","充斥","妥善","煞费苦心"],
+                    "第三课": ["统计","大型","日新月异","泛滥","寿命","途径","缺乏","亿","遗憾","谨慎","渗透"],
+                    "第四课": ["宣布","狩猎","聘请","啃","疾病","锐减","糟蹋","毁灭","罪魁祸首","研究","目睹","违背","拼搏"]
+                },
+                "单元四": {
+                    "第一课": ["自卑","羡慕","诱惑","毅力","茫然","魂不守舍","睡眠","闪烁其词","嫌","逼","霸道","怄气","烹饪","符合"],
+                    "第二课": ["憋","委婉","吼","反驳","缝","吭声","掩","走廊","熄灯","诡异","蜷缩","瑟瑟","恐怖","通宵","惊悚"],
+                    "第三课": ["脖子","瞥","炙","社交媒体","掩饰","拘束","嘈杂","局促","沮丧","睿智"],
+                    "第四课": ["搓澡","涩涩","筹划","拾掇","颔首","棉","掏","崭新","喃喃","涌动","县","捅","珍藏"]
+                },
+                "单元五": {
+                    "第一课": ["简陋","政府","开辟","小贩","宗教","综合","诊疗所","经济","富裕","变迁","障碍","驰名","屡次","荣誉"],
+                    "第二课": ["接触","翠绿","心旷神怡","曝晒","林荫大道","樟宜","耸立","叮咛","温馨","欣赏","粗糙","婆娑","翱翔","同甘共苦","茁壮","接纳"],
+                    "第三课": ["妻子","患","失智症","寻找","流逝","叮嘱","嬉戏","俏皮","惬意","烦躁"],
+                    "第四课": ["矿泉水","竹竿","一缕","涓涓","缸","舀","滋养","黯然","漂泊","惆怅","跋涉","尘封","岂有此理"]
+                },
+                "单元六": {
+                    "第一课": ["丝绸","陆地","奢侈","瓷器","仪式","秉持","枢纽","港口","勾勒","高瞻远瞩"],
+                    "第二课": ["可谓","岛屿","海峡","历史","钱币","区域","汇集","赋予","椰浆饭","黄姜饭","初来乍到","啧啧称奇","发芽","兼容并蓄","携手","辉煌","海纳百川","求同存异"],
+                    "第三课": ["砍","无远弗届","真伪","陷阱","步伐","询问","人云亦云","免疫","凝聚力"],
+                    "第四课": ["缔造","小溪","硕果","美洲","湮灭","尘埃","建筑","震惊","辣椒","变革","灿烂","翻天覆地","停滞"]
+                }
+            }
+        };
+
+        // 2. 动态生成树状菜单
+        const menuContainer = document.getElementById('menu-container');
+        for (const level in vocabData) {
+            const levelDiv = document.createElement('div');
+            levelDiv.className = 'tree-node expanded';
+            levelDiv.innerHTML = `
+                <label><span class="toggle-icon">[-]</span><input type="checkbox" data-level="${level}" class="level-cb"> ${level}</label>
+                <div class="tree-children"></div>
+            `;
+            const levelChildren = levelDiv.querySelector('.tree-children');
+            for (const unit in vocabData[level]) {
+                const unitDiv = document.createElement('div');
+                unitDiv.className = 'tree-node unit-node';
+                unitDiv.innerHTML = `
+                    <label><span class="toggle-icon">[+]</span><input type="checkbox" data-level="${level}" data-unit="${unit}" class="unit-cb"> ${unit}</label>
+                    <div class="tree-children"></div>
+                `;
+                const unitChildren = unitDiv.querySelector('.tree-children');
+                for (const lesson in vocabData[level][unit]) {
+                    const words = vocabData[level][unit][lesson];
+                    const lessonDiv = document.createElement('div');
+                    lessonDiv.className = 'tree-node lesson-node';
+                    lessonDiv.innerHTML = `<label><span class="toggle-icon" style="visibility:hidden;"></span><input type="checkbox" class="lesson-cb" value='${JSON.stringify(words)}'> ${lesson} (${words.length}词)</label>`;
+                    unitChildren.appendChild(lessonDiv);
+                }
+                levelChildren.appendChild(unitDiv);
+            }
+            menuContainer.appendChild(levelDiv);
+        }
+
+        // 菜单交互逻辑
+        document.querySelectorAll('.toggle-icon').forEach(icon => {
+            icon.addEventListener('click', function(e) {
+                e.preventDefault();
+                const parentNode = this.closest('.tree-node');
+                parentNode.classList.toggle('expanded');
+                this.innerText = parentNode.classList.contains('expanded') ? '[-]' : '[+]';
+            });
+        });
+        menuContainer.addEventListener('change', function(e) {
+            if (e.target.tagName !== 'INPUT' || e.target.type !== 'checkbox') return;
+            const childrenContainer = e.target.closest('label').nextElementSibling;
+            if (childrenContainer && childrenContainer.classList.contains('tree-children')) {
+                childrenContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = e.target.checked);
+            }
+            document.querySelectorAll('.unit-node').forEach(node => {
+                const lessons = node.querySelectorAll('.lesson-cb');
+                node.querySelector('.unit-cb').checked = (lessons.length > 0 && lessons.length === node.querySelectorAll('.lesson-cb:checked').length);
+            });
+            document.querySelectorAll('.tree-node:not(.unit-node):not(.lesson-node)').forEach(node => {
+                const units = node.querySelectorAll('.unit-cb');
+                node.querySelector('.level-cb').checked = (units.length > 0 && units.length === node.querySelectorAll('.unit-cb:checked').length);
+            });
+        });
+
+        // UI 控制逻辑
+        const sidebar = document.getElementById('sidebar');
+        const toggleMenuBtn = document.getElementById('toggle-menu-btn');
+        function setSidebarVisible(visible) {
+            if (visible) {
+                sidebar.classList.remove('hidden');
+                toggleMenuBtn.style.display = 'none';
+            } else {
+                sidebar.classList.add('hidden');
+                toggleMenuBtn.style.display = 'block';
+            }
+        }
+        toggleMenuBtn.addEventListener('click', () => setSidebarVisible(true));
+
+        // 3. 听写系统与核心算法 ==========================================
+        let dictationGroups = []; // 数据结构变为二维数组: [ ["淘气"], ["称赞", "赞不绝口"], ["科技"] ]
+        let currentGroupIndex = 0;
+        let currentWordIndex = 0;
+        let readCount = 0;
+        let isPlaying = false;
+        let totalWordsCount = 0;
+        let timeoutId = null;
+        let hanziWriters = [];
+        const synth = window.speechSynthesis;
+        let femaleVoice = null; // 变量名沿用，实际存放选中的朗读音色（已改为优先男声）
+
+        function loadVoices() {
+            const voices = synth.getVoices();
+            const maleNameHints = ['male', 'yunyang', 'yunjian', 'yunxi', 'kangkang', 'wang', '男'];
+            const zhVoices = voices.filter(v => v.lang.includes('zh'));
+            femaleVoice = zhVoices.find(v => maleNameHints.some(h => v.name.toLowerCase().includes(h)))
+                       || zhVoices.find(v => v.lang === 'zh-CN')
+                       || zhVoices.find(v => v.lang === 'zh-HK' || v.lang === 'zh-TW');
+        }
+        speechSynthesis.onvoiceschanged = loadVoices;
+
+        // 【新算法】将共享汉字的词语打包成数组
+        function createDictationGroups(words) {
+            let groups = [];
+            let pool = [...new Set(words)]; // 去重
+            
+            while (pool.length > 0) {
+                let current = pool.shift();
+                let currentGroup = [current];
+                
+                for (let i = pool.length - 1; i >= 0; i--) {
+                    let hasCommonChar = false;
+                    for (let char of current) {
+                        if (pool[i].includes(char)) {
+                            hasCommonChar = true;
+                            break;
+                        }
+                    }
+                    if (hasCommonChar) {
+                        currentGroup.push(pool[i]);
+                        pool.splice(i, 1);
+                    }
+                }
+                groups.push(currentGroup);
+            }
+            return groups;
+        }
+
+        // 找出一个词组中共同出现的汉字（用于标红）
+        function getCommonChars(group) {
+            let charCounts = {};
+            let common = new Set();
+            group.forEach(word => {
+                let uniqueChars = new Set(word.split(''));
+                uniqueChars.forEach(char => {
+                    charCounts[char] = (charCounts[char] || 0) + 1;
+                    if (charCounts[char] > 1 && /[\u4e00-\u9fa5]/.test(char)) {
+                        common.add(char);
+                    }
+                });
+            });
+            return common;
+        }
+
+        function speak(text, callback) {
+            if (!isPlaying) return;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.voice = femaleVoice;
+            utterance.rate = 0.65;
+            utterance.pitch = 0.75;
+            utterance.onend = callback;
+            synth.speak(utterance);
+        }
+
+        function dictationLoop() {
+            if (!isPlaying) return;
+
+            if (currentGroupIndex >= dictationGroups.length) {
+                document.getElementById('status').innerText = "🎉 听写全部完成！你真棒！";
+                document.getElementById('display-area').style.display = 'none';
+                document.getElementById('comparison-area').style.display = 'none';
+                setSidebarVisible(true);
+                isPlaying = false;
+                return;
+            }
+
+            let currentGroup = dictationGroups[currentGroupIndex];
+            let currentWord = currentGroup[currentWordIndex];
+
+            // 计算进度
+            let wordsDone = dictationGroups.slice(0, currentGroupIndex).reduce((sum, g) => sum + g.length, 0) + currentWordIndex + 1;
+            document.getElementById('progress').innerText = `进度: ${wordsDone} / ${totalWordsCount}`;
+
+            // 阶段一：朗读 (3遍)
+            if (readCount < 3) {
+                document.getElementById('display-area').style.display = 'none';
+                document.getElementById('comparison-area').style.display = 'none';
+                document.getElementById('status').innerText = `正在朗读... (第 ${readCount + 1}/3 遍)`;
+                speak(currentWord, () => {
+                    timeoutId = setTimeout(() => { readCount++; dictationLoop(); }, 3000);
+                });
+                return;
+            }
+
+            // 阶段二：大字显示笔画 (HanziWriter)
+            if (readCount === 3) {
+                document.getElementById('status').innerText = "请仔细对照笔画和部首：";
+                document.getElementById('display-area').style.display = 'block';
+                document.getElementById('comparison-area').style.display = 'none';
+                document.getElementById('word-text').innerText = `【 ${currentWord} 】`;
+                document.getElementById('character-container').innerHTML = '';
+                hanziWriters = [];
+                
+                for (let char of currentWord) {
+                    const box = document.createElement('div');
+                    box.className = 'hanzi-box';
+                    box.id = `char-${Math.random().toString(36).substr(2, 9)}`;
+                    document.getElementById('character-container').appendChild(box);
+                    
+                    if(/[\u4e00-\u9fa5]/.test(char)){
+                        let writer = HanziWriter.create(box.id, char, {
+                            width: 150, height: 150, padding: 10, showOutline: true,
+                            strokeAnimationSpeed: 1.5, delayBetweenStrokes: 150, radicalColor: '#e74c3c'
+                        });
+                        hanziWriters.push(writer);
+                        writer.animateCharacter();
+                    } else {
+                        box.style.display = 'flex'; box.style.alignItems = 'center'; box.style.justifyContent = 'center';
+                        box.style.fontSize = '50px'; box.innerText = char;
+                    }
+                }
+
+                timeoutId = setTimeout(() => { readCount = 4; dictationLoop(); }, 6000);
+                return;
+            }
+
+            // 阶段三：判断是听写下一个词，还是进入“比较学习”
+            if (readCount === 4) {
+                currentWordIndex++;
+                if (currentWordIndex < currentGroup.length) {
+                    // 同一组还有词，继续听写
+                    readCount = 0;
+                    dictationLoop();
+                } else {
+                    // 这一组听写完了。如果组里有两个或以上的词，进入比较模式！
+                    if (currentGroup.length > 1) {
+                        showComparisonScreen(currentGroup);
+                        timeoutId = setTimeout(() => {
+                            currentGroupIndex++;
+                            currentWordIndex = 0;
+                            readCount = 0;
+                            dictationLoop();
+                        }, 10000); // 比较屏幕停留10秒
+                    } else {
+                        // 组里只有一个词，直接跳到下一组
+                        currentGroupIndex++;
+                        currentWordIndex = 0;
+                        readCount = 0;
+                        dictationLoop();
+                    }
+                }
+            }
+        }
+
+        function showComparisonScreen(group) {
+            document.getElementById('display-area').style.display = 'none';
+            document.getElementById('status').innerText = "💡 知识点总结";
+            const compArea = document.getElementById('comparison-area');
+            const compGroup = document.getElementById('compare-group');
+            compArea.style.display = 'block';
+            
+            let commonChars = getCommonChars(group);
+            let html = '';
+            
+            group.forEach(word => {
+                html += '<div class="compare-word">';
+                for(let char of word) {
+                    if(commonChars.has(char)) {
+                        html += `<span class="highlight-char">${char}</span>`;
+                    } else {
+                        html += `<span>${char}</span>`;
+                    }
+                }
+                html += '</div>';
+            });
+            compGroup.innerHTML = html;
+        }
+
+        // 按钮事件
+        document.getElementById('start-btn').addEventListener('click', () => {
+            if (isPlaying) return;
+            
+            let rawWords = [];
+            document.querySelectorAll('.lesson-cb:checked').forEach(cb => {
+                rawWords = rawWords.concat(JSON.parse(cb.value));
+            });
+
+            if (rawWords.length === 0) {
+                alert("请先在左侧展开菜单，并勾选想要听写的课文或单元！");
+                return;
+            }
+
+            // 自动折叠侧边栏，显示进度条
+            setSidebarVisible(false);
+            document.getElementById('progress').style.display = 'block';
+
+            // 初始化数据
+            dictationGroups = createDictationGroups(rawWords);
+            totalWordsCount = dictationGroups.reduce((sum, g) => sum + g.length, 0);
+            currentGroupIndex = 0;
+            currentWordIndex = 0;
+            readCount = 0;
+            isPlaying = true;
+            loadVoices();
+            
+            dictationLoop();
+        });
+
+        document.getElementById('stop-btn').addEventListener('click', () => {
+            isPlaying = false;
+            synth.cancel();
+            clearTimeout(timeoutId);
+            setSidebarVisible(true);
+            document.getElementById('progress').style.display = 'none';
+            document.getElementById('status').innerText = "⏹ 听写已停止。重新选择或再次点击“开始”。";
+        });
+        
+        loadVoices();
+    </script>
+</body>
+</html>
