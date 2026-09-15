@@ -3,7 +3,7 @@
  * Create a separate Apps Script project; do not overwrite the old vocabulary receiver.
  * Uses the exact teacher-designated spreadsheet. Reads expose no student records.
  */
-const VCFG={sheetId:'1I6gXsqkfyRjXIwrAoJW8GlthFbB6cTGOOJ9Pzjc32lA',lessonId:'2hcl-xuanci-2025',title:'选词填空（2025）',protocol:'hwt-vocab-progress-v1',progress:'选词填空2025-进度',details:'选词填空2025-逐题'};
+const VCFG={sheetId:'1XWGz1BBY4K5AfVsmZSYnqxXvlie2j2wiVFV0ZRF0-VE',lessonId:'2hcl-xuanci-2025',title:'选词填空（2025）',protocol:'hwt-vocab-progress-v1',progress:'选词填空2025-进度',details:'选词填空2025-逐题'};
 const VPHEAD=['更新时间','学习单','班级','学号','姓名','已核对题数','首次答对','首次正确率','当前答对','累计错题','待重做','重做正确','状态','已提交版本','记录ID','首次开始时间','最近提交ID','校验值','作答快照'];
 const VDHEAD=['更新时间','学习单','班级','学号','姓名','题号','首次答案','初答对错','当前答案','当前核对','答错次数','最近错答','最近重做答案','重做结果','记录ID','版本'];
 const VANS={16:['名落孙山'],17:['络绎不绝'],18:['诡异'],19:['品学兼优'],20:['妥善'],21:['苦口婆心'],22:['好逸恶劳'],23:['烦躁'],24:['屡见不鲜'],25:['潜移默化','逐渐'],26:['每况愈下'],27:['日新月异'],28:['立竿见影'],29:['囫囵吞枣'],30:['名列前茅']};
@@ -12,7 +12,7 @@ function vnorm(x){return String(x||'').normalize('NFKC').replace(/[\s\u200b\uFEF
 function vright(id,x){return VANS[id].indexOf(vnorm(x))>=0;}
 function vtext(x){const s=String(x==null?'':x);return /^[\s]*[=+\-@]/.test(s)?"'"+s:s;}
 function vsafe(row){return row.map(x=>typeof x==='number'?x:vtext(x));}
-function vensure(book,name,headers){let sh=book.getSheetByName(name);if(!sh)sh=book.insertSheet(name);if(sh.getMaxColumns()<headers.length)sh.insertColumnsAfter(sh.getMaxColumns(),headers.length-sh.getMaxColumns());if(sh.getLastRow()===0){sh.getRange(1,1,1,headers.length).setValues([headers]);sh.setFrozenRows(1);sh.getRange(1,1,1,headers.length).setBackground('#145abf').setFontColor('#ffffff').setFontWeight('bold');sh.setColumnWidths(1,headers.length,130);sh.setColumnWidth(1,165);sh.setColumnWidth(2,180);sh.setColumnWidth(5,160);sh.getRange(1,1,1,headers.length).setWrap(true);}else if(JSON.stringify(sh.getRange(1,1,1,headers.length).getValues()[0])!==JSON.stringify(headers))throw Error('header mismatch');return sh;}
+function vensure(book,name,headers){let sh=book.getSheetByName(name);if(!sh)sh=book.insertSheet(name);if(sh.getMaxColumns()<headers.length)sh.insertColumnsAfter(sh.getMaxColumns(),headers.length-sh.getMaxColumns());if(sh.getLastRow()===0){sh.getRange(1,1,1,headers.length).setValues([headers]);sh.setFrozenRows(1);sh.getRange(1,1,1,headers.length).setBackground('#f0f0f0').setFontColor('#000000').setFontWeight('bold');sh.setColumnWidths(1,headers.length,130);sh.setColumnWidth(1,165);sh.setColumnWidth(2,180);sh.setColumnWidth(5,160);sh.getRange(1,1,1,headers.length).setWrap(true);}else if(JSON.stringify(sh.getRange(1,1,1,headers.length).getValues()[0])!==JSON.stringify(headers))throw Error('header mismatch');return sh;}
 function setupVocabProgress(){const b=SpreadsheetApp.openById(VCFG.sheetId),p=vensure(b,VCFG.progress,VPHEAD),d=vensure(b,VCFG.details,VDHEAD);p.hideColumns(14,6);d.hideColumns(15,2);SpreadsheetApp.flush();}
 function doGet(){return vjson({ok:true,protocol:VCFG.protocol,spreadsheetId:VCFG.sheetId,lessonId:VCFG.lessonId,writeMethod:'POST'});}
 function vrow(sh,row,values){if(row>sh.getMaxRows())sh.insertRowsAfter(sh.getMaxRows(),row-sh.getMaxRows());sh.getRange(row,1,1,values.length).setValues([vsafe(values)]);}
