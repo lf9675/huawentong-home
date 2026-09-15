@@ -1,9 +1,9 @@
 {
-  "enabled": false,
+  "enabled": true,
   "protocol": "hwt-cloze-result-v1",
-  "endpoint": "",
+  "endpoint": "https://script.google.com/macros/s/AKfycbzY9_jyvFGPtCFWtAYEoo7d-poYMU6zAb3pCmhLt9IDXNWhjCf7ClZYZ-W76s5Z-Wgm/exec",
   "spreadsheetId": "1_xft7XkfZTByvgWlgu-bVKZophK53FrwtabSurbC0mE",
   "spreadsheetTitle": "综合填空-成绩表",
   "scriptProjectId": "1AafwVe2mFduYhJ2fHbXEJjwSv3gX8PRHm2CTApnW84dkEKc0QAI5nKfp",
-  "status": "waiting-for-web-app-exec-url"
+  "status": "enabled-2026-09-15"
 }
