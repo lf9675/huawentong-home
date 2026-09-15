@@ -1,0 +1,9 @@
+{
+  "enabled": false,
+  "protocol": "hwt-vocab-progress-v1",
+  "endpoint": "",
+  "spreadsheetId": "1I6gXsqkfyRjXIwrAoJW8GlthFbB6cTGOOJ9Pzjc32lA",
+  "lessonId": "2hcl-xuanci-2025",
+  "lessonTitle": "选词填空（2025）",
+  "status": "awaiting-google-write-authorization-and-endpoint-verification"
+}
