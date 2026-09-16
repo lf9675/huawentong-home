@@ -1,0 +1,25 @@
+name: Hezuo R5 debug
+on:
+  push:
+    branches: [qa/hezuo-r5-20260916]
+    paths: [.github/workflows/hezuo-r5-debug.yml]
+permissions:
+  contents: read
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and check embedded JavaScript
+        run: |
+          python tests/hezuo-r5/build.py
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('tests/hezuo-r5/2024-2hcl-yilunwen-hezuo.html').read_text()
+          scripts=re.findall(r'<script(?: [^>]*)?>(.*?)</script>',s,re.S)
+          print('scripts',len(scripts),'sizes',[len(x) for x in scripts])
+          Path('/tmp/r5.js').write_text(scripts[-1])
+          print(scripts[-1][:1000])
+          PY
+          node --check /tmp/r5.js
