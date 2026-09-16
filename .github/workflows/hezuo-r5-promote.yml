@@ -1,0 +1,62 @@
+name: Hezuo R5 promote validated pages
+on:
+  push:
+    branches: [qa/hezuo-r5-20260916]
+    paths: [.github/workflows/hezuo-r5-promote.yml]
+permissions:
+  contents: write
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Rebuild the exact browser-validated R5 pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tests/hezuo-r5/build.py');s=p.read_text()
+          s=s.replace('blankTask(t)])}}','blankTask(t)]))}}')
+          old="if(e.target.dataset.field){w().answers[e.target.dataset.field]=e.target.value;save()}else if(['name','className','indexNo'].includes(e.target.id))"
+          new="if(e.target.dataset.field){w().answers[e.target.dataset.field]=e.target.value;save();const sp=$('.statepill');if(sp)sp.textContent=stat(w())}else if(['name','className','indexNo'].includes(e.target.id))"
+          if old not in s: raise SystemExit('input handler pattern not found')
+          p.write_text(s.replace(old,new))
+          PY
+          python tests/hezuo-r5/build.py
+          cp tests/hezuo-r5/2024-2hcl-yilunwen-hezuo.html /tmp/hezuo-r5-student.html
+          cp tests/hezuo-r5/2024-2hcl-yilunwen-hezuo-teacher.html /tmp/hezuo-r5-teacher.html
+          grep -q 'HEZUO-20260916-R5' /tmp/hezuo-r5-student.html
+          grep -q 'HEZUO-20260916-R5' /tmp/hezuo-r5-teacher.html
+      - name: Commit only the two Hezuo production pages
+        run: |
+          git reset --hard
+          git switch main
+          git pull --ff-only origin main
+          cp /tmp/hezuo-r5-student.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html
+          cp /tmp/hezuo-r5-teacher.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html
+          test "$(git diff --name-only | sort)" = "$(printf '%s\n%s\n' 'du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html' 'du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html' | sort)"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html
+          git commit -m 'Simplify Hezuo worksheet around paragraph reasoning and native copy-paste'
+          git push origin main
+      - name: Verify Cloudflare R5 publication
+        run: |
+          python - <<'PY'
+          import time,urllib.request
+          urls=['https://huawentong-home.lyqlym2015.workers.dev/du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html?v=5','https://huawentong-home.lyqlym2015.workers.dev/du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html?v=5']
+          for url in urls:
+            for i in range(15):
+              try:
+                body=urllib.request.urlopen(urllib.request.Request(url,headers={'Cache-Control':'no-cache','User-Agent':'Hezuo-R5-Promote'}),timeout=20).read().decode('utf-8')
+                if 'HEZUO-20260916-R5' in body:
+                  assert '选入此组' not in body
+                  print('LIVE PASS',url)
+                  break
+              except Exception as e:
+                print('waiting',i,type(e).__name__)
+              time.sleep(10)
+            else: raise SystemExit('Cloudflare R5 not visible: '+url)
+          PY
