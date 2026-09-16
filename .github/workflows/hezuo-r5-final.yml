@@ -1,0 +1,106 @@
+name: Hezuo R5 final validation and publish
+on:
+  push:
+    branches: [qa/hezuo-r5-20260916]
+    paths: [.github/workflows/hezuo-r5-final.yml]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch generator and build R5 pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tests/hezuo-r5/build.py');s=p.read_text()
+          s=s.replace('blankTask(t)])}}','blankTask(t)]))}}')
+          old="if(e.target.dataset.field){w().answers[e.target.dataset.field]=e.target.value;save()}else if(['name','className','indexNo'].includes(e.target.id))"
+          new="if(e.target.dataset.field){w().answers[e.target.dataset.field]=e.target.value;save();const sp=$('.statepill');if(sp)sp.textContent=stat(w())}else if(['name','className','indexNo'].includes(e.target.id))"
+          if old not in s: raise SystemExit('input handler pattern not found')
+          p.write_text(s.replace(old,new))
+          PY
+          python tests/hezuo-r5/build.py
+          cp tests/hezuo-r5/2024-2hcl-yilunwen-hezuo.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html
+          cp tests/hezuo-r5/2024-2hcl-yilunwen-hezuo-teacher.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html
+          python - <<'PY'
+          from pathlib import Path
+          import re,subprocess
+          s=Path('du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html').read_text();scripts=re.findall(r'<script(?: [^>]*)?>(.*?)</script>',s,re.S)
+          Path('/tmp/r5.js').write_text(scripts[-1]);subprocess.run(['node','--check','/tmp/r5.js'],check=True)
+          PY
+      - name: Install Playwright
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Validate simplified student experience
+        run: |
+          cat > /tmp/test_r5.py <<'PY'
+          import pathlib,threading,http.server,functools,json
+          from playwright.sync_api import sync_playwright
+          root=pathlib.Path.cwd();out=root/'hezuo-r5-qa';out.mkdir(exist_ok=True)
+          srv=http.server.ThreadingHTTPServer(('127.0.0.1',8765),functools.partial(http.server.SimpleHTTPRequestHandler,directory=str(root)));threading.Thread(target=srv.serve_forever,daemon=True).start()
+          checks=[];errors=[]
+          def ok(name,x): assert x,name;checks.append(name);print('PASS',name,flush=True)
+          url='http://127.0.0.1:8765/du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html'
+          with sync_playwright() as pw:
+            b=pw.chromium.launch();c=b.new_context(viewport={'width':1024,'height':768},accept_downloads=True);p=c.new_page();p.on('pageerror',lambda e:errors.append(str(e)));p.goto(url)
+            body=p.locator('body').inner_text();ok('R5 loaded','HEZUO-20260916-R5' in body);ok('complex evidence UI removed',all(x not in body for x in ['选入此组','证据操作','归类名称','删减 / Trim','写一句联系说明']));ok('native copy paste cue','Select → Copy → Paste' in body);ok('full original has five paragraphs',p.locator('.para').count()==5);ok('reference hidden initially',p.locator('.reference').count()==0)
+            p.locator('[data-field=common]').fill('。。。');p.locator('#referenceBtn').click();ok('punctuation cannot unlock',p.locator('.reference').count()==0)
+            for card,slot in [('a','s1'),('b','s2'),('c','s2'),('d','s2'),('e','s3')]:p.locator(f'[data-card="{card}"]').click();p.locator(f'[data-slot="{slot}"]').click()
+            p.locator('[data-field=common]').fill('三个身份都需要和别人合作，才能完成各自任务。');p.locator('#checkBoard').click();ok('R1 logic map works',p.locator('.slot.good').count()==3);p.locator('#referenceBtn').click();ok('reference unlocks only after attempt',p.locator('.reference').count()==1)
+            first=p.evaluate('JSON.stringify(w().first.answers)');p.locator('[data-field=common]').fill('三个不同身份都要与别人配合完成任务。');ok('modified status updates immediately','已修改' in p.locator('.statepill').inner_text());p.reload();ok('first answer immutable after reload',p.evaluate('JSON.stringify(w().first.answers)')==first and '已修改' in p.locator('.statepill').inner_text())
+            p.evaluate("go('R2')");p.locator('[data-role-source="p2s1"][data-role="强调"]').click();ok('wrong sentence-role is red',p.locator('[data-role-source="p2s1"].wrong').count()==1);p.locator('[data-role-source="p2s1"][data-role="定义"]').click();ok('wrong answer can be corrected to blue',p.locator('[data-role-source="p2s1"].correct').count()==1)
+            p.evaluate("go('R3')");ok('R3 asks direct support question','为什么这个例子能证明' in p.locator('.qtitle').inner_text());
+            for card,slot in [('a','s1'),('b','s2'),('c','s3')]:p.locator(f'[data-card="{card}"]').click();p.locator(f'[data-slot="{slot}"]').click()
+            p.locator('[data-field=why]').fill('乐师有统一目标后配合演奏，结果演奏完美和谐，所以例子支持分论点。');p.locator('#checkBoard').click();ok('R3 point-example-result map works',p.locator('.slot.good').count()==3)
+            p.evaluate("go('R4')");ok('R4 preserves concession wording','即使' in p.locator('.qtitle').inner_text() or '即使' in p.locator('#passage').inner_text())
+            p.evaluate("go('Q50')");p.locator('[data-field=answer]').fill('作为学生，我们需要与同学一起学习、一起成长，共同完成学业；');ok('answer box accepts direct source paste','作为学生' in p.locator('[data-field=answer]').input_value())
+            for q in ['Q50','Q51','Q52','Q53']:ok(q+' retained',p.evaluate(f"D.tasks.some(t=>t.id==='{q}')"))
+            p.evaluate("go('T1')");ok('transfer has reduced support',p.locator('.board').count()==0 and p.locator('.hint').count()==0)
+            with p.expect_download() as dl:p.locator('#exportBtn').click()
+            dl.value.save_as(out/'record.html');ok('readable record downloads','合作' in (out/'record.html').read_text())
+            for width,height in [(1024,768),(1180,820),(390,844)]:
+              p.set_viewport_size({'width':width,'height':height});r=p.locator('#reader').bounding_box();m=p.locator('main').bounding_box();ok('no horizontal overflow '+str(width),p.evaluate('document.documentElement.scrollWidth<=innerWidth'));ok('responsive layout '+str(width),(r['x']+r['width']<=m['x']+3) if width>=800 else (m['y']>=r['y']+r['height']-3))
+            p.set_viewport_size({'width':1024,'height':768});p.evaluate("go('R4')");p.screenshot(path=str(out/'tablet.png'),full_page=True);ok('no browser errors',not errors);b.close()
+          (out/'result.json').write_text(json.dumps({'checks':checks,'errors':errors},ensure_ascii=False,indent=2))
+          PY
+          python /tmp/test_r5.py
+      - name: Publish only Hezuo student and teacher pages
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch main
+          git pull --ff-only origin main
+          cp du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html /tmp/hezuo-r5-student.html
+          cp du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html /tmp/hezuo-r5-teacher.html
+          cp /tmp/hezuo-r5-student.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html
+          cp /tmp/hezuo-r5-teacher.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html
+          git add du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html
+          git commit -m 'Simplify Hezuo worksheet around paragraph reasoning and native copy-paste'
+          git push origin main
+      - name: Verify Cloudflare R5
+        run: |
+          python - <<'PY'
+          import time,urllib.request
+          urls=['https://huawentong-home.lyqlym2015.workers.dev/du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html?v=5','https://huawentong-home.lyqlym2015.workers.dev/du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html?v=5']
+          for url in urls:
+            for i in range(15):
+              try:
+                body=urllib.request.urlopen(urllib.request.Request(url,headers={'Cache-Control':'no-cache','User-Agent':'Hezuo-R5-QA'}),timeout=20).read().decode('utf-8')
+                if 'HEZUO-20260916-R5' in body:
+                  print('LIVE PASS',url);break
+              except Exception: pass
+              time.sleep(10)
+            else: raise SystemExit('Cloudflare R5 not visible: '+url)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hezuo-r5-final-validation
+          path: hezuo-r5-qa
+          retention-days: 7
