@@ -1,0 +1,112 @@
+name: Hezuo R4 validate and publish
+on:
+  push:
+    branches: [qa/hezuo-r4-20260916]
+    paths: [.github/workflows/hezuo-r4-publish.yml]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Patch Hezuo student and teacher pages only
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html')
+          t=Path('du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html')
+          x=s.read_text()
+          assert 'HEZUO-20260914-R3' in x
+          x=x.replace('HEZUO-20260914-R3','HEZUO-20260916-R4')
+          old='<button id="selectionBtn">选取划线文字 / Use selection</button><button id="wordHelpBtn">词语 / Words</button>'
+          new='<span class="copytip">选取 → 复制 → 粘贴 / Select → Copy → Paste</span><button id="wordHelpBtn">词语 / Words</button>'
+          assert old in x; x=x.replace(old,new,1)
+          old='<div class="collect" id="collectBar"><label><input type="checkbox" id="collectMode"> 点原文收集证据 / Tap text to collect</label><div id="collectTarget"></div></div>'
+          new='<div class="collect" id="collectBar"><span>先在右侧点“选入此组”，再点左侧句子；也可把句子拖入。 / Choose a group, then tap or drag source text.</span><button id="stopCollectBtn" type="button">完成选取 / Done</button><div id="collectTarget"></div></div>'
+          assert old in x; x=x.replace(old,new,1)
+          x=x.replace('.collect input{vertical-align:middle;width:20px;height:20px}', '.collect input{vertical-align:middle;width:20px;height:20px}.copytip{font-size:14px;color:var(--muted);padding:6px 4px}')
+          old="$('#collectBar').hidden=state.stage===3||!t.groups.length;$('#collectMode').checked=state.collect;$('#collectMode').disabled=!editable(a);$('#collectTarget').textContent=t.groups.length?`${t.id} · ${t.groups[state.target]||t.groups[0]}`:'';"
+          new="$('#collectBar').hidden=state.stage===3||!t.groups.length;$('#collectTarget').textContent=t.groups.length?`${t.id} · ${t.groups[state.target]||t.groups[0]}`:'';"
+          assert old in x; x=x.replace(old,new,1)
+          old="$$('#collectMode').onchange=()=>{state.collect=$('#collectMode').checked;save();renderPassage();};"
+          if old in x: x=x.replace(old,'')
+          else:
+              old="$('#collectMode').onchange=()=>{state.collect=$('#collectMode').checked;save();renderPassage();};"
+              assert old in x; x=x.replace(old,'')
+          old="$('#selectionBtn').onpointerdown=captureSelection;document.addEventListener('selectionchange',captureSelection);$('#selectionBtn').onclick=()=>{if(!selection){toast('请先在同一句原文中划选短片段。 / Select part of one sentence first.');return;}addEvidence(selection.source,selection.text);selection=null;window.getSelection()?.removeAllRanges();};"
+          assert old in x; x=x.replace(old, "$('#stopCollectBtn').onclick=()=>{state.collect=false;save();renderPassage();toast('已停止点选证据；仍可直接选取、复制和粘贴原文。 / Evidence tapping stopped; native copy and paste remain available.');};",1)
+          old='先选一组，再开启点选。也可拖入句子，或划选一句中的短片段。已选材料可以删减、删除、移动、加归类名称；数量不代表得分。<span class="en">Choose a group, then tap, drag, or select part of a sentence. Trim, remove, move or label extracts. Their number is not a score.</span>'
+          new='先选一组，再点原文或把句子拖入。需要更短的原文时，可在证据卡中删减；也可直接使用系统的 Select → Copy → Paste 把原文粘贴到答案框。数量不代表得分。<span class="en">Choose a group, then tap or drag source text. Trim evidence when needed, or use native Select → Copy → Paste in your answer. The number of extracts is not a score.</span>'
+          assert old in x; x=x.replace(old,new,1)
+          s.write_text(x)
+          y=t.read_text().replace('HEZUO-20260914-R3','HEZUO-20260916-R4')
+          marker='<h2>如何核对学习记录 / Reviewing records</h2>'
+          assert marker in y
+          y=y.replace(marker, marker+'<p>R4课堂操作已简化：取消额外“划选模式”和捕获按钮，保留浏览器原生 Select → Copy → Paste；证据训练仍可先选组别后点句子或拖入。<span class="en">R4 removes the extra capture mode. Native text selection, copy and paste stay available, while evidence notes still support tap or drag.</span></p>',1)
+          t.write_text(y)
+          PY
+      - name: Install browser test tools
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Validate patched pages in a real browser
+        run: |
+          python - <<'PY'
+          from playwright.sync_api import sync_playwright
+          import pathlib,threading,http.server,functools,json
+          root=pathlib.Path.cwd(); server=http.server.ThreadingHTTPServer(('127.0.0.1',8765),functools.partial(http.server.SimpleHTTPRequestHandler,directory=str(root)));threading.Thread(target=server.serve_forever,daemon=True).start()
+          url='http://127.0.0.1:8765/du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html';errs=[];checks=[]
+          def ok(n,v): assert v,n; checks.append(n); print('PASS',n)
+          with sync_playwright() as pw:
+            b=pw.chromium.launch(); p=b.new_page(viewport={'width':1024,'height':768});p.on('pageerror',lambda e:errs.append(str(e)));p.goto(url)
+            ok('R4 loaded', 'HEZUO-20260916-R4' in p.locator('.version').inner_text())
+            ok('capture-mode button removed', p.locator('#selectionBtn').count()==0 and p.locator('#collectMode').count()==0)
+            ok('native copy/paste tip visible', 'Select → Copy → Paste' in p.locator('.copytip').inner_text())
+            ok('fresh page hides model', p.locator('.model').count()==0)
+            p.locator('[data-target-group="0"]').click(); el=p.locator('#source-p1s5');el.evaluate('(e)=>e.scrollIntoView({block:"center"})');r=el.evaluate('(e)=>{let r=e.getClientRects()[0];return {x:r.x,y:r.y,h:r.height}}');p.mouse.click(r['x']+4,r['y']+r['h']/2)
+            ok('tap evidence still works',p.evaluate('work().draft.evidence.length===1'))
+            p.locator('#stopCollectBtn').click();ok('done stops tap collection',p.evaluate('state.collect===false'))
+            p.locator('[data-field=explain]').fill('不同身份的人都需要与别人配合完成任务。');p.locator('#submitFirst').click();first=p.evaluate('JSON.stringify(work().first)');p.reload();ok('reload restores first attempt',p.evaluate('JSON.stringify(work().first)')==first)
+            p.locator('#viewReference').click();p.locator('#startRevision').click();p.locator('[data-field=explain]').fill('三个身份不同，但完成各自任务都需要合作。');p.locator('#revisionReason').fill('补充例子与中心论点的联系。');p.locator('#saveRevision').click();ok('revision preserves first',p.evaluate('JSON.stringify(work().first)')==first and p.evaluate('work().revisions.length===1'))
+            p.set_viewport_size({'width':390,'height':844});ok('small screen no horizontal overflow',p.evaluate('document.documentElement.scrollWidth<=innerWidth'))
+            p.set_viewport_size({'width':1024,'height':768});a=p.locator('#reader').bounding_box();m=p.locator('#main').bounding_box();ok('iPad landscape stays two-column',a['x']+a['width']<=m['x']+2)
+            p.evaluate("goTask('T1')");ok('transfer remains independent','新编练习' in p.locator('#passage').inner_text() and p.locator('.model').count()==0)
+            ok('no browser errors',not errs);b.close()
+          pathlib.Path('hezuo-r4-result.json').write_text(json.dumps({'checks':checks,'errors':errs},ensure_ascii=False,indent=2))
+          PY
+      - name: Commit only the two Hezuo production pages
+        run: |
+          git config user.name "lf9675"
+          git config user.email "lyqlym2015@gmail.com"
+          git add du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html
+          git commit -m "Simplify Hezuo iPad evidence workflow and preserve native copy-paste"
+          git push origin HEAD:main
+      - name: Verify Cloudflare publication
+        run: |
+          python - <<'PY'
+          import urllib.request,time
+          url='https://huawentong-home.lyqlym2015.workers.dev/du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html?v=4'
+          data=''
+          for i in range(12):
+            try:
+              req=urllib.request.Request(url+'&t='+str(time.time()),headers={'User-Agent':'Hezuo-R4-QA','Cache-Control':'no-cache'})
+              data=urllib.request.urlopen(req,timeout=25).read().decode('utf-8','replace')
+              if 'HEZUO-20260916-R4' in data: break
+            except Exception: pass
+            time.sleep(10)
+          assert 'HEZUO-20260916-R4' in data,'Cloudflare did not publish R4 in time'
+          assert 'selectionBtn' not in data and 'collectMode' not in data
+          assert 'Select → Copy → Paste' in data
+          print('PASS Cloudflare R4 published and simplified interaction present')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hezuo-r4-validation
+          path: hezuo-r4-result.json
+          retention-days: 7
