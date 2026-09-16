@@ -1,0 +1,118 @@
+name: Hezuo R5 validate and publish
+on:
+  push:
+    branches: [qa/hezuo-r5-20260916]
+    paths:
+      - tests/hezuo-r5/**
+      - .github/workflows/hezuo-r5-publish.yml
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build R5 pages
+        run: |
+          python tests/hezuo-r5/build.py
+          cp tests/hezuo-r5/2024-2hcl-yilunwen-hezuo.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html
+          cp tests/hezuo-r5/2024-2hcl-yilunwen-hezuo-teacher.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html
+      - name: Install Playwright
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Browser validation
+        run: |
+          cat > /tmp/test_r5.py <<'PY'
+          import pathlib,threading,http.server,functools,json
+          from playwright.sync_api import sync_playwright
+          root=pathlib.Path.cwd(); out=root/'hezuo-r5-qa'; out.mkdir(exist_ok=True)
+          server=http.server.ThreadingHTTPServer(('127.0.0.1',8765),functools.partial(http.server.SimpleHTTPRequestHandler,directory=str(root)))
+          threading.Thread(target=server.serve_forever,daemon=True).start(); checks=[]; errors=[]
+          def ok(name,x):
+              assert x,name;checks.append(name);print('PASS',name,flush=True)
+          url='http://127.0.0.1:8765/du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html'
+          with sync_playwright() as pw:
+              b=pw.chromium.launch();c=b.new_context(viewport={'width':1024,'height':768},accept_downloads=True);p=c.new_page();p.on('pageerror',lambda e:errors.append(str(e)));p.goto(url)
+              text=p.locator('body').inner_text()
+              ok('R5 loaded','HEZUO-20260916-R5' in text)
+              ok('complex evidence UI removed',all(x not in text for x in ['选入此组','证据操作','归类名称','删减 / Trim']))
+              ok('native copy paste cue','Select → Copy → Paste' in text)
+              ok('five original paragraphs',p.locator('.para').count()==5)
+              ok('reference hidden initially',p.locator('.reference').count()==0)
+              # blank cannot unlock
+              p.locator('[data-field=common]').fill('。。。');p.locator('#referenceBtn').click();ok('punctuation does not unlock',p.locator('.reference').count()==0)
+              # R1 simple click-card -> slot
+              mapping=[('a','s1'),('b','s2'),('c','s2'),('d','s2'),('e','s3')]
+              for card,slot in mapping:
+                  p.locator(f'[data-card="{card}"]').click();p.locator(f'[data-slot="{slot}"]').click()
+              p.locator('[data-field=common]').fill('三个身份都要和别人合作，才能完成自己的任务。')
+              p.locator('#checkBoard').click();ok('R1 logic map correct',p.locator('.slot.good').count()==3)
+              p.locator('#referenceBtn').click();ok('reference available after attempt',p.locator('.reference').count()==1 and p.evaluate('w().first!==null'))
+              first=p.evaluate('JSON.stringify(w().first.answers)');p.locator('[data-field=common]').fill('三个不同身份都必须与别人合作完成任务。');ok('modified status visible','已修改' in p.locator('.statepill').inner_text())
+              p.reload();ok('reload preserves first and current',p.evaluate('JSON.stringify(w().first.answers)')==first and '已修改' in p.locator('.statepill').inner_text())
+              # R2 immediate colour and correction
+              p.evaluate("go('R2')");p.locator('[data-role-source="p2s1"][data-role="强调"]').click();ok('wrong role is red',p.locator('[data-role-source="p2s1"].wrong').count()==1)
+              p.locator('[data-role-source="p2s1"][data-role="定义"]').click();ok('role can be corrected to blue',p.locator('[data-role-source="p2s1"].correct').count()==1)
+              # R3 direct wording and map
+              p.evaluate("go('R3')");ok('direct question wording','为什么这个例子能证明' in p.locator('body').inner_text())
+              for card,slot in [('a','s1'),('b','s2'),('c','s3')]:p.locator(f'[data-card="{card}"]').click();p.locator(f'[data-slot="{slot}"]').click()
+              p.locator('[data-field=why]').fill('统一目标带来好的合作效果，所以例子支持分论点。');p.locator('#checkBoard').click();ok('R3 map works',p.locator('.slot.good').count()==3)
+              # direct paste/fill answer
+              p.evaluate("go('Q50')");p.locator('[data-field=answer]').fill('作为学生，我们需要与同学一起学习、一起成长，共同完成学业；')
+              ok('answer box accepts copied text','作为学生' in p.locator('[data-field=answer]').input_value())
+              # questions and transfer
+              for q in ['Q50','Q51','Q52','Q53']:ok(q+' present',p.evaluate(f"D.tasks.some(t=>t.id==='{q}')"))
+              p.evaluate("go('T1')");ok('transfer has no scaffold map',p.locator('.board').count()==0 and p.locator('.hint').count()==0)
+              # export
+              with p.expect_download() as dl:p.locator('#exportBtn').click()
+              dl.value.save_as(out/'record.html');ok('readable export','合作' in (out/'record.html').read_text())
+              # responsive
+              for width,height in [(1024,768),(390,844)]:
+                  p.set_viewport_size({'width':width,'height':height});r=p.locator('#reader').bounding_box();m=p.locator('main').bounding_box();ok('no overflow '+str(width),p.evaluate('document.documentElement.scrollWidth<=innerWidth'))
+                  ok('layout '+str(width),(r['x']+r['width']<=m['x']+3) if width>=800 else (m['y']>=r['y']+r['height']-3))
+              p.set_viewport_size({'width':1024,'height':768});p.evaluate("go('R4')");p.screenshot(path=str(out/'tablet.png'),full_page=True)
+              ok('no browser errors',not errors);b.close()
+          (out/'result.json').write_text(json.dumps({'checks':checks,'errors':errors},ensure_ascii=False,indent=2))
+          PY
+          python /tmp/test_r5.py
+      - name: Publish only the two Hezuo pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch main
+          git pull --ff-only origin main
+          git checkout qa/hezuo-r5-20260916 -- tests/hezuo-r5/2024-2hcl-yilunwen-hezuo.html tests/hezuo-r5/2024-2hcl-yilunwen-hezuo-teacher.html
+          cp tests/hezuo-r5/2024-2hcl-yilunwen-hezuo.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html
+          cp tests/hezuo-r5/2024-2hcl-yilunwen-hezuo-teacher.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html
+          rm -rf tests/hezuo-r5
+          git add du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html
+          git commit -m 'Simplify Hezuo reading interactions for iPad and paragraph reasoning'
+          git push origin main
+      - name: Verify Cloudflare publication
+        run: |
+          python - <<'PY'
+          import time,urllib.request
+          urls=['https://huawentong-home.lyqlym2015.workers.dev/du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo.html?v=5','https://huawentong-home.lyqlym2015.workers.dev/du/exam/2hcl/yilunwen/2024-2hcl-yilunwen-hezuo-teacher.html?v=5']
+          for url in urls:
+              ok=False
+              for _ in range(12):
+                  try:
+                      body=urllib.request.urlopen(urllib.request.Request(url,headers={'Cache-Control':'no-cache','User-Agent':'Hezuo-R5-QA'}),timeout=20).read().decode('utf-8')
+                      if 'HEZUO-20260916-R5' in body: ok=True;break
+                  except Exception: pass
+                  time.sleep(10)
+              assert ok,'Cloudflare did not publish R5: '+url
+              print('LIVE PASS',url)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hezuo-r5-validation
+          path: hezuo-r5-qa
+          retention-days: 7
