@@ -1,6 +1,22 @@
 const SB_URL="https://rodtizxezbtlhnuljzsc.supabase.co";
 const SB_KEY="sb_publishable_NcVlurSiCAxUCQbkdQ_ZsQ_h_O1h6HU";
 const TEAM_NAMES=["蓝队","红队","绿队","橙队","紫队","青队"];
+const CONTEXT_FIXES={
+ "鹤立鸡群":"宴会上，她一身白衣，在人群中格外醒目，颇有_____之感。",
+ "囫囵吞枣":"学习新知识时要认真理解，不能_____。",
+ "花言巧语":"他用_____迷惑世杰，世杰信以为真，向他买了那批仿制的古董。",
+ "浑水摸鱼":"火灾现场一片混乱，竟有人_____，偷取灾民财物，真让人心寒。",
+ "家喻户晓":"这家肉干店_____，每年新年店前总是大排长龙。",
+ "居安思危":"生活环境虽然安逸，我们仍要_____，不能因为眼前平静就放松警惕。",
+ "举足轻重":"家强是篮球队的主力射手，在这场比赛中_____，教练非常重视他的表现。",
+ "慷慨解囊":"看到这些需要帮助的孩子，大家纷纷_____。",
+ "口若悬河":"他知识丰富，每次发表意见都_____，听众都很佩服他的口才。",
+ "狼狈为奸":"这两个罪犯_____，一起策划了多起诈骗案。",
+ "良药苦口":"父母师长的劝告有时不好听，但正所谓“_____”，我们应该认真反思。",
+ "面面俱到":"公司新来的经理做事非常细心，安排工作总能_____，很少有遗漏。",
+ "面目全非":"大火过后，那栋旧屋已经_____，居民看了十分痛心。",
+ "名落孙山":"他报考热门课程，却因准备不足而_____。"
+};
 let rt=null,channel=null,room="",me=null,assignedTeam="",gameCfg=null;
 let teacherPlayers={},teacherWrongs={},teamN=6,started=false;
 let queue=[],idx=0,uniqueDone=new Set(),initialCorrect=new Set(),mastered=new Set(),wrongOnce=new Set(),points=0,qStarted=0,current=null,locked=false;
@@ -31,7 +47,7 @@ function renderTeacher(){let ps=Object.values(teacherPlayers),done=ps.reduce((s,
 function studentJoin(){room=$("roomInput").value.trim().toUpperCase();let name=$("nameInput").value.trim(),cl=$("classInput").value.trim(),no=$("noInput").value.trim();if(!/^[A-Z2-9]{6}$/.test(room)||!name||!cl||!no){msg("joinMsg","请填写完整资料和6位房间码。",true);return;}me={id:localStorage.getItem("hwtPkId")||rid(),name,className:cl,studentNo:no};localStorage.setItem("hwtPkId",me.id);hideAll();$("studentWait").classList.remove("hidden");$("studentCode").textContent=room;try{connect("hwt-pk-"+room,()=>{listenStudent();send("join_request",me);setInterval(()=>{if(!started)send("join_request",me)},2500);});}catch(e){alert(e.message);}}
 function listenStudent(){channel.on("broadcast",{event:"host_hello"},()=>send("join_request",me));channel.on("broadcast",{event:"assign"},({payload:p})=>{if(p?.target!==me.id)return;assignedTeam=p.team;$("studentTeam").textContent=assignedTeam;if(p.started&&p.config&&!started)beginGame(p.config);});channel.on("broadcast",{event:"start_game"},({payload:p})=>{if(!started)beginGame(p);});channel.on("broadcast",{event:"scoreboard"},({payload:p})=>{let t=p?.teams?.find(x=>x.name===assignedTeam);if(t&&$("teamLabel"))$("teamLabel").textContent=`${assignedTeam}｜团队初次正确率 ${t.acc}%`;});}
 function allTargets(cfg){return [...(cfg.includeVocab?DATA.vocab:[]),...(cfg.includeIdiom?DATA.idiom:[])];}
-function makeQuestions(cfg){return shuffle(allTargets(cfg).map(t=>({...t,qid:t.kind+"-"+t.term,repeat:false})));}
+function makeQuestions(cfg){return shuffle(allTargets(cfg).map(t=>({...t,context:CONTEXT_FIXES[t.term]||t.context,qid:t.kind+"-"+t.term,repeat:false})));}
 function beginGame(cfg){started=true;gameCfg=cfg;queue=makeQuestions(cfg);idx=0;uniqueDone=new Set();initialCorrect=new Set();mastered=new Set();wrongOnce=new Set();points=0;hideAll();$("game").classList.remove("hidden");$("teamLabel").textContent=assignedTeam;renderQuestion();}
 function distractorsFor(t,mode){let pool=DATA[t.kind==="idiom"?"idiom":"vocab"].filter(x=>x.term!==t.term);if(mode==="meaning")return shuffle(pool).slice(0,3).map(x=>x.zh);return shuffle(pool).slice(0,3).map(x=>x.term);}
 function renderQuestion(){if(idx>=queue.length){finishGame();return;}current=queue[idx];locked=false;qStarted=performance.now();let mode=current.context?"context":"meaning",opts,answer;if(mode==="context"){answer=current.term;opts=shuffle([answer,...distractorsFor(current,"context")]);$("qType").textContent=current.repeat?"错词复活 · 选择最合适的词语／成语":"语境题 · 选择最合适的词语／成语";$("qText").textContent=current.context.replace(/_+/g,"______");}else{answer=current.zh;opts=shuffle([answer,...distractorsFor(current,"meaning")]);$("qType").textContent=current.repeat?"错词复活 · 选择正确意思":"词义题 · 选择最恰当的意思";$("qText").textContent=current.term;}current._answer=answer;current._opts=opts;$("options").innerHTML=opts.map((o,i)=>`<button class="opt" onclick="answer(${i})">${esc(o)}</button>`).join("");$("feedback").className="feedback hidden";$("nextBtn").classList.add("hidden");let uniq=uniqueDone.size,total=gameCfg.total;$("qCount").textContent=`已完成 ${uniq} / ${total}`;$("pbar").style.width=Math.min(100,uniq*100/total)+"%";}
