@@ -1,0 +1,9 @@
+{
+  "enabled": false,
+  "protocol": "hwt-vocab-progress-v1",
+  "endpoint": "",
+  "spreadsheetId": "1XWGz1BBY4K5AfVsmZSYnqxXvlie2j2wiVFV0ZRF0-VE",
+  "lessonId": "2hcl-xuanci-2022",
+  "lessonTitle": "选词填空（2022）",
+  "status": "awaiting-vocab-2022-receiver-deployment"
+}
