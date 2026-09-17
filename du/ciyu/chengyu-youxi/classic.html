@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新加坡成语闯关英雄 - 中一/中二</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --secondary: #A29BFE;
+            --success: #00B894;
+            --error: #D63031;
+            --bg: #F0F2F5;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .game-container {
+            width: 90%;
+            max-width: 800px;
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 顶部进度条 */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .score-board { font-size: 1.2rem; color: var(--primary); font-weight: bold; }
+
+        /* 选关界面 */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .menu-card {
+            background: var(--secondary);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: none;
+            font-size: 1rem;
+        }
+        .menu-card:hover { transform: translateY(-3px); background: var(--primary); }
+
+        /* 字池区域 */
+        .char-pool {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 25px 0;
+            padding: 20px;
+            background: #F9FAFB;
+            border-radius: 15px;
+            min-height: 120px;
+        }
+
+        .char-tile {
+            width: 55px;
+            height: 55px;
+            background: white;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        .char-tile:active { transform: scale(0.9); }
+        .char-tile.used { opacity: 0.3; pointer-events: none; }
+
+        /* 答案框 */
+        .answer-zone { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; }
+        .slot {
+            width: 65px;
+            height: 65px;
+            border-bottom: 4px solid var(--secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .slot.win { border-bottom-color: var(--success); color: var(--success); animation: bounce; animation-duration: 0.5s; }
+
+        /* 题目描述 */
+        .question-card {
+            background: #FFF9DB;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #FAB005;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .sentence { font-size: 1.3rem; line-height: 1.8; margin-bottom: 10px; }
+        .en-hint { color: #666; font-style: italic; font-size: 0.95rem; border-top: 1px dashed #DDD; padding-top: 10px; }
+        .underline-placeholder { color: var(--error); font-weight: bold; border-bottom: 2px solid var(--error); padding: 0 10px; }
+
+        /* 按钮控制 */
+        .controls { margin-top: 20px; }
+        .btn-next {
+            display: none;
+            padding: 12px 40px;
+            font-size: 1.2rem;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,184,148,0.4);
+        }
+
+        .btn-reset { margin-top: 10px; background: none; border: none; color: #666; cursor: pointer; text-decoration: underline; }
+
+        /* 掌声动画提示 */
+        #feedback { position: fixed; top: 20%; left: 50%; transform: translateX(-50%); font-size: 3rem; pointer-events: none; z-index: 100; }
+    </style>
+</head>
+<body>
+
+<div id="feedback"></div>
+
+<div class="game-container">
+    <div id="setup-screen">
+        <h1 style="color: var(--primary);">成语大闯关 🏆</h1>
+        <p>请选择你的学习目标：</p>
+        
+        <h3>中一级 (Secondary 1)</h3>
+        <div class="menu-grid">
+            <button class="menu-card" onclick="startGame('s1_1')">1-23条</button>
+            <button class="menu-card" onclick="startGame('s1_2')">24-46条</button>
+            <button class="menu-card" onclick="startGame('s1_3')">47-70条</button>
+        </div>
+
+        <h3>中二级 (Secondary 2)</h3>
+        <div class="menu-grid">
+            <button class="menu-card" onclick="startGame('s2_1')">71-87条</button>
+            <button class="menu-card" onclick="startGame('s2_2')">88-106条</button>
+            <button class="menu-card" onclick="startGame('s2_3')">107-122条</button>
+            <button class="menu-card" onclick="startGame('s2_4')">122-138条</button>
+        </div>
+    </div>
+
+    <div id="game-screen" style="display: none;">
+        <div class="header">
+            <button onclick="location.reload()" style="border:none; background:none; cursor:pointer;">⬅ 返回</button>
+            <div class="score-board">进度: <span id="current-idx">1</span>/<span id="total-idx">10</span></div>
+        </div>
+
+        <div class="question-card">
+            <div class="sentence" id="sentence-text"></div>
+            <div class="en-hint" id="english-hint"></div>
+        </div>
+
+        <div class="answer-zone" id="answer-slots">
+            <div class="slot" id="slot-0"></div>
+            <div class="slot" id="slot-1"></div>
+            <div class="slot" id="slot-2"></div>
+            <div class="slot" id="slot-3"></div>
+        </div>
+
+        <div class="char-pool" id="char-pool"></div>
+
+        <div class="controls">
+            <button class="btn-next animate__animated animate__pulse animate__infinite" id="next-btn" onclick="nextQuestion()">下一题 ➔</button>
+            <br>
+            <button class="btn-reset" onclick="resetCurrent()">重填本题</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/**
+ * 成语数据库 (您可以在此处继续补充附件中的所有数据)
+ * 格式说明: word: 成语, sentence: 带有横线的句子, en: 英文解释
+ */
+const IDIOM_DATA = {
+ // 中一 (1-23)
+"s1_1": [
+  {word: "百折不挠", sentence: "在公司成立初期，他遭遇到许多挫折，多亏他意志坚定、______，才有今日的成就。", en: "Undaunted by repeated setbacks; persistent and indomitable."},
+  {word: "班门弄斧", sentence: "谢先生是大书法家，我怎么敢在他前面______呢？", en: "To show off one’s slight skill before an expert."},
+  {word: "半途而废", sentence: "陈明做事总是______，所以最终一事无成。", en: "To give up halfway; to leave something unfinished."},
+  {word: "悲天悯人", sentence: "他有______的胸怀，每次发生天灾人祸，他总是出钱出力帮忙。", en: "To feel compassion for the world's suffering."},
+  {word: "不耻下问", sentence: "学习要______，才能有进步。", en: "Not feel ashamed to ask and learn from one's subordinates."},
+  {word: "不苟言笑", sentence: "工作时______的他，与他休息时谈笑风生的样子相比，简直判若两人。", en: "Serious in manner; not given to joking."},
+  {word: "不亢不卑", sentence: "我们虽是小国寡民，但对外仍然表现______的态度。", en: "Neither haughty nor humble; show appropriate self-respect."},
+  {word: "不可救药", sentence: "他终日沉迷于电脑游戏，已到______的地步。", en: "Beyond cure; hopeless."},
+  {word: "不劳而获", sentence: "他沉迷于赌博，希望能______，成为大富翁。", en: "To reap without sowing; to profit from others' hard work."},
+  {word: "不务正业", sentence: "小明经常跟一些______的朋友混在一起，久而久之，他染上了毒瘾。", en: "Not attend to one's proper business or profession."},
+  {word: "不翼而飞", sentence: "我明明把钱包放在这张桌子上，转眼间，钱包却______了。", en: "To disappear suddenly without a trace."},
+  {word: "不知所措", sentence: "得知工厂下个星期就要停工，所有的员工都______。", en: "To be at a loss; not knowing what to do."},
+  {word: "不自量力", sentence: "那支球队的球技还不成熟，却主动挑战冠军队，真是不知______。", en: "To overrate one's own abilities."},
+  {word: "差强人意", sentence: "那几首诗写得不怎么样，只有这首还______。", en: "Just barely satisfactory."},
+  {word: "长年累月", sentence: "他______地超负荷工作，终于病倒了。", en: "Over a long period of time; year in and year out."},
+  {word: "长袖善舞", sentence: "他______，善于钻营取巧，因此业务在他的掌管下蒸蒸日上。", en: "Resourceful in social maneuvering; good at networking."},
+  {word: "嗤之以鼻", sentence: "绝大多数写旧诗的人把新诗看成旁门左道而______。", en: "To turn up one's nose at; to treat with contempt."},
+  {word: "持之以恒", sentence: "学习应该抱着锲而不舍，______的精神，这样才能有所收获。", en: "To persevere; to stick to something without giving up."},
+  {word: "重蹈覆辙", sentence: "如果我们不吸取教训，难免会______。", en: "To follow the same track as a overturned cart; to repeat one's mistakes."},
+  {word: "出尔反尔", sentence: "做人要讲信用，不能______，说了不算数。", en: "To go back on one's word."},
+  {word: "出类拔萃", sentence: "他在众多选手中表现______，最终获得了冠军。", en: "Stand out from the crowd; outstanding."},
+  {word: "吹毛求疵", sentence: "他总是对别人的工作______，这让同事们感到非常反感。", en: "To carp; to find fault with something small."},
+  {word: "垂涎三尺", sentence: "看到桌上丰盛的晚餐，弟弟馋得______。", en: "To drool with envy; to long for something."}
+],
+
+// 中一 (24-46)
+"s1_2": [
+  {word: "从善如流", sentence: "王经理______，总是虚心听取员工的合理化建议。", en: "To follow correct advice readily."},
+  {word: "粗制滥造", sentence: "由于厂家______，这批货物的质量非常糟糕。", en: "To turn out rough and slipshod work."},
+  {word: "大公无私", sentence: "林法官办事______，在当地享有很高的威望。", en: "Just and fair; selfless."},
+  {word: "大言不惭", sentence: "他明明什么都不会，却还在那里______地吹牛。", en: "To boast without shame."},
+  {word: "当机立断", sentence: "情况非常紧急，他______，立刻决定带大家撤离。", en: "To make a prompt decision."},
+  {word: "当仁不让", sentence: "在推选班长时，他作为优秀的候选人______。", en: "To not decline a responsibility when it is for a good cause."},
+  {word: "道貌岸然", sentence: "别看他平时一副______的样子，其实内心非常阴险。", en: "Sanctimonious; feigning righteousness."},
+  {word: "德高望重", sentence: "这位______的老教授，深受全体师生的爱戴。", en: "Someone who is greatly respected and has high integrity."},
+  {word: "得过且过", sentence: "学习不能抱着______的态度，必须脚踏实地。", en: "Muddle along; drift along."},
+  {word: "得意忘形", sentence: "他在比赛中取得了一点成绩就______，结果在下一场比赛中输了。", en: "Blinded by success; become highly conceited."},
+  {word: "掉以轻心", sentence: "虽然形势有所好转，但我们绝不能______。", en: "To let one's guard down; to be careless."},
+  {word: "独善其身", sentence: "在社会风气不好的时候，他依然能够______。", en: "To pay attention to one's own moral uplift without thought of others."},
+  {word: "对牛弹琴", sentence: "你给那个不懂音乐的人讲交响乐，简直是______。", en: "To address the wrong audience."},
+  {word: "对症下药", sentence: "只有找准问题的根源，才能______，彻底解决问题。", en: "Apply the right remedy to the problem."},
+  {word: "多多益善", sentence: "对于这些慈善捐款，自然是______。", en: "The more the better."},
+  {word: "尔虞我诈", sentence: "那个商业圈子里充满了______，很难找到真诚的合作伙伴。", en: "Each trying to cheat the other."},
+  {word: "耳濡目染", sentence: "在父母的______下，他从小就对绘画产生了浓厚的兴趣。", en: "To be influenced by what one sees and hears."},
+  {word: "发人深省", sentence: "这部电影的结尾处理得非常深刻，极其______。", en: "Thought-provoking; calling for deep reflection."},
+  {word: "发扬光大", sentence: "我们有责任将中华优良传统文化______。", en: "To develop and promote; to enhance."},
+  {word: "防患未然", sentence: "我们必须定期检查消防设施，______。", en: "Take preventive measures."},
+  {word: "废寝忘食", sentence: "为了攻克这个难题，他简直到了______的地步。", en: "To forget to eat and sleep due to hard work."},
+  {word: "纷至沓来", sentence: "新店开张，顾客______，生意十分红火。", en: "To come in a continuous stream."},
+  {word: "奉公守法", sentence: "作为一个公民，我们应该______。", en: "To be law-abiding."}
+],
+
+// 中一 (47-70)
+"s1_3": [
+  {word: "敷衍塞责", sentence: "他办事总是______，一点责任心都没有。", en: "Perform one's duty in a careless manner."},
+  {word: "赴汤蹈火", sentence: "为了国家的利益，即使是______，我们也绝不退缩。", en: "Go through fire and water; defy all difficulties."},
+  {word: "改过自新", sentence: "只要他愿意______，大家还是会给他机会的。", en: "To mend one's ways for a fresh start."},
+  {word: "改邪归正", sentence: "经过教导，这群失足少年终于决定______。", en: "Abandon the depraved way and return to virtue."},
+  {word: "高瞻远瞩", sentence: "领导者应该______，制定出长远的发展规划。", en: "Look far ahead and aim high."},
+  {word: "高枕无忧", sentence: "只要防范措施做得好，我们就可以______了。", en: "To sleep without anxiety; feel safe."},
+  {word: "各有千秋", sentence: "此次参加竞赛的作品______，让评审难以取舍。", en: "Each has its own merits; everyone has strong points."},
+  {word: "根深蒂固", sentence: "他那副威严的形象在人们的心中，早已______。", en: "Deep-rooted; ingrained."},
+  {word: "功亏一篑", sentence: "试验马上就要大功告成了，大家千万不能松懈，否则______。", en: "To fail at the last step."},
+  {word: "勾心斗角", sentence: "公司里的几位经理______，把公司的业务搞得一团糟。", en: "To scheme against each other."},
+  {word: "苟且偷安", sentence: "国难当前，我们不应当______，而应投身救国。", en: "Seek a moment's peace however one can."},
+  {word: "孤陋寡闻", sentence: "如果你不走出去看看，只会变得______。", en: "Ignorant and ill-informed."},
+  {word: "沽名钓誉", sentence: "他做的那些慈善活动，其实只是为了______。", en: "To fish for fame and compliments."},
+  {word: "孤掌难鸣", sentence: "在这个复杂的项目中，他一个人感到______，需要团队支持。", en: "It's hard to achieve anything alone."},
+  {word: "孤注一掷", sentence: "在最后关头，他决定______，把全部资金投入到这个项目。", en: "To risk everything on a single venture."},
+  {word: "管中窥豹", sentence: "你只看了一小部分就下结论，这种______的方法是不可取的。", en: "To have a narrow view of things."},
+  {word: "光明正大", sentence: "我们做事应该______，没什么好隐瞒的。", en: "Honorable; above board."},
+  {word: "海底捞针", sentence: "在茫茫人海中寻找一个失散多年的亲人，犹如______。", en: "Looking for a needle in a haystack."},
+  {word: "海誓山盟", sentence: "他们曾立下______，誓言永不分离。", en: "A solemn pledge of love."},
+  {word: "害群之马", sentence: "我们绝不能容忍这个______破坏整个团队的荣誉。", en: "Black sheep; someone who brings trouble to the group."},
+  {word: "含沙射影", sentence: "他在发言中______地攻击竞争对手，这种做法不道德。", en: "To insinuate; to attack by innuendo."},
+  {word: "汗牛充栋", sentence: "国家图书馆里的藏书可谓是______。", en: "An immense collection of books."},
+  {word: "和蔼可亲", sentence: "王奶奶总是那么______，孩子们都很喜欢她。", en: "Affable and genial; kind."},
+  {word: "和睦相处", sentence: "邻里之间应该______，互相帮助。", en: "To live together in peace."}
+],
+
+// 中二 (71-87)
+"s2_1": [
+  {word: "好逸恶劳", sentence: "伟杰______，总是贪图享受，希望别人能帮他把工作做完。", en: "To love comfort and hate work; to be lazy."},
+  {word: "鹤立鸡群", sentence: "宴会上，她那浑身雪白的打扮，在红男绿女之中就有______之感。", en: "Standing out from the crowd."},
+  {word: "狐假虎威", sentence: "他仗着姐夫是公司的董事，便经常______，欺负同事。", en: "Bullying others using someone else's power."},
+  {word: "囫囵吞枣", sentence: "对于别人的意见，需要加以分析，不可以______。", en: "To accept things without understanding properly."},
+  {word: "胡作非为", sentence: "这些不良少年经常在这一带______，干扰居民生活。", en: "To act recklessly and do wrong things."},
+  {word: "花言巧语", sentence: "在他______的哄骗下，世杰信以为真，买了那批仿制的古董。", en: "Sweet but false words; smooth talk."},
+  {word: "画龙点睛", sentence: "写作文时，适当引用一些诗文名句，可以收到______的效果。", en: "To add the finishing touch."},
+  {word: "画蛇添足", sentence: "你已经布置得很好了，再加这些东西简直是______。", en: "To do something unnecessary that makes things worse."},
+  {word: "诲人不倦", sentence: "______的陈老师，深得学生的爱戴和赞许。", en: "To teach others patiently without getting tired."},
+  {word: "混水摸鱼", sentence: "当火灾发生时，竟有人______偷取灾民财物，真是让人心寒。", en: "To fish in troubled waters; take advantage of chaos."},
+  {word: "豁然开朗", sentence: "一旦变换看问题的角度，你会______，知道该怎么做了。", en: "To suddenly understand; to become clear."},
+  {word: "家喻户晓", sentence: "这家肉干店是______的，每年新年店前总是大排长龙。", en: "Known by every household."},
+  {word: "见仁见智", sentence: "这部电影的好坏______，有人说好看，也有人说不喜欢。", en: "Different people have different opinions."},
+  {word: "见义勇为", sentence: "他是一个______的青年，看到别人有困难，他都会前去帮忙。", en: "To act bravely for a just cause."},
+  {word: "捷足先登", sentence: "谁知别人已______，买下了最后一台限量版手机。", en: "The early bird catches the worm."},
+  {word: "金玉良言", sentence: "长辈们对你的劝告都是______，你一定要牢记在心。", en: "Invaluable advice."},
+  {word: "精益求精", sentence: "他在学术研究上始终坚持______的精神，不断突破自我。", en: "To constantly strive for perfection."}
+],
+
+// 中二 (88-106)
+"s2_2": [
+  {word: "近朱者赤", sentence: "所谓“______，近墨者黑”，因此在交友的时候，我们应该尤为谨慎。", en: "One takes on the color of one's company."},
+  {word: "惊弓之鸟", sentence: "经历过战争的人，一听到枪声，就会有如______，慌张起来。", en: "A badly frightened person who panics easily."},
+  {word: "井井有条", sentence: "他做事细心，每件事都做得______。", en: "In perfect order; well-organized."},
+  {word: "咎由自取", sentence: "他落得今日这个下场，完全是______，怪不得别人。", en: "To have only oneself to blame."},
+  {word: "居安思危", sentence: "在和平时期，我们也要______，增强国防意识。", en: "Be prepared for danger in times of peace."},
+  {word: "鞠躬尽瘁", sentence: "诸葛亮为国家______，死而后已的精神令人感动。", en: "To put in one's utmost effort; dedicate oneself until death."},
+  {word: "举足轻重", sentence: "他在商界有着______的地位，一举一动都受人瞩目。", en: "To play a decisive role."},
+  {word: "开源节流", sentence: "在经济困难时期，公司必须采取______的措施度过难关。", en: "To increase income and reduce expenditure."},
+  {word: "慷慨解囊", sentence: "当灾区急需救援时，社会各界纷纷______。", en: "To give money generously to charity."},
+  {word: "口若悬河", sentence: "他口才极好，辩论起来______，说得对方哑口无言。", en: "To speak with great eloquence."},
+  {word: "口是心非", sentence: "我们应该言行一致，不能______，嘴里一套心里一套。", en: "To say one thing and mean another."},
+  {word: "扣人心弦", sentence: "这部小说情节惊险奇特，______，引人入胜。", en: "Thrilling; deeply moving."},
+  {word: "苦口婆心", sentence: "在师长______的劝导下，他终于决定改过自新。", en: "To advise earnestly and repeatedly."},
+  {word: "滥竽充数", sentence: "他根本不会唱歌，只是混在合唱团里______罢了。", en: "To make up the numbers with inferior talent."},
+  {word: "狼狈为奸", sentence: "那两个坏人______，合伙骗取了他人的财产。", en: "To act in collusion to do evil."},
+  {word: "老马识途", sentence: "由于他______，我们很快就找到了走出森林的路。", en: "An experienced person knows the way."},
+  {word: "礼尚往来", sentence: "______是我们的优良传统，邻里间送点小礼物是很平常的。", en: "To return politeness with politeness."}
+],
+
+// 中二 (107-138 部分及后续)
+"s2_3": [
+  {word: "理直气壮", sentence: "只要我们没做亏心事，就可以______地面对任何质疑。", en: "To speak or act with confidence because one is right."},
+  {word: "力不从心", sentence: "我很想帮你的忙，可惜我现在______。", en: "Ability falling short of one's wishes."},
+  {word: "良药苦口", sentence: "这些批评虽然难听，但______，对你有好处。", en: "Good advice is often hard to take but beneficial."},
+  {word: "了如指掌", sentence: "他对这个社区的环境______，问他准没错。", en: "To know something like the back of one's hand."},
+  {word: "炉火纯青", sentence: "经过多年的苦练，他的书法艺术已经达到了______的地步。", en: "Attaining high proficiency or perfection."},
+  {word: "路不拾遗", sentence: "在这个治安良好的国家，人们都能做到______。", en: "Honesty is such that no one picks up lost articles."},
+  {word: "落花流水", sentence: "我军奋勇杀敌，把敌人打得______，仓皇逃窜。", en: "Shattered and defeated."},
+  {word: "门庭若市", sentence: "自从他在那儿开了餐馆，每天都是______，生意火红。", en: "A place crowded with visitors."},
+  {word: "面目全非", sentence: "这场大火过后，原本美丽的别墅已经变得______。", en: "Changed beyond recognition."},
+  {word: "名列前茅", sentence: "他在这次全国统一考试中______，获得了全额奖学金。", en: "To be among the best."},
+  {word: "明知故犯", sentence: "他知道闯红灯是违法的，却还要______。", en: "To break the rules intentionally."},
+  {word: "目空一切", sentence: "他取得一点成绩就______，看不起任何人。", en: "To be supercilious; haughty."},
+  {word: "逆水行舟", sentence: "求学如______，不进则退。", en: "To go against the current; work hard or fall behind."},
+  {word: "宁死不屈", sentence: "那位将军在敌人面前______，表现了大无畏精神。", en: "Prefer death to surrender."},
+  {word: "潜移默化", sentence: "父母的身教对孩子的身心发展起着______的作用。", en: "To be influenced gradually and unconsciously."},
+  {word: "勤能补拙", sentence: "他的手脚虽然慢些，但______，总会有成功的一天。", en: "Diligence compensates for clumsiness."},
+  {word: "青红皂白", sentence: "妈妈不分______，竟把过错推到我身上。", en: "Right and wrong; the true facts."}
+],
+
+// 中二 (122-138)
+"s2_4": [
+  {word: "情不自禁", sentence: "看到这么美的风景，他______地拿出相机拍照。", en: "Unable to restrain one's feelings."},
+  {word: "取长补短", sentence: "两个团队合作，可以______，发挥各自的优势。", en: "Draw on each other's strong points."},
+  {word: "忍辱负重", sentence: "为了完成任务，他______，默默承受一切压力。", en: "To endure humiliation in order to complete a mission."},
+  {word: "任重道远", sentence: "建设国家是______的事业，需要几代人的共同努力。", en: "The burden is heavy and the road is long."},
+  {word: "如火如荼", sentence: "各地的建设工作正在______地进行着。", en: "Vigorous and active; in full swing."},
+  {word: "如虎添翼", sentence: "有了这批新设备，工厂的生产能力______，大大提高了效率。", en: "Like a tiger with wings added; even more powerful."},
+  {word: "三人成虎", sentence: "谣言______，传得多了，人们便信以为真了。", en: "Repeated rumours become accepted as truth."},
+  {word: "舍己为人", sentence: "消防员______的精神，令人无比敬佩。", en: "To sacrifice oneself for others."},
+  {word: "身先士卒", sentence: "将军______，带领士兵冲锋陷阵。", en: "To lead one's troops in person; to take the lead."},
+  {word: "盛气凌人", sentence: "他总是一副______的样子，让人很难接近。", en: "To bully others by showing off one's power."},
+  {word: "事半功倍", sentence: "掌握正确的学习方法，就能______，学得轻松。", en: "Get twice the results with half the effort."},
+  {word: "事与愿违", sentence: "他努力了很久，结果却______，令人惋惜。", en: "Things turn out contrary to one's wishes."},
+  {word: "手足无措", sentence: "面对突如其来的变故，他顿时______，不知如何是好。", en: "At a loss what to do."},
+  {word: "叹为观止", sentence: "杂技演员的精彩表演，令观众______。", en: "To gasp in admiration; a marvellous sight."},
+  {word: "同甘共苦", sentence: "真正的朋友应该能够______，不离不弃。", en: "To share joys and sorrows together."},
+  {word: "无懈可击", sentence: "他的论证逻辑严密，______，对方无言以对。", en: "Flawless; leaving no room for criticism."},
+  {word: "循序渐进", sentence: "学习任何技能都要______，不能急于求成。", en: "To follow in order and advance step by step."}
+]
+};
+
+let currentSet = [];
+let currentIndex = 0;
+let userInput = [];
+
+function startGame(rangeKey) {
+    currentSet = IDIOM_DATA[rangeKey] || IDIOM_DATA["s1_1"];
+    currentIndex = 0;
+    document.getElementById('setup-screen').style.display = 'none';
+    document.getElementById('game-screen').style.display = 'block';
+    renderQuestion();
+}
+
+function renderQuestion() {
+    const data = currentSet[currentIndex];
+    userInput = [];
+    document.getElementById('current-idx').innerText = currentIndex + 1;
+    document.getElementById('total-idx').innerText = currentSet.length;
+    document.getElementById('next-btn').style.display = 'none';
+    
+    // 清空答案框
+    for(let i=0; i<4; i++) {
+        const s = document.getElementById(`slot-${i}`);
+        s.innerText = '';
+        s.classList.remove('win');
+    }
+
+    // 设置题目
+    document.getElementById('sentence-text').innerHTML = data.sentence.replace("______", "<span class='underline-placeholder'>____</span>");
+    document.getElementById('english-hint').innerText = "提示 (English Hint): " + data.en;
+
+    // 生成乱序字池 (16个字)
+    let pool = data.word.split('');
+    const extraChars = "志坚强不息努力向上成功坚持奋斗勇往直前天天向上大吉大利".split('');
+    while(pool.length < 16) {
+        let r = extraChars[Math.floor(Math.random()*extraChars.length)];
+        if(!pool.includes(r)) pool.push(r);
+    }
+    pool.sort(() => Math.random() - 0.5);
+
+    const poolContainer = document.getElementById('char-pool');
+    poolContainer.innerHTML = '';
+    pool.forEach((char, index) => {
+        const btn = document.createElement('div');
+        btn.className = 'char-tile animate__animated animate__fadeInUp';
+        btn.innerText = char;
+        btn.onclick = () => selectChar(char, btn);
+        poolContainer.appendChild(btn);
+    });
+}
+
+function selectChar(char, element) {
+    if(userInput.length < 4) {
+        userInput.push(char);
+        element.classList.add('used');
+        document.getElementById(`slot-${userInput.length-1}`).innerText = char;
+        
+        if(userInput.length === 4) checkResult();
+    }
+}
+
+function checkResult() {
+    const answer = userInput.join('');
+    const correctWord = currentSet[currentIndex].word;
+
+    if(answer === correctWord) {
+        // 成功反馈
+        triggerWinEffects();
+        document.getElementById('next-btn').style.display = 'inline-block';
+        for(let i=0; i<4; i++) document.getElementById(`slot-${i}`).classList.add('win');
+    } else {
+        // 失败反馈
+        document.getElementById('feedback').innerText = "❌ 再试一次";
+        speak("再试一次");
+        setTimeout(() => {
+            document.getElementById('feedback').innerText = "";
+            resetCurrent();
+        }, 1000);
+    }
+}
+
+function triggerWinEffects() {
+    // 1. 鲜花纸屑特效
+    confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+    });
+
+    // 2. 语音朗读成语
+    speak(currentSet[currentIndex].word);
+
+    // 3. 掌声图标
+    document.getElementById('feedback').innerText = "👏 太棒了！🌷";
+    setTimeout(() => { document.getElementById('feedback').innerText = ""; }, 2000);
+}
+
+function nextQuestion() {
+    if(currentIndex < currentSet.length - 1) {
+        currentIndex++;
+        renderQuestion();
+    } else {
+        alert("恭喜！你已完成本组全部成语练习！");
+        location.reload();
+    }
+}
+
+function resetCurrent() {
+    userInput = [];
+    for(let i=0; i<4; i++) document.getElementById(`slot-${i}`).innerText = '';
+    document.querySelectorAll('.char-tile').forEach(el => el.classList.remove('used'));
+}
+
+function speak(text) {
+    const msg = new SpeechSynthesisUtterance();
+    msg.text = text;
+    msg.lang = 'zh-CN';
+    msg.rate = 0.8;
+    window.speechSynthesis.speak(msg);
+}
+</script>
+</body>
+</html>
