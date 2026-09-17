@@ -59,12 +59,7 @@ h1{font-family:var(--kai);font-size:33px;line-height:1.2;margin:0;color:#14263e}
 .keyword{color:var(--red);font-weight:800}
 .gloss{border-bottom:1px dashed #6b7c93;outline:none;position:relative}
 .gloss:hover,.gloss:focus{background:#fff7d6}
-.gloss:hover::after,.gloss:focus::after{
-  content:attr(data-tip);position:absolute;z-index:20;left:0;bottom:calc(100% + 7px);
-  width:max-content;max-width:min(320px,75vw);padding:8px 10px;border:1px solid #cbd7e7;border-radius:9px;
-  background:#fff;color:#26364c;font-family:var(--song);font-size:14px;line-height:1.45;
-  box-shadow:0 8px 24px rgba(23,45,76,.16)
-}
+
 .answer-input{display:inline-block;vertical-align:baseline;width:min(9em,48vw);min-width:5.5em;margin:0 .18em;padding:2px 8px 3px;border:0;border-bottom:2px solid #6984a8;background:#f8fbff;border-radius:6px 6px 0 0;outline:none;font-family:var(--kai);font-size:24px;line-height:1.4;text-align:center;color:#14263e}
 .answer-input:focus{background:#eef5ff;border-bottom-color:var(--brand);box-shadow:0 0 0 3px rgba(21,92,201,.09)}
 .actions{display:flex;align-items:center;gap:10px;margin-top:12px}
@@ -112,3 +107,18 @@ h1{font-family:var(--kai);font-size:33px;line-height:1.2;margin:0;color:#14263e}
   .bank small{display:block;margin-left:0}.sentence,.answer-input{font-size:23px}.tabs .tab-tail{display:none}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+/* Definitions stay within the screen and above the scrolling word bank. */
+.gloss{cursor:pointer;border-bottom-color:currentColor}
+.gloss:focus-visible{outline:2px solid var(--brand);outline-offset:3px}
+.glossary-popup{position:fixed;z-index:1000;width:320px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);overflow:auto;padding:16px 42px 14px 16px;border:1px solid #bacde5;border-radius:12px;background:#fff;color:#20344e;box-shadow:0 8px 28px #152e5930;font-family:var(--song);font-size:16px;line-height:1.55}
+.glossary-popup strong{font-family:var(--kai);font-size:21px}
+.glossary-popup p{margin:5px 0}
+.glossary-popup [lang=en]{color:#52657e}
+.glossary-popup button{position:absolute;right:5px;top:4px;width:38px;height:38px;border:0;background:transparent;color:#395572;font-size:24px}
+.field-error{color:var(--red);font-size:15px;margin:10px 0 0}
+.wrong-history{margin-top:12px;border-top:1px dashed var(--line);padding-top:9px;font-size:14px;color:#526176}
+.wrong-history summary{cursor:pointer}
+.wrong-history .answer-word{font-family:var(--kai);font-size:20px}
+.home-link{margin-left:auto;margin-right:16px;color:var(--brand);font-size:14px;text-decoration:none}
+.instructions [lang=en],.feedback [lang=en],.review-intro{font-family:var(--song)}
+@media(max-width:680px){.masthead{flex-wrap:wrap;gap:8px}.home-link{margin-left:auto;margin-right:0}.save-status{max-width:100%;width:100%}}
