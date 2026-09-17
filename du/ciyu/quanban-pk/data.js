@@ -88,9 +88,9 @@ const VOCAB=parseBank(`秉持|坚持、保持某种态度或原则。|to uphold;
 符合|与要求、标准或实际情况一致。|to conform to; to be in line with|符合要求 / 符合标准|
 怄气|跟人闹别扭，或自己生闷气。|to sulk|和别人怄气|
 烹饪|做饭做菜，加工食物。|cooking; culinary arts|学习烹饪 / 烹饪技巧|
-嫌|对某人或某事不满意，觉得不好或不够好。|to dislike; to find fault with|嫌太贵 / 嫌麻烦|
-毅力|坚强而持久的意志。|perseverance; willpower|有毅力 / 靠毅力坚持|
-恐怖|令人极度害怕或不安。|terrifying; horrifying|恐怖故事 / 恐怖气氛|
+嫌|对某人或某事不满意，觉得不好或不够好。|to dislike; to find fault with|嫌麻烦 / 嫌太贵|
+毅力|坚强而持久的意志。|perseverance; willpower|有毅力 / 坚强的毅力|
+恐怖|令人极度害怕或惊慌。|terror; horror; terrifying|恐怖事件 / 感到恐怖|
 憋|勉强忍住，不让情绪、话语等表达出来。|to hold back; to bottle up|憋住眼泪 / 憋在心里|
 委婉|说话比较含蓄，不直接、不生硬。|indirect; tactful; euphemistic|说法委婉 / 委婉表达|
 吼|大声叫喊。|to yell; to roar|大吼一声 / 冲着人吼|
@@ -110,17 +110,17 @@ const VOCAB=parseBank(`秉持|坚持、保持某种态度或原则。|to uphold;
 炙|用火烤。|to roast; to grill|炙烤 / 炙热|
 社交媒体|让人们在网上交流、分享内容的平台。|social media|使用社交媒体 / 社交媒体平台|`,'vocab');
 const IDIOM=parseBank(`好逸恶劳|贪图安逸，厌恶劳动。|to love ease and dislike work|成语用法|家杰_____，总是贪图享受，希望别人能帮他把工作做完。
-鹤立鸡群|比喻一个人的才能或仪表特别出众。|to stand out from the crowd|成语用法|宴会上，她那浑身雪白的打扮，在红男绿女之中就有_____之感。
+鹤立鸡群|比喻一个人的才能或仪表特别出众。|to stand out from the crowd|成语用法|宴会上，她一身白衣，在人群中格外醒目，颇有_____之感。
 狐假虎威|比喻依仗别人的势力去欺压他人。|to bully others by relying on powerful connections|成语用法|他仗着姐夫是公司的董事，便经常_____，欺负同事。
-囫囵吞枣|比喻学习时不加分析，不求甚解地笼统接受。|to swallow information without understanding it|成语用法|对于别人的意见，需要加以分析，不可以_____。
+囫囵吞枣|比喻学习时不加分析，不求甚解地笼统接受。|to swallow information without understanding it|成语用法|学习新知识时要认真理解，不能_____。
 胡作非为|不顾法纪或舆论，毫无顾忌地做坏事。|to behave lawlessly; to do evil|成语用法|这些不良少年经常在这一带_____，干扰居民生活。
-花言巧语|指用来骗人的虚假而动听的话。|sweet talk; deceptive flattering words|成语用法|在他_____的哄骗下，世杰信以为真，向他买了那批仿制的古董。
+花言巧语|指用来骗人的虚假而动听的话。|sweet talk; deceptive flattering words|成语用法|他用_____迷惑世杰，世杰信以为真，向他买了那批仿制的古董。
 画龙点睛|比喻在关键处用几句话点明实质，使内容更生动有力。|to add the vital finishing touch|成语用法|写作文时，适当引用一些诗文名句，可以收到_____的效果。
 画蛇添足|比喻做了多余的事，反而不恰当。|to do something unnecessary and spoil it|成语用法|明华已经把这里布置成古代战场，你却放了一辆古董车在中央，简直是_____。
 诲人不倦|教导别人特别有耐心，从不厌倦。|to teach patiently and tirelessly|成语用法|_____的陈老师，深得学生的爱戴和赞许。
-浑水摸鱼|比喻趁混乱的时候从中取得利益。|to fish in troubled waters; to take advantage of confusion|成语用法|火灾发生时，竟有人_____偷取灾民财物，真让人心寒。
+浑水摸鱼|比喻趁混乱的时候从中取得利益。|to fish in troubled waters; to take advantage of confusion|成语用法|火灾现场一片混乱，竟有人_____，偷取灾民财物，真让人心寒。
 豁然开朗|比喻突然明白了某个道理。|to suddenly understand; everything becomes clear|成语用法|一旦变换看问题的角度，你会_____，知道该怎么做了。
-家喻户晓|家家户户都知道，形容人人皆知。|well-known; a household name|成语用法|这家肉干店是_____的，每年新年店前总是大排长龙。
+家喻户晓|家家户户都知道，形容人人皆知。|well-known; a household name|成语用法|这家肉干店_____，每年新年店前总是大排长龙。
 见仁见智|对同一个问题，不同的人有不同的看法。|different people have different views|成语用法|这部电影的好坏_____，有人说好看，也有人说不喜欢。
 见义勇为|看到正义的事，就勇敢地去做。|to act courageously for a just cause|成语用法|他看到一名学生被人欺负，马上上前制止，真是个_____的青年。
 捷足先登|比喻行动快的人先达到目的或先得到想要的东西。|the early bird gets there first|成语用法|丽美原以为自己能抢先买到限量版手机，谁知别人已_____，买下了最后一台。
@@ -130,22 +130,22 @@ const IDIOM=parseBank(`好逸恶劳|贪图安逸，厌恶劳动。|to love ease 
 惊弓之鸟|比喻受过惊吓后，遇到一点动静就非常害怕的人。|a badly frightened person; easily alarmed|成语用法|很多经历过战争的人，一听到枪声，就像_____一样慌张起来。
 井井有条|形容做事、安排等很有条理，整齐有序。|well-organised; methodical|成语用法|他做事细心，每件事都安排得_____。
 咎由自取|灾祸或后果是自己造成的，怪不得别人。|to have only oneself to blame|成语用法|我已经多次警告你别太信任他，你却不听，现在被骗了，也是_____。
-居安思危|处在平安环境中，也想到可能出现危险，并预先准备。|to be prepared for danger even in safe times|成语用法|生活环境虽然安逸，我们仍要_____，预先做好应对危机的准备。
-举足轻重|形容地位重要，一举一动都会产生很大影响。|to play a key role; to carry great weight|成语用法|家强是篮球队的射手，在这场比赛中_____，是输赢的关键。
+居安思危|处在平安环境中，也想到可能出现危险，并预先准备。|to be prepared for danger even in safe times|成语用法|生活环境虽然安逸，我们仍要_____，不能因为眼前平静就放松警惕。
+举足轻重|形容地位重要，一举一动都会产生很大影响。|to play a key role; to carry great weight|成语用法|家强是篮球队的主力射手，在这场比赛中_____，教练非常重视他的表现。
 开门见山|比喻说话或写文章直截了当地进入正题。|to get straight to the point|成语用法|我们是多年的好朋友，有什么事就_____地说，不必拐弯抹角。
 开源节流|比喻增加收入，同时节省开支。|to increase income and cut expenses|成语用法|我们的公司才刚起步，因此更应该_____，巩固经济基础。
-慷慨解囊|形容很大方地在经济上帮助别人。|to help someone generously with money|成语用法|看到这些需要帮助的孩子，大家纷纷_____相助。
-口若悬河|形容口才很好，说起话来滔滔不绝。|eloquent; to speak fluently and continuously|成语用法|他口才很好，每次发表意见都_____，滔滔不绝。
+慷慨解囊|形容很大方地在经济上帮助别人。|to help someone generously with money|成语用法|看到这些需要帮助的孩子，大家纷纷_____。
+口若悬河|形容口才很好，说起话来滔滔不绝。|eloquent; to speak fluently and continuously|成语用法|他知识丰富，每次发表意见都_____，听众都很佩服他的口才。
 口是心非|嘴上说的和心里想的不一样。|to say one thing but mean another|成语用法|他嘴上说赞成这个计划，心里其实非常反对，真是_____。
 扣人心弦|形容事物非常吸引人、激动人心。|thrilling; gripping|成语用法|这部电影的情节_____，看完后令人回味无穷。
 苦口婆心|形容善意而又耐心地劝导。|to advise earnestly and patiently|成语用法|在老师和父母_____的劝导下，他终于决定改过自新。
 滥竽充数|比喻没有本领的人冒充有本领，或次货冒充好货。|to pass oneself off as competent; to make up the numbers|成语用法|他的演奏水平不高，却_____，参加乐队演出。
-狼狈为奸|比喻坏人互相勾结，一起做坏事。|villains collude together|成语用法|这两个罪犯臭味相投，_____，干了许多坏事。
+狼狈为奸|比喻坏人互相勾结，一起做坏事。|villains collude together|成语用法|这两个罪犯_____，一起策划了多起诈骗案。
 礼尚往来|在礼节上讲究有来有往；也指用相应的态度或做法回报对方。|courtesy calls for reciprocity|成语用法|去年他们热情接待我们，下周他们来我校，我们也应该好好接待，这是_____嘛！
 理直气壮|理由充分、正当，所以说话很有气势。|to speak boldly and confidently with good reason|成语用法|既然你认为自己没做错，就应该_____，坚持自己的立场。
 力不从心|心里想做，但能力或力量不够。|to be willing but unable; strength falls short|成语用法|王先生经验丰富，可如今年事已高，身体虚弱，_____，无法再到商海打拼。
 立竿见影|比喻立刻见到效果。|to have an immediate effect|成语用法|这种药十分灵验，能_____，疼痛很快就消失。
-良药苦口|比喻对人有帮助的劝告，往往听起来不舒服，却是为了他好。|good advice may be unpleasant to hear but beneficial|成语用法|父母师长的指导虽然严厉了些，但_____，他们也是希望你能有所进步。
+良药苦口|比喻对人有帮助的劝告，往往听起来不舒服，却是为了他好。|good advice may be unpleasant to hear but beneficial|成语用法|父母师长的劝告有时不好听，但正所谓“_____”，我们应该认真反思。
 了如指掌|形容对某件事非常熟悉、非常了解。|to know something very well; like the back of one's hand|成语用法|我对华人传统文化习俗_____，做你的旅游向导最适合不过了。
 淋漓尽致|形容把感情、意思或特点表现得非常充分、透彻。|to express or display something to the fullest|成语用法|电视小品《孔乙己》把鲁迅作品中含泪的幽默表现得_____。
 令人发指|形容某种行为恶劣到了让人非常愤怒的程度。|outrageous; horrifyingly cruel|成语用法|为了自身利益骗取老人家的血汗钱，这样的行为简直_____。
@@ -156,9 +156,9 @@ const IDIOM=parseBank(`好逸恶劳|贪图安逸，厌恶劳动。|to love ease 
 毛骨悚然|形容感到非常恐惧。|to feel terrified; hair stands on end|成语用法|听了这个恐怖故事后，她感到_____，连回家都要有人陪伴。
 毛遂自荐|比喻主动推荐自己担任某项工作。|to volunteer oneself; to recommend oneself|成语用法|在选举班长时，志文_____，老师赞扬他的勇气。
 每况愈下|形容情况越来越糟。|to get worse and worse|成语用法|经济不景气，该公司的生意_____，可能马上要裁员了。
-面面俱到|形容各方面都照顾得很周全，没有遗漏。|to cover all aspects thoroughly|成语用法|公司新来的经理做事非常细心，各方面都照顾得_____。
-面目全非|形容样子改变得很厉害，已经完全不同。|to be changed beyond recognition|成语用法|大火过后，那栋旧屋已经_____，几乎认不出来了。
+面面俱到|形容各方面都照顾得很周全，没有遗漏。|to cover all aspects thoroughly|成语用法|公司新来的经理做事非常细心，安排工作总能_____，很少有遗漏。
+面目全非|形容样子改变得很厉害，已经完全不同。|to be changed beyond recognition|成语用法|大火过后，那栋旧屋已经_____，居民看了十分痛心。
 名列前茅|指名次排在前面。|to rank among the top|成语用法|他的聪慧加上平日用功，使他在考试中_____。
-名落孙山|指在考试或选拔中没有被录取。|to fail an examination or selection|成语用法|他上课不专心，又不用功，结果考试成绩公布后_____。
+名落孙山|指在考试或选拔中没有被录取。|to fail an examination or selection|成语用法|他报考热门课程，却因准备不足而_____。
 墨守成规|守着旧规矩不肯改变，带有贬义。|to stick rigidly to old rules|成语用法|这间工厂过去因为_____，生产模式落后，最终被迫结束营业。`,'idiom');
 const DATA={vocab:VOCAB,idiom:IDIOM};
