@@ -653,4 +653,30 @@ parts.forEach(btn=>{
     const out=document.getElementById('buildResult');
     if(clicked.size===4){
       out.classList.add('show');
-      out.textContent='✅ 小画面完成：发现对方
+      out.textContent='✅ 小画面完成：发现对方还不懂 → 重新解释 → 用简短语言安慰 → 直到对方会做。人物特点就“写出来”了。';
+    }
+  });
+});
+
+document.querySelectorAll('.toggle-analysis').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const para=btn.closest('.para');
+    const boxes=[...para.querySelectorAll('.analysis-box')];
+    const willShow=boxes.some(b=>!b.classList.contains('show'));
+    boxes.forEach(b=>b.classList.toggle('show',willShow));
+    btn.textContent=willShow?'隐藏分析':'查看分析';
+  });
+});
+
+const showAllBtn=document.getElementById('showAllAnalysis');
+let allShown=false;
+showAllBtn.addEventListener('click',()=>{
+  allShown=!allShown;
+  document.querySelectorAll('.analysis-box').forEach(b=>b.classList.toggle('show',allShown));
+  document.querySelectorAll('.toggle-analysis').forEach(b=>b.textContent=allShown?'隐藏分析':'查看分析');
+  showAllBtn.textContent=allShown?'隐藏全部句子分析':'显示全部句子分析';
+});
+
+</script>
+</body>
+</html>
