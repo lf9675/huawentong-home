@@ -31,7 +31,7 @@
         .word-chip.selected { background: var(--secondary); color: white; border-color: var(--secondary); }
 
         .formula-hint { background: #e6f7ff; padding: 12px; border-left: 4px solid #1890ff; margin-bottom: 15px; font-size: 0.95em; color: #0050b3; }
-        textarea { font-family: KaiTi, STKaiti, 'Kaiti SC', serif; width: 100%; height: 100px; padding: 15px; border: 2px solid #ccc; border-radius: 8px; font-size: 1.1em; font-family: inherit; resize: vertical; box-sizing: border-box; }
+        textarea { font-family: KaiTi, STKaiti, 'Kaiti SC', serif; width: 100%; height: 100px; padding: 15px; border: 2px solid #ccc; border-radius: 8px; font-size: 1.1em; resize: vertical; box-sizing: border-box; }
         textarea:focus { border-color: var(--primary); outline: none; }
 
         .btn-submit { display: block; width: 100%; padding: 15px; font-size: 1.2em; font-weight: bold; color: white; background: var(--accent); border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; transition: 0.3s; }
@@ -304,7 +304,7 @@
     }
 
     function hasMeaningfulAttempt(text) {
-        return /[\\p{L}\\p{N}]/u.test(text);
+        return /[\p{L}\p{N}]/u.test(text);
     }
 
     function revealReference() {
