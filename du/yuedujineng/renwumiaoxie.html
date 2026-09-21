@@ -11,6 +11,13 @@
         
         .target-sentence-box { font-family: KaiTi, STKaiti, 'Kaiti SC', serif; background: #fffbe6; border-left: 6px solid #fadb14; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; font-size: 1.25em; line-height: 1.8; color: #333; }
         .target-sentence-box strong { color: #d46b08; font-size: 0.85em; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        .context-box { font-family:'Songti SC',SimSun,serif; background:#f5f7f5; border-left:4px solid #8fa68f; border-radius:8px; padding:10px 12px; margin-bottom:12px; color:#536153; font-size:.88em; line-height:1.7; }
+        .context-box b { color:#2a5c3f; }
+        .format-box { background:#fffdf6; border:1px solid #ead9a8; border-radius:9px; padding:10px 12px; margin-top:10px; }
+        .format-row { display:flex; gap:8px; align-items:flex-start; justify-content:space-between; }
+        .format-text { font-family:KaiTi,STKaiti,'Kaiti SC',serif; color:#6b5200; font-size:1.02em; line-height:1.7; user-select:text; }
+        .copy-format-btn { flex-shrink:0; border:1px solid #d4a035; background:#fff; color:#9a6d00; border-radius:8px; padding:6px 9px; cursor:pointer; font-size:.82em; }
+        .copy-format-btn:active { transform:scale(.97); }
 
         .step-box { background: #fff; border: 2px solid #eef2f5; border-radius: 10px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
         .step-title { font-size: 1.2em; font-weight: bold; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; }
@@ -90,6 +97,7 @@
     const allQuestions = [
         {
             source: "《母与女》",
+            context: "女儿靠在母亲的右肩上，沉沉入睡了。",
             grade: 2,
             fullSentence: "她小心地打开皮包，拿纸巾，擦鼻子，又小心地调整身体的姿势。自始至终，她的右肩动也不敢动。",
             chunks: [
@@ -105,10 +113,11 @@
             traitOptions: ["体贴", "关爱女儿", "谨慎", "顺从", "爱面子", "严厉"],
             analysisNote: "不能只看到“小心”就写“谨慎”。结合女儿靠着母亲右肩睡觉的情境，母亲这些动作是为了不惊醒女儿，因此体现的是体贴和关爱。",
             person: "母亲",
-            standardAnswer: "通过母亲小心取纸巾、调整姿势，而且始终不敢移动右肩的行动描写，表现了母亲怕惊醒女儿、处处为女儿着想的体贴与关爱。"
+            standardAnswer: "“小心地调整身体的姿势”“右肩动也不敢动”运用行动描写，表现了母亲体贴、关爱女儿。"
         },
         {
             source: "《我现在要去救人》",
+            context: "“911”灾难中，曾喆正在救护一位受伤的妇女，电视台拍下了这一幕。",
             grade: 1,
             fullSentence: "曾喆身穿白衬衫，戴着手套。面对死亡的威胁，他的表情仍然很镇静。",
             chunks: [
@@ -121,10 +130,11 @@
             traitOptions: ["镇静", "勇敢", "紧张", "害怕", "鲁莽"],
             analysisNote: "“仍然很镇静”直接写曾喆面对危险时的神态；结合“面对死亡的威胁”，可进一步看出他临危不乱、勇敢。",
             person: "曾喆",
-            standardAnswer: "通过曾喆面对死亡威胁时仍然镇静的神态描写，表现了他临危不乱、沉着勇敢的特点。"
+            standardAnswer: "“表情仍然很镇静”运用外貌／神态描写，表现了曾喆镇静、勇敢。"
         },
         {
             source: "《幸运饺子》",
+            context: "我把幸运饺子夹给奶奶，奶奶又把它夹到妈妈的碗里。",
             grade: 1,
             fullSentence: "奶奶对全家人说：“儿媳妇既要工作，又要照顾一家老小，是这个家里最辛苦的人。希望她在新的一年天天幸福快乐！”",
             chunks: [
@@ -138,10 +148,11 @@
             traitOptions: ["体贴", "关心家人", "自私", "冷漠", "严厉"],
             analysisNote: "奶奶先说出儿媳妇的辛苦，再祝福她幸福快乐。语言直接表现她理解并关心家人的感受。",
             person: "奶奶",
-            standardAnswer: "通过奶奶体谅儿媳妇工作又照顾家庭的辛苦，并祝福她幸福快乐的语言描写，表现了奶奶体贴、善解人意和关心家人的特点。"
+            standardAnswer: "通过语言描写，表现了奶奶体贴、关心家人。"
         },
         {
             source: "《迟到》",
+            context: "“我”因为赖床迟到，又被爸爸责打。到校后，老师让“我”看向窗外，“我”发现爸爸来了。",
             grade: 1,
             fullSentence: "我刚平静下来的心一下子又提到了嗓子眼！爸爸为什么追到学校来？",
             chunks: [
@@ -154,10 +165,11 @@
             traitOptions: ["紧张", "不安", "开心", "得意", "生气"],
             analysisNote: "“心提到了嗓子眼”和连续的疑问，都直接表现“我”看到爸爸来到学校时突然紧张、不安。",
             person: "我",
-            standardAnswer: "通过“心一下子又提到了嗓子眼”和对爸爸为什么追到学校来的疑问，表现了“我”看到爸爸来到学校时紧张、不安的心理。"
+            standardAnswer: "通过心理描写，表现了“我”紧张、不安。"
         },
         {
             source: "《一个蛋两个蛋三个蛋》",
+            context: "第一天，马小跳不小心把鸡蛋弄破了。第二天，他重新带了一个鸡蛋。",
             grade: 1,
             fullSentence: "第二天，他小心翼翼地用纸巾把蛋层层包好，放进裤兜，这样果然安全多了。",
             chunks: [
@@ -172,10 +184,11 @@
             traitOptions: ["小心谨慎", "有责任心", "粗心大意", "敷衍", "冲动"],
             analysisNote: "“小心翼翼”“层层包好”写出马小跳怎样保护鸡蛋，直接表现他比第一天更小心，也开始认真承担保护鸡蛋的责任。",
             person: "马小跳",
-            standardAnswer: "通过马小跳小心翼翼地把鸡蛋层层包好并放进裤兜的行动描写，表现了他这次保护鸡蛋时十分小心、认真，也开始表现出责任心。"
+            standardAnswer: "通过行动描写，表现了马小跳小心、有责任心。"
         },
         {
             source: "《最美的姿势》",
+            context: "宜欣因为自己的外表一直不喜欢拍照。轮到她拍个人照时，她说自己没有什么美的姿势。",
             grade: 2,
             fullSentence: "陈老师笑着大声说：“你错了，这个世界上每个人都有自己最美丽的姿势，都可以为这个世界留下最美的镜头！”",
             chunks: [
@@ -189,10 +202,11 @@
             traitOptions: ["善解人意", "鼓励学生", "关爱学生", "乐观", "直率", "好胜"],
             analysisNote: "陈老师不是只称赞宜欣，而是用话语改变她看待自己的角度，帮助她建立信心。因此重点是理解学生、鼓励学生和关爱学生，不只是“乐观”。",
             person: "陈老师",
-            standardAnswer: "通过陈老师肯定每个人都有自己最美丽的姿势、鼓励宜欣留下最美镜头的语言描写，表现了她善解人意、懂得鼓励和关爱学生。"
+            standardAnswer: "“每个人都有自己最美丽的姿势”运用语言描写，表现了陈老师善解人意、会鼓励学生。"
         },
         {
             source: "《放风筝》",
+            context: "“我”晚上十点半才回家，发现爸爸妈妈还坐在沙发上等“我”。",
             grade: 2,
             fullSentence: "爸爸则两眼布满血丝，神色焦虑。",
             chunks: [
@@ -205,10 +219,11 @@
             traitOptions: ["焦虑", "担心", "关心孩子", "生气", "严厉", "疲惫"],
             analysisNote: "“两眼布满血丝”本身也可能让人想到疲惫，但结合孩子深夜才回家的情境和“神色焦虑”，更准确的是父亲因担心孩子而焦虑；“关心孩子”是从神态进一步推断出的特点。",
             person: "爸爸",
-            standardAnswer: "通过爸爸两眼布满血丝、神色焦虑的外貌和神态描写，表现了他因为孩子晚归而十分焦虑、担心，体现了他对孩子的关心。"
+            standardAnswer: "“两眼布满血丝，神色焦虑”运用外貌／神态描写，表现了爸爸担心、关心孩子。"
         },
         {
             source: "《最美的姿势》",
+            context: "陈老师要为每个同学拍个人照。宜欣因为脖子歪向右边，一向害怕面对镜头。",
             grade: 2,
             fullSentence: "大家都兴致勃勃，叽叽喳喳地讨论着摆什么姿势好。我的心却沉到了谷底。",
             chunks: [
@@ -220,10 +235,11 @@
             traitOptions: ["自卑", "沮丧", "不安", "内向", "嫉妒", "胆小"],
             analysisNote: "“心沉到了谷底”写的是当时的心理状态。结合宜欣害怕拍照、在意自己的缺陷，可判断她自卑、沮丧和不安；不能只凭这一刻就把她定为“内向”或“胆小”的性格。",
             person: "我",
-            standardAnswer: "通过“我的心却沉到了谷底”的心理描写，表现了“我”想到要在同学面前拍照时非常自卑、沮丧和不安。"
+            standardAnswer: "“我的心却沉到了谷底”运用心理描写，表现了“我”自卑、沮丧、不安。"
         },
         {
             source: "《一个蛋两个蛋三个蛋》",
+            context: "店员怀疑马小跳裤兜里藏了东西，拉扯间把他保护了一天的鸡蛋弄破了，并提出赔他鸡蛋。",
             grade: 1,
             fullSentence: "“赔我一百个我都不要，我就要这一个！”马小跳哭得更伤心了，“这是我保护了一天的鸡蛋，呜呜呜……”",
             chunks: [
@@ -238,10 +254,11 @@
             traitOptions: ["珍惜", "有责任心", "无所谓", "自私", "骄傲"],
             analysisNote: "马小跳不要新的鸡蛋，坚持要自己保护了一天的那个鸡蛋，说明他珍惜自己的付出，也开始重视责任。",
             person: "马小跳",
-            standardAnswer: "通过马小跳坚持不要赔偿、只要自己保护了一天的那个鸡蛋的语言描写，表现了他十分珍惜自己的劳动成果，也开始懂得重视责任。"
+            standardAnswer: "通过语言描写，表现了马小跳珍惜这个鸡蛋、有责任心。"
         },
         {
             source: "《我与父亲的秘密》",
+            context: "“我”去高中报到时，父亲想送“我”，但被“我”拒绝了。",
             grade: 2,
             fullSentence: "父亲没有再说什么，只是默默地在一边帮我拾掇在学校寄宿需要用到的东西。",
             chunks: [
@@ -255,7 +272,7 @@
             traitOptions: ["关爱孩子", "体贴", "默默付出", "顺从", "软弱", "沉默寡言"],
             analysisNote: "关键不在“没有再说什么”，而在父亲被拒绝后仍默默替“我”收拾寄宿用品。这个行动体现他不张扬却持续付出的父爱，不能据一句沉默就概括成“沉默寡言”。",
             person: "父亲",
-            standardAnswer: "通过父亲不多说话，却默默替“我”收拾寄宿用品的行动描写，表现了父亲体贴孩子、默默付出的深沉父爱。"
+            standardAnswer: "“默默地帮我拾掇”运用行动描写，表现了父亲体贴、默默关爱孩子。"
         }
     ];
 
@@ -308,8 +325,8 @@
         document.getElementById('practice-area').style.display = 'block';
         document.getElementById('grade-pill').innerText = selectedGrade === 1 ? '中一 · Secondary 1' : '中二 · Secondary 2';
         document.getElementById('level-note').innerHTML = selectedGrade === 1
-            ? '<b>Focus（重点）:</b> Identify what the person says / does / thinks / looks like, then choose the most direct feeling or trait.（先看说、做、想、神态，再判断最直接的心情或特点）'
-            : '<b>Focus（重点）:</b> Explain the link from evidence to interpretation.（不只说“是什么特点”，还要说明“这个细节为什么能支持这个判断”）';
+            ? '<b>Focus（重点）:</b> 看懂人物说／做／想／神态。<br><b>Steps（步骤）:</b> ① 判手法 → ② 抓直接线索 → ③ 判断心情／特点 → ④ 套公式作答'
+            : '<b>Focus（重点）:</b> 说明“证据为什么能支持这个判断”。<br><b>Steps（步骤）:</b> ① 判手法 → ② 找证据 → ③ 判断人物 → ④ 用证据套公式作答';
         renderQuestion();
     }
 
@@ -334,13 +351,14 @@
             ? 'Tap the words that directly show what the person says, does, thinks or looks like.（点击直接表现人物的词句）'
             : 'Select the evidence that best supports your interpretation.（选择最能支持你判断的证据）';
         const step3Title = selectedGrade === 1 ? 'What does it show?（表现什么）' : 'Interpretation（解释）';
-        const answerHint = selectedGrade === 1
-            ? '<b>句式：</b>通过……描写，表现了【谁】的【心情／特点】。'
-            : '<b>Explain the link（说明关系）:</b> 通过……描写，表现了……；从“……”可以看出……。';
+        const answerFormat = selectedGrade === 1
+            ? '通过【____描写】，表现了【人物】【____的心情／特点】。'
+            : '“【关键词】”运用【____描写】，表现了【人物】【____的心情／特点】。';
 
         let html = `
             <div class="target-sentence-box">
                 <strong>Read the sentence（读句子）</strong>
+                <div class="context-box"><b>Context（语境）:</b> ${q.context}</div>
                 ${q.fullSentence}
                 <div style="margin-top:8px; font-size:0.8em; color:#7f8c8d;">课文：${q.source}</div>
             </div>
@@ -374,8 +392,13 @@
             <div class="step-box">
                 <div class="step-title"><span>4</span> Explain（完整分析）</div>
                 <div class="formula-hint">
-                    ${selectedGrade === 1 ? 'Use the clue to name the feeling or trait.（用线索判断心情或特点）' : 'Do not stop at a label. Explain why the evidence supports it.（不要只写特点，要解释证据与判断的关系）'}<br>
-                    ${answerHint}
+                    ${selectedGrade === 1 ? 'Answer the key point only.（答到重点即可）' : 'Use one key piece of evidence.（用一个关键证据即可）'}
+                    <div class="format-box">
+                        <div class="format-row">
+                            <div class="format-text" id="answer-format">${answerFormat}</div>
+                            <button type="button" class="copy-format-btn" onclick="copyAnswerFormat()">Copy format</button>
+                        </div>
+                    </div>
                 </div>
                 <textarea id="final-answer" placeholder="先写下自己的答案，再看参考答案。"></textarea>
                 <div class="answer-status" id="answer-status">未看参考答案</div>
@@ -398,6 +421,29 @@
             }
         });
         document.getElementById('progress-text').innerText = `第 ${currentIdx + 1} / ${activeQuestions.length} 题`;
+    }
+
+    async function copyAnswerFormat() {
+        const text = document.getElementById('answer-format')?.innerText || '';
+        if (!text) return;
+        try {
+            await navigator.clipboard.writeText(text);
+        } catch (e) {
+            const temp = document.createElement('textarea');
+            temp.value = text;
+            temp.style.position = 'fixed';
+            temp.style.opacity = '0';
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            temp.remove();
+        }
+        const btn = document.querySelector('.copy-format-btn');
+        if (btn) {
+            const old = btn.innerText;
+            btn.innerText = 'Copied';
+            setTimeout(() => btn.innerText = old, 1000);
+        }
     }
 
     function selectMethod(m, btn) {
@@ -452,7 +498,6 @@
                     <b>Method（手法）:</b> ${q.method}<br>
                     <b>${selectedGrade === 1 ? 'Direct clue（直接线索）' : 'Evidence（证据）'}:</b> <span style="font-family:KaiTi,STKaiti,'Kaiti SC',serif;">${keyWords}</span><br>
                     <b>${selectedGrade === 1 ? 'What it shows（表现）' : 'Interpretation（解释）'}:</b> ${q.traits.join("、")}
-                    <div class="thinking-link"><b>${selectedGrade === 1 ? 'How to see it（怎么看）' : 'Why this evidence works（为什么）'}:</b> ${q.analysisNote}</div>
                 </div>
             </div>
         `;
