@@ -47,6 +47,22 @@
         .answer-status { margin-top: 8px; color: #6b7280; font-size: 0.92em; }
         .attempt-warning { margin-top: 12px; padding: 10px 12px; background: #fff7e6; border-left: 4px solid #fa8c16; border-radius: 6px; color: #874d00; display: none; }
 
+        .setup-hero { background:#1c2b1a; color:#fff; border-radius:16px; padding:24px; margin-bottom:24px; }
+        .setup-hero h2 { margin:0 0 8px; color:#d4a035; font-size:1.45em; }
+        .setup-hero p { margin:0; color:#b8c3ad; line-height:1.7; }
+        .grade-label { font-size:0.9em; font-weight:700; color:#7a6e5a; margin:4px 0 10px; }
+        .grade-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px; }
+        .grade-btn { border:2px solid #d6cdb8; background:#fdfaf4; border-radius:14px; padding:24px 12px; cursor:pointer; transition:.2s; }
+        .grade-btn strong { display:block; font-family:KaiTi,STKaiti,'Kaiti SC',serif; font-size:1.8em; color:#b8ad96; }
+        .grade-btn small { display:block; margin-top:4px; color:#8a7f6b; font-size:.85em; }
+        .grade-btn.selected { border-color:#2a5c3f; background:#e8f2ec; }
+        .grade-btn.selected strong { color:#2a5c3f; }
+        .start-btn { width:100%; border:none; border-radius:10px; padding:14px; background:#2a5c3f; color:#fff; font-size:1.05em; font-weight:700; cursor:pointer; }
+        .start-btn:disabled { background:#d6cdb8; color:#8a7f6b; cursor:not-allowed; }
+        .top-row { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px; }
+        .grade-pill { background:#e8f2ec; color:#2a5c3f; border:1px solid #b8d6c2; border-radius:999px; padding:5px 11px; font-weight:700; font-size:.9em; }
+        .back-btn { border:1px solid #d6cdb8; background:#fff; color:#6f6553; border-radius:999px; padding:6px 11px; cursor:pointer; font-size:.88em; }
+        @media (max-width:640px) { .container{padding:18px;} .grade-grid{grid-template-columns:1fr;} }
         .progress-text { text-align: center; color: #7f8c8d; font-weight: bold; margin-bottom: 20px; font-size: 1.1em; }
     </style>
 </head>
@@ -54,15 +70,23 @@
 
 <div class="container">
     <h1>人物描写：从句子看人物</h1>
-    <div class="progress-text" id="progress-text">第 1 / 10 题</div>
-    <div id="game-area"></div>
+    <div id="setup-area"></div>
+    <div id="practice-area" style="display:none;">
+        <div class="top-row">
+            <span class="grade-pill" id="grade-pill"></span>
+            <button class="back-btn" onclick="backToSetup()">换年级</button>
+        </div>
+        <div class="progress-text" id="progress-text"></div>
+        <div id="game-area"></div>
+    </div>
 </div>
 
 <script>
     // --- 10 道课文人物描写题 ---
-    const questions = [
+    const allQuestions = [
         {
             source: "《母与女》",
+            grade: 2,
             fullSentence: "她小心地打开皮包，拿纸巾，擦鼻子，又小心地调整身体的姿势。自始至终，她的右肩动也不敢动。",
             chunks: [
                 {text: "她", isKey: false},
@@ -80,6 +104,7 @@
         },
         {
             source: "《我现在要去救人》",
+            grade: 1,
             fullSentence: "曾喆身穿白衬衫，戴着手套。面对死亡的威胁，他的表情仍然很镇静。",
             chunks: [
                 {text: "曾喆身穿白衬衫，戴着手套。", isKey: false},
@@ -94,6 +119,7 @@
         },
         {
             source: "《幸运饺子》",
+            grade: 1,
             fullSentence: "奶奶对全家人说：“儿媳妇既要工作，又要照顾一家老小，是这个家里最辛苦的人。希望她在新的一年天天幸福快乐！”",
             chunks: [
                 {text: "奶奶对全家人说：", isKey: false},
@@ -109,6 +135,7 @@
         },
         {
             source: "《迟到》",
+            grade: 1,
             fullSentence: "我刚平静下来的心一下子又提到了嗓子眼！爸爸为什么追到学校来？",
             chunks: [
                 {text: "我刚平静下来的心", isKey: false},
@@ -123,6 +150,7 @@
         },
         {
             source: "《一个蛋两个蛋三个蛋》",
+            grade: 1,
             fullSentence: "第二天，他小心翼翼地用纸巾把蛋层层包好，放进裤兜，这样果然安全多了。",
             chunks: [
                 {text: "第二天，他", isKey: false},
@@ -139,6 +167,7 @@
         },
         {
             source: "《最美的姿势》",
+            grade: 2,
             fullSentence: "陈老师笑着大声说：“你错了，这个世界上每个人都有自己最美丽的姿势，都可以为这个世界留下最美的镜头！”",
             chunks: [
                 {text: "陈老师笑着大声说：", isKey: false},
@@ -154,6 +183,7 @@
         },
         {
             source: "《放风筝》",
+            grade: 2,
             fullSentence: "爸爸则两眼布满血丝，神色焦虑。",
             chunks: [
                 {text: "爸爸则", isKey: false},
@@ -168,6 +198,7 @@
         },
         {
             source: "《最美的姿势》",
+            grade: 2,
             fullSentence: "大家都兴致勃勃，叽叽喳喳地讨论着摆什么姿势好。我的心却沉到了谷底。",
             chunks: [
                 {text: "大家都兴致勃勃，叽叽喳喳地讨论着摆什么姿势好。", isKey: false},
@@ -181,6 +212,7 @@
         },
         {
             source: "《一个蛋两个蛋三个蛋》",
+            grade: 1,
             fullSentence: "“赔我一百个我都不要，我就要这一个！”马小跳哭得更伤心了，“这是我保护了一天的鸡蛋，呜呜呜……”",
             chunks: [
                 {text: "“赔我一百个我都不要，", isKey: true},
@@ -197,6 +229,7 @@
         },
         {
             source: "《我与父亲的秘密》",
+            grade: 2,
             fullSentence: "父亲没有再说什么，只是默默地在一边帮我拾掇在学校寄宿需要用到的东西。",
             chunks: [
                 {text: "父亲没有再说什么，", isKey: false},
@@ -214,22 +247,70 @@
 
     // 描写手法选项
     const methodOptions = ["肖像描写 / 外貌描写", "语言描写", "行动描写 / 动作描写", "心理描写"];
+    let selectedGrade = null;
+    let activeQuestions = [];
     let currentIdx = 0;
     let selectedMethod = "";
     let hasViewedReference = false;
     let firstAnswerSnapshot = "";
 
+    function renderSetup() {
+        selectedGrade = null;
+        document.getElementById('practice-area').style.display = 'none';
+        const setup = document.getElementById('setup-area');
+        setup.style.display = 'block';
+        setup.innerHTML = `
+            <div class="setup-hero">
+                <h2>人物描写分析</h2>
+                <p>Choose your level（选择年级）。题目只使用该年级学过的课文。</p>
+            </div>
+            <div class="grade-label">选择年级</div>
+            <div class="grade-grid">
+                <button class="grade-btn" id="grade-1" onclick="selectGrade(1)">
+                    <strong>中一</strong>
+                    <small>Secondary 1 · 5题</small>
+                </button>
+                <button class="grade-btn" id="grade-2" onclick="selectGrade(2)">
+                    <strong>中二</strong>
+                    <small>Secondary 2 · 5题</small>
+                </button>
+            </div>
+            <button class="start-btn" id="start-btn" onclick="startPractice()" disabled>开始练习</button>
+        `;
+    }
+
+    function selectGrade(grade) {
+        selectedGrade = grade;
+        document.querySelectorAll('.grade-btn').forEach(btn => btn.classList.remove('selected'));
+        document.getElementById(`grade-${grade}`).classList.add('selected');
+        document.getElementById('start-btn').disabled = false;
+    }
+
+    function startPractice() {
+        if (!selectedGrade) return;
+        activeQuestions = allQuestions.filter(q => q.grade === selectedGrade);
+        currentIdx = 0;
+        document.getElementById('setup-area').style.display = 'none';
+        document.getElementById('practice-area').style.display = 'block';
+        document.getElementById('grade-pill').innerText = selectedGrade === 1 ? '中一 · Secondary 1' : '中二 · Secondary 2';
+        renderQuestion();
+    }
+
+    function backToSetup() {
+        renderSetup();
+    }
+
     function shuffleArray(array) { return array.sort(() => Math.random() - 0.5); }
 
     function renderQuestion() {
-        const q = questions[currentIdx];
+        const q = activeQuestions[currentIdx];
         const area = document.getElementById('game-area');
 
         selectedMethod = "";
         hasViewedReference = false;
-        firstAnswerSnapshot = localStorage.getItem(`renwumiaoxie:first:${currentIdx}`) || "";
+        firstAnswerSnapshot = localStorage.getItem(`renwumiaoxie:${selectedGrade}:first:${currentIdx}`) || "";
         const shuffledTraits = shuffleArray([...q.traitOptions]);
-        const savedAnswer = localStorage.getItem(`renwumiaoxie:answer:${currentIdx}`) || "";
+        const savedAnswer = localStorage.getItem(`renwumiaoxie:${selectedGrade}:answer:${currentIdx}`) || "";
 
         let html = `
             <div class="target-sentence-box">
@@ -285,12 +366,12 @@
         const textarea = document.getElementById('final-answer');
         textarea.value = savedAnswer;
         textarea.addEventListener('input', () => {
-            localStorage.setItem(`renwumiaoxie:answer:${currentIdx}`, textarea.value);
+            localStorage.setItem(`renwumiaoxie:${selectedGrade}:answer:${currentIdx}`, textarea.value);
             if (hasViewedReference) {
                 document.getElementById('answer-status').innerText = "已看参考 · 已修改";
             }
         });
-        document.getElementById('progress-text').innerText = `第 ${currentIdx + 1} / ${questions.length} 题`;
+        document.getElementById('progress-text').innerText = `第 ${currentIdx + 1} / ${activeQuestions.length} 题`;
     }
 
     function selectMethod(m, btn) {
@@ -324,7 +405,7 @@
 
         if (!firstAnswerSnapshot) {
             firstAnswerSnapshot = typedText;
-            localStorage.setItem(`renwumiaoxie:first:${currentIdx}`, firstAnswerSnapshot);
+            localStorage.setItem(`renwumiaoxie:${selectedGrade}:first:${currentIdx}`, firstAnswerSnapshot);
         }
 
         hasViewedReference = true;
@@ -353,22 +434,23 @@
 
     function nextQuestion() {
         currentIdx++;
-        if (currentIdx < questions.length) {
+        if (currentIdx < activeQuestions.length) {
             renderQuestion();
         } else {
             document.getElementById('game-area').innerHTML = `
                 <div style="text-align:center; padding: 40px;">
-                    <h2 style="color:var(--primary);">已完成 10 题</h2>
+                    <h2 style="color:var(--primary);">已完成 ${selectedGrade === 1 ? '中一' : '中二'} 5题</h2>
                     <p style="font-size:1.1em;">Review（回看）：哪一种描写最容易判断错？哪些词真正支持你的判断？</p>
-                    <button class="btn-submit" style="width:220px; margin:30px auto;" onclick="location.reload()">重新练习</button>
+                    <button class="btn-submit" style="max-width:260px; margin:24px auto 10px;" onclick="currentIdx=0; renderQuestion()">同年级再练一次</button>
+                    <button class="back-btn" style="padding:10px 18px;" onclick="backToSetup()">返回选择年级</button>
                 </div>
             `;
-            document.getElementById('progress-text').innerText = "练习完成";
+            document.getElementById('progress-text').innerText = selectedGrade === 1 ? "中一练习完成" : "中二练习完成";
         }
     }
 
-    // 页面加载后显示第一题
-    renderQuestion();
+    // 页面加载后先选择年级
+    renderSetup();
 </script>
 </body>
 </html>
