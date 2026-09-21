@@ -89,161 +89,146 @@
     function playSad() { playTone(300, 'sawtooth', 0.1, 0.1); setTimeout(() => playTone(250, 'sawtooth', 0.3, 0.1), 100); }
     function playApplause() { [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => { setTimeout(() => playTone(freq, 'triangle', 0.5, 0.2), i * 150); }); }
 
-    // --- 老师提供的 10 道题题库 ---
+    // --- 10 道课文人物描写题 ---
     const questions = [
         {
-            fullSentence: "看到 那个小男孩 快要 在泳池里 溺水了，志明 连衣服都来不及脱，扑通一声 就 跳进水里，奋力 向男孩 游去。",
+            source: "《母与女》",
+            fullSentence: "她小心地打开皮包，拿纸巾，擦鼻子，又小心地调整身体的姿势。自始至终，她的右肩动也不敢动。",
             chunks: [
-                {text: "看到 那个小男孩 快要 在泳池里 溺水了，志明", isKey: false},
-                {text: "连衣服都来不及脱，", isKey: true},
-                {text: "扑通一声 就", isKey: false},
-                {text: "跳进水里，", isKey: true},
-                {text: "奋力 向男孩 游去。", isKey: true}
+                {text: "她", isKey: false},
+                {text: "小心地打开皮包，拿纸巾，擦鼻子，", isKey: true},
+                {text: "又", isKey: false},
+                {text: "小心地调整身体的姿势。", isKey: true},
+                {text: "自始至终，她的右肩", isKey: false},
+                {text: "动也不敢动。", isKey: true}
             ],
             method: "行动描写 / 动作描写",
-            traits: ["勇敢", "见义勇为"],
-            person: "志明",
-            standardAnswer: "表现出志明在看到那个小男孩快要在泳池里溺水时勇敢、见义勇为的特点。"
+            traits: ["体贴", "关爱女儿", "细心"],
+            person: "母亲",
+            standardAnswer: "通过母亲小心取纸巾、调整姿势，而且始终不敢移动右肩的行动描写，表现了母亲怕惊醒女儿、处处为女儿着想的体贴与关爱。"
         },
         {
-            fullSentence: "这位老爷爷 满头白发，身上 穿着 一件 洗得发白、打着 好几个 补丁 的 旧衬衫，脚上的一双布鞋 也 磨破了边。",
+            source: "《我现在要去救人》",
+            fullSentence: "曾喆身穿白衬衫，戴着手套。面对死亡的威胁，他的表情仍然很镇静。",
             chunks: [
-                {text: "这位老爷爷 满头白发，身上 穿着 一件", isKey: false},
-                {text: "洗得发白、打着好几个补丁的", isKey: true},
-                {text: "旧衬衫，", isKey: true},
-                {text: "脚上的一双布鞋 也", isKey: false},
-                {text: "磨破了边。", isKey: true}
+                {text: "曾喆身穿白衬衫，戴着手套。", isKey: false},
+                {text: "面对死亡的威胁，", isKey: false},
+                {text: "他的表情仍然很镇静。", isKey: true}
             ],
             method: "肖像描写 / 外貌描写",
-            traits: ["家境贫穷", "节俭"],
-            person: "老爷爷",
-            standardAnswer: "体现出老爷爷家境贫穷且节俭的品德。"
+            traits: ["镇静", "沉着", "勇敢"],
+            person: "曾喆",
+            standardAnswer: "通过曾喆面对死亡威胁时仍然镇静的神态描写，表现了他临危不乱、沉着勇敢的特点。"
         },
         {
-            fullSentence: "小华 低着头，红着脸 对老师说：“老师，对不起，这次的默写 是 我偷看课本的，我 以后 再也 不敢了。”",
+            source: "《幸运饺子》",
+            fullSentence: "奶奶对全家人说：“儿媳妇既要工作，又要照顾一家老小，是这个家里最辛苦的人。希望她在新的一年天天幸福快乐！”",
             chunks: [
-                {text: "小华", isKey: false},
-                {text: "低着头，红着脸", isKey: true},
-                {text: "对老师说：“老师，", isKey: false},
-                {text: "对不起，", isKey: true},
-                {text: "这次的默写 是 我偷看课本的，我", isKey: false},
-                {text: "以后再也不敢了。”", isKey: true}
+                {text: "奶奶对全家人说：", isKey: false},
+                {text: "“儿媳妇既要工作，又要照顾一家老小，", isKey: true},
+                {text: "是这个家里最辛苦的人。", isKey: true},
+                {text: "希望她在新的一年天天幸福快乐！”", isKey: true}
             ],
             method: "语言描写",
-            traits: ["诚实", "勇于认错"],
-            person: "小华",
-            standardAnswer: "表现了小华虽然做错了事，但勇于认错，表现出他是一个诚实的人。"
+            traits: ["体贴", "善解人意", "关心家人"],
+            person: "奶奶",
+            standardAnswer: "通过奶奶体谅儿媳妇工作又照顾家庭的辛苦，并祝福她幸福快乐的语言描写，表现了奶奶体贴、善解人意和关心家人的特点。"
         },
         {
-            fullSentence: "演讲前，看着台下密密麻麻的观众，我的手心 直冒冷汗，心里 不停地 盘算着：万一 我演讲时 忘词了怎么办？大家 会不会嘲笑 我？",
+            source: "《迟到》",
+            fullSentence: "我刚平静下来的心一下子又提到了嗓子眼！爸爸为什么追到学校来？",
             chunks: [
-                {text: "演讲前，看着台下密密麻麻的观众，我的手心", isKey: false},
-                {text: "直冒冷汗，", isKey: true},
-                {text: "心里 不停地", isKey: false},
-                {text: "盘算着：", isKey: true},
-                {text: "万一 忘词怎么办？", isKey: true},
-                {text: "会不会嘲笑", isKey: true},
-                {text: "我？", isKey: false}
+                {text: "我刚平静下来的心", isKey: false},
+                {text: "一下子又提到了嗓子眼！", isKey: true},
+                {text: "爸爸为什么追到学校来？", isKey: true}
             ],
             method: "心理描写",
-            traits: ["紧张"],
+            traits: ["紧张", "害怕", "不安"],
             person: "我",
-            standardAnswer: "表现了我演讲前在看到台下密密麻麻的观众时极其紧张的心理。"
+            standardAnswer: "通过“心一下子又提到了嗓子眼”和对爸爸为什么追到学校来的疑问，表现了“我”看到爸爸来到学校时紧张、不安的心理。"
         },
         {
-            fullSentence: "即使 到了 深夜，小明 依然 端坐 在书桌前，一边 翻阅着 厚厚的字典，一边 在笔记本上 密密麻麻地做着笔记，连妈妈端进来的牛奶凉了 没发觉。",
+            source: "《一个蛋两个蛋三个蛋》",
+            fullSentence: "第二天，他小心翼翼地用纸巾把蛋层层包好，放进裤兜，这样果然安全多了。",
             chunks: [
-                {text: "即使 到了 深夜，小明 依然", isKey: false},
-                {text: "端坐", isKey: true},
-                {text: "在书桌前，一边", isKey: false},
-                {text: "翻阅着厚厚的字典，", isKey: true},
-                {text: "一边 在笔记本上", isKey: false},
-                {text: "密密麻麻地做着笔记，", isKey: true},
-                {text: "连妈妈端进来的牛奶凉了", isKey: false},
-                {text: "没发觉。", isKey: true}
+                {text: "第二天，他", isKey: false},
+                {text: "小心翼翼地", isKey: true},
+                {text: "用纸巾把蛋层层包好，", isKey: true},
+                {text: "放进裤兜，", isKey: true},
+                {text: "这样果然安全多了。", isKey: false}
             ],
             method: "行动描写 / 动作描写",
-            traits: ["勤奋", "用功", "废寝忘食", "细心认真"],
-            person: "小明",
-            standardAnswer: "表现出小明学习非常勤奋/用功、废寝忘食，且做事细心认真。"
+            traits: ["小心谨慎", "认真", "有责任心"],
+            person: "马小跳",
+            standardAnswer: "通过马小跳小心翼翼地把鸡蛋层层包好并放进裤兜的行动描写，表现了他这次保护鸡蛋时十分小心、认真，也开始表现出责任心。"
         },
         {
-            fullSentence: "妈妈 轻轻拍了拍 我的肩膀，温柔地说：“没关系，一次考试代表不了什么，只要你 尽力了就好。”",
+            source: "《最美的姿势》",
+            fullSentence: "陈老师笑着大声说：“你错了，这个世界上每个人都有自己最美丽的姿势，都可以为这个世界留下最美的镜头！”",
             chunks: [
-                {text: "妈妈 轻轻拍了拍 我的肩膀，", isKey: false},
-                {text: "温柔地说：", isKey: true},
-                {text: "“没关系，", isKey: true},
-                {text: "一次考试代表不了什么，只要你", isKey: false},
-                {text: "尽力了就好。”", isKey: true}
+                {text: "陈老师笑着大声说：", isKey: false},
+                {text: "“你错了，", isKey: false},
+                {text: "这个世界上每个人都有自己最美丽的姿势，", isKey: true},
+                {text: "都可以为这个世界留下最美的镜头！”", isKey: true}
             ],
             method: "语言描写",
-            traits: ["善解人意", "体贴", "宽容"],
-            person: "妈妈",
-            standardAnswer: "表现出妈妈非常善解人意、体贴别人，性格宽容的特点。"
+            traits: ["善解人意", "鼓励学生", "关爱学生"],
+            person: "陈老师",
+            standardAnswer: "通过陈老师肯定每个人都有自己最美丽的姿势、鼓励宜欣留下最美镜头的语言描写，表现了她善解人意、懂得鼓励和关爱学生。"
         },
         {
-            fullSentence: "面对 强劲的对手，她 昂首挺胸地 走上讲台，嘴角 挂着 一抹淡淡的微笑，眼神里 充满了光芒。",
+            source: "《放风筝》",
+            fullSentence: "爸爸则两眼布满血丝，神色焦虑。",
             chunks: [
-                {text: "面对 强劲的对手，她", isKey: false},
-                {text: "昂首挺胸地", isKey: true},
-                {text: "走上讲台，嘴角 挂着 一抹淡淡的", isKey: false},
-                {text: "微笑，", isKey: true},
-                {text: "眼神里", isKey: false},
-                {text: "充满光芒。", isKey: true}
+                {text: "爸爸则", isKey: false},
+                {text: "两眼布满血丝，", isKey: true},
+                {text: "神色焦虑。", isKey: true}
             ],
             method: "肖像描写 / 外貌描写",
-            traits: ["自信", "积极乐观"],
-            person: "她",
-            standardAnswer: "体现出她面对强劲对手时仍保持自信，她是一个积极乐观的人。"
+            traits: ["焦虑", "担心", "关心孩子"],
+            person: "爸爸",
+            standardAnswer: "通过爸爸两眼布满血丝、神色焦虑的外貌和神态描写，表现了他因为孩子晚归而十分焦虑、担心，体现了他对孩子的关心。"
         },
         {
-            fullSentence: "看着 同桌 拿了第一名，小明 暗暗想：有什么了不起的，他肯定是 运气好 罢了，老师 就是 偏心！",
+            source: "《最美的姿势》",
+            fullSentence: "大家都兴致勃勃，叽叽喳喳地讨论着摆什么姿势好。我的心却沉到了谷底。",
             chunks: [
-                {text: "看着 同桌 拿了第一名，小明", isKey: false},
-                {text: "暗暗想：", isKey: true},
-                {text: "有什么了不起，", isKey: true},
-                {text: "他肯定是", isKey: false},
-                {text: "运气好", isKey: true},
-                {text: "罢了，老师 就是", isKey: false},
-                {text: "偏心！", isKey: true}
+                {text: "大家都兴致勃勃，叽叽喳喳地讨论着摆什么姿势好。", isKey: false},
+                {text: "我的心却沉到了谷底。", isKey: true}
             ],
             method: "心理描写",
-            traits: ["心胸狭隘", "嫉妒"],
-            person: "小明",
-            standardAnswer: "表现出小明看到同桌拿了第一名后心胸狭隘的嫉妒心理。"
+            traits: ["自卑", "沮丧", "不安"],
+            person: "我",
+            standardAnswer: "通过“我的心却沉到了谷底”的心理描写，表现了“我”想到要在同学面前拍照时非常自卑、沮丧和不安。"
         },
         {
-            fullSentence: "当班长 提醒 大家 留下来 大扫除时，明伟却 不耐烦地 摆摆手说：“这又不是我家，扫那么干净干嘛？我还要 赶着去打游戏呢！”",
+            source: "《一个蛋两个蛋三个蛋》",
+            fullSentence: "“赔我一百个我都不要，我就要这一个！”马小跳哭得更伤心了，“这是我保护了一天的鸡蛋，呜呜呜……”",
             chunks: [
-                {text: "当班长 提醒 大家 留下来 大扫除时，明伟却", isKey: false},
-                {text: "不耐烦地", isKey: true},
-                {text: "摆摆手说：“这", isKey: false},
-                {text: "又不是我家，", isKey: true},
-                {text: "扫那么干净干嘛？我还要", isKey: false},
-                {text: "赶着去打游戏呢！”", isKey: true}
+                {text: "“赔我一百个我都不要，", isKey: true},
+                {text: "我就要这一个！”", isKey: true},
+                {text: "马小跳哭得更伤心了，", isKey: false},
+                {text: "“这是我保护了一天的鸡蛋，", isKey: true},
+                {text: "呜呜呜……”", isKey: false}
             ],
             method: "语言描写",
-            traits: ["没有责任心", "不负责任", "自私自利"],
-            person: "明伟",
-            standardAnswer: "表现出明伟对班级事务没有责任心/不负责任，自私自利的人特点。"
+            traits: ["珍惜", "重视责任", "有责任心"],
+            person: "马小跳",
+            standardAnswer: "通过马小跳坚持不要赔偿、只要自己保护了一天的那个鸡蛋的语言描写，表现了他十分珍惜自己的劳动成果，也开始懂得重视责任。"
         },
         {
-            fullSentence: "小丽 每天放学 一回家，就 立刻放下 书包，熟练地 帮生病的奶奶 洗脸、喂饭，把家里 打扫得 干干净净。",
+            source: "《我与父亲的秘密》",
+            fullSentence: "父亲没有再说什么，只是默默地在一边帮我拾掇在学校寄宿需要用到的东西。",
             chunks: [
-                {text: "小丽 每天放学 一回家，就", isKey: false},
-                {text: "立刻放下", isKey: true},
-                {text: "书包，", isKey: false},
-                {text: "熟练地帮", isKey: true},
-                {text: "生病的奶奶", isKey: false},
-                {text: "洗脸、", isKey: true},
-                {text: "喂饭，", isKey: true},
-                {text: "把家里", isKey: false},
-                {text: "打扫得干干净净。", isKey: true}
+                {text: "父亲没有再说什么，", isKey: false},
+                {text: "只是默默地", isKey: true},
+                {text: "在一边帮我拾掇", isKey: true},
+                {text: "在学校寄宿需要用到的东西。", isKey: true}
             ],
             method: "行动描写 / 动作描写",
-            traits: ["孝顺", "懂事", "勤劳"],
-            person: "小丽",
-            standardAnswer: "表现出小丽是个非常孝顺、懂事且勤劳的孩子"
+            traits: ["关爱孩子", "体贴", "默默付出"],
+            person: "父亲",
+            standardAnswer: "通过父亲不多说话，却默默替“我”收拾寄宿用品的行动描写，表现了父亲体贴孩子、默默付出的深沉父爱。"
         }
     ];
 
@@ -251,10 +236,10 @@
     const methodOptions = ["肖像描写 / 外貌描写", "语言描写", "行动描写 / 动作描写", "心理描写"];
     // 综合所有题目提取的性格词库，并增加几个干扰词
     const fullTraitBank = [
-        "勇敢", "见义勇为", "家境贫穷", "节俭", "诚实", "勇于认错", "紧张", 
-        "勤奋", "用功", "废寝忘食", "细心认真", "善解人意", "体贴", "宽容", 
-        "自信", "积极乐观", "心胸狭隘", "嫉妒", "没有责任心", "不负责任", 
-        "自私自利", "孝顺", "懂事", "勤劳", "骄傲", "粗心大意", "懒惰"
+        "体贴", "关爱女儿", "细心", "镇静", "沉着", "勇敢", "善解人意", "关心家人",
+        "紧张", "害怕", "不安", "小心谨慎", "认真", "有责任心", "鼓励学生", "关爱学生",
+        "焦虑", "担心", "关心孩子", "自卑", "沮丧", "珍惜", "重视责任", "默默付出",
+        "粗心大意", "自私自利", "骄傲", "冷漠"
     ];
 
     let currentIdx = 0;
@@ -281,6 +266,7 @@
             <div class="target-sentence-box">
                 <strong>🎯 任务：请分析下面这段话</strong>
                 ${q.fullSentence}
+                <div style="margin-top:8px; font-size:0.8em; color:#7f8c8d;">课文：${q.source}</div>
             </div>
 
             <div class="step-box">
