@@ -2,14 +2,14 @@
 <html lang="zh-SG">
 <head>
     <meta charset="UTF-8">
-    <title>人物描写分析：四步闯关挑战 V4</title>
+    <title>人物描写：从句子看人物</title>
     <style>
         :root { --primary: #3498db; --secondary: #2ecc71; --accent: #e67e22; --bg: #f5f7fa; --text: #2c3e50; --wrong: #e74c3c; }
-        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; line-height: 1.6; }
+        body { font-family: 'Songti SC', SimSun, serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; line-height: 1.6; }
         .container { max-width: 950px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         h1 { text-align: center; color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
         
-        .target-sentence-box { background: #fffbe6; border-left: 6px solid #fadb14; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; font-size: 1.25em; line-height: 1.8; color: #333; }
+        .target-sentence-box { font-family: KaiTi, STKaiti, 'Kaiti SC', serif; background: #fffbe6; border-left: 6px solid #fadb14; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; font-size: 1.25em; line-height: 1.8; color: #333; }
         .target-sentence-box strong { color: #d46b08; font-size: 0.85em; display: block; margin-bottom: 5px; text-transform: uppercase; }
 
         .step-box { background: #fff; border: 2px solid #eef2f5; border-radius: 10px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
@@ -17,24 +17,21 @@
         .step-title span { background: var(--primary); color: white; border-radius: 50%; width: 28px; height: 28px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-size: 0.9em; }
 
         .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
-        .btn-opt { background: #f9f9f9; border: 2px solid #ddd; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 1em; }
+        .btn-opt { font-family: KaiTi, STKaiti, 'Kaiti SC', serif; background: #f9f9f9; border: 2px solid #ddd; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 1em; }
         .btn-opt:hover { border-color: var(--primary); background: #ebf5ff; }
         .btn-opt.selected { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .sentence-chunk { display: inline-block; padding: 5px 8px; margin: 4px; background: #f0f4f8; border-radius: 5px; cursor: pointer; font-size: 1.2em; border: 2px solid transparent; transition: 0.3s; }
+        .sentence-chunk { font-family: KaiTi, STKaiti, 'Kaiti SC', serif; display: inline-block; padding: 5px 8px; margin: 4px; background: #f0f4f8; border-radius: 5px; cursor: pointer; font-size: 1.2em; border: 2px solid transparent; transition: 0.3s; }
         .sentence-chunk:hover { background: #e2e8f0; }
-        .chunk-correct { background: #e8f8f5; border-color: var(--secondary); color: #16a085; }
-        .chunk-wrong { background: #fdedec; border-color: var(--wrong); color: #c0392b; animation: shake 0.4s; }
-        .icon-feedback { display: inline-block; margin-left: 2px; font-size: 1.1em; }
-        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-5px);} 75% {transform: translateX(5px);} }
+        .sentence-chunk.selected { background: #e6f7ff; border-color: #91d5ff; color: #0958d9; }
 
         .word-bank { display: flex; flex-wrap: wrap; gap: 10px; padding: 15px; background: #fafafa; border-radius: 8px; border: 1px dashed #ccc; }
-        .word-chip { background: white; border: 1px solid #bbb; padding: 8px 15px; border-radius: 20px; cursor: pointer; transition: 0.2s; font-size: 1.05em; }
+        .word-chip { font-family: KaiTi, STKaiti, 'Kaiti SC', serif; background: white; border: 1px solid #bbb; padding: 8px 15px; border-radius: 20px; cursor: pointer; transition: 0.2s; font-size: 1.05em; }
         .word-chip:hover { background: #e8f4fd; }
         .word-chip.selected { background: var(--secondary); color: white; border-color: var(--secondary); }
 
         .formula-hint { background: #e6f7ff; padding: 12px; border-left: 4px solid #1890ff; margin-bottom: 15px; font-size: 0.95em; color: #0050b3; }
-        textarea { width: 100%; height: 100px; padding: 15px; border: 2px solid #ccc; border-radius: 8px; font-size: 1.1em; font-family: inherit; resize: vertical; box-sizing: border-box; }
+        textarea { font-family: KaiTi, STKaiti, 'Kaiti SC', serif; width: 100%; height: 100px; padding: 15px; border: 2px solid #ccc; border-radius: 8px; font-size: 1.1em; font-family: inherit; resize: vertical; box-sizing: border-box; }
         textarea:focus { border-color: var(--primary); outline: none; }
 
         .btn-submit { display: block; width: 100%; padding: 15px; font-size: 1.2em; font-weight: bold; color: white; background: var(--accent); border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; transition: 0.3s; }
@@ -43,12 +40,12 @@
         .feedback-area { margin-top: 20px; padding: 20px; border-radius: 8px; display: none; font-size: 1.1em; line-height: 1.6; }
         .btn-next { display: none; width: 100%; padding: 15px; font-size: 1.2em; font-weight: bold; color: white; background: var(--secondary); border: none; border-radius: 8px; cursor: pointer; margin-top: 15px; }
 
-        /* 答案对比区域样式 */
-        .comparison-box { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
-        .comp-card { padding: 15px; border-radius: 8px; border-left: 5px solid; }
-        .comp-yours { background: #fff1f0; border-color: #ffa39e; }
-        .comp-standard { background: #f6ffed; border-color: #b7eb8f; }
-        .comp-title { font-weight: bold; margin-bottom: 5px; font-size: 0.9em; }
+        .reference-box { margin-top: 18px; padding: 18px; border-radius: 10px; background: #f6ffed; border: 1px solid #b7eb8f; }
+        .reference-box h3 { margin: 0 0 12px; color: #237804; }
+        .reference-answer { font-family: KaiTi, STKaiti, 'Kaiti SC', serif; font-size: 1.08em; line-height: 1.8; }
+        .reference-meta { margin-top: 12px; font-size: 0.95em; line-height: 1.7; color: #445; }
+        .answer-status { margin-top: 8px; color: #6b7280; font-size: 0.92em; }
+        .attempt-warning { margin-top: 12px; padding: 10px 12px; background: #fff7e6; border-left: 4px solid #fa8c16; border-radius: 6px; color: #874d00; display: none; }
 
         .progress-text { text-align: center; color: #7f8c8d; font-weight: bold; margin-bottom: 20px; font-size: 1.1em; }
     </style>
@@ -56,39 +53,12 @@
 <body>
 
 <div class="container">
-    <h1>📝 人物描写分析：十关大挑战</h1>
+    <h1>人物描写：从句子看人物</h1>
     <div class="progress-text" id="progress-text">第 1 / 10 题</div>
     <div id="game-area"></div>
 </div>
 
 <script>
-    // --- 音效模块 ---
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    let audioCtx;
-
-    function initAudio() {
-        if (!audioCtx) audioCtx = new AudioContext();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-    }
-
-    function playTone(freq, type, duration, vol=0.1) {
-        initAudio();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-        osc.stop(audioCtx.currentTime + duration);
-    }
-
-    function playStar() { playTone(800, 'sine', 0.1, 0.2); setTimeout(() => playTone(1200, 'sine', 0.3, 0.2), 100); }
-    function playSad() { playTone(300, 'sawtooth', 0.1, 0.1); setTimeout(() => playTone(250, 'sawtooth', 0.3, 0.1), 100); }
-    function playApplause() { [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => { setTimeout(() => playTone(freq, 'triangle', 0.5, 0.2), i * 150); }); }
-
     // --- 10 道课文人物描写题 ---
     const questions = [
         {
@@ -104,6 +74,7 @@
             ],
             method: "行动描写 / 动作描写",
             traits: ["体贴", "关爱女儿", "细心"],
+            traitOptions: ["体贴", "关爱女儿", "细心", "冷漠", "粗心大意", "严厉"],
             person: "母亲",
             standardAnswer: "通过母亲小心取纸巾、调整姿势，而且始终不敢移动右肩的行动描写，表现了母亲怕惊醒女儿、处处为女儿着想的体贴与关爱。"
         },
@@ -117,6 +88,7 @@
             ],
             method: "肖像描写 / 外貌描写",
             traits: ["镇静", "沉着", "勇敢"],
+            traitOptions: ["镇静", "沉着", "勇敢", "紧张", "鲁莽", "冷漠"],
             person: "曾喆",
             standardAnswer: "通过曾喆面对死亡威胁时仍然镇静的神态描写，表现了他临危不乱、沉着勇敢的特点。"
         },
@@ -131,6 +103,7 @@
             ],
             method: "语言描写",
             traits: ["体贴", "善解人意", "关心家人"],
+            traitOptions: ["体贴", "善解人意", "关心家人", "自私", "冷漠", "严厉"],
             person: "奶奶",
             standardAnswer: "通过奶奶体谅儿媳妇工作又照顾家庭的辛苦，并祝福她幸福快乐的语言描写，表现了奶奶体贴、善解人意和关心家人的特点。"
         },
@@ -144,6 +117,7 @@
             ],
             method: "心理描写",
             traits: ["紧张", "害怕", "不安"],
+            traitOptions: ["紧张", "害怕", "不安", "开心", "自信", "得意"],
             person: "我",
             standardAnswer: "通过“心一下子又提到了嗓子眼”和对爸爸为什么追到学校来的疑问，表现了“我”看到爸爸来到学校时紧张、不安的心理。"
         },
@@ -159,6 +133,7 @@
             ],
             method: "行动描写 / 动作描写",
             traits: ["小心谨慎", "认真", "有责任心"],
+            traitOptions: ["小心谨慎", "认真", "有责任心", "粗心大意", "敷衍", "冲动"],
             person: "马小跳",
             standardAnswer: "通过马小跳小心翼翼地把鸡蛋层层包好并放进裤兜的行动描写，表现了他这次保护鸡蛋时十分小心、认真，也开始表现出责任心。"
         },
@@ -173,6 +148,7 @@
             ],
             method: "语言描写",
             traits: ["善解人意", "鼓励学生", "关爱学生"],
+            traitOptions: ["善解人意", "鼓励学生", "关爱学生", "冷漠", "严厉", "不耐烦"],
             person: "陈老师",
             standardAnswer: "通过陈老师肯定每个人都有自己最美丽的姿势、鼓励宜欣留下最美镜头的语言描写，表现了她善解人意、懂得鼓励和关爱学生。"
         },
@@ -186,6 +162,7 @@
             ],
             method: "肖像描写 / 外貌描写",
             traits: ["焦虑", "担心", "关心孩子"],
+            traitOptions: ["焦虑", "担心", "关心孩子", "生气", "冷漠", "得意"],
             person: "爸爸",
             standardAnswer: "通过爸爸两眼布满血丝、神色焦虑的外貌和神态描写，表现了他因为孩子晚归而十分焦虑、担心，体现了他对孩子的关心。"
         },
@@ -198,6 +175,7 @@
             ],
             method: "心理描写",
             traits: ["自卑", "沮丧", "不安"],
+            traitOptions: ["自卑", "沮丧", "不安", "自信", "兴奋", "得意"],
             person: "我",
             standardAnswer: "通过“我的心却沉到了谷底”的心理描写，表现了“我”想到要在同学面前拍照时非常自卑、沮丧和不安。"
         },
@@ -213,6 +191,7 @@
             ],
             method: "语言描写",
             traits: ["珍惜", "重视责任", "有责任心"],
+            traitOptions: ["珍惜", "重视责任", "有责任心", "自私", "冷漠", "无所谓"],
             person: "马小跳",
             standardAnswer: "通过马小跳坚持不要赔偿、只要自己保护了一天的那个鸡蛋的语言描写，表现了他十分珍惜自己的劳动成果，也开始懂得重视责任。"
         },
@@ -227,6 +206,7 @@
             ],
             method: "行动描写 / 动作描写",
             traits: ["关爱孩子", "体贴", "默默付出"],
+            traitOptions: ["关爱孩子", "体贴", "默默付出", "冷漠", "自私", "粗心"],
             person: "父亲",
             standardAnswer: "通过父亲不多说话，却默默替“我”收拾寄宿用品的行动描写，表现了父亲体贴孩子、默默付出的深沉父爱。"
         }
@@ -234,81 +214,82 @@
 
     // 描写手法选项
     const methodOptions = ["肖像描写 / 外貌描写", "语言描写", "行动描写 / 动作描写", "心理描写"];
-    // 综合所有题目提取的性格词库，并增加几个干扰词
-    const fullTraitBank = [
-        "体贴", "关爱女儿", "细心", "镇静", "沉着", "勇敢", "善解人意", "关心家人",
-        "紧张", "害怕", "不安", "小心谨慎", "认真", "有责任心", "鼓励学生", "关爱学生",
-        "焦虑", "担心", "关心孩子", "自卑", "沮丧", "珍惜", "重视责任", "默默付出",
-        "粗心大意", "自私自利", "骄傲", "冷漠"
-    ];
-
     let currentIdx = 0;
     let selectedMethod = "";
-    let foundKeywordsCount = 0;
-    let totalKeywordsCount = 0;
-    let attemptCount = 0; // 记录答题次数
+    let hasViewedReference = false;
+    let firstAnswerSnapshot = "";
 
     function shuffleArray(array) { return array.sort(() => Math.random() - 0.5); }
 
     function renderQuestion() {
-        initAudio();
         const q = questions[currentIdx];
         const area = document.getElementById('game-area');
-        
+
         selectedMethod = "";
-        foundKeywordsCount = 0;
-        attemptCount = 0;
-        totalKeywordsCount = q.chunks.filter(c => c.isKey).length;
-        // 打乱词库
-        const shuffledTraits = shuffleArray([...fullTraitBank]);
+        hasViewedReference = false;
+        firstAnswerSnapshot = localStorage.getItem(`renwumiaoxie:first:${currentIdx}`) || "";
+        const shuffledTraits = shuffleArray([...q.traitOptions]);
+        const savedAnswer = localStorage.getItem(`renwumiaoxie:answer:${currentIdx}`) || "";
 
         let html = `
             <div class="target-sentence-box">
-                <strong>🎯 任务：请分析下面这段话</strong>
+                <strong>Read the sentence（读句子）</strong>
                 ${q.fullSentence}
                 <div style="margin-top:8px; font-size:0.8em; color:#7f8c8d;">课文：${q.source}</div>
             </div>
 
             <div class="step-box">
-                <div class="step-title"><span>1</span> 第一步：判定描写手法</div>
+                <div class="step-title"><span>1</span> Method（描写手法）</div>
                 <div class="options-grid">
                     ${methodOptions.map(m => `<button class="btn-opt method-btn" onclick="selectMethod('${m}', this)">${m}</button>`).join('')}
                 </div>
             </div>
 
             <div class="step-box">
-                <div class="step-title"><span>2</span> 第二步：找出并点击这段话中的“关键词”</div>
+                <div class="step-title"><span>2</span> Key words（关键词）</div>
+                <div class="formula-hint">Tap the words that help you understand the character.（点击最能帮助你判断人物的词句）</div>
                 <div style="line-height: 2.2;">
                     ${q.chunks.map((chunk, index) => `
-                        <span class="sentence-chunk" onclick="handleChunkClick(this, ${chunk.isKey})">
-                            ${chunk.text} <span class="icon-feedback"></span>
+                        <span class="sentence-chunk" data-index="${index}" onclick="handleChunkClick(this)">
+                            ${chunk.text}
                         </span>
                     `).join('')}
                 </div>
             </div>
 
             <div class="step-box">
-                <div class="step-title"><span>3</span> 第三步：概括人物特点（可多选）</div>
+                <div class="step-title"><span>3</span> Character / feeling（人物特点／心情）</div>
                 <div class="word-bank">
                     ${shuffledTraits.map(t => `<span class="word-chip trait-chip" onclick="this.classList.toggle('selected')">${t}</span>`).join('')}
                 </div>
             </div>
 
             <div class="step-box">
-                <div class="step-title"><span>4</span> 第四步：写出完整的分析结论</div>
+                <div class="step-title"><span>4</span> Explain（完整分析）</div>
                 <div class="formula-hint">
-                    💡 <b>老师提示格式：</b>表现了/体现了 <b>【什么人】</b> 在 <b>【什么情况下 / 做什么事时】</b> 具有 <b>【什么样的特点】</b>。
+                    Use the evidence, not just a label.（不要只写一个性格词）<br>
+                    <b>句式：</b>通过……描写，表现了【谁】在【什么情况下】的【特点／心情】。
                 </div>
-                <textarea id="final-answer" placeholder="请结合上下文，打字完成完整分析..."></textarea>
+                <textarea id="final-answer" placeholder="先写下自己的答案，再看参考答案。"></textarea>
+                <div class="answer-status" id="answer-status">未看参考答案</div>
+                <div class="attempt-warning" id="attempt-warning">Write your own answer first.（先写下自己的答案）</div>
             </div>
 
-            <button class="btn-submit" id="btn-submit" onclick="checkAll()">提交分析</button>
-            
+            <button class="btn-submit" id="btn-reference" onclick="revealReference()">查看参考答案</button>
+
             <div id="feedback-area" class="feedback-area"></div>
-            <button class="btn-next" id="btn-next" onclick="nextQuestion()">进入下一题 ➔</button>
+            <button class="btn-next" id="btn-next" onclick="nextQuestion()">下一题 ➔</button>
         `;
-        
+
         area.innerHTML = html;
+        const textarea = document.getElementById('final-answer');
+        textarea.value = savedAnswer;
+        textarea.addEventListener('input', () => {
+            localStorage.setItem(`renwumiaoxie:answer:${currentIdx}`, textarea.value);
+            if (hasViewedReference) {
+                document.getElementById('answer-status').innerText = "已看参考 · 已修改";
+            }
+        });
         document.getElementById('progress-text').innerText = `第 ${currentIdx + 1} / ${questions.length} 题`;
     }
 
@@ -318,93 +299,56 @@
         btn.classList.add('selected');
     }
 
-    function handleChunkClick(el, isKey) {
-        if (el.classList.contains('chunk-correct') || el.classList.contains('chunk-wrong')) return;
-        const iconBox = el.querySelector('.icon-feedback');
-        if (isKey) {
-            el.classList.add('chunk-correct');
-            iconBox.innerText = "⭐";
-            playStar();
-            foundKeywordsCount++;
-        } else {
-            el.classList.add('chunk-wrong');
-            iconBox.innerText = "😢";
-            playSad();
-            setTimeout(() => { el.classList.remove('chunk-wrong'); iconBox.innerText = ""; }, 1000);
-        }
+    function handleChunkClick(el) {
+        el.classList.toggle('selected');
     }
 
-    function checkAll() {
+    function hasMeaningfulAttempt(text) {
+        return /[\\p{L}\\p{N}]/u.test(text);
+    }
+
+    function revealReference() {
         const q = questions[currentIdx];
+        const textarea = document.getElementById('final-answer');
+        const typedText = textarea.value.trim();
+        const warning = document.getElementById('attempt-warning');
         const feedback = document.getElementById('feedback-area');
-        let errors = [];
 
-        // 1. 检查手法 (处理外貌描写与行动描写的严格匹配)
-        if (selectedMethod !== q.method) errors.push("❌ <b>第一步：</b>描写手法选择错误。");
-        
-        // 2. 检查关键词
-        if (foundKeywordsCount < totalKeywordsCount) errors.push(`❌ <b>第二步：</b>还有 ${totalKeywordsCount - foundKeywordsCount} 个关键词没找到，请在原句上继续点击。`);
-        
-        // 3. 检查性格词语 (只要包含了老师要求的一个及以上即可)
-        const selectedTraits = Array.from(document.querySelectorAll('.trait-chip.selected')).map(el => el.innerText);
-        const hasCorrectTrait = q.traits.some(t => selectedTraits.includes(t));
-        if (!hasCorrectTrait) errors.push(`❌ <b>第三步：</b>人物特点概括不准确。请重新选择。`);
-
-        // 4. 检查打字：需包含人物名称，以及“表现”或“体现”等动作词，长度不能过短
-        const typedText = document.getElementById('final-answer').value.trim();
-        if (typedText.length < 10 || !typedText.includes(q.person) || !(typedText.includes("表现") || typedText.includes("体现"))) {
-            errors.push("❌ <b>第四步：</b>完整结论表述不规范。记得要写出“表现了/体现了 +【谁】+ 的特点”。");
+        if (!hasMeaningfulAttempt(typedText)) {
+            warning.style.display = 'block';
+            textarea.focus();
+            return;
         }
+
+        warning.style.display = 'none';
+
+        if (!firstAnswerSnapshot) {
+            firstAnswerSnapshot = typedText;
+            localStorage.setItem(`renwumiaoxie:first:${currentIdx}`, firstAnswerSnapshot);
+        }
+
+        hasViewedReference = true;
+        document.getElementById('answer-status').innerText = "已看参考 · 可直接修改上面的答案";
+        document.getElementById('btn-reference').style.display = 'none';
+        document.getElementById('btn-next').style.display = 'block';
+
+        const keyWords = q.chunks.filter(c => c.isKey).map(c => c.text).join(" / ");
 
         feedback.style.display = 'block';
-
-        if (errors.length === 0) {
-            // 完全正确
-            feedback.style.background = "#f6ffed";
-            feedback.style.border = "2px solid #b7eb8f";
-            feedback.innerHTML = `
-                <h3 style="color:#52c41a; margin-top:0;">🎉 太棒了，分析完全正确！</h3>
-                <p><b>你的完美解答：</b><br>${typedText}</p>
-            `;
-            playApplause();
-            document.getElementById('btn-submit').style.display = 'none';
-            document.getElementById('btn-next').style.display = 'block';
-        } else {
-            attemptCount++;
-            playSad();
-            
-            if (attemptCount === 1) {
-                // 第一次答错，给提示
-                feedback.style.background = "#fff2f0";
-                feedback.style.border = "2px solid #ffccc7";
-                feedback.innerHTML = `
-                    <h3 style="color:#f5222d; margin-top:0;">哎呀，有几个地方不太对哦：</h3>
-                    <div style="color:#d4380d; margin-bottom: 15px;">${errors.join('<br><br>')}</div>
-                    <strong style="color:#cf1322;">💡 别灰心，你还有一次机会，修改后再试一次吧！</strong>
-                `;
-            } else {
-                // 第二次答错，锁定并显示对比框
-                feedback.style.background = "#fff";
-                feedback.style.border = "2px solid #ddd";
-                feedback.innerHTML = `
-                    <h3 style="color:#f5222d; margin-top:0;">很遗憾，还是有错误。让我们来对比一下吧！</h3>
-                    <div class="comparison-box">
-                        <div class="comp-card comp-yours">
-                            <div class="comp-title" style="color:#cf1322;">❌ 你的表述：</div>
-                            ${typedText || "（未填写完整）"}
-                        </div>
-                        <div class="comp-card comp-standard">
-                            <div class="comp-title" style="color:#389e0d;">✅ 老师的标准答案：</div>
-                            ${q.standardAnswer}
-                        </div>
-                    </div>
-                    <p style="color:#888; font-size:0.9em; margin-top:15px;">请仔细观察标准答案是如何使用提示公式，以及抓取了哪些关键词的。</p>
-                `;
-                document.getElementById('btn-submit').style.display = 'none';
-                document.getElementById('btn-next').style.display = 'block';
-                document.getElementById('btn-next').innerText = "我明白了，进入下一题 ➔";
-            }
-        }
+        feedback.style.background = "#fff";
+        feedback.style.border = "1px solid #d9d9d9";
+        feedback.innerHTML = `
+            <div class="reference-box">
+                <h3>Reference（参考答案）</h3>
+                <div class="reference-answer">${q.standardAnswer}</div>
+                <div class="reference-meta">
+                    <b>Method（手法）:</b> ${q.method}<br>
+                    <b>Key words（关键词）:</b> <span style="font-family:KaiTi,STKaiti,'Kaiti SC',serif;">${keyWords}</span><br>
+                    <b>Character / feeling（人物特点／心情）:</b> ${q.traits.join("、")}<br>
+                    <b>Why?</b> The answer links the evidence to the character or feeling.（答案要说明“这些词句怎样表现人物”）
+                </div>
+            </div>
+        `;
     }
 
     function nextQuestion() {
@@ -414,18 +358,16 @@
         } else {
             document.getElementById('game-area').innerHTML = `
                 <div style="text-align:center; padding: 40px;">
-                    <h1 style="color:var(--secondary); font-size:2.5em;">🏆 恭喜通关！</h1>
-                    <p style="font-size:1.2em;">你已经完成了全部 10 题的强化练习！</p>
-                    <p>只要牢记 <b>判定手法 ➔ 抓关键词 ➔ 概括特点 ➔ 套用公式</b>，阅读理解的人物描写题就再也难不倒你了！</p>
-                    <button class="btn-submit" style="width:200px; margin:30px auto;" onclick="location.reload()">重新挑战</button>
+                    <h2 style="color:var(--primary);">已完成 10 题</h2>
+                    <p style="font-size:1.1em;">Review（回看）：哪一种描写最容易判断错？哪些词真正支持你的判断？</p>
+                    <button class="btn-submit" style="width:220px; margin:30px auto;" onclick="location.reload()">重新练习</button>
                 </div>
             `;
-            playApplause();
-            document.getElementById('progress-text').innerText = "10 关挑战全部完成！";
+            document.getElementById('progress-text').innerText = "练习完成";
         }
     }
 
-    // 页面加载完毕即渲染第一题
+    // 页面加载后显示第一题
     renderQuestion();
 </script>
 </body>
