@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>作文功能句 · 华文通</title>
+<style>
+:root{--blue:#1459aa;--ink:#17324d;--muted:#5c6f82;--line:#dce6f1;--pale:#eef5fc;--good:#1f7a4d;--bad:#b33a3a;--paper:#fff;--bg:#f7f9fc;font-family:"KaiTi","STKaiti","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--bg)}
+*{box-sizing:border-box}body{margin:0}button{font:inherit}button,a{-webkit-tap-highlight-color:transparent}button:focus-visible,a:focus-visible{outline:3px solid #e19a18;outline-offset:3px}
+header{background:#fff;border-bottom:1px solid var(--line)}.bar{max-width:980px;margin:auto;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{font-weight:800;color:var(--blue);text-decoration:none;font-size:22px}.small{font-family:"SimSun","Songti SC",serif;color:var(--muted);font-size:14px}
+main{max-width:980px;margin:auto;padding:26px 22px 56px}.hero{margin-bottom:20px}.hero h1{margin:0 0 8px;font-size:clamp(28px,5vw,40px)}.hero p{margin:0;color:var(--muted);font-family:"SimSun","Songti SC",serif;line-height:1.7}
+.tabs{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0}.tab{min-height:46px;padding:10px 16px;border:1px solid var(--line);background:#fff;border-radius:12px;font-weight:700}.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cat{border:1px solid var(--line);background:#fff;border-radius:14px;padding:16px;text-align:left;min-height:86px}.cat.active{border-color:var(--blue);background:var(--pale)}.cat b{font-size:20px}.cat span{display:block;margin-top:6px;color:var(--muted);font-size:14px;font-family:"SimSun","Songti SC",serif}
+.card{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}.label{font-family:"SimSun","Songti SC",serif;font-size:13px;color:var(--muted);margin:0 0 5px}.when{margin:0 0 16px;line-height:1.7}.main-sentence{background:var(--pale);border-radius:12px;padding:14px;font-size:21px;line-height:1.65;font-weight:700}.list{margin:10px 0 0;padding-left:22px}.list li{margin:9px 0;line-height:1.7}.pattern{margin-top:14px;border:1px dashed var(--line);border-radius:12px;padding:12px}
+.qbox{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}.situation{font-size:21px;font-weight:700;line-height:1.6;margin:4px 0 16px}.options{display:grid;gap:10px}.opt{width:100%;min-height:52px;text-align:left;padding:12px 14px;border:1px solid var(--line);background:#fff;border-radius:12px;line-height:1.6}.opt.good{border-color:var(--good);background:#f0faf5}.opt.bad{border-color:var(--bad);background:#fff3f3}.feedback{margin-top:14px;border-radius:12px;padding:12px 14px;line-height:1.6;font-family:"SimSun","Songti SC",serif}.feedback.good{background:#f0faf5}.feedback.bad{background:#fff3f3}.row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.next{min-height:44px;padding:9px 15px;border:1px solid var(--line);background:#fff;border-radius:10px}.next:disabled{opacity:.45}
+.build-section{margin-bottom:18px}.build-section h3{font-size:17px;margin:0 0 9px}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{min-height:44px;padding:9px 12px;border:1px solid var(--line);background:#fff;border-radius:999px}.chip.on{border-color:var(--blue);background:var(--pale)}.result{background:var(--pale);border-radius:12px;padding:14px;min-height:70px;font-size:20px;line-height:1.7}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}.primary{min-height:46px;padding:10px 16px;border:none;border-radius:11px;background:var(--blue);color:#fff;font-weight:700}.secondary{min-height:46px;padding:10px 16px;border:1px solid var(--line);border-radius:11px;background:#fff;font-weight:700}
+.bank-tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.filter{min-height:42px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:#fff}.filter.on{background:var(--blue);color:#fff;border-color:var(--blue)}.bank-item{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin:9px 0}.bank-item b{display:block;color:var(--blue);margin-bottom:5px}.bank-item p{margin:0;line-height:1.65}
+footer{max-width:980px;margin:auto;padding:18px 22px 30px;color:var(--muted);font-family:"SimSun","Songti SC",serif;font-size:13px}
+@media(max-width:620px){.grid{grid-template-columns:1fr}.bar{padding:16px}.brand{font-size:20px}main{padding:22px 16px 42px}.main-sentence,.situation,.result{font-size:19px}}
+</style>
+</head>
+<body>
+<header><div class="bar"><a class="brand" href="/">华文通</a><span class="small">作文 · Story Writing</span></div></header>
+<main>
+<section class="hero">
+<h1>作文功能句</h1>
+<p>先认功能，再选句子，最后放进故事。不要死背50句，要学会在合适的情境中调用。</p>
+</section>
+
+<nav class="tabs" aria-label="练习模式">
+<button class="tab active" data-tab="learn">① Learn（认）</button>
+<button class="tab" data-tab="choose">② Choose（选）</button>
+<button class="tab" data-tab="build">③ Build（造句）</button>
+<button class="tab" data-tab="bank">④ Bank（50句）</button>
+</nav>
+
+<section id="learn" class="panel active">
+<div id="catGrid" class="grid"></div>
+<div class="card">
+<p class="label">Function（功能）</p>
+<h2 id="learnTitle" style="margin:0 0 8px"></h2>
+<p class="label">When?（什么时候用）</p>
+<p id="learnWhen" class="when"></p>
+<p class="label">Main sentence（主句）</p>
+<div id="learnMain" class="main-sentence"></div>
+<p class="label" style="margin-top:16px">Backup sentences（备用句）</p>
+<ul id="learnMore" class="list"></ul>
+<div class="pattern"><p class="label">Pattern（句式）</p><div id="learnPattern"></div></div>
+</div>
+</section>
+
+<section id="choose" class="panel">
+<div class="row"><div><span class="small">Score（得分）</span> <b id="score">0</b> / <b id="done">0</b></div><button id="nextBtn" class="next" disabled>Next（下一题）</button></div>
+<div class="qbox">
+<p class="label">Situation（情境）</p>
+<div id="qSituation" class="situation"></div>
+<div id="qOptions" class="options"></div>
+<div id="qFeedback" class="feedback" hidden aria-live="polite"></div>
+</div>
+</section>
+
+<section id="build" class="panel">
+<div class="qbox">
+<p class="label">Build a short scene（组一个小片段）</p>
+<p class="situation">你第一次上台演讲，非常紧张，但最后决定勇敢面对。</p>
+<div class="build-section"><h3>① Action（动作）</h3><div class="chips" data-group="a"></div></div>
+<div class="build-section"><h3>② Thought（心理）</h3><div class="chips" data-group="b"></div></div>
+<div class="build-section"><h3>③ Action（行动）</h3><div class="chips" data-group="c"></div></div>
+<p class="label">Your sentence（我的句子）</p>
+<div id="buildResult" class="result">请依次选择：动作 → 心理 → 行动</div>
+<div class="actions"><button id="checkBuild" class="primary">Check（检查）</button><button id="resetBuild" class="secondary">Reset（重来）</button></div>
+<div id="buildFeedback" class="feedback" hidden aria-live="polite"></div>
+</div>
+</section>
+
+<section id="bank" class="panel">
+<div class="bank-tools" id="bankTools"></div>
+<div id="bankList"></div>
+</section>
+</main>
+<footer>华文通 · 考前作文复习 ｜ 重点：动作 + 心理 + 语言，不堆砌华丽词语。</footer>
+
+<script>
+const DATA=[
+{name:"紧张、害怕",short:"紧张",when:"上台、比赛、认错、面对不敢尝试的事情时",pattern:"我的______开始______，心也______。",sentences:[
+"我的手心开始冒汗，双手不由自主地握紧了。",
+"我停下脚步，迟迟不敢向前走。",
+"我的心怦怦直跳，仿佛快要从胸口跳出来。",
+"我越想越害怕，脑海里不断浮现最坏的情况。",
+"我暗暗告诉自己：“冷静一点，先想清楚再说。”"]},
+{name:"犹豫、挣扎",short:"犹豫",when:"不知道该不该做、内心有两个选择时",pattern:"我______，却又______。",sentences:[
+"我伸出手，却又慢慢地缩了回来。",
+"我站在原地，一时不知道该怎么办才好。",
+"我的心里像有两个声音在争吵，一个叫我放弃，一个叫我坚持。",
+"如果现在退出，我或许会轻松一些；可是，我真的甘心吗？",
+"我咬了咬嘴唇，心想：“到底该不该试一次呢？”"]},
+{name:"下定决心、鼓起勇气",short:"决心",when:"决定尝试、坚持、认错或说出真相时",pattern:"我______，终于______。",sentences:[
+"我深吸一口气，终于迈出了第一步。",
+"我咬紧牙关，逼自己继续坚持下去。",
+"与其还没开始就认输，不如给自己一次机会。",
+"我突然明白，再害怕也不能永远逃避。",
+"我握紧拳头，对自己说：“试一试，我未必做不到。”"]},
+{name:"遇到困难、想放弃",short:"困难",when:"失败、受挫、觉得自己做不到时",pattern:"我开始怀疑自己是不是______。",sentences:[
+"我停了下来，低着头，久久没有说话。",
+"我无力地坐了下来，只觉得全身的力气都被抽走了。",
+"我开始怀疑自己是不是根本没有能力完成这件事。",
+"辛苦了这么久却没有结果，我心里不禁打起了退堂鼓。",
+"“算了，我真的做不到。”我沮丧地说道。"]},
+{name:"坚持、克服困难",short:"坚持",when:"遇到困难后继续努力、重新尝试时",pattern:"虽然______，但我知道______。",sentences:[
+"我擦了擦额头上的汗，再次站了起来。",
+"失败一次，我就重新来一次，直到找到问题所在。",
+"虽然很累，但我知道，现在放弃，之前的努力就白费了。",
+"我把注意力放在眼前的一小步，不再去想还有多远。",
+"“再试一次吧，也许这次会不一样。”我鼓励自己。"]},
+{name:"生气、委屈、不满",short:"生气",when:"被误会、受责怪、和别人发生冲突时",pattern:"明明______，为什么______？",sentences:[
+"我皱起眉头，忍不住提高了声音。",
+"我别过脸去，不想再和他说话。",
+"明明不是我的错，为什么大家都怪我？",
+"那些话像一根刺扎在心里，让我久久无法释怀。",
+"“你为什么连解释的机会都不给我？”我忍不住问道。"]},
+{name:"难过、失望、后悔",short:"后悔",when:"做错事、错失机会、结果不理想后",pattern:"如果当时我______，事情也许就不会______。",sentences:[
+"我低下头，不敢看他的眼睛。",
+"我默默地坐在一旁，刚才的兴奋早已消失得无影无踪。",
+"如果当时我肯多想一步，事情也许就不会变成这样。",
+"直到失去这次机会，我才真正明白它有多么珍贵。",
+"“早知道会这样，我当时就不该这么做。”我懊悔地说。"]},
+{name:"道歉、反省、弥补",short:"道歉",when:"犯错后承担责任、修复关系时",pattern:"我没有______，而是______。",sentences:[
+"我走到他面前，鼓起勇气向他道歉。",
+"我没有为自己找借口，而是把事情的经过如实告诉他。",
+"一句“对不起”并不能马上弥补伤害，我还必须用行动证明自己的诚意。",
+"我第一次认真反省，问题并不全在别人，我自己也有责任。",
+"“这件事是我做错了。你愿意给我一个弥补的机会吗？”"]},
+{name:"受到帮助、感动、感谢",short:"感动",when:"别人主动帮助、关心、支持自己时",pattern:"一股______涌上心头，______也慢慢消失了。",sentences:[
+"他轻轻拍了拍我的肩膀，把东西递到我手中。",
+"我愣了一下，抬起头看着他，一时说不出话来。",
+"原来，在我最无助的时候，身边一直有人愿意帮助我。",
+"一股暖意涌上心头，刚才的不安也慢慢消失了。",
+"“谢谢你。如果没有你，我真不知道该怎么办。”"]},
+{name:"成功、释然、改变看法",short:"成功",when:"事情解决、目标完成、看法改变时",pattern:"我这才发现，真正______的不是______，而是______。",sentences:[
+"我终于松了一口气，脸上露出了笑容。",
+"我回头看着刚才走过的路，心里突然有一种说不出的满足。",
+"我这才发现，真正困难的并不是事情本身，而是我一直不敢跨出第一步。",
+"经过这件事，我对他原来的看法开始改变了。",
+"我笑着对自己说：“原来我真的可以做到。”"]}];
+
+const tabs=[...document.querySelectorAll(".tab")],panels=[...document.querySelectorAll(".panel")];
+tabs.forEach(b=>b.addEventListener("click",()=>{tabs.forEach(x=>x.classList.remove("active"));panels.forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active");}));
+
+const catGrid=document.getElementById("catGrid");
+DATA.forEach((d,i)=>{const b=document.createElement("button");b.className="cat";b.innerHTML="<b>"+(i+1)+". "+d.short+"</b><span>"+d.when+"</span>";b.addEventListener("click",()=>showCat(i));catGrid.appendChild(b)});
+function showCat(i){[...catGrid.children].forEach((b,j)=>b.classList.toggle("active",i===j));const d=DATA[i];learnTitle.textContent=d.name;learnWhen.textContent=d.when;learnMain.textContent=d.sentences[0];learnMore.innerHTML=d.sentences.slice(1).map(s=>"<li>"+s+"</li>").join("");learnPattern.textContent=d.pattern}
+showCat(0);
+
+const QUESTIONS=[
+{sit:"你第一次上台演讲，老师叫到你的名字。你十分害怕。",right:"我的心怦怦直跳，仿佛快要从胸口跳出来。",opts:["我的心怦怦直跳，仿佛快要从胸口跳出来。","我终于松了一口气，脸上露出了笑容。","我走到他面前，鼓起勇气向他道歉。"],tip:"“心怦怦直跳”是身体感觉，能让读者看见紧张。"},
+{sit:"你想向朋友承认自己做错了事，可是迟迟开不了口。",right:"我伸出手，却又慢慢地缩了回来。",opts:["我伸出手，却又慢慢地缩了回来。","我擦了擦额头上的汗，再次站了起来。","我回头看着刚才走过的路，心里十分满足。"],tip:"“伸出又缩回”把犹豫写成了动作。"},
+{sit:"你本来想放弃比赛，最后决定再试一次。",right:"“再试一次吧，也许这次会不一样。”我鼓励自己。",opts:["“再试一次吧，也许这次会不一样。”我鼓励自己。","“算了，我真的做不到。”我沮丧地说道。","我别过脸去，不想再和他说话。"],tip:"人物已经决定继续，所以应选择“坚持”而不是“放弃”。"},
+{sit:"因为贪玩，你错过了代表学校比赛的机会。",right:"直到失去这次机会，我才真正明白它有多么珍贵。",opts:["直到失去这次机会，我才真正明白它有多么珍贵。","我握紧拳头，对自己说：“试一试，我未必做不到。”","他轻轻拍了拍我的肩膀。"],tip:"“直到……才……”很适合写事后的后悔和醒悟。"},
+{sit:"你误会了朋友，后来发现自己错了，准备修复关系。",right:"我没有为自己找借口，而是把事情的经过如实告诉他。",opts:["我没有为自己找借口，而是把事情的经过如实告诉他。","我皱起眉头，忍不住提高了声音。","我把注意力放在眼前的一小步。"],tip:"真正的补救要承担责任，不只是心里后悔。"},
+{sit:"你最无助时，同学主动留下来帮你完成任务。",right:"一股暖意涌上心头，刚才的不安也慢慢消失了。",opts:["一股暖意涌上心头，刚才的不安也慢慢消失了。","我开始怀疑自己是不是根本没有能力完成这件事。","我停下脚步，迟迟不敢向前走。"],tip:"别人主动帮助后，重点是“感动、感谢”。"}];
+let qi=0,scoreN=0,doneN=0,answered=false;
+function renderQ(){answered=false;nextBtn.disabled=true;const q=QUESTIONS[qi];qSituation.textContent=q.sit;qOptions.innerHTML="";qFeedback.hidden=true;q.opts.forEach(s=>{const b=document.createElement("button");b.className="opt";b.textContent=s;b.addEventListener("click",()=>pick(b,s,q));qOptions.appendChild(b)})}
+function pick(btn,s,q){if(answered)return;answered=true;doneN++;const ok=s===q.right;if(ok)scoreN++;[...qOptions.children].forEach(b=>{if(b.textContent===q.right)b.classList.add("good");else if(b===btn)b.classList.add("bad");b.disabled=true});score.textContent=scoreN;done.textContent=doneN;qFeedback.hidden=false;qFeedback.className="feedback "+(ok?"good":"bad");qFeedback.innerHTML="<b>"+(ok?"✓ 对":"✗ 再想想")+"</b><br>"+q.tip;nextBtn.disabled=false}
+nextBtn.addEventListener("click",()=>{qi=(qi+1)%QUESTIONS.length;renderQ()});renderQ();
+
+const BUILD={
+a:["我深吸一口气","我转身就跑","我低着头站在原地"],
+b:["心想：“我不能还没开始就认输。”","心想：“算了，逃走最轻松。”","脑中一片空白"],
+c:["终于迈步走上讲台。","于是躲到教室外面。","继续站在原地。"]};
+const chosen={a:"",b:"",c:""};
+document.querySelectorAll("[data-group]").forEach(box=>{const g=box.dataset.group;BUILD[g].forEach(s=>{const b=document.createElement("button");b.className="chip";b.textContent=s;b.addEventListener("click",()=>{[...box.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");chosen[g]=s;updateBuild()});box.appendChild(b)})});
+function updateBuild(){const arr=[chosen.a,chosen.b,chosen.c].filter(Boolean);buildResult.textContent=arr.length?arr.join("，"):"请依次选择：动作 → 心理 → 行动"}
+checkBuild.addEventListener("click",()=>{buildFeedback.hidden=false;if(!chosen.a||!chosen.b||!chosen.c){buildFeedback.className="feedback bad";buildFeedback.textContent="先完成三部分。";return}const ok=chosen.a.includes("深吸一口气")&&chosen.b.includes("不能还没开始就认输")&&chosen.c.includes("走上讲台");buildFeedback.className="feedback "+(ok?"good":"bad");buildFeedback.innerHTML=ok?"✓ 很好！动作 + 心理 + 行动，清楚写出了“紧张 → 决心”的转变。":"再想想：题目说“最后决定勇敢面对”，三个选择必须共同表现这个转变。"});
+resetBuild.addEventListener("click",()=>{chosen.a=chosen.b=chosen.c="";document.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));buildFeedback.hidden=true;updateBuild()});
+
+const bankTools=document.getElementById("bankTools"),bankList=document.getElementById("bankList");
+function renderBank(filter=-1){bankList.innerHTML="";DATA.forEach((d,i)=>{if(filter!==-1&&i!==filter)return;d.sentences.forEach((s,j)=>{const x=document.createElement("div");x.className="bank-item";x.innerHTML="<b>"+d.short+" · "+(j===0?"主句":"备用句")+"</b><p>"+s+"</p>";bankList.appendChild(x)})})}
+[{n:"全部",i:-1},...DATA.map((d,i)=>({n:d.short,i}))].forEach((x,k)=>{const b=document.createElement("button");b.className="filter"+(k===0?" on":"");b.textContent=x.n;b.addEventListener("click",()=>{[...bankTools.children].forEach(y=>y.classList.remove("on"));b.classList.add("on");renderBank(x.i)});bankTools.appendChild(b)});
+renderBank();
+</script>
+</body></html>
