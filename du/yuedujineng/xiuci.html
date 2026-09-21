@@ -2128,7 +2128,7 @@ function selectLevel(lv) {
 function renderRhetoricChips() {
   const avail = RHETORICS_BY_LEVEL[S.level];
   const grid = document.getElementById('rhetoricGrid');
-  const enMap = {比喻:'Simile/Metaphor', 拟人:'Personification', 夸张:'Hyperbole', 排比:'Parallelism', 反问:'Rhetoric Q.', 设问:'Self-Q&A'};
+  const enMap = {比喻:'Simile/Metaphor', 拟人:'Personification', 夸张:'Hyperbole', 排比:'Parallelism'};
   grid.innerHTML = avail.map(r => `
     <button class="rhet-chip ${S.selectedRhetorics.includes(r)?'sel':''}" onclick="toggleRhetic('${r}')">
       ${r}
