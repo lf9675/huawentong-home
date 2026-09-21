@@ -181,7 +181,23 @@ body {
   margin-bottom: 16px; box-shadow: var(--shadow);
   border-left: 4px solid var(--gold);
 }
-.sentence-label { font-size: 11px; color: var(--muted); letter-spacing: 1.5px; margin-bottom: 10px; font-weight: 600; }
+.sentence-label { font-size: 11px; color: var(--muted); letter-spacing: 1.5px; margin-bottom: 6px; font-weight: 600; }
+.source-line {
+  display: inline-block; margin-bottom: 10px; padding: 4px 9px;
+  border-radius: 999px; background: var(--green-light); color: var(--green);
+  font-size: 11px; font-weight: 700;
+}
+.independent-guide {
+  font-size: 13px; line-height: 1.65; color: var(--muted);
+  background: #f6f8f5; border-radius: 9px; padding: 10px 12px; margin-bottom: 12px;
+}
+.independent-answer {
+  width: 100%; min-height: 118px; resize: vertical; border: 2px solid var(--border);
+  border-radius: 10px; padding: 12px 13px; background: #fff; color: var(--ink);
+  font-family: 'Noto Serif SC', serif; font-size: 16px; line-height: 1.8;
+}
+.independent-answer:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(42,92,63,.08); }
+.compare-note { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
 .sentence-text {
   font-family: 'Noto Serif SC', serif; font-size: 18px;
   line-height: 1.9; color: var(--ink);
@@ -463,7 +479,7 @@ body {
       <div class="header-title">分析修辞的作用</div>
       <div class="header-sub">HCL 修辞手法互动练习</div>
     </div>
-    <div class="score-pill" id="scorePill">0 分</div>
+    <div class="score-pill" id="scorePill">进度 0/0</div>
   </div>
 </div>
 
@@ -475,7 +491,7 @@ body {
 <div class="screen active" id="screen-setup">
   <div class="setup-hero">
     <h1>修辞分析练习</h1>
-    <p>四步引导：识别修辞 → 分析对象 → 找关键词 → 写分析句。<br>请选择年级和要练习的修辞手法。</p>
+    <p>先有提示，再逐步减少支架，最后自己分析。<br>题目全部选自中一、中二课文。</p>
   </div>
 
   <div class="setup-section">
@@ -521,6 +537,7 @@ body {
   <!-- sentence display -->
   <div class="sentence-card">
     <div class="sentence-label">📖 请阅读以下句子</div>
+    <div class="source-line" id="sourceLine"></div>
     <div class="sentence-text" id="sentenceDisplay"></div>
   </div>
 
@@ -614,7 +631,8 @@ const QUESTIONS = {
           "走路稳重、不慌不忙"
         ],
         "formulaTemplate": "运用比喻，将马小跳比作__①__，生动地写出了他__②__的特点，表现出__③__。",
-        "modelAnswer": "运用比喻的修辞手法，将马小跳比作快乐的鸟儿，生动地写出了他走路轻快、活蹦乱跳的特点，表现出他心里非常高兴。"
+        "modelAnswer": "运用比喻的修辞手法，将马小跳比作快乐的鸟儿，生动地写出了他走路轻快、活蹦乱跳的特点，表现出他心里非常高兴。",
+        "source": "中一上《一个蛋两个蛋三个蛋》"
       },
       {
         "sentence": "闪亮的星耀樟宜{像一颗宝石}镶嵌在樟宜机场第一搭客大厦的旁边。",
@@ -654,7 +672,8 @@ const QUESTIONS = {
           "古旧破旧"
         ],
         "formulaTemplate": "运用比喻，将星耀樟宜比作__①__，生动地突出了它__②__的外观特征，表达了__③__之情。",
-        "modelAnswer": "运用比喻的修辞手法，将星耀樟宜比作一颗宝石，生动地突出了这个建筑闪闪发光、非常漂亮的外观特征，表达了赞美与惊叹之情。"
+        "modelAnswer": "运用比喻的修辞手法，将星耀樟宜比作一颗宝石，生动地突出了这个建筑闪闪发光、非常漂亮的外观特征，表达了赞美与惊叹之情。",
+        "source": "中一上《魅力四射 星耀樟宜》"
       },
       {
         "sentence": "林小飞垂头丧气地站在那里，{像泄了气的皮球}。",
@@ -694,7 +713,8 @@ const QUESTIONS = {
           "冷静从容"
         ],
         "formulaTemplate": "运用比喻，将林小飞比作__①__，生动地写出了他被欧阳甜甜说得__②__的样子，表达了__③__。",
-        "modelAnswer": "运用比喻的修辞手法，将林小飞比作泄了气的皮球，生动地写出了林小飞被欧阳甜甜说得哑口无言、一副垂头丧气的样子。"
+        "modelAnswer": "运用比喻的修辞手法，将林小飞比作泄了气的皮球，生动地写出了林小飞被欧阳甜甜说得哑口无言、一副垂头丧气的样子。",
+        "source": "中一上《张老师“审案”》"
       },
       {
         "sentence": "全班同学都被王老师那{金属般}的声音镇住了。",
@@ -734,7 +754,8 @@ const QUESTIONS = {
           "普通平常"
         ],
         "formulaTemplate": "运用比喻，将声音比作__①__，生动地突出了王老师的声音__②__的特点，令全班__③__。",
-        "modelAnswer": "运用比喻的修辞手法，将声音比作金属，生动地突出了王老师的声音非常响亮、清脆的特点，令全班同学都被镇住了，感到震撼与敬畏。"
+        "modelAnswer": "运用比喻，把王老师的声音比作金属，突出他的声音响亮、有力量，使王老师一开口就给全班留下强烈印象。",
+        "source": "中一上《王几何》"
       },
       {
         "sentence": "时间真是个{贼}，而且还是个{神偷}。",
@@ -775,7 +796,8 @@ const QUESTIONS = {
           "充裕宽松"
         ],
         "formulaTemplate": "运用比喻，将时间比作__①__，生动地写出了时间__②__的特点，表达了__③__。",
-        "modelAnswer": "运用比喻的修辞手法，将时间比作神偷，生动地写出了时间在不知不觉中飞快溜走、抓不住的特点，警示人们要珍惜时间。"
+        "modelAnswer": "运用比喻，把时间比作「贼」和「神偷」，突出时间会在不知不觉中流逝，并带走人的青春；联系下文妈妈白发和皱纹增多，写出作者对岁月流逝的感叹。",
+        "source": "中一上《团圆饭》"
       },
       {
         "sentence": "面饼越甩越大，也越来越薄，最后薄得{像纸片一样}。",
@@ -815,7 +837,8 @@ const QUESTIONS = {
           "形状奇特"
         ],
         "formulaTemplate": "运用比喻，将面饼比作__①__，生动地突出了面饼__②__的特点，表达了__③__之情。",
-        "modelAnswer": "运用比喻的修辞手法，将面饼比作纸片，生动地突出了面饼被拉得非常非常薄的特点，表达了对印度大叔技术的赞叹与佩服之情。"
+        "modelAnswer": "运用比喻，把甩薄后的面饼比作纸片，具体写出面饼非常薄，让读者更容易想象印度煎饼制作时的形态变化。",
+        "source": "中一上《“食”在新加坡》"
       },
       {
         "sentence": "我{像一只狼狈的小狗}，被女佣抱上了人力车。",
@@ -855,7 +878,8 @@ const QUESTIONS = {
           "开心活泼"
         ],
         "formulaTemplate": "运用比喻，将「我」比作__①__，生动地写出了「我」__②__的样子，表达了__③__。",
-        "modelAnswer": "运用比喻的修辞手法，将「我」比作狼狈的小狗，生动地写出了「我」当时不愿上学但又没办法、一副可怜无助的样子。"
+        "modelAnswer": "运用比喻的修辞手法，将「我」比作狼狈的小狗，生动地写出了「我」当时不愿上学但又没办法、一副可怜无助的样子。",
+        "source": "中一下《迟到》"
       },
       {
         "sentence": "海面上风平浪静，{像一块无边无际的玻璃}。",
@@ -895,7 +919,8 @@ const QUESTIONS = {
           "浑浊狭小"
         ],
         "formulaTemplate": "运用比喻，将海面比作__①__，生动地写出了海面__②__的特点，带给人__③__。",
-        "modelAnswer": "运用比喻的修辞手法，将海面比作一块无边无际的玻璃，生动地写出了海面非常平静、水面很清澈的特点，带给人宁静、开阔的感觉。"
+        "modelAnswer": "运用比喻，把平静的海面比作无边无际的玻璃，突出海面平坦、宁静而开阔的特点，使眼前景象更具体。",
+        "source": "中一下《海底牧场游记》"
       },
       {
         "sentence": "这里有两座摩天大楼，看上去就{像薄薄的刀片}一样。",
@@ -935,7 +960,8 @@ const QUESTIONS = {
           "高大雄伟但普通"
         ],
         "formulaTemplate": "运用比喻，将大楼比作__①__，生动地刻画出大楼__②__的特点，令人__③__。",
-        "modelAnswer": "运用比喻的修辞手法，将大楼比作薄薄的刀片，生动地刻画出大楼外形特别、非常扁平的特点，令人感到惊奇、印象深刻。"
+        "modelAnswer": "运用比喻，把新门广场的摩天大楼比作薄薄的刀片，突出大楼外形薄而独特，使建筑造型更容易想象，也说明设计别具一格。",
+        "source": "中一下《难忘的建筑之旅》"
       }
     ],
     "拟人": [
@@ -980,7 +1006,8 @@ const QUESTIONS = {
         "formulaTemplate": "运用拟人，用「__①__」等词语赋予老巴刹人的神态，生动地写出了它__②__的特点，表达了作者的__③__之情。",
         "modelAnswer": "运用拟人的修辞手法，用「安详地坐」「欢迎」等词语赋予老巴刹人的神态和动作，生动地写出了这座建筑历史非常悠久、稳重安静的特点，表达了作者的亲切与喜爱之情。",
         "extraRhetoric": "比喻",
-        "fullRhetoricLabel": "拟人（兼比喻）"
+        "fullRhetoricLabel": "拟人（兼比喻）",
+        "source": "中一上《走街串巷逛狮城》"
       },
       {
         "sentence": "他想：这下子鸡蛋{想跑也跑不掉}了。",
@@ -1021,7 +1048,8 @@ const QUESTIONS = {
           "非常脆弱"
         ],
         "formulaTemplate": "运用拟人，用「__①__」把鸡蛋写得像会行动的人，生动地写出了鸡蛋__②__的想象效果，也表现出__③__。",
-        "modelAnswer": "运用拟人的修辞手法，用「想跑也跑不掉」把鸡蛋写得像会自己逃跑的人，语言活泼有趣，也表现出马小跳这次保护鸡蛋时更加认真、觉得万无一失。"
+        "modelAnswer": "运用拟人的修辞手法，用「想跑也跑不掉」把鸡蛋写得像会自己逃跑的人，语言活泼有趣，也表现出马小跳这次保护鸡蛋时更加认真、觉得万无一失。",
+        "source": "中一上《一个蛋两个蛋三个蛋》"
       },
       {
         "sentence": "五用车{屁股一翘}，{钻进海里}，成了潜水艇。",
@@ -1062,7 +1090,8 @@ const QUESTIONS = {
           "完全静止不动"
         ],
         "formulaTemplate": "运用拟人，用「__①__」赋予五用车人的动作，生动地写出了它__②__的特点，表现出__③__。",
-        "modelAnswer": "运用拟人的修辞手法，用「屁股一翘」「钻进海里」赋予五用车人的身体动作，生动地写出了五用车转换形态时灵活有趣的样子，表现出未来交通工具的新奇感。"
+        "modelAnswer": "运用拟人的修辞手法，用「屁股一翘」「钻进海里」赋予五用车人的身体动作，生动地写出了五用车转换形态时灵活有趣的样子，表现出未来交通工具的新奇感。",
+        "source": "中一下《海底牧场游记》"
       },
       {
         "sentence": "火锅还在滚着，{似乎在期待着}全家的大团圆。",
@@ -1102,7 +1131,8 @@ const QUESTIONS = {
           "说明火锅温度很高"
         ],
         "formulaTemplate": "运用拟人，用「__①__」赋予火锅人的心理，生动地写出了火锅__②__的状态，烘托出__③__。",
-        "modelAnswer": "运用拟人的修辞手法，用「似乎在期待着」赋予火锅人的心理，写得生动有情味，烘托出一家人盼望团圆的温馨气氛。"
+        "modelAnswer": "运用拟人的修辞手法，用「似乎在期待着」赋予火锅人的心理，写得生动有情味，烘托出一家人盼望团圆的温馨气氛。",
+        "source": "中一上《团圆饭》"
       },
       {
         "sentence": "这家伙{欺软怕硬}，咬不动五用车，就尾巴一扫，闪电般地溜走了。",
@@ -1142,7 +1172,8 @@ const QUESTIONS = {
           "胆大而坚定"
         ],
         "formulaTemplate": "运用拟人，用「__①__」赋予大白鲨人的性格，生动地写出了它__②__的特点，带有__③__。",
-        "modelAnswer": "运用拟人的修辞手法，用「欺软怕硬」赋予大白鲨人的性格，生动地写出了它凶猛却又欺软怕硬的特点，语言带有调侃、轻松的意味。"
+        "modelAnswer": "运用拟人的修辞手法，用「欺软怕硬」赋予大白鲨人的性格，生动地写出了它凶猛却又欺软怕硬的特点，语言带有调侃、轻松的意味。",
+        "source": "中一下《海底牧场游记》"
       },
       {
         "sentence": "送走圣诞老人，过了元旦，农历新年也{悄悄地走近}了。",
@@ -1182,7 +1213,8 @@ const QUESTIONS = {
           "遥远而陌生"
         ],
         "formulaTemplate": "运用拟人，用「__①__」赋予农历新年人的动作，生动地写出了它__②__的特点，__③__。",
-        "modelAnswer": "运用拟人的修辞手法，用「悄悄地走近」赋予农历新年人的动作，生动地写出了农历新年逐渐临近的情景，营造出节日将至的气氛。"
+        "modelAnswer": "运用拟人的修辞手法，用「悄悄地走近」赋予农历新年人的动作，生动地写出了农历新年逐渐临近的情景，营造出节日将至的气氛。",
+        "source": "中一上《团圆饭》"
       }
     ],
     "夸张": [
@@ -1224,7 +1256,8 @@ const QUESTIONS = {
           "普通平常"
         ],
         "formulaTemplate": "运用夸张，用「__①__」故意夸大时间，强调了马小跳的故事__②__的特点，表达了__③__的效果。",
-        "modelAnswer": "运用夸张的修辞手法，用「几天几夜都说不完」故意夸大时间，强调了马小跳的故事数量极其丰富、非常多的特点，给读者留下了幽默生动、印象深刻的效果。"
+        "modelAnswer": "运用夸张，用「几天几夜都说不完」故意夸大故事之多，突出马小跳贪玩、好动、经常惹麻烦的淘气特点。",
+        "source": "中一上《我的新同学》"
       },
       {
         "sentence": "教室里更安静了，{静得只听见}周围深沉的呼吸。",
@@ -1264,7 +1297,8 @@ const QUESTIONS = {
           "轻松活泼"
         ],
         "formulaTemplate": "运用夸张，用「__①__」极度强调了教室__②__的特点，反映出大家__③__的状态。",
-        "modelAnswer": "运用夸张的修辞手法，通过只听见呼吸声，极度夸张地强调了教室极其安静的特点，反映出大家当时极度紧张的心理状态。"
+        "modelAnswer": "运用夸张，用「静得只听见周围深沉的呼吸」突出教室极其安静，表现同学们看到王老师迅速走到黑板前后十分惊讶、屏息关注。",
+        "source": "中一上《王几何》"
       },
       {
         "sentence": "中年人（王几何老师）{眨眼工夫}就站到了黑板前。",
@@ -1304,7 +1338,8 @@ const QUESTIONS = {
           "动作普通平常"
         ],
         "formulaTemplate": "运用夸张，用「__①__」故意夸大时间之短，强调了这个人__②__的特点，令人__③__。",
-        "modelAnswer": "运用夸张的修辞手法，用「眨眼工夫」故意夸大时间之短，强调了这个中年人动作极其迅速、敏捷的特点，令人感到惊讶、印象深刻。"
+        "modelAnswer": "运用夸张的修辞手法，用「眨眼工夫」故意夸大时间之短，强调了这个中年人动作极其迅速、敏捷的特点，令人感到惊讶、印象深刻。",
+        "source": "中一上《王几何》"
       },
       {
         "sentence": "我刚平静下来的心一下子又{提到了嗓子眼}！",
@@ -1344,7 +1379,8 @@ const QUESTIONS = {
           "开心期待"
         ],
         "formulaTemplate": "运用夸张，用「__①__」故意夸大心理感受，强调了「我」__②__的心理特点，表达了__③__。",
-        "modelAnswer": "运用夸张的修辞手法，用「提到了嗓子眼」故意夸大心脏的位置感受，强调了「我」当时极度紧张、受惊吓的心理特点。"
+        "modelAnswer": "运用夸张的修辞手法，用「提到了嗓子眼」故意夸大心脏的位置感受，强调了「我」当时极度紧张、受惊吓的心理特点。",
+        "source": "中一下《迟到》"
       },
       {
         "sentence": "{简直让人笑破肚子}，数学课竟变成了图画课！",
@@ -1384,7 +1420,8 @@ const QUESTIONS = {
           "感到十分害怕"
         ],
         "formulaTemplate": "运用夸张，用「__①__」故意夸大同学们发笑的程度，强调他们__②__，营造了__③__的课堂气氛。",
-        "modelAnswer": "运用夸张的修辞手法，用「笑破肚子」故意夸大同学们发笑的程度，强调大家觉得课堂非常有趣、笑得很厉害，营造了轻松欢乐的课堂气氛。"
+        "modelAnswer": "运用夸张的修辞手法，用「笑破肚子」故意夸大同学们发笑的程度，强调大家觉得课堂非常有趣、笑得很厉害，营造了轻松欢乐的课堂气氛。",
+        "source": "中一上《王几何》"
       }
     ],
     "排比": [
@@ -1428,7 +1465,8 @@ const QUESTIONS = {
           "聪明能干、反应敏捷"
         ],
         "formulaTemplate": "运用排比，连续用三组「有……但……」写差不多先生__①__，从多个方面突出了他__②__的特点，加强了__③__的语气。",
-        "modelAnswer": "运用排比的修辞手法，连续用三组结构相似的「有……但……」句子，从眼睛、耳朵、鼻子和嘴等方面写差不多先生，突出了他凡事马虎、不认真、只求差不多的特点，加强了讽刺和批评的语气。"
+        "modelAnswer": "运用排比的修辞手法，连续用三组结构相似的「有……但……」句子，从眼睛、耳朵、鼻子和嘴等方面写差不多先生，突出了他凡事马虎、不认真、只求差不多的特点，加强了讽刺和批评的语气。",
+        "source": "中一下《差不多先生》"
       }
     ]
   },
@@ -1473,7 +1511,8 @@ const QUESTIONS = {
           "软弱没有原则"
         ],
         "formulaTemplate": "运用比喻，将言语比作「刀子」，内心比作「豆腐」，生动地写出了妈妈__①__的性格特点，使人物形象__②__，表达了__③__。",
-        "modelAnswer": "运用比喻的修辞手法，把「言语」比作「刀子」，「内心」比作「豆腐」，生动地写出了妈妈说话严厉但内心善良疼爱孩子的性格特点，使人物形象非常鲜明。"
+        "modelAnswer": "运用比喻的修辞手法，把「言语」比作「刀子」，「内心」比作「豆腐」，生动地写出了妈妈说话严厉但内心善良疼爱孩子的性格特点，使人物形象非常鲜明。",
+        "source": "中二上《我想对您说》"
       },
       {
         "sentence": "看着看着，雨树竟然变成了{姿态婆娑的舞蹈员}。",
@@ -1513,7 +1552,8 @@ const QUESTIONS = {
           "枝干坚硬毫不动摇"
         ],
         "formulaTemplate": "运用比喻，将雨树比作__①__，生动地写出了雨树__②__的特点，表达了作者的__③__之情。",
-        "modelAnswer": "运用比喻的修辞手法，将雨树比作姿态婆娑的舞蹈员，生动地写出了雨树的枝干随风摆动时姿态优美的特点，表达了作者的赞美与喜爱之情。"
+        "modelAnswer": "运用比喻的修辞手法，将雨树比作姿态婆娑的舞蹈员，生动地写出了雨树的枝干随风摆动时姿态优美的特点，表达了作者的赞美与喜爱之情。",
+        "source": "中二下《雨树》"
       },
       {
         "sentence": "风筝却{像个不听话的孩子}，用力挣脱。",
@@ -1553,7 +1593,8 @@ const QUESTIONS = {
           "安静平稳"
         ],
         "formulaTemplate": "运用比喻，将风筝比作__①__，生动地写出了风筝__②__的特点，表达了__③__之情。",
-        "modelAnswer": "运用比喻的修辞手法，将风筝比作不听话的孩子，生动地写出了风筝在空中难以控制、剧烈摇摆的特点，表达了无奈与感慨之情。"
+        "modelAnswer": "运用比喻，把风筝比作不听话的孩子，写出风筝受风后不断挣脱控制的状态；这也为下文爸爸用风筝说明孩子与父母的关系作铺垫。",
+        "source": "中二上《放风筝》"
       },
       {
         "sentence": "小鸟蛋{像宝石一样}，漂亮极了！",
@@ -1593,7 +1634,8 @@ const QUESTIONS = {
           "形状奇怪不好看"
         ],
         "formulaTemplate": "运用比喻，将小鸟蛋比作__①__，生动地突出了它__②__的特点，表达了__③__之情。",
-        "modelAnswer": "运用比喻的修辞手法，将小鸟蛋比作宝石，生动地突出了鸟蛋颜色鲜艳、光彩夺目的外观特点，表达了「我们」的喜爱与惊喜之情。"
+        "modelAnswer": "运用比喻的修辞手法，将小鸟蛋比作宝石，生动地突出了鸟蛋颜色鲜艳、光彩夺目的外观特点，表达了「我们」的喜爱与惊喜之情。",
+        "source": "中二上《山中奇遇》"
       },
       {
         "sentence": "小珍珠鸟好肥，整个身子好像{一个蓬松的球儿}。",
@@ -1633,7 +1675,8 @@ const QUESTIONS = {
           "凶猛危险"
         ],
         "formulaTemplate": "运用比喻，将小珍珠鸟比作__①__，生动地描写出它__②__的特点，表达了作者的__③__之情。",
-        "modelAnswer": "运用比喻的修辞手法，将小珍珠鸟比作蓬松的球儿，生动地描写出小鸟身形肥胖、毛茸茸的可爱特点，表达了作者的喜爱与亲昵之情。"
+        "modelAnswer": "运用比喻的修辞手法，将小珍珠鸟比作蓬松的球儿，生动地描写出小鸟身形肥胖、毛茸茸的可爱特点，表达了作者的喜爱与亲昵之情。",
+        "source": "中二上《珍珠鸟》"
       },
       {
         "sentence": "即便是别人不经意的一瞥，都会成为{射向我的利箭}。",
@@ -1673,7 +1716,8 @@ const QUESTIONS = {
           "毫无影响"
         ],
         "formulaTemplate": "运用比喻，将别人的目光比作__①__，生动地突出了它__②__的特点，表达了「我」__③__的心理。",
-        "modelAnswer": "运用比喻的修辞手法，将别人的目光比作射向我的利箭，生动地突出了这种目光极具杀伤力、让「我」内心深感受伤的特点，表达了「我」极度受伤、内心痛苦的心理。"
+        "modelAnswer": "运用比喻，把别人不经意的一瞥比作射来的利箭，突出「我」因身体缺陷而十分敏感，别人的目光也会让「我」感到受伤。",
+        "source": "中二下《最美的姿势》"
       },
       {
         "sentence": "我觉得自己……{犹如被烈日炙烤着}。",
@@ -1713,7 +1757,8 @@ const QUESTIONS = {
           "开心期待"
         ],
         "formulaTemplate": "运用比喻，将「我」的感受比作__①__，生动地表现出「我」__②__的心理，表达了__③__。",
-        "modelAnswer": "运用比喻的修辞手法，将「我」的感受比作被烈日炙烤，生动地表现出「我」被注视时极度难堪、备受煎熬的心理特点，表达了「我」的痛苦与不安。"
+        "modelAnswer": "运用比喻，把被同学注视时的感受比作被烈日炙烤，突出「我」因脖子歪而自卑敏感，被注视时感到难堪和煎熬。",
+        "source": "中二下《最美的姿势》"
       }
     ],
     "拟人": [
@@ -1755,48 +1800,50 @@ const QUESTIONS = {
           "危险可怕令人害怕"
         ],
         "formulaTemplate": "运用拟人，用「__①__」赋予雨树人的感情，生动地写出了它__②__的特点，表达了作者的__③__之情。",
-        "modelAnswer": "运用拟人的修辞手法，用「叮咛」赋予雨树人的感情和说话的能力，生动地写出了雨树如同亲人般陪伴守护的特点，表达了作者对它的喜爱之情。"
+        "modelAnswer": "运用拟人的修辞手法，用「叮咛」赋予雨树人的感情和说话的能力，生动地写出了雨树如同亲人般陪伴守护的特点，表达了作者对它的喜爱之情。",
+        "source": "中二下《雨树》"
       },
       {
-        "sentence": "非洲企鹅班杰和贝拉喜欢{大摇大摆}地四处{探索}新事物。",
-        "context": "2B课文（单句练习）",
+        "sentence": "白天，它这样{淘气地陪伴}我；傍晚，它就在父母再三的{呼唤声}中，飞向笼子。",
+        "context": "中二上《珍珠鸟》｜小珍珠鸟逐渐信赖作者，白天在屋里亲近作者，傍晚才回到鸟笼。",
         "rhetoric": "拟人",
         "writeTypeChoices": [
-          "写动物（企鹅）",
+          "写动物（小珍珠鸟）",
           "写人",
-          "写景色",
-          "写感情"
+          "写景物",
+          "写观点"
         ],
-        "writeTypeCorrect": "写动物（企鹅）",
-        "target": "企鹅",
-        "keywordPrompt": "哪些词语把「企鹅」写得像人一样？",
+        "writeTypeCorrect": "写动物（小珍珠鸟）",
+        "target": "小珍珠鸟",
+        "keywordPrompt": "哪些词语把小珍珠鸟写得像有人的性情和关系？",
         "tokens": [
-          "企鹅",
-          "大摇大摆",
-          "探索",
-          "四处",
-          "神气十足"
+          "淘气地陪伴",
+          "父母再三的呼唤声",
+          "白天",
+          "飞向笼子",
+          "小珍珠鸟"
         ],
         "correctTokens": [
-          "大摇大摆",
-          "探索"
+          "淘气地陪伴",
+          "父母再三的呼唤声"
         ],
-        "keyHint": "关键词是「大摇大摆」和「探索」——这些是人的动作和行为，用来写企鹅，突出企鹅走路神气十足、充满好奇心的特点。",
+        "keyHint": "「陪伴」「呼唤」带有人的关系和情感色彩，把珍珠鸟一家写得更亲切，也表现小鸟与作者越来越亲近。",
         "emotionChoices": [
-          "喜爱觉得有趣可爱",
-          "嫌弃不喜欢",
-          "害怕恐惧",
-          "无所谓"
+          "表现小鸟活泼亲人，也突出人与鸟之间的信赖",
+          "表现小鸟十分凶猛",
+          "营造紧张恐怖的气氛",
+          "说明鸟笼十分宽大"
         ],
-        "correctEmotion": "喜爱觉得有趣可爱",
-        "correctFeature": "走路神气十足、充满好奇心",
+        "correctEmotion": "表现小鸟活泼亲人，也突出人与鸟之间的信赖",
+        "correctFeature": "活泼、亲人，与作者越来越亲近",
         "featureChoices": [
-          "走路神气十足、充满好奇心",
-          "走路缓慢毫无活力",
-          "胆小怕事不敢探索"
+          "活泼、亲人，与作者越来越亲近",
+          "胆小疏远，始终怕人",
+          "凶猛好斗，不愿回笼"
         ],
-        "formulaTemplate": "运用拟人，用「__①__」等词语赋予企鹅人的动作，生动地描写出它__②__的特点，表达了__③__。",
-        "modelAnswer": "运用拟人的修辞手法，用「大摇大摆」「探索」等词语赋予企鹅人的动作，生动地描写出企鹅走路神气十足、充满好奇心的特点，表达了对它的喜爱与觉得有趣可爱之情。"
+        "formulaTemplate": "运用拟人，用「__①__」等词语赋予珍珠鸟人的情感和关系，写出了它__②__的特点，也表现了__③__。",
+        "modelAnswer": "运用拟人的修辞手法，用「淘气地陪伴」「父母再三的呼唤声」等表达把珍珠鸟写得富有人情味，表现小珍珠鸟活泼、亲人，以及它与作者之间逐渐建立起来的信赖。",
+        "source": "中二上《珍珠鸟》"
       },
       {
         "sentence": "它们的叫声越来越急促，似乎在{生气地骂着什么}。",
@@ -1836,7 +1883,8 @@ const QUESTIONS = {
           "淡然无感"
         ],
         "formulaTemplate": "运用拟人，用「__①__」赋予小鸟人的愤怒，生动地表现出大鸟__②__的特点，表达了__③__之情。",
-        "modelAnswer": "运用拟人的修辞手法，用「生气地骂着什么」赋予小鸟人的愤怒情感，生动地表现出大鸟失去鸟蛋后极度焦急、生气的特点，表达了动物间浓厚的亲情。"
+        "modelAnswer": "运用拟人，用「生气地骂」赋予鸟儿人的情绪和语言，写出它们发现鸟蛋被拿走后焦急、愤怒的反应，突出亲鸟护蛋的急切。",
+        "source": "中二上《山中奇遇》"
       },
       {
         "sentence": "它们停止了蹦跳，呆呆地看着鸟蛋的碎片，仿佛在{默哀}。",
@@ -1876,7 +1924,8 @@ const QUESTIONS = {
           "残忍无情"
         ],
         "formulaTemplate": "运用拟人，用「__①__」赋予小鸟人的哀悼行为，生动地写出了大鸟__②__的特点，表达了作者的__③__之情。",
-        "modelAnswer": "运用拟人的修辞手法，用「默哀」赋予小鸟人的哀悼行为，生动地写出了大鸟面对失去的孩子时极度悲伤、难过的特点，表达了作者的同情与惋惜之情。"
+        "modelAnswer": "运用拟人，用「默哀」把鸟儿写得像失去亲人后哀悼的人，突出鸟蛋破碎后亲鸟悲伤、无助的状态，使这一场面更令人难受。",
+        "source": "中二上《山中奇遇》"
       }
     ],
     "夸张": [
@@ -1918,7 +1967,8 @@ const QUESTIONS = {
           "无所谓不在乎"
         ],
         "formulaTemplate": "运用夸张，用「__①__」故意夸大心理感受，极度强调了这个同学__②__的心理特点，表达了__③__。",
-        "modelAnswer": "运用夸张的修辞手法，用「快要窒息」故意夸大心理感受，极度强调了这个同学被严厉管教后极度压抑、痛苦的心理特点。"
+        "modelAnswer": "运用夸张，用「快要窒息」故意扩大受限制的感受，突出这个孩子觉得父亲管得太严、自己非常压抑和苦恼。",
+        "source": "中二上《我想对您说》"
       },
       {
         "sentence": "宿舍中的空气仿佛凝固起来，房间里安静得{可以听到彼此心跳的声音}。",
@@ -1958,12 +2008,13 @@ const QUESTIONS = {
           "安静舒适令人放松"
         ],
         "formulaTemplate": "运用夸张，用「__①__」故意夸大听觉感受，极度强调了宿舍__②__的特点，反映了室友间__③__的关系。",
-        "modelAnswer": "运用夸张的修辞手法，用「可以听到彼此心跳的声音」故意夸大听觉感受，极度强调了宿舍环境极其死寂、气氛极其尴尬紧张的特点，反映了室友间关系的僵持。"
+        "modelAnswer": "运用夸张，用「安静得可以听到彼此心跳」突出房间异常安静，也烘托「我」和蒋妍互不理睬时僵硬、尴尬的关系。",
+        "source": "中二下《恐怖事件》"
       }
     ],
     "排比": [
       {
-        "sentence": "她{为曝晒在烈日下的汽车遮阳}；她{把炎阳遮挡成柔柔的凉意}；她{用枝干繁叶合拢成}一片美丽的林荫大道。",
+        "sentence": "空旷的停车场里，{她为曝晒在烈日下的汽车遮阳}；宽阔的草场边，{她把炎阳遮挡成柔柔的凉意}；长长的道路两旁，{她用枝干繁叶合拢成一片美丽的林荫大道}。",
         "context": "2B课文｜作者在介绍新加坡无处不在的雨树。",
         "rhetoric": "排比",
         "writeTypeChoices": [
@@ -1976,18 +2027,19 @@ const QUESTIONS = {
         "target": "雨树的作用",
         "keywordPrompt": "排比句中，三个「她……」分别做了什么？",
         "tokens": [
-          "她为……遮阳",
-          "她把……遮挡成凉意",
-          "她用……合拢成林荫大道",
-          "连续句式",
-          "加强语气"
+          "她为曝晒在烈日下的汽车遮阳",
+          "她把炎阳遮挡成柔柔的凉意",
+          "她用枝干繁叶合拢成一片美丽的林荫大道",
+          "停车场",
+          "草场边",
+          "道路两旁"
         ],
         "correctTokens": [
-          "她为……遮阳",
-          "她把……遮挡成凉意",
-          "她用……合拢成林荫大道"
+          "她为曝晒在烈日下的汽车遮阳",
+          "她把炎阳遮挡成柔柔的凉意",
+          "她用枝干繁叶合拢成一片美丽的林荫大道"
         ],
-        "keyHint": "关键词是三个「她……」——连续使用相同句式加强语气，全面地写出了雨树在各个地方为人遮阴纳凉的贡献。",
+        "keyHint": "三个分句结构相近，分别写雨树在停车场、草场和道路旁给人们带来的好处，形成排比。",
         "emotionChoices": [
           "赞美感激雨树",
           "批评嫌弃",
@@ -2002,10 +2054,11 @@ const QUESTIONS = {
           "只对少数人有用"
         ],
         "formulaTemplate": "运用排比（兼拟人），用三个「__①__」连续使用相同句式加强语气，全面地写出了雨树__②__的特点，表达了作者的__③__之情。",
-        "modelAnswer": "运用排比的修辞手法（兼拟人），连续使用三个「她……」增强语气，全面地写出了雨树在各个地方为人遮阴纳凉的特点和贡献，表达了作者对雨树的赞美与感激之情。"
+        "modelAnswer": "运用排比的修辞手法，连续从停车场、草场和道路三个场景写雨树遮阳、带来凉意和形成林荫大道，使内容层次清楚、语气更有力量，突出雨树无处不在并为城市和人们作出贡献。",
+        "source": "中二下《雨树》"
       },
       {
-        "sentence": "雨树的枝干或似楚楚可人的{美女}；或如撑起半边天的{壮汉}；或像顽童一般跟翱翔的鸟儿玩捉迷藏的{顽童}。",
+        "sentence": "雨树的枝干看似随意生长，却可以长出一些非常特别的姿势：{或似楚楚可人的美女}；{或如撑起半边天的壮汉}；{或像顽童一般跟翱翔的鸟儿玩捉迷藏}。",
         "context": "2B课文｜作者出神地看着雨树粗糙又随意的枝干。",
         "rhetoric": "排比",
         "writeTypeChoices": [
@@ -2018,18 +2071,18 @@ const QUESTIONS = {
         "target": "雨树的枝干",
         "keywordPrompt": "排比句中，雨树的枝干被连续比作哪三种人？",
         "tokens": [
-          "美女",
-          "壮汉",
-          "顽童",
-          "或似……或如……或像……",
-          "千姿百态"
+          "或似楚楚可人的美女",
+          "或如撑起半边天的壮汉",
+          "或像顽童一般跟翱翔的鸟儿玩捉迷藏",
+          "粗糙的枝干",
+          "随意生长"
         ],
         "correctTokens": [
-          "美女",
-          "壮汉",
-          "顽童"
+          "或似楚楚可人的美女",
+          "或如撑起半边天的壮汉",
+          "或像顽童一般跟翱翔的鸟儿玩捉迷藏"
         ],
-        "keyHint": "关键词是「美女」「壮汉」「顽童」——连续使用三个比喻加强语气，极度生动地突出了雨树枝干千姿百态的特点。",
+        "keyHint": "三个「或似／或如／或像……」结构相近，把雨树枝干比作不同人物形象，形成排比并兼用比喻。",
         "emotionChoices": [
           "赞叹惊喜（千姿百态）",
           "嫌弃批评",
@@ -2044,52 +2097,53 @@ const QUESTIONS = {
           "整齐划一毫无变化"
         ],
         "formulaTemplate": "运用排比（兼比喻），连续用三个比喻__①__加强语气，极度生动地突出了雨树枝干__②__的特点，表达了作者的__③__。",
-        "modelAnswer": "运用排比的修辞手法（兼比喻），连续使用三个「或似……或如……或像……」增强语气，极度生动地突出了雨树枝干千姿百态、形状奇特的特点，表达了作者的赞叹与惊喜之情。",
+        "modelAnswer": "运用排比兼比喻，连续把雨树枝干比作美女、壮汉和顽童，从不同形态展现雨树枝干千姿百态、富于变化的特点，使描写更有层次，也表现作者对雨树姿态的欣赏。",
         "extraRhetoric": "比喻",
-        "fullRhetoricLabel": "排比、比喻"
+        "fullRhetoricLabel": "排比、比喻",
+        "source": "中二下《雨树》"
       },
       {
-        "sentence": "这里有华族传统的南音，也有极富时代特色的新谣；有婉转悠扬的{马来班顿诗}，也有姿态优美的{印度婆罗多舞}。",
-        "context": "2B课文｜课文在介绍不同族群的文化在新加坡生根发芽。",
+        "sentence": "我又{想起父母亲}，{想起家乡小镇上的山水风景}，{想起那久别的温暖和情意}。",
+        "context": "中二下《水是故乡甜》｜作者在欧洲喝到带有故乡山泉味道的矿泉水，又喝到友人准备的绿茶，勾起了乡愁。",
         "rhetoric": "排比",
         "writeTypeChoices": [
-          "写事物（新加坡文化艺术）",
-          "写人",
-          "写感情",
-          "写景色"
+          "写人的思念（作者）",
+          "写景物",
+          "写事物",
+          "写观点"
         ],
-        "writeTypeCorrect": "写事物（新加坡文化艺术）",
-        "target": "新加坡的文化艺术",
-        "keywordPrompt": "排比句中，「有……也有……」重复出现，点选全部关键文化艺术词。",
+        "writeTypeCorrect": "写人的思念（作者）",
+        "target": "作者的思乡之情",
+        "keywordPrompt": "哪三组结构相似的内容组成排比？",
         "tokens": [
-          "华族南音",
-          "新谣",
-          "马来班顿诗",
-          "印度婆罗多舞",
-          "有……也有……"
+          "想起父母亲",
+          "想起家乡小镇上的山水风景",
+          "想起那久别的温暖和情意",
+          "欧洲旅行",
+          "绿茶"
         ],
         "correctTokens": [
-          "华族南音",
-          "新谣",
-          "马来班顿诗",
-          "印度婆罗多舞"
+          "想起父母亲",
+          "想起家乡小镇上的山水风景",
+          "想起那久别的温暖和情意"
         ],
-        "keyHint": "关键词是四种文化艺术——「有……也有……」反复出现，连续列举加强语气，全面展示了新加坡文化种类繁多、极度丰富的特点。",
+        "keyHint": "三个「想起……」连续出现，结构相似、内容相关，从亲人、景物和情意三个方面层层展开思念。",
         "emotionChoices": [
-          "自豪赞美（多元丰富）",
-          "批评忧虑",
-          "悲伤惆怅",
-          "漠然无感"
+          "加强思念的语气，突出作者浓厚的思乡之情",
+          "表现作者对旅行的不满",
+          "说明作者喜欢欧洲风景",
+          "营造轻松幽默的气氛"
         ],
-        "correctEmotion": "自豪赞美（多元丰富）",
-        "correctFeature": "种类繁多、极度丰富",
+        "correctEmotion": "加强思念的语气，突出作者浓厚的思乡之情",
+        "correctFeature": "思念的内容多而深，由亲人延伸到故乡的一切",
         "featureChoices": [
-          "种类繁多、极度丰富",
-          "单一乏味缺乏多元",
-          "文化冲突互相排斥"
+          "思念的内容多而深，由亲人延伸到故乡的一切",
+          "只想念家乡的一种饮料",
+          "已经逐渐忘记故乡"
         ],
-        "formulaTemplate": "运用排比，用「__①__」连续列举加强语气，全面地展示了新加坡文化艺术__②__的特点，表达了__③__之情。",
-        "modelAnswer": "运用排比的修辞手法，连续用「有……也有……」列举加强语气，全面地展示了新加坡的文化艺术种类繁多、极度丰富的特点，表达了自豪与赞美之情。"
+        "formulaTemplate": "运用排比，连续用三个「想起……」写作者__①__，从多个方面突出他__②__，并__③__。",
+        "modelAnswer": "运用排比的修辞手法，连续用三个「想起……」从父母、家乡山水和温暖情意三个方面展开思念，加强了语气，突出作者离乡后浓厚而深切的思乡之情。",
+        "source": "中二下《水是故乡甜》"
       }
     ]
   }
@@ -2169,7 +2223,9 @@ function startPractice() {
     });
     // shuffle
     for (let i=filtered.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[filtered[i],filtered[j]]=[filtered[j],filtered[i]];}
-    S.queue.push(...filtered.slice(0, 4)); // up to 4 per rhetoric
+    const n = S.selectedRhetorics.length;
+    const perRhetoricLimit = n === 1 ? 5 : n === 2 ? 3 : 2;
+    S.queue.push(...filtered.slice(0, perRhetoricLimit));
   });
   // deduplicate (dual-rhetoric sentence may appear in two buckets)
   const seen = new Set();
@@ -2221,7 +2277,8 @@ function renderQuestion() {
   badge.textContent = '?';
   badge.className = 'rhet-badge';
 
-  // sentence
+  // source + sentence
+  document.getElementById('sourceLine').textContent = q.source || (q.context || '').split('｜')[0] || '课文句子';
   const sentEl = document.getElementById('sentenceDisplay');
   // parse {word} as tapable tokens
   sentEl.innerHTML = parseSentence(q.sentence, false);
@@ -2232,7 +2289,7 @@ function renderQuestion() {
   hideFeedback();
   document.getElementById('mainActionBtn').textContent = '确认';
   document.getElementById('mainActionBtn').disabled = false;
-  document.getElementById('scorePill').textContent = S.score + ' 分';
+  document.getElementById('scorePill').textContent = '进度 ' + S.qIdx + '/' + S.queue.length;
 }
 
 function parseSentence(sentence, highlightKeys) {
@@ -2245,14 +2302,29 @@ function parseSentence(sentence, highlightKeys) {
   });
 }
 
+function getPracticeMode() {
+  if (S.qIdx === 0) return 'guided';
+  if (S.qIdx === 1) return 'reduced';
+  return 'independent';
+}
+
+function getStepSequence() {
+  const mode = getPracticeMode();
+  if (mode === 'guided') return [0,1,2,3];
+  if (mode === 'reduced') return [0,2,3];
+  return [0,4];
+}
+
 function renderStepsRow(activeStep) {
-  const steps = ['识别修辞','分析对象','找关键词','写分析句'];
+  const labels = {0:'识别修辞',1:'分析对象',2:'找关键词',3:'组织作用',4:'独立分析'};
+  const seq = getStepSequence();
+  const activeIndex = Math.max(0, seq.indexOf(activeStep));
   const row = document.getElementById('stepsRow');
-  row.innerHTML = steps.map((s,i) => {
-    let cls = i < activeStep ? 'done' : i === activeStep ? 'active' : '';
-    const lineClass = i < activeStep ? 'done' : '';
-    return (i>0?`<div class="step-line ${lineClass}"></div>`:'') + 
-           `<div class="step-dot ${cls}" title="${s}">${i+1}</div>`;
+  row.innerHTML = seq.map((stepId,i) => {
+    const cls = i < activeIndex ? 'done' : i === activeIndex ? 'active' : '';
+    const lineClass = i < activeIndex ? 'done' : '';
+    return (i>0?'<div class="step-line '+lineClass+'"></div>':'') +
+           '<div class="step-dot '+cls+'" title="'+labels[stepId]+'">'+(i+1)+'</div>';
   }).join('');
 }
 
@@ -2280,7 +2352,7 @@ function renderStep(step) {
 
     // Hint for dual-rhetoric
     const dualHint = q.extraRhetoric
-      ? `<div class="hint-box show" style="margin-top:8px;font-size:12px;">💡 这个句子用了<strong>${q.fullRhetoricLabel || q.rhetoric + '、' + q.extraRhetoric}</strong>两种修辞，选其中一种都算对！</div>`
+      ? `<div class="hint-box show" style="margin-top:8px;font-size:12px;">💡 有些句子可能同时使用不止一种修辞。先选你认为最明显的一种。</div>`
       : '';
 
     container.innerHTML = `
@@ -2343,6 +2415,21 @@ function renderStep(step) {
     container.innerHTML = buildFormulaPuzzle(q);
     document.getElementById('mainActionBtn').textContent = '查看答案 ✓';
     document.getElementById('mainActionBtn').style.display = 'block';
+  } else if (step === 4) {
+    const sentEl = document.getElementById('sentenceDisplay');
+    sentEl.innerHTML = parseSentence(q.sentence, false);
+    container.innerHTML = `
+      <div class="panel">
+        <div class="panel-title"><div class="step-num">2</div>自己分析这个修辞的作用</div>
+        <div class="independent-guide">
+          What is highlighted? What effect does it create?<br>
+          <strong>突出什么？有什么作用？</strong> 一句话写清楚即可。
+        </div>
+        <textarea id="independentAnswer" class="independent-answer" placeholder="例如：运用……，突出……，使……"></textarea>
+        <div id="independent-feedback"></div>
+      </div>`;
+    document.getElementById('mainActionBtn').textContent = '查看参考答案';
+    document.getElementById('mainActionBtn').style.display = 'block';
   }
 }
 
@@ -2351,18 +2438,18 @@ function renderStep(step) {
 // Per-rhetoric: step labels, method description (Chinese + English), TTS text
 const RHETORIC_META = {
   '比喻': {
-    s1: '关键词（喻体）', s2: '突出的特点', s3: '表达的感情',
+    s1: '关键词（喻体）', s2: '突出的特点', s3: '实际作用／感情',
     method: '把A比作B → 说B的特点 → 表达感情',
     methodEn: 'Simile or Metaphor. Step one: find what the subject is compared to. Step two: describe the feature it highlights. Step three: identify the emotion expressed.',
     tts: '分析比喻的方法：第一步，找出喻体，也就是"像什么"；第二步，说明这个比喻突出了什么特点；第三步，表达了什么感情。答题格式：运用比喻，将某某比作某某，生动地写出了它的某个特点，表达了某种感情。',
     steps: [
       { zh: '① 找喻体：本体被"像/是/如"比作了什么？', en: 'Step one. Find the comparison. What is the subject compared to? Look for words like "like" or "as".' },
       { zh: '② 说特点：这个比喻突出了什么特点？', en: 'Step two. State the feature. What quality or characteristic does this comparison highlight?' },
-      { zh: '③ 表感情：写出感情（赞美？喜爱？惋惜？）', en: 'Step three. Express the feeling. What emotion does the writer convey? For example, admiration, love, or regret.' }
+      { zh: '③ 说作用：结合语境说明实际作用；有明显感情才写感情', en: 'Step three. Express the feeling. What emotion does the writer convey? For example, admiration, love, or regret.' }
     ]
   },
   '拟人': {
-    s1: '拟人词语', s2: '突出的特点', s3: '表达的感情',
+    s1: '拟人词语', s2: '突出的特点', s3: '实际作用／感情',
     method: '找人的词语 → 说它的特点 → 表达感情',
     methodEn: 'Personification. Step one: find the human word that brings the object to life. Step two: describe the feature highlighted. Step three: identify the emotion expressed.',
     tts: '分析拟人的方法：第一步，找出把非人事物写得像人一样的词语；第二步，说明这样写突出了什么特点；第三步，表达了什么感情。答题格式：运用拟人，用某某词语赋予某某人的动作，生动地写出了它的特点，表达了某种感情。',
@@ -2373,18 +2460,18 @@ const RHETORIC_META = {
     ]
   },
   '夸张': {
-    s1: '夸张表达', s2: '突出的特点', s3: '表达的效果/感情',
+    s1: '夸张表达', s2: '突出的特点', s3: '实际作用／感情',
     method: '找夸大的词 → 说突出了什么 → 表达感情',
     methodEn: 'Hyperbole. Step one: find the exaggerated expression. Step two: state what feature it emphasises. Step three: describe the effect or emotion.',
     tts: '分析夸张的方法：第一步，找出故意夸大的表达；第二步，说明夸张突出了什么特点；第三步，表达了什么感情或效果。答题格式：运用夸张，用某某词语故意夸大，强调了某某特点，表达了某种感情。',
     steps: [
       { zh: '① 找夸大的词：哪里故意夸得过分了？', en: 'Step one. Find the exaggeration. Which part is deliberately over the top or impossible in real life?' },
       { zh: '② 说突出了什么：这样夸张，是为了强调什么特点？', en: 'Step two. What does it emphasise? What quality is being strongly highlighted through the exaggeration?' },
-      { zh: '③ 表感情/效果：有什么效果？表达了什么感情？', en: 'Step three. Describe the effect and feeling. What impact does it create on the reader, and what emotion does it express?' }
+      { zh: '③ 说作用：它具体强调、烘托或表现了什么？有明显感情才写感情', en: 'Step three. Describe the effect and feeling. What impact does it create on the reader, and what emotion does it express?' }
     ]
   },
   '排比': {
-    s1: '排比项', s2: '全面描写的内容', s3: '表达的感情',
+    s1: '排比项', s2: '全面描写的内容', s3: '实际作用／感情',
     method: '找相同句式 → 说写了什么 → 表达感情',
     methodEn: 'Parallelism. Step one: find the repeated sentence structure. Step two: describe what it covers comprehensively. Step three: identify the emotion it builds.',
     tts: '分析排比的方法：第一步，找出连续使用的相同句式；第二步，说明排比全面写出了什么；第三步，说明表达了什么感情。答题格式：运用排比，连续用某某句式加强语气，全面地写出了某某特点，表达了某种感情。',
@@ -2606,7 +2693,7 @@ function confirmStep3(q) {
   let msg = '';
 
   if (allGood) {
-    msg = '<div style="color:var(--green);font-weight:700;font-size:15px;margin-bottom:10px;">✅ 全对！+' + pts + '分</div>';
+    msg = '<div style="color:var(--green);font-weight:700;font-size:15px;margin-bottom:10px;">✅ 组织正确。</div>';
   } else {
     msg = '<div style="font-weight:700;font-size:14px;margin-bottom:8px;color:var(--gold);">📝 已更正，请对照参考答案：</div>';
     if (hasSlot2 && !featCorrect) msg += '<div style="font-size:13px;margin-bottom:4px;color:var(--red);">② 正确答案：<strong>' + q.correctFeature + '</strong></div>';
@@ -2658,6 +2745,35 @@ function handleAction() {
   else if (S.step === 1) confirmStep1(q);
   else if (S.step === 2) confirmStep2(q);
   else if (S.step === 3) confirmStep3(q);
+  else if (S.step === 4) confirmIndependent(q);
+}
+
+function confirmIndependent(q) {
+  const box = document.getElementById('independentAnswer');
+  const answer = box ? box.value.trim() : '';
+  if (!/[\u3400-\u9fffA-Za-z0-9]/.test(answer)) {
+    showToast('先写下你的分析，再看参考答案');
+    return;
+  }
+  S.answerText = answer;
+
+  let shtml = q.sentence;
+  q.correctTokens.forEach(kw => {
+    shtml = shtml.replace(new RegExp('\\{?' + escRegex(kw) + '\\}?', 'g'),
+      '<span class="kw-highlight">' + kw + '</span>');
+  });
+  shtml = shtml.replace(/\{([^}]+)\}/g, '$1');
+  document.getElementById('sentenceDisplay').innerHTML = shtml;
+
+  const fb = document.getElementById('independent-feedback');
+  fb.innerHTML =
+    '<div class="model-answer-label" style="margin-top:14px;">📌 参考答案</div>' +
+    '<div class="model-answer-box">' + q.modelAnswer + '</div>' +
+    '<div class="compare-note">Compare meaning, not wording.（比较意思，不必一字一样）<br>Check: 写清「突出什么」和「实际作用」了吗？</div>';
+
+  const btn = document.getElementById('mainActionBtn');
+  btn.textContent = S.qIdx < S.queue.length - 1 ? '下一题 →' : '完成练习 →';
+  btn.onclick = nextQuestion;
 }
 
 function confirmStep0(q) {
@@ -2697,11 +2813,12 @@ function confirmStep0(q) {
   }
 
   setTimeout(() => {
-    S.step = 1;
-    renderStepsRow(1);
-    renderStep(1);
+    const mode = getPracticeMode();
+    S.step = mode === 'guided' ? 1 : mode === 'reduced' ? 2 : 4;
+    renderStepsRow(S.step);
+    renderStep(S.step);
     hideFeedback();
-  }, correct ? 1400 : 1800);
+  }, correct ? 900 : 1300);
 }
 
 function confirmStep1(q) {
@@ -2724,7 +2841,7 @@ function confirmStep1(q) {
     renderStepsRow(2);
     renderStep(2);
     hideFeedback();
-  }, correct ? 900 : 1600);
+  }, correct ? 700 : 1100);
 }
 
 function confirmStep2(q) {
@@ -2760,7 +2877,7 @@ function confirmStep2(q) {
     renderStepsRow(3);
     renderStep(3);
     hideFeedback();
-  }, 1800);
+  }, 1200);
 }
 
 
@@ -2779,18 +2896,17 @@ function nextQuestion() {
 
 function showResult() {
   const total = S.queue.length;
-  const pct = Math.round(S.correct/total*100);
-  const emoji = pct>=80?'🏆':pct>=60?'😊':'💪';
+  const needReview = total - S.correct;
   document.getElementById('resultCard').innerHTML = `
-    <div class="result-emoji">${emoji}</div>
-    <div class="result-title">练习完成！</div>
-    <div class="result-score">${S.score}</div>
-    <div class="result-sub">总积分 · 答对 ${S.correct}/${total} 题（第一步）</div>
+    <div class="result-emoji">✓</div>
+    <div class="result-title">练习完成</div>
+    <div class="result-score">${total}</div>
+    <div class="result-sub">已完成题数 · 作用分析请对照参考答案自行检查</div>
   `;
   document.getElementById('statRow').innerHTML = `
     <div class="stat-box"><div class="stat-num">${S.correct}</div><div class="stat-label">修辞识别正确</div></div>
-    <div class="stat-box"><div class="stat-num">${total-S.correct}</div><div class="stat-label">需要复习</div></div>
-    <div class="stat-box"><div class="stat-num">${S.score}</div><div class="stat-label">总积分</div></div>
+    <div class="stat-box"><div class="stat-num">${needReview}</div><div class="stat-label">识别需复习</div></div>
+    <div class="stat-box"><div class="stat-num">${total}</div><div class="stat-label">已完成</div></div>
   `;
   showScreen('result');
 }
@@ -2799,8 +2915,8 @@ function showResult() {
 // HELPERS
 // ═══════════════════════════════════════════════
 function updateScore(d) {
+  // Process points are kept internally only; they are not treated as a grade.
   S.score += d;
-  document.getElementById('scorePill').textContent = S.score + ' 分';
 }
 function showFeedback(type, html) {
   const fb = document.getElementById('mainFeedback');
