@@ -73,6 +73,7 @@ footer{color:var(--muted);font-size:13px;margin:14px 3px 24px}
   <div id="answerBox" class="answerBox">
     <div class="small">Correct writing（正确写法）</div>
     <div id="answerWord" class="answerWord"></div>
+    <div id="answerMeaning" style="margin-top:10px;line-height:1.65"></div>
     <div class="sep"></div>
     <div class="small">Compare character by character（逐字对照）</div>
     <div class="actions" style="margin-top:8px">
@@ -96,6 +97,7 @@ footer{color:var(--muted);font-size:13px;margin:14px 3px 24px}
 
 <script>
 const VOCAB={"中一":{"中一词语":["魅力","悠久","遗产","饱经风霜","同胞","融合","浓郁","探索","娘惹","拍摄","镶嵌","循环","映衬","盎然","松懈","领略","设施","投降","里程碑","尤其","发掘","擅长","紧凑","赞不绝口","起码","新颖","戏剧","尴尬","维护","友谊","有效","策略","嘉宾","赖床","辫子","恐惧","滋味","催促","哀求","挪窝","狼狈","缘故","泪痕","包袱","讲究","何必","亏","慢条斯理","起航","称赞","潜水","腾空而起","收拢","翘","悠然自得","袭击","浑身","颁布","手势","截至","行驶","延误","稳定","漏液","轨道","凌晨","就绪","隧道","扫描","顺畅","投入","全力以赴","职业","故障","岗位","奉献"]},"中二":{"中二词语":["自卑","羡慕","诱惑","毅力","茫然","魂不守舍","闪烁其词","嫌","逼","霸道","怄气","烹饪","符合","憋","委婉","反驳","吭声","诡异","蜷缩","瑟瑟","恐怖","通宵","惊悚","瞥","炙","掩饰","拘束","嘈杂","局促","沮丧","睿智","简陋","开辟","综合","富裕","变迁","障碍","驰名","屡次","荣誉","接触","翠绿","心旷神怡","曝晒","耸立","叮咛","温馨","欣赏","粗糙","婆娑","翱翔","同甘共苦","茁壮","接纳","患","流逝","叮嘱","嬉戏","俏皮","惬意","烦躁"],"单元六":["奢侈","仪式","秉持","枢纽","勾勒","高瞻远瞩","可谓","岛屿","汇集","赋予","椰浆饭","啧啧称奇","发芽","兼容并蓄","携手","辉煌","赞誉有加","得天独厚","海纳百川","砍","无远弗届","真伪","陷阱","步伐","询问","人云亦云","免疫"]}};
+const MEANINGS={"魅力":["吸引人的力量","charm; appeal"],"悠久":["经历了很长时间","long-standing; time-honoured"],"遗产":["前人留下的文化或财物","heritage; legacy"],"饱经风霜":["经历过许多艰难困苦","weathered by many hardships"],"同胞":["同一国家或民族的人","compatriot; fellow countryman"],"融合":["不同事物结合在一起","blend; integrate"],"浓郁":["气味、色彩或特色很强","rich; strong; intense"],"探索":["寻找、研究未知事物","explore; investigate"],"娘惹":["土生华人女性","Nyonya; Peranakan woman"],"拍摄":["用相机或摄影机记录","photograph; film"],"镶嵌":["把一物嵌入另一物","inlay; embed"],"循环":["周而复始地运行","cycle; circulate"],"映衬":["互相衬托，使特点更明显","set off; highlight by contrast"],"盎然":["气氛或生机很浓","full of; vibrant"],"松懈":["放松了应有的认真或警惕","slacken; become lax"],"领略":["了解并体会其中的特点","experience; appreciate"],"设施":["为某种需要设置的设备","facilities"],"投降":["停止抵抗，向对方屈服","surrender"],"里程碑":["有重要意义的标志性事件","milestone"],"尤其":["特别；更加","especially; particularly"],"发掘":["发现并找出有价值的事物","discover; unearth"],"擅长":["在某方面很有能力","be good at; excel at"],"紧凑":["安排密集而有条理","compact; tightly organised"],"赞不绝口":["不停地称赞","praise highly; full of praise"],"起码":["至少；最低限度","at least"],"新颖":["新奇而有创意","novel; original"],"戏剧":["供舞台表演的艺术或作品","drama; theatre"],"尴尬":["处境不自然或难为情","awkward; embarrassed"],"维护":["保护，使不受损害","maintain; protect"],"友谊":["朋友之间的感情","friendship"],"有效":["能产生预期效果","effective"],"策略":["为达到目标采取的方法","strategy"],"嘉宾":["受邀请的重要客人","special guest; guest of honour"],"赖床":["醒了仍不愿起床","stay in bed after waking"],"辫子":["把头发分股编成的发式","braid; plait"],"恐惧":["非常害怕","fear; be afraid"],"滋味":["味道；也指某种感受","taste; feeling"],"催促":["叫人赶快行动","urge; hurry"],"哀求":["苦苦请求","beg; plead"],"挪窝":["离开原来的位置","move from one's place"],"狼狈":["处境困窘、不体面","in a sorry or awkward state"],"缘故":["原因","reason; cause"],"泪痕":["眼泪流过留下的痕迹","tear stains"],"包袱":["包起来的东西；也比喻负担","bundle; burden"],"讲究":["重视并要求达到一定标准","be particular about; pay attention to"],"何必":["没有必要","why bother; no need to"],"亏":["幸亏；多亏","fortunately; thanks to"],"慢条斯理":["做事不慌不忙","unhurried; leisurely"],"起航":["开始航行","set sail"],"称赞":["用话表示赞扬","praise; compliment"],"潜水":["进入水下活动","dive; go underwater"],"腾空而起":["迅速升到空中","rise into the air"],"收拢":["把分散的东西合起来","draw together; fold in"],"翘":["向上抬起","raise; tilt upward"],"悠然自得":["悠闲自在、很满足","relaxed and contented"],"袭击":["突然攻击","attack; strike"],"浑身":["全身","whole body; all over"],"颁布":["正式公布法令或规定","promulgate; issue officially"],"手势":["用手表达意思的动作","gesture"],"截至":["到某个时间为止","up to; as of"],"行驶":["车辆在路上运行","travel; move (of a vehicle)"],"延误":["耽误，使时间推迟","delay"],"稳定":["保持不变或平稳","stable; steady"],"漏液":["液体从设备中漏出","fluid leak; leakage"],"轨道":["车辆或物体运行的路线","track; orbit"],"凌晨":["天快亮前的一段时间","early hours before dawn"],"就绪":["已经准备好","ready; all set"],"隧道":["穿过地下或山体的通道","tunnel"],"扫描":["用设备快速检查或读取","scan"],"顺畅":["顺利，没有阻碍","smooth; unobstructed"],"投入":["开始使用；或把精力放进去","put into use; devote"],"全力以赴":["用全部力量去做","go all out; do one's utmost"],"职业":["个人从事的工作","occupation; profession"],"故障":["机器或系统发生问题","malfunction; fault"],"岗位":["工作的位置或职务","post; job position"],"奉献":["贡献自己的力量或资源","dedicate; contribute"],"自卑":["觉得自己不如别人","feel inferior"],"羡慕":["希望自己也有别人的优点或好处","admire; envy"],"诱惑":["吸引人去做某事的力量","temptation"],"毅力":["坚持到底、不轻易放弃的力量","perseverance"],"茫然":["不知道怎么办或不明白","at a loss; confused"],"魂不守舍":["心神不定，精神不能集中","absent-minded; distracted"],"闪烁其词":["说话吞吞吐吐，不肯说清楚","evasive; speak vaguely"],"嫌":["对某事不满意","dislike; find fault with"],"逼":["强迫别人做某事","force; compel"],"霸道":["蛮横，不讲道理","overbearing; domineering"],"怄气":["因不满而生闷气","sulk; be angry"],"烹饪":["做饭、制作食物","cooking; cookery"],"符合":["与要求或情况相合","meet; conform to"],"憋":["忍住，不让情绪或话说出来","hold back; suppress"],"委婉":["说话含蓄，不直接刺激别人","tactful; indirect"],"反驳":["提出理由否定别人的说法","refute; rebut"],"吭声":["说话或发出声音","speak; make a sound"],"诡异":["奇怪而让人不安","strange and eerie"],"蜷缩":["弯曲身体缩成一团","curl up"],"瑟瑟":["因冷或害怕而发抖的样子","trembling; shivering"],"恐怖":["可怕，使人害怕","terrifying; frightening"],"通宵":["整夜不睡","all night; throughout the night"],"惊悚":["使人非常害怕","frightening; terrifying"],"瞥":["很快地看一眼","glance"],"炙":["烤；使受到强烈热力","roast; scorch"],"掩饰":["设法隐藏真实情况","cover up; conceal"],"拘束":["不自然、不自在","constrained; uncomfortable"],"嘈杂":["声音很多而杂乱","noisy; clamorous"],"局促":["不自在；空间狭小","awkward; cramped"],"沮丧":["灰心、失望","dejected; discouraged"],"睿智":["有智慧、有远见","wise; insightful"],"简陋":["简单粗陋，条件不好","simple and poorly equipped"],"开辟":["开创新的地方或领域","open up; develop"],"综合":["把不同方面合在一起","combine; integrate"],"富裕":["财物充足，生活条件好","well-off; affluent"],"变迁":["随着时间发生变化","changes over time"],"障碍":["阻挡前进的事物","obstacle; barrier"],"驰名":["名声传播很远","well-known; famous"],"屡次":["一次又一次","repeatedly; many times"],"荣誉":["值得尊重和称赞的名声","honour; distinction"],"接触":["靠近并与人或事物发生联系","come into contact with"],"翠绿":["鲜亮的绿色","emerald green"],"心旷神怡":["心情舒畅，精神愉快","relaxed and refreshed"],"曝晒":["长时间受到强烈阳光照射","expose to strong sunlight"],"耸立":["高高地直立","tower; stand tall"],"叮咛":["反复地嘱咐、提醒","repeatedly remind"],"温馨":["温暖而舒适","warm and cosy"],"欣赏":["喜爱并感受其中的美好","appreciate; admire"],"粗糙":["表面不光滑；不精细","rough; coarse"],"婆娑":["枝叶等轻柔摇动的样子","sway gracefully"],"翱翔":["在空中自由飞翔","soar"],"同甘共苦":["共同分享快乐、承担困难","share joys and hardships"],"茁壮":["健康而旺盛地成长","grow vigorously"],"接纳":["接受并容纳","accept; embrace"],"患":["患病；得某种疾病","suffer from; contract an illness"],"流逝":["时间不断过去","pass by; elapse"],"叮嘱":["再三嘱咐、提醒","urge; remind carefully"],"嬉戏":["快乐地玩耍","play; frolic"],"俏皮":["活泼有趣，带点调皮","playful; cheeky"],"惬意":["舒适而满意","pleasant; comfortable"],"烦躁":["心情烦闷、急躁","irritable; restless"],"奢侈":["花费很多，超过一般需要","luxurious; extravagant"],"仪式":["按一定程序举行的正式活动","ceremony; ritual"],"秉持":["坚持、保持某种原则或态度","uphold; adhere to"],"枢纽":["联系许多地方的重要中心","hub; key junction"],"勾勒":["用简洁线条或文字描绘","outline; sketch"],"高瞻远瞩":["看得远，有长远眼光","far-sighted"],"可谓":["可以说","it can be said"],"岛屿":["岛的总称","island; islands"],"汇集":["从各处聚集到一起","gather; collect"],"赋予":["给予某种意义、任务或权力","bestow; give"],"椰浆饭":["用椰浆煮成的米饭","coconut rice; nasi lemak"],"啧啧称奇":["不停赞叹事物奇特","exclaim in admiration"],"发芽":["植物长出新芽","sprout; germinate"],"兼容并蓄":["把不同事物一起接纳、吸收","embrace and absorb diverse things"],"携手":["共同合作","join hands; collaborate"],"辉煌":["光彩耀眼；成就显著","brilliant; glorious"],"赞誉有加":["给予很多称赞","highly praise; speak very highly of"],"得天独厚":["具有特别优越的条件","exceptionally well-endowed; uniquely advantaged"],"海纳百川":["胸怀宽广，能包容不同事物","broad-minded and inclusive"],"砍":["用刀斧等用力切","chop; cut"],"无远弗届":["不管多远都能到达","reach everywhere; no place too far"],"真伪":["真的和假的","true or false; authenticity"],"陷阱":["使人受骗或受害的圈套","trap; pitfall"],"步伐":["走路的步子；也指前进速度","step; pace"],"询问":["向别人提出问题以了解情况","ask; inquire"],"人云亦云":["没有主见，只跟着别人说","echo others blindly"],"免疫":["身体抵抗疾病；也比喻不受影响","immunity; be immune"]};
 const STORAGE="hcl_exam_handwriting_review_v1";
 let state=JSON.parse(localStorage.getItem(STORAGE)||'{"words":{}}');
 let mode="class",session=[],index=0,current=null,hasInk=false,revealed=false,strokes=[],activeStroke=null;
@@ -134,14 +136,45 @@ function showCard(){
  current=session[index];revealed=false;hasInk=false;strokes=[];activeStroke=null;$("answerBox").style.display="none";$("feedback").textContent="先手写，再看答案。";
  $("setBadge").textContent=$("grade").value+" · "+$("set").value;$("progress").textContent=(index+1)+" / "+session.length;resizeCanvas(true);setTimeout(speakWord,220);
 }
-function speakWord(){
+let speechRunId=0;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function preferredMandarinVoice(){
+ const voices=speechSynthesis.getVoices().filter(v=>(v.lang==="zh-CN"||v.lang==="zh_CN"||v.lang.startsWith("zh"))&&!v.lang.toLowerCase().includes("hk"));
+ const preferred=["Xiaoxiao","Tingting","Ting-Ting","Meijia","Mei-Jia","Yu-shu","Yushu"];
+ return voices.find(v=>preferred.some(n=>v.name.includes(n)))||voices.find(v=>v.lang==="zh-CN"||v.lang==="zh_CN")||voices[0];
+}
+function speakOnce(word,runId){
+ return new Promise(resolve=>{
+   if(runId!==speechRunId){resolve();return}
+   const u=new SpeechSynthesisUtterance(word);
+   u.lang="zh-CN";
+   u.rate=.62;
+   u.pitch=.88;
+   u.volume=.9;
+   const v=preferredMandarinVoice(); if(v)u.voice=v;
+   u.onend=resolve;u.onerror=resolve;
+   speechSynthesis.speak(u);
+ });
+}
+async function speakWord(){
  if(!current||!("speechSynthesis" in window))return;
- speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(current+"。 。 。 "+current+"。 。 。 "+current);u.lang="zh-CN";u.rate=.75;u.pitch=1.05;
- const voices=speechSynthesis.getVoices();const v=voices.find(x=>x.lang==="zh-CN"||x.lang==="zh_CN")||voices.find(x=>x.lang.startsWith("zh")&&!x.lang.toLowerCase().includes("hk"));if(v)u.voice=v;speechSynthesis.speak(u);
+ const runId=++speechRunId;
+ speechSynthesis.cancel();
+ await sleep(120);
+ for(let i=0;i<2;i++){
+   if(runId!==speechRunId)return;
+   await speakOnce(current,runId);
+   if(i===0&&runId===speechRunId)await sleep(2000);
+ }
 }
 function reveal(){
  if(!hasInk){$("feedback").innerHTML='<b style="color:#b91c1c">先写一写。</b> Write first, then check.';return}
- revealed=true;$("answerWord").textContent=current;$("answerBox").style.display="block";$("feedback").textContent="逐字对照你的手写。";
+ revealed=true;
+ $("answerWord").textContent=current;
+ const m=MEANINGS[current]||["",""];
+ $("answerMeaning").innerHTML='<b>意思：</b>'+m[0]+'<br><b>English:</b> '+m[1];
+ $("answerBox").style.display="block";
+ $("feedback").textContent="逐字对照你的手写。";
 }
 function mark(ok){
  if(!revealed)return;const r=rec(current);r.last=now();
