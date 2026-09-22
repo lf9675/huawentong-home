@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-SG"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>中一短文填空互动练习｜华文通</title>
+<meta name="description" content="中一高级华文短文填空互动练习：根据上下文、搭配、词义、词性和感情色彩选择最适当的词语。">
+<style>
+:root{--blue:#1459aa;--blue2:#0a67c7;--ink:#18324c;--muted:#5d7186;--line:#d9e4ef;--pale:#eff6fd;--good:#1268c4;--goodbg:#eaf4ff;--bad:#c73838;--badbg:#fff0f0;--red:#c52222;--paper:#fff;--bg:#f5f8fc;--shadow:0 10px 30px rgba(20,55,90,.08);font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg)}button,input,select{font:inherit}a{color:inherit}header{background:#fff;border-bottom:1px solid var(--line)}.bar{max-width:1180px;margin:auto;padding:18px 22px;display:flex;justify-content:space-between;gap:18px;align-items:center}.brand{font-weight:800;color:var(--blue);text-decoration:none;font-size:24px;letter-spacing:.08em}.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:.15em;font-weight:500}.back{font-size:14px;color:var(--blue);text-decoration:none}
+main{max-width:1180px;margin:auto;padding:28px 22px 70px}.hero{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;margin-bottom:18px}h1{font-size:clamp(28px,4vw,42px);line-height:1.25;margin:0 0 8px}.lead{margin:0;color:var(--muted);font-size:16px;line-height:1.65}.tag{background:var(--pale);color:var(--blue);font-size:13px;font-weight:700;padding:9px 13px;border-radius:999px;white-space:nowrap}
+.tools{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin:16px 0 20px}.tools summary{cursor:pointer;font-weight:700;color:var(--blue)}.steps{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.chip{border:1px solid var(--line);background:#fafcff;border-radius:999px;padding:6px 10px;font-size:13px}.chip b{color:var(--red)}
+.identity{display:grid;grid-template-columns:1.2fr 1fr .8fr;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:16px}.identity label{font-size:12px;color:var(--muted);display:block}.identity input{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 11px;margin-top:4px;background:#fff;color:var(--ink)}
+.tabs{display:flex;gap:8px;overflow:auto;padding:2px 0 10px;scrollbar-width:thin}.tabs button{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 15px;border-radius:10px;cursor:pointer;white-space:nowrap;font-weight:700}.tabs button.active{background:var(--blue);color:white;border-color:var(--blue)}
+.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(310px,.8fr);gap:20px;align-items:start}.paper{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px 26px;box-shadow:var(--shadow)}.paper h2{margin:0 0 6px;font-size:24px}.paper .instruction{font-size:14px;color:var(--muted);margin:0 0 20px}.paper .instruction strong{color:var(--red)}.passage{font-family:"Kaiti SC","STKaiti","KaiTi",serif;font-size:20px;line-height:2.05;letter-spacing:.01em}.passage p{margin:0 0 18px}.clue{color:var(--red);font-weight:800}.blank{display:inline-block;min-width:138px;max-width:210px;border:2px solid #a9bfd5;border-radius:8px;background:#fff;padding:5px 8px;color:#334e67;font-family:"Kaiti SC","STKaiti","KaiTi",serif;font-size:18px;vertical-align:baseline;margin:0 3px}.blank.correct{border-color:var(--good);color:var(--good);background:var(--goodbg);font-weight:800}.blank.wrong{border-color:var(--bad);color:var(--bad);background:var(--badbg);font-weight:800}.blank:focus{outline:3px solid #d9eaff;outline-offset:2px}.scoreline{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:20px;padding-top:15px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}.scoreline b{color:var(--ink)}
+.side{position:sticky;top:16px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow)}.side h3{margin:0 0 6px;font-size:20px}.side .placeholder{color:var(--muted);line-height:1.65;font-size:14px}.result{display:inline-block;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:800;margin-bottom:10px}.result.good{background:var(--goodbg);color:var(--good)}.result.bad{background:var(--badbg);color:var(--bad)}.why{font-size:15px;line-height:1.65;margin:10px 0 12px}.method{font-size:13px;color:var(--muted);background:#f7fafc;border-radius:9px;padding:8px 10px;margin-bottom:12px}.optgrid{display:grid;gap:8px}.optrow{border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:#fbfdff}.optrow.correctopt{border-color:#8ebce8;background:var(--goodbg)}.optword{font-family:"Kaiti SC","STKaiti","KaiTi",serif;font-size:18px;font-weight:800;margin-bottom:2px}.optmean{font-size:13px;line-height:1.5}.optmean .en{color:var(--blue);font-family:"Times New Roman",serif}.optnote{font-size:12px;color:var(--muted);line-height:1.5;margin-top:3px}
+.actions{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}.submit{width:100%;border:0;border-radius:10px;padding:12px 14px;background:var(--blue);color:white;font-weight:800;cursor:pointer}.submit:disabled{background:#a9b8c7;cursor:not-allowed}.status{font-size:12px;color:var(--muted);line-height:1.5;margin-top:8px}.reset{border:1px solid #efb3b3;border-radius:9px;padding:8px 12px;background:#fff7f7;color:#a53737;font-weight:800;cursor:pointer;white-space:nowrap}.reset:hover{background:#fff0f0}.resetnote{font-size:12px;color:var(--muted);line-height:1.5;margin:0}.sideTop{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}.blank:disabled{opacity:1;cursor:not-allowed}.netok{color:#21713c}.netbad{color:#a24545}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.side{position:static}.hero{grid-template-columns:1fr}.tag{justify-self:start}.identity{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:600px){main{padding:20px 14px 55px}.bar{padding:14px}.paper{padding:18px 16px}.identity{grid-template-columns:1fr}.passage{font-size:18px;line-height:1.95}.blank{font-size:16px;min-width:126px}}
+
+/* Keep the familiar two-column layout; preserve native text selection. */
+.lead,.tools,.instruction,.side,.scoreline,.status,.identity{font-family:"Songti SC","STSong","SimSun","Times New Roman",serif}
+.paper h2,.side h3{font-family:"Kaiti SC","STKaiti","KaiTi",serif}
+.blank{min-height:44px;max-width:100%;white-space:normal}
+button.blank{cursor:pointer;line-height:1.5}
+button.blank:focus-visible,button:focus-visible{outline:3px solid #dca22e;outline-offset:2px}
+.why{color:#b32222}.optmean .en{display:block}.optnote{color:#505f70}
+.tabs button:disabled,.reset:disabled{opacity:.65;cursor:wait}
+@media(min-width:851px){.passage{max-height:66vh;overflow-y:auto;padding-right:10px}.side{max-height:calc(100vh - 32px);overflow-y:auto}}
+.return{display:none}
+@media(max-width:850px){.return{display:inline-block;margin:0 0 10px;padding:10px;border:1px solid var(--line);background:var(--pale);border-radius:8px;cursor:pointer}}
+
+</style></head>
+<body><header><div class="bar"><a class="brand" href="../../../..">华文通<small>HUAWENTONG</small></a><a class="back" href="../../../../#1/reading/1">← 返回中一考前强化（卷二）</a></div></header>
+<main>
+<div class="hero"><div><h1>中一短文填空</h1><p class="lead">Read the whole passage first. Compare the four options using <b>context（语境）</b> and <b>collocation（搭配）</b>.</p></div><span class="tag">10题 × 3篇</span></div>
+<details class="tools"><summary>答题方法 · How to choose the best word</summary><div class="steps"><span class="chip"><b>1</b> 上下文 Context</span><span class="chip"><b>2</b> 词义 Meaning</span><span class="chip"><b>3</b> 搭配 Collocation</span><span class="chip"><b>4</b> 使用范围 Word range</span><span class="chip"><b>5</b> 词性 POS</span><span class="chip"><b>6</b> 感情色彩 Tone</span><span class="chip"><b>7</b> 常识 Logic</span><span class="chip"><b>8</b> 排除 Elimination</span></div></details>
+<div class="identity"><label>姓名 Name<input id="name" autocomplete="name" placeholder="输入姓名"></label><label>班级 Class<input id="className" placeholder="例如 105"></label><label>学号 Index<input id="indexNo" inputmode="numeric" placeholder="例如 12"></label></div>
+<div class="tabs" id="tabs"></div>
+<div class="layout"><section class="paper"><h2 id="exTitle"></h2><p class="instruction">Read → Compare → Choose（读·比·选）. <strong>Red bold text = context clues（线索）.</strong></p><div class="passage" id="passage"></div><div class="scoreline" aria-live="polite"><span>Answered（已答） <b id="answered">0/10</b></span><span>First correct（首次） <b id="firstScore">0/10</b></span><span>Current correct（本轮） <b id="finalScore">0/10</b></span></div></section>
+<aside class="side"><div class="sideTop"><p class="resetnote">Answers lock after selection（选后锁定）. Reset this passage to retry.</p><button class="reset" id="resetBtn">Reset（清空重做）</button></div><div id="analysis" aria-live="polite"><h3>Feedback（解析）</h3><p class="placeholder">Choose an answer to see all four meanings and the reason. Tap a locked answer to review（点已答题看解析）.</p></div><div class="actions"><button class="submit" id="submitBtn" disabled>完成10题后提交成绩</button><div class="status" role="status" id="submitStatus">Saved on this device（本机保存）. Checking submission settings…</div></div></aside></div>
+</main>
+<script>
+
+'use strict';
+let EXERCISES={};
+const STORAGE='hwt_cloze_1hcl_passages_2023_2025_v1';
+const VERSION='2026-09-22-passages-v1';
+const YEAR_ORDER=['2025','2024','2023'];
+let active='2025',config={enabled:false,endpoint:''},inFlight=false,saveFailed=false;
+let state={identity:{name:'',className:'',indexNo:''},exercises:{},active:'2025'};
+try{
+ const saved=JSON.parse(localStorage.getItem(STORAGE)||'null');
+ if(saved&&typeof saved==='object'){
+  state.identity=Object.assign(state.identity,saved.identity||{});
+  state.exercises=saved.exercises&&typeof saved.exercises==='object'?saved.exercises:{};
+  if(YEAR_ORDER.includes(saved.active))active=saved.active;
+ }
+}catch(e){}
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function exState(y){return state.exercises[y]||(state.exercises[y]={first:{},current:{},attempts:{},startedAt:Date.now(),lastQ:null,submitted:false,submissionId:null,status:'local'});}
+function save(){
+ try{state.active=active;localStorage.setItem(STORAGE,JSON.stringify(state));saveFailed=false;}
+ catch(e){saveFailed=true;}
+}
+function selectHTML(y,q){
+ const d=EXERCISES[y].questions[q],s=exState(y),v=s.current[q];
+ if(v){
+  const o=d.options.find(o=>o.label===v);
+  return '<button type="button" id="q'+q+'" class="blank '+(v===d.correct?'correct':'wrong')+'" data-review="'+q+'" aria-label="Q'+q+' '+esc(o.word)+' — locked; review feedback">Q'+q+' '+o.label+'. '+esc(o.word)+'</button>';
+ }
+ return '<select id="q'+q+'" class="blank" data-q="'+q+'" aria-label="Q'+q+'"><option value="">Q'+q+' Choose（选择）</option>'+d.options.map(o=>'<option value="'+o.label+'">'+o.label+'. '+esc(o.word)+'</option>').join('')+'</select>';
+}
+function render(){
+ const e=EXERCISES[active];$('exTitle').textContent=e.title;
+ $('passage').innerHTML=e.paragraphs.map(p=>'<p>'+p.replace(/\{(\d+)\}/g,(_,q)=>selectHTML(active,q))+'</p>').join('');
+ document.querySelectorAll('select.blank').forEach(el=>el.addEventListener('change',onPick));
+ document.querySelectorAll('[data-review]').forEach(el=>el.onclick=()=>{
+  exState(active).lastQ=el.dataset.review;save();showAnalysis(el.dataset.review);
+  if(innerWidth<=850)$('analysis').scrollIntoView({block:'start'});
+ });
+ renderStats();renderAnalysis();renderStatus();
+}
+function renderTabs(){
+ $('tabs').innerHTML=YEAR_ORDER.map(y=>'<button type="button" data-y="'+y+'" class="'+(y===active?'active':'')+'" aria-pressed="'+(y===active)+'" '+(inFlight?'disabled':'')+'>'+EXERCISES[y].title+'</button>').join('');
+ $('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  if(inFlight)return;active=b.dataset.y;save();renderTabs();render();
+ });
+}
+function onPick(ev){
+ if(inFlight)return;
+ const q=ev.target.dataset.q,val=ev.target.value,s=exState(active),d=EXERCISES[active].questions[q];
+ if(!val||s.current[q]||!d.options.some(o=>o.label===val))return;
+ s.first[q]=val;s.current[q]=val;s.attempts[q]=1;s.lastQ=q;
+ save();
+ const scroll=$('passage').scrollTop;render();$('passage').scrollTop=scroll;
+ $('q'+q).focus({preventScroll:true});
+ if(innerWidth<=850)$('analysis').scrollIntoView({block:'start'});
+}
+function renderAnalysis(){
+ const q=exState(active).lastQ;
+ if(q&&exState(active).current[q]){showAnalysis(q);return;}
+ $('analysis').innerHTML='<h3>Feedback（解析）</h3><p class="placeholder">Choose an answer to compare all four words. Tap a locked answer to review（点已答题看解析）.</p>';
+}
+function showAnalysis(q){
+ const d=EXERCISES[active].questions[q],val=exState(active).current[q];
+ if(!val)return;
+ const ok=val===d.correct,correct=d.options.find(o=>o.label===d.correct);
+ $('analysis').innerHTML='<button type="button" class="return" id="returnBtn">↑ Back to passage（回短文）</button><br class="return">'+
+ '<span class="result '+(ok?'good':'bad')+'">Q'+q+' · '+(ok?'Correct（正确）':'Incorrect（错误）')+'</span>'+
+ '<h3>'+esc(correct.label+'. '+correct.word)+'</h3><div class="method">'+esc(d.method)+'</div><p class="why">'+esc(d.why)+'</p>'+
+ '<div class="optgrid">'+d.options.map(o=>'<div class="optrow '+(o.label===d.correct?'correctopt':'')+'"><div class="optword">'+esc(o.label+'. '+o.word)+'</div><div class="optmean">'+esc(o.zh)+'<span class="en">'+esc(o.en)+'</span></div><div class="optnote">'+esc(o.note)+'</div></div>').join('')+'</div>';
+ $('returnBtn').onclick=()=>{$('q'+q).scrollIntoView({block:'center'});$('q'+q).focus({preventScroll:true});};
+}
+function scores(y){
+ const qs=EXERCISES[y].questions,s=exState(y),ids=Object.keys(qs);
+ return {total:ids.length,answered:ids.filter(q=>s.current[q]).length,first:ids.filter(q=>s.first[q]===qs[q].correct).length,final:ids.filter(q=>s.current[q]===qs[q].correct).length};
+}
+function renderStats(){
+ const sc=scores(active),s=exState(active);
+ $('answered').textContent=sc.answered+'/'+sc.total;$('firstScore').textContent=sc.first+'/'+sc.total;$('finalScore').textContent=sc.final+'/'+sc.total;
+ const ready=config.enabled&&/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(config.endpoint);
+ $('submitBtn').disabled=inFlight||sc.answered<sc.total||!ready||s.submitted;
+ $('submitBtn').textContent=inFlight?'Submitting（提交中）…':s.submitted?'Submitted（本篇已提交）':sc.answered<sc.total?'Finish all 10 questions（完成10题后提交）':!ready?'Submission unavailable（未连接）':'Submit to teacher（提交成绩）';
+ $('resetBtn').disabled=inFlight;
+ ['name','className','indexNo'].forEach(id=>$(id).disabled=inFlight);
+}
+function renderStatus(){
+ const s=exState(active),st=$('submitStatus');
+ if(saveFailed){st.className='status netbad';st.textContent='Device save failed（本机保存失败）. Keep this page open; your answers are still on screen.';return;}
+ st.className='status'+(s.submitted?' netok':s.status==='failed'?' netbad':'');
+ st.textContent=s.submitted?'✓ Confirmed by server（已确认写入）.':s.status==='sending'?'Submitting（提交中）…':s.status==='failed'?'Not confirmed（未确认成功）. Answers kept; retry safely（答案保留，可重试）.':config.enabled?'Saved on this device（已存本机）. Finish all 10 to submit.':'Saved on this device（已存本机）. Online submission is not configured.';
+}
+function bindIdentity(){
+ ['name','className','indexNo'].forEach(id=>{
+  $(id).maxLength=80;$(id).value=state.identity[id]||'';
+  $(id).addEventListener('input',()=>{state.identity[id]=$(id).value.trim();save();renderStatus();});
+ });
+}
+function submissionPayload(y){
+ const s=exState(y),sc=scores(y),qs=EXERCISES[y].questions;
+ if(!s.submissionId){s.submissionId='s1-passages-'+y+'-'+(globalThis.crypto?.randomUUID?.()||Date.now()+'-'+Math.random().toString(36).slice(2));save();}
+ return {type:'hwt-cloze-result-v1',timestamp:new Date().toISOString(),...state.identity,lesson:'中一综合填空 '+EXERCISES[y].title+'（Q41–50，短文版）',year:y,firstScore:sc.first,finalScore:sc.final,firstAnswers:{...s.first},finalAnswers:{...s.current},wrongQuestions:Object.keys(qs).filter(q=>s.first[q]!==qs[q].correct),attempts:{...s.attempts},durationSec:Math.max(0,Math.round((Date.now()-s.startedAt)/1000)),submissionId:s.submissionId,pageVersion:VERSION};
+}
+async function submit(){
+ if(inFlight)return;
+ const y=active,s=exState(y);
+ if(s.submitted||scores(y).answered!==10||!config.enabled||!config.endpoint)return;
+ if(['name','className','indexNo'].some(k=>!String(state.identity[k]).trim()||/^[=+@]/.test(state.identity[k]))){
+  $('submitStatus').className='status netbad';$('submitStatus').textContent='Enter a valid name, class and index（填写姓名、班级、学号）.';return;
+ }
+ const p=submissionPayload(y),ctrl=new AbortController(),timeout=setTimeout(()=>ctrl.abort(),25000);
+ inFlight=true;s.status='sending';save();renderStats();renderTabs();renderStatus();
+ try{
+  const r=await fetch(config.endpoint,{method:'POST',body:new URLSearchParams({payload:JSON.stringify(p)}),signal:ctrl.signal});
+  const j=await r.json();
+  if(!r.ok||j.ok!==true||j.submissionId!==p.submissionId)throw new Error('Write not confirmed');
+  s.submitted=true;s.status='submitted';s.confirmedId=j.submissionId;
+ }catch(e){s.status='failed';}
+ finally{clearTimeout(timeout);inFlight=false;save();renderStats();renderTabs();renderStatus();}
+}
+function resetActive(){
+ if(inFlight||!confirm('Reset this passage only?（只清空当前这篇？）\nLocal answers will be cleared. Submitted records stay with your teacher.（已提交成绩不会删除。）'))return;
+ delete state.exercises[active];exState(active);save();render();
+}
+async function loadConfig(){
+ try{const r=await fetch('submission-config.json?v='+VERSION,{cache:'no-store'});if(r.ok)config=Object.assign(config,await r.json());}catch(e){}
+ renderStats();renderStatus();
+}
+async function loadExercises(){
+ const rows=await Promise.all(YEAR_ORDER.map(async y=>{
+  const r=await fetch('data-'+y+'.json?v='+VERSION,{cache:'no-store'});if(!r.ok)throw new Error('Missing data');
+  return [y,await r.json()];
+ }));
+ EXERCISES=Object.fromEntries(rows);
+ // Validate saved option labels; this storage key is separate from the withdrawn 20-item version.
+ for(const y of YEAR_ORDER){
+  const s=exState(y);s.first=s.first||{};s.current=s.current||{};s.attempts=s.attempts||{};
+  if(s.status==='sending')s.status='failed';
+  for(const q of Object.keys(s.current)){
+   const d=EXERCISES[y].questions[q];
+   if(!d||!d.options.some(o=>o.label===s.current[q])){delete s.current[q];delete s.first[q];delete s.attempts[q];}
+  }
+  if(!s.current[s.lastQ])s.lastQ=null;
+ }
+ bindIdentity();renderTabs();render();save();await loadConfig();
+}
+$('submitBtn').onclick=submit;$('resetBtn').onclick=resetActive;
+loadExercises().catch(e=>{$('passage').textContent='Could not load the passages（资料载入失败）. Check your connection and reload.';$('submitStatus').textContent='Not ready（未就绪）';});
+
+</script></body></html>

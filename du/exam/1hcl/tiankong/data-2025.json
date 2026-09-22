@@ -1,0 +1,363 @@
+{
+  "title": "练习一（2025年）",
+  "answerStatus": "suggested-from-context",
+  "questions": {
+    "41": {
+      "correct": "B",
+      "method": "Context + Grammar（语境·句式）",
+      "why": "“都要和周围的人发生……关系” explains why nobody exists in isolation.",
+      "options": [
+        {
+          "label": "A",
+          "word": "自立",
+          "zh": "不依赖别人，独立生活或做事",
+          "en": "be self-reliant",
+          "note": "Self-reliance is different from having no connection with others."
+        },
+        {
+          "label": "B",
+          "word": "孤立",
+          "zh": "与周围的人或事物缺少联系",
+          "en": "isolated",
+          "note": "Use: 孤立存在. The next clause says everyone has relationships."
+        },
+        {
+          "label": "C",
+          "word": "孤岛",
+          "zh": "与其他陆地分离的岛；也可比喻孤立的事物",
+          "en": "an isolated island",
+          "note": "A noun. “不是孤岛存在的” does not fit this sentence structure."
+        },
+        {
+          "label": "D",
+          "word": "独特",
+          "zh": "与众不同，有自己的特点",
+          "en": "unique",
+          "note": "Having relationships does not mean a person cannot be unique."
+        }
+      ]
+    },
+    "42": {
+      "correct": "D",
+      "method": "Meaning + Context（词义·语境）",
+      "why": "合作 means working together. 互相配合 directly explains how people “共同把事情做好”.",
+      "options": [
+        {
+          "label": "A",
+          "word": "融合",
+          "zh": "不同事物结合成一个整体",
+          "en": "blend; integrate",
+          "note": "Use: 文化融合. Cooperation does not require people to merge into one."
+        },
+        {
+          "label": "B",
+          "word": "分配",
+          "zh": "按一定标准安排或分发",
+          "en": "distribute; allocate",
+          "note": "Use: 分配任务. One possible step, not the meaning of cooperation."
+        },
+        {
+          "label": "C",
+          "word": "合资",
+          "zh": "共同出资经营",
+          "en": "jointly invest",
+          "note": "A business arrangement; narrower than cooperation in general."
+        },
+        {
+          "label": "D",
+          "word": "配合",
+          "zh": "互相协调，协助完成任务",
+          "en": "coordinate; work together",
+          "note": "Use: 互相配合. Matches doing something well together."
+        }
+      ]
+    },
+    "43": {
+      "correct": "A",
+      "method": "Metaphor + Collocation（比喻·搭配）",
+      "why": "A key opens a door. The passage compares cooperation skills to a key to success.",
+      "options": [
+        {
+          "label": "A",
+          "word": "钥匙",
+          "zh": "开锁的工具；也可比喻解决问题的关键",
+          "en": "key",
+          "note": "Matches “打开成功之门”."
+        },
+        {
+          "label": "B",
+          "word": "秘密",
+          "zh": "不让人知道的事情",
+          "en": "secret",
+          "note": "A secret does not fit the door-and-lock image as directly."
+        },
+        {
+          "label": "C",
+          "word": "法宝",
+          "zh": "特别有效的办法；原指有神奇力量的宝物",
+          "en": "effective means; magic weapon",
+          "note": "Can mean a useful method, but it does not complete the door metaphor."
+        },
+        {
+          "label": "D",
+          "word": "宝库",
+          "zh": "储藏宝贵东西的地方",
+          "en": "treasure house",
+          "note": "It is a place, not the tool used to open a door."
+        }
+      ]
+    },
+    "44": {
+      "correct": "D",
+      "method": "Collocation（搭配）",
+      "why": "有成效地合作 means cooperating in a way that produces useful results.",
+      "options": [
+        {
+          "label": "A",
+          "word": "成绩",
+          "zh": "工作或学习等取得的成果",
+          "en": "achievement; results",
+          "note": "Use: 取得成绩. Not the natural phrase “有成绩地合作”."
+        },
+        {
+          "label": "B",
+          "word": "程度",
+          "zh": "事物达到的水平",
+          "en": "degree; level",
+          "note": "Use: 程度较高. Does not mean effective cooperation."
+        },
+        {
+          "label": "C",
+          "word": "效应",
+          "zh": "某种原因产生的作用或反应",
+          "en": "effect; response",
+          "note": "An effect may be neutral or negative; it is not the usual phrase here."
+        },
+        {
+          "label": "D",
+          "word": "成效",
+          "zh": "工作等产生的实际效果",
+          "en": "positive results; effectiveness",
+          "note": "Use: 有成效的合作、有成效地工作."
+        }
+      ]
+    },
+    "45": {
+      "correct": "B",
+      "method": "Word range（使用范围）",
+      "why": "The orchestra is a representative example of successful cooperation. 典范 fits a practice that others can learn from.",
+      "options": [
+        {
+          "label": "A",
+          "word": "规范",
+          "zh": "行为等应遵守的标准或规则",
+          "en": "standard; norm",
+          "note": "Rules for cooperation are not the same as an example of it."
+        },
+        {
+          "label": "B",
+          "word": "典范",
+          "zh": "值得学习、具有代表性的好例子",
+          "en": "exemplary model",
+          "note": "Use: 合作的典范. The performance demonstrates the idea."
+        },
+        {
+          "label": "C",
+          "word": "榜样",
+          "zh": "值得学习的人或事例",
+          "en": "role model; example",
+          "note": "Close in meaning; 典范 is more natural here for an exemplary form of cooperation. 榜样 is not restricted to people."
+        },
+        {
+          "label": "D",
+          "word": "模板",
+          "zh": "制作或操作时参照的固定样式",
+          "en": "template",
+          "note": "A reusable pattern, not a judgement that the performance is exemplary."
+        }
+      ]
+    },
+    "46": {
+      "correct": "C",
+      "method": "Word range + Collocation（范围·搭配）",
+      "why": "The sentence describes pleasant musical sound, so 悠扬 is the most suitable word.",
+      "options": [
+        {
+          "label": "A",
+          "word": "悠长",
+          "zh": "时间长或声音绵长",
+          "en": "long; prolonged",
+          "note": "Emphasises length or duration, not mainly the pleasing quality of music."
+        },
+        {
+          "label": "B",
+          "word": "悠久",
+          "zh": "年代长远",
+          "en": "long-standing; ancient",
+          "note": "Use: 历史悠久. Describes history or time."
+        },
+        {
+          "label": "C",
+          "word": "悠扬",
+          "zh": "声音高低起伏，和谐悦耳而传得远",
+          "en": "melodious; resonant",
+          "note": "Use: 悠扬的乐曲."
+        },
+        {
+          "label": "D",
+          "word": "悠远",
+          "zh": "距离遥远或时间久远",
+          "en": "distant; remote",
+          "note": "Focuses on distance or remoteness, not the musical quality here."
+        }
+      ]
+    },
+    "47": {
+      "correct": "B",
+      "method": "Context + Collocation（语境·搭配）",
+      "why": "Many musicians and instruments work together smoothly. 完美和谐 describes that coordinated result.",
+      "options": [
+        {
+          "label": "A",
+          "word": "无畏",
+          "zh": "没有畏惧",
+          "en": "fearless",
+          "note": "About courage, not how instruments work together."
+        },
+        {
+          "label": "B",
+          "word": "和谐",
+          "zh": "配合协调，相处融洽",
+          "en": "harmonious",
+          "note": "Use: 完美和谐. Matches the orchestra's coordinated performance."
+        },
+        {
+          "label": "C",
+          "word": "组合",
+          "zh": "把几个部分合在一起；合成的整体",
+          "en": "combine; combination",
+          "note": "The sentence needs a quality of cooperation, not the act of combining."
+        },
+        {
+          "label": "D",
+          "word": "极致",
+          "zh": "最高的境界或程度",
+          "en": "the utmost; perfection",
+          "note": "Use: 达到极致. “完美极致” does not fit this construction as naturally."
+        }
+      ]
+    },
+    "48": {
+      "correct": "D",
+      "method": "Reaction + Context（反应·语境）",
+      "why": "The successful three-second rescue impresses the audience, and they cannot help clapping.",
+      "options": [
+        {
+          "label": "A",
+          "word": "纷至沓来",
+          "zh": "纷纷到来，连续不断",
+          "en": "arrive in a steady stream",
+          "note": "Describes arrival, not clapping."
+        },
+        {
+          "label": "B",
+          "word": "不偏不倚",
+          "zh": "不偏向任何一方；也指正好在中间",
+          "en": "impartial; exactly in the middle",
+          "note": "Neither fairness nor position explains the applause."
+        },
+        {
+          "label": "C",
+          "word": "当机立断",
+          "zh": "抓住时机，立即作出决定",
+          "en": "make a prompt decision",
+          "note": "The audience is reacting emotionally, not making an urgent decision."
+        },
+        {
+          "label": "D",
+          "word": "情不自禁",
+          "zh": "感情激动，控制不住自己",
+          "en": "cannot help oneself",
+          "note": "Use: 情不自禁地鼓掌."
+        }
+      ]
+    },
+    "49": {
+      "correct": "C",
+      "method": "Context + Collocation（语境·搭配）",
+      "why": "“心中想着别人……集体” points to putting collective needs before one's own interests.",
+      "options": [
+        {
+          "label": "A",
+          "word": "追求",
+          "zh": "努力争取达到或得到",
+          "en": "pursuit; strive for",
+          "note": "Focuses on what someone wants to achieve, not giving up personal interests."
+        },
+        {
+          "label": "B",
+          "word": "舍弃",
+          "zh": "放弃，不再保留",
+          "en": "discard; give up",
+          "note": "Use: 舍弃某物. “自我牺牲” is the natural expression for the spirit described here."
+        },
+        {
+          "label": "C",
+          "word": "牺牲",
+          "zh": "为他人或某个目的放弃自身利益；也可指献出生命",
+          "en": "sacrifice",
+          "note": "Here 自我牺牲 means putting the group first; it does not mean losing one's life."
+        },
+        {
+          "label": "D",
+          "word": "取舍",
+          "zh": "选择保留什么、放弃什么",
+          "en": "choose what to keep or give up",
+          "note": "A decision process, not necessarily concern for others."
+        }
+      ]
+    },
+    "50": {
+      "correct": "A",
+      "method": "Contrast + Word range（对照·范围）",
+      "why": "The passage contrasts competition with the need for cooperation in modern society.",
+      "options": [
+        {
+          "label": "A",
+          "word": "竞争",
+          "zh": "为了同一目标而相互争取胜出",
+          "en": "competition",
+          "note": "Use: 充满竞争的社会. It forms the contrast with “合作”."
+        },
+        {
+          "label": "B",
+          "word": "较真",
+          "zh": "认真计较，追究细节或真假",
+          "en": "take things seriously; insist on details",
+          "note": "Describes an attitude, not the social relationship intended here."
+        },
+        {
+          "label": "C",
+          "word": "比拼",
+          "zh": "互相比试、较量",
+          "en": "compete; pit against one another",
+          "note": "Often describes a particular contest or comparison; 竞争 is broader and more natural here."
+        },
+        {
+          "label": "D",
+          "word": "对抗",
+          "zh": "对立、抵抗或相互斗争",
+          "en": "confrontation; opposition",
+          "note": "Stronger hostility than general social competition."
+        }
+      ]
+    }
+  },
+  "paragraphs": [
+    "任何人在这个世界上都不是{41}存在的，<span class=\"clue\">都要和周围的人发生各种各样的关系</span>。",
+    "合作就是互相{42}，<span class=\"clue\">共同把事情做好</span>。一个人学会了与别人合作，也就获得了<span class=\"clue\">打开成功之门的</span>{43}。",
+    "怎样才能<span class=\"clue\">有</span>{44}<span class=\"clue\">地合作</span>呢？你一定在音乐厅或电视里看到过<span class=\"clue\">交响乐团的演奏</span>吧。这可算得上是<span class=\"clue\">人与人合作的</span>{45}了。你瞧，指挥家轻轻一扬手里的指挥棒，{46}的<span class=\"clue\">乐曲</span>便从乐师的嘴唇边、指缝里演奏出来。是什么力量使<span class=\"clue\">上百位乐师，数十种不同的乐器合作得这样完美</span>{47}？我想，这主要依靠<span class=\"clue\">高度统一的团体目标和每个人所发挥的协作精神</span>。",
+    "还有一个小故事，也能说明这个道理。几个小学生做了一个小实验。一个小口瓶里，放着七个穿线的彩球，线的一端露出瓶子。这个瓶子代表一个房间，彩球代表被困在房间里的人，哨声响起代表“房子着火”。听到哨声，七个孩子一个接着一个，依次从瓶子里取出了自己的彩球，拯救“被困的人”。<span class=\"clue\">整个过程总共才用了3秒钟！</span>在场的人{48}地<span class=\"clue\">鼓起掌来</span>。可见成功的合作不仅要有统一的目标，要尽力做好份内的事情，而且还要<span class=\"clue\">心中想着别人，心中想着集体</span>，有<span class=\"clue\">自我</span>{49}的精神。",
+    "现代社会是一个充满{50}的社会，<span class=\"clue\">但同时也是一个更加需要合作的社会</span>。作为一个现代人，只有学会与别人合作，才能取得更大的成功。"
+  ]
+}

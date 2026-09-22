@@ -1,0 +1,366 @@
+{
+  "title": "练习三（2023年）",
+  "answerStatus": "suggested-from-context",
+  "questions": {
+    "41": {
+      "correct": "1",
+      "method": "Context + Grammar（语境·句式）",
+      "why": "The unexpected display makes “我” delighted. 心花怒放 describes that inner joy after “看得我”.",
+      "options": [
+        {
+          "label": "1",
+          "word": "心花怒放",
+          "zh": "心里非常高兴",
+          "en": "be delighted; one's heart blooms with joy",
+          "note": "An inner feeling: 看得我心花怒放."
+        },
+        {
+          "label": "2",
+          "word": "欢声笑语",
+          "zh": "欢乐的说笑声",
+          "en": "cheerful voices and laughter",
+          "note": "Describes sounds or an atmosphere, not “我”的心理."
+        },
+        {
+          "label": "3",
+          "word": "心满意足",
+          "zh": "心愿得到满足，十分满意",
+          "en": "fully satisfied; content",
+          "note": "He is excited by new sights, not yet satisfied after getting what he wants."
+        },
+        {
+          "label": "4",
+          "word": "欢天喜地",
+          "zh": "非常欢喜，常表现为喜气洋洋的样子",
+          "en": "be overjoyed",
+          "note": "Close in meaning, but 心花怒放 more directly describes the inner delight here."
+        }
+      ]
+    },
+    "42": {
+      "correct": "3",
+      "method": "Contrast（对照）",
+      "why": "“麻木” contrasts with “这里反而……新鲜感”. The malls feel similar to one another.",
+      "options": [
+        {
+          "label": "1",
+          "word": "各有千秋",
+          "zh": "各有各的长处和特色",
+          "en": "each has its own strengths",
+          "note": "Would emphasise distinct merits, not the similarity that makes him feel numb."
+        },
+        {
+          "label": "2",
+          "word": "五花八门",
+          "zh": "种类繁多，变化多样",
+          "en": "of many varieties",
+          "note": "Variety would not explain this contrast as well as similarity."
+        },
+        {
+          "label": "3",
+          "word": "大同小异",
+          "zh": "大体相同，只有小部分差别",
+          "en": "largely alike",
+          "note": "Explains why the usual malls no longer feel fresh."
+        },
+        {
+          "label": "4",
+          "word": "巧思妙想",
+          "zh": "巧妙、新颖的构思或想法",
+          "en": "clever, imaginative ideas",
+          "note": "Refers to ideas, not how similar the malls' products are."
+        }
+      ]
+    },
+    "43": {
+      "correct": "4",
+      "method": "Context + Word range（语境·范围）",
+      "why": "The author contrasts this shop's clothes with the showy style of street performers' costumes.",
+      "options": [
+        {
+          "label": "1",
+          "word": "花招",
+          "zh": "迷惑人的手法；也指花样、招数",
+          "en": "trick; gimmick",
+          "note": "A tactic, not the visual style of the clothes here."
+        },
+        {
+          "label": "2",
+          "word": "啰嗦",
+          "zh": "说话重复、繁杂；也指事情麻烦",
+          "en": "long-winded; fussy",
+          "note": "Not the intended description of a costume's appearance."
+        },
+        {
+          "label": "3",
+          "word": "熟悉",
+          "zh": "了解得清楚、不陌生",
+          "en": "familiar",
+          "note": "Familiarity belongs to someone's knowledge of something."
+        },
+        {
+          "label": "4",
+          "word": "夸张",
+          "zh": "超过通常程度；此处指造型抢眼、过于突出",
+          "en": "exaggerated; flamboyant",
+          "note": "Here it describes the striking style of performers' costumes."
+        }
+      ]
+    },
+    "44": {
+      "correct": "2",
+      "method": "Context（语境）",
+      "why": "He has trouble choosing among styles and fabrics, so he asks a sales assistant to suggest a suitable one.",
+      "options": [
+        {
+          "label": "1",
+          "word": "推送",
+          "zh": "主动把信息等发送给用户",
+          "en": "push; send to users",
+          "note": "Use: 推送消息. Not personal advice on choosing clothes."
+        },
+        {
+          "label": "2",
+          "word": "推荐",
+          "zh": "把合适的人或事物介绍给别人选择",
+          "en": "recommend",
+          "note": "Use: 推荐款式. The assistant helps him choose."
+        },
+        {
+          "label": "3",
+          "word": "发现",
+          "zh": "看到或找到以前没有注意到的事物",
+          "en": "discover; find",
+          "note": "Finding something is not the same as advising a customer."
+        },
+        {
+          "label": "4",
+          "word": "发觉",
+          "zh": "开始察觉某种情况",
+          "en": "notice; realise",
+          "note": "Use: 发觉不对劲. Not a shopping recommendation."
+        }
+      ]
+    },
+    "45": {
+      "correct": "2",
+      "method": "Context + Grammar（语境·句式）",
+      "why": "The foreign shoppers appreciate the value of these traditional clothes. 识货 describes people who can judge quality.",
+      "options": [
+        {
+          "label": "1",
+          "word": "购货",
+          "zh": "购买货物",
+          "en": "purchase goods",
+          "note": "Use: 购货渠道. “选购……购货的老外” would be repetitive and less natural."
+        },
+        {
+          "label": "2",
+          "word": "识货",
+          "zh": "能够判断物品的好坏或价值",
+          "en": "know quality when one sees it",
+          "note": "“识货的老外” means buyers who appreciate good items."
+        },
+        {
+          "label": "3",
+          "word": "得体",
+          "zh": "言行、装束等恰当合适",
+          "en": "appropriate; becoming",
+          "note": "Usually describes behaviour or dress, not a buyer's judgement."
+        },
+        {
+          "label": "4",
+          "word": "道地",
+          "zh": "真正的、纯正的；地道",
+          "en": "authentic; genuine",
+          "note": "Does not explain their appreciation of the clothes."
+        }
+      ]
+    },
+    "46": {
+      "correct": "2",
+      "method": "Contrast（对照）",
+      "why": "“他们……拥抱中华文化” contrasts with the Chinese shoppers' negative attitude towards their own tradition.",
+      "options": [
+        {
+          "label": "1",
+          "word": "突破",
+          "zh": "打破限制，取得进展",
+          "en": "break through",
+          "note": "Use: 突破困难. Does not express the rejecting attitude here."
+        },
+        {
+          "label": "2",
+          "word": "排斥",
+          "zh": "不接受，拒绝或排除",
+          "en": "reject; exclude",
+          "note": "Use: 排斥自己的传统. Opposite to “拥抱” in this context."
+        },
+        {
+          "label": "3",
+          "word": "交融",
+          "zh": "互相融合在一起",
+          "en": "blend; merge",
+          "note": "Describes coming together, not rejecting."
+        },
+        {
+          "label": "4",
+          "word": "排外",
+          "zh": "排斥外来的人或事物",
+          "en": "reject outsiders or foreign things",
+          "note": "The object is “自己的传统”, not something foreign."
+        }
+      ]
+    },
+    "47": {
+      "correct": "3",
+      "method": "Context（语境）",
+      "why": "He openly and confidently wears the new outfit to visit relatives. 大摇大摆 fits the slightly playful tone.",
+      "options": [
+        {
+          "label": "1",
+          "word": "装模做样",
+          "zh": "故意做出样子，显得不真实",
+          "en": "put on an act",
+          "note": "The passage does not say he pretends to be someone else."
+        },
+        {
+          "label": "2",
+          "word": "一摇一摆",
+          "zh": "摇摇摆摆地移动",
+          "en": "swaying from side to side",
+          "note": "Describes physical movement, not his confident manner here."
+        },
+        {
+          "label": "3",
+          "word": "大摇大摆",
+          "zh": "走路或行动时大模大样，满不在乎",
+          "en": "swagger; act with an unconcerned air",
+          "note": "Here it humorously describes confidently going out in 唐装; not a general praise word."
+        },
+        {
+          "label": "4",
+          "word": "一五一十",
+          "zh": "详细、完整地讲述",
+          "en": "in full detail",
+          "note": "Use: 一五一十地告诉别人. Does not describe going on a visit."
+        }
+      ]
+    },
+    "48": {
+      "correct": "4",
+      "method": "Context + Tone（语境·语气）",
+      "why": "His mother's praise makes him pleased with his own choice. 沾沾自喜 means self-satisfaction, not a new discovery.",
+      "options": [
+        {
+          "label": "1",
+          "word": "异想天开",
+          "zh": "想法离奇，不切实际",
+          "en": "have fanciful, unrealistic ideas",
+          "note": "He is reacting to praise, not inventing an unrealistic plan."
+        },
+        {
+          "label": "2",
+          "word": "恍然大悟",
+          "zh": "突然完全明白过来",
+          "en": "suddenly realise",
+          "note": "There is no earlier puzzle being solved here."
+        },
+        {
+          "label": "3",
+          "word": "发人深省",
+          "zh": "启发别人深入思考",
+          "en": "thought-provoking",
+          "note": "Describes something that makes people reflect; not his pleased feeling."
+        },
+        {
+          "label": "4",
+          "word": "沾沾自喜",
+          "zh": "因自己的表现或成就而自我得意",
+          "en": "feel smug; be self-satisfied",
+          "note": "Often disapproving. Here it is a lightly self-mocking account of his own pride."
+        }
+      ]
+    },
+    "49": {
+      "correct": "3",
+      "method": "Word range + Collocation（范围·搭配）",
+      "why": "The sentence describes hot weather that makes long sleeves uncomfortable: 天气炎热.",
+      "options": [
+        {
+          "label": "1",
+          "word": "热烈",
+          "zh": "情绪高涨或气氛浓厚",
+          "en": "enthusiastic; warm",
+          "note": "Use: 热烈欢迎. Describes emotion or atmosphere, not air temperature."
+        },
+        {
+          "label": "2",
+          "word": "炽热",
+          "zh": "温度很高；也形容感情强烈",
+          "en": "blazing hot; intense",
+          "note": "Use: 炽热的阳光、炽热的感情. 炎热 is the more natural everyday description of weather here."
+        },
+        {
+          "label": "3",
+          "word": "炎热",
+          "zh": "天气很热",
+          "en": "hot; sweltering",
+          "note": "Use: 天气炎热、炎热的夏天."
+        },
+        {
+          "label": "4",
+          "word": "热气",
+          "zh": "热的空气或蒸汽",
+          "en": "hot air; steam",
+          "note": "A noun; the sentence needs a description of the weather."
+        }
+      ]
+    },
+    "50": {
+      "correct": "4",
+      "method": "Collocation + Meaning（搭配·词义）",
+      "why": "Wearing 唐装 helps the tradition carry on over time. 让传统延续下去 expresses this continuity naturally.",
+      "options": [
+        {
+          "label": "1",
+          "word": "延长",
+          "zh": "使时间、距离等变长",
+          "en": "extend; lengthen",
+          "note": "Use: 延长时间. The focus here is keeping a tradition alive."
+        },
+        {
+          "label": "2",
+          "word": "继续",
+          "zh": "活动等持续进行，不中断",
+          "en": "continue",
+          "note": "Close in meaning, but 延续 more precisely expresses a tradition being carried forward."
+        },
+        {
+          "label": "3",
+          "word": "延绵",
+          "zh": "连续不断，常形容空间上的延伸",
+          "en": "stretch continuously",
+          "note": "Often describes mountains or a continuous stretch; not the usual choice for preserving a tradition."
+        },
+        {
+          "label": "4",
+          "word": "延续",
+          "zh": "照原来的状态持续下去",
+          "en": "carry on; continue over time",
+          "note": "Use: 延续传统. Fits keeping a tradition alive through practice."
+        }
+      ]
+    }
+  },
+  "paragraphs": [
+    "我为了买一件唐装而来到了这间老店。在牛车水一带活动了这些年，一直没踏进这家老店，以为它专卖药材、补品等。没料到店主在过年期间进口许多漂亮的旗袍、唐装、绣花鞋，<span class=\"clue\">看得我</span>{41}，像刘姥姥进大观园，对每一件物品<span class=\"clue\">充满好奇，大开眼界</span>。",
+    "乌节路逛多了，<span class=\"clue\">有点麻木</span>，因为每间购物中心的物品{42}。<span class=\"clue\">这里反而给我很多新鲜感和视觉上的新刺激</span>。",
+    "选购唐装原来不简单，价钱差异相当大。这里的货物有别于<span class=\"clue\">街头艺人服装</span>的{43}，也不是迎合洋人旅客口味的类型。<span class=\"clue\">试穿不同的款式</span>，我发现布料的质地会影响外观，有的口袋往下垂，有的领口不太挺，最后要劳烦一位<span class=\"clue\">售货阿姨为我</span>{44}。",
+    "有些朋友很意外，我什么时候变得这么老土，哪有年轻人穿唐装的？",
+    "其实不然，我看到店里架子上贴着的杂志广告，是一位金发碧眼男模，穿唐装配牛仔裤，蛮帅气的。当天到这间老店<span class=\"clue\">选购唐装</span>的还有很多{45}的老外。但是，为什么他们一窝蜂地<span class=\"clue\">拥抱中华文化</span>，<span class=\"clue\">而我们华人本身却</span>{46}<span class=\"clue\">自己的传统</span>呢？",
+    "售货阿姨也有点纳闷地说：“每年过年都有很多人买唐装，平时却不见有人在街上穿……华人好像不喜欢自己的传统服装！”",
+    "我就这样<span class=\"clue\">穿着新买的唐装</span>，在大年初一{47}地<span class=\"clue\">拜年去</span>。没想到，妈妈居然说：“<span class=\"clue\">穿唐装很好看啊！</span>”这让我{48}，<span class=\"clue\">认定自己做对了</span>。",
+    "也许新加坡的<span class=\"clue\">天气</span>{49}，<span class=\"clue\">不适合经常穿上长袖子的唐装</span>，但有时换上一件唐装，你必定成为众人焦点。能让<span class=\"clue\">传统</span>{50}<span class=\"clue\">下去</span>，就算是一年就那么几次，又何妨呢？"
+  ]
+}

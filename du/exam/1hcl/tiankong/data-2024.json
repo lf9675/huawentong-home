@@ -1,0 +1,365 @@
+{
+  "title": "练习二（2024年）",
+  "answerStatus": "suggested-from-context",
+  "questions": {
+    "41": {
+      "correct": "B",
+      "method": "Context（语境）",
+      "why": "“做事一度不认真” means he was not taking his duties seriously. 敷衍 fits this careless attitude.",
+      "options": [
+        {
+          "label": "A",
+          "word": "傲慢",
+          "zh": "骄傲，看不起别人",
+          "en": "arrogant",
+          "note": "Being proud is different from doing a job carelessly."
+        },
+        {
+          "label": "B",
+          "word": "敷衍",
+          "zh": "做事不认真，只求应付过去",
+          "en": "perfunctory; going through the motions",
+          "note": "Use: 敷衍了事. It matches “不认真”."
+        },
+        {
+          "label": "C",
+          "word": "淡漠",
+          "zh": "冷淡，不关心",
+          "en": "indifferent",
+          "note": "Focuses on lack of interest or concern, not careless work."
+        },
+        {
+          "label": "D",
+          "word": "强硬",
+          "zh": "态度坚决，不肯让步",
+          "en": "tough; uncompromising",
+          "note": "Refusing to give way is not the clue here."
+        }
+      ]
+    },
+    "42": {
+      "correct": "A",
+      "method": "Grammar + Context（句式·语境）",
+      "why": "幸亏 introduces the help that prevented a bad result: 杰成 reached out and saved him.",
+      "options": [
+        {
+          "label": "A",
+          "word": "幸亏",
+          "zh": "多亏某种有利条件，才避免坏结果",
+          "en": "fortunately; thanks to",
+          "note": "Use: 幸亏有人帮忙. It can introduce a whole clause."
+        },
+        {
+          "label": "B",
+          "word": "幸免",
+          "zh": "幸运地免于灾难或损失",
+          "en": "escape harm",
+          "note": "Use: 幸免于难. It cannot introduce “杰成伸手拉了他” here."
+        },
+        {
+          "label": "C",
+          "word": "不幸",
+          "zh": "不幸运；令人难过的事情",
+          "en": "unfortunate; misfortune",
+          "note": "The rescue is good fortune, not bad luck."
+        },
+        {
+          "label": "D",
+          "word": "侥幸",
+          "zh": "因偶然的有利条件而免于不幸或获得成功",
+          "en": "by a lucky chance",
+          "note": "Use: 侥幸脱险. Here the clause names the person whose help saved him."
+        }
+      ]
+    },
+    "43": {
+      "correct": "D",
+      "method": "Context（语境）",
+      "why": "The question “为什么……” shows that 杰成 does not understand the different actions.",
+      "options": [
+        {
+          "label": "A",
+          "word": "婉转",
+          "zh": "说话温和曲折，不直接",
+          "en": "tactful; indirect",
+          "note": "Describes how something is said, not a puzzled feeling."
+        },
+        {
+          "label": "B",
+          "word": "不屑",
+          "zh": "认为不值得；轻视",
+          "en": "disdainful",
+          "note": "Nothing shows that he looks down on the explanation."
+        },
+        {
+          "label": "C",
+          "word": "惊吓",
+          "zh": "因突然的刺激而害怕",
+          "en": "fright; being startled",
+          "note": "The question shows puzzlement, not fear."
+        },
+        {
+          "label": "D",
+          "word": "疑惑",
+          "zh": "不明白，心中有疑问",
+          "en": "puzzled; doubtful",
+          "note": "Use: 疑惑地问. It matches his question."
+        }
+      ]
+    },
+    "44": {
+      "correct": "B",
+      "method": "Collocation（搭配）",
+      "why": "“刻在心灵的深处” means keeping a memory permanently. 永不磨灭 means it will never fade away.",
+      "options": [
+        {
+          "label": "A",
+          "word": "怀念",
+          "zh": "对过去的人或事深切地想念",
+          "en": "miss; remember fondly",
+          "note": "“永不怀念” would mean never remembering fondly—the opposite idea."
+        },
+        {
+          "label": "B",
+          "word": "磨灭",
+          "zh": "逐渐消失；因时间等而失去痕迹",
+          "en": "fade away; be erased",
+          "note": "Use: 不可磨灭的记忆."
+        },
+        {
+          "label": "C",
+          "word": "消灭",
+          "zh": "使敌人、有害事物等不再存在",
+          "en": "eliminate; destroy",
+          "note": "Use: 消灭害虫. Not the natural word for a lasting memory here."
+        },
+        {
+          "label": "D",
+          "word": "驱赶",
+          "zh": "赶走人或动物",
+          "en": "drive away; chase away",
+          "note": "Use: 驱赶蚊虫. A memory is not physically chased away."
+        }
+      ]
+    },
+    "45": {
+      "correct": "C",
+      "method": "Contrast（对照）",
+      "why": "The passage contrasts a forgiving attitude with being fussy about every small matter.",
+      "options": [
+        {
+          "label": "A",
+          "word": "班门弄斧",
+          "zh": "在行家面前卖弄本领",
+          "en": "show off before an expert",
+          "note": "About showing off skills, not forgiveness."
+        },
+        {
+          "label": "B",
+          "word": "得过且过",
+          "zh": "只求勉强过得去，不求进步",
+          "en": "muddle along",
+          "note": "About lack of effort, not counting every small wrong."
+        },
+        {
+          "label": "C",
+          "word": "斤斤计较",
+          "zh": "对小事或小利过分计较",
+          "en": "be petty; fuss over small matters",
+          "note": "It contrasts with “宽容的胸怀”."
+        },
+        {
+          "label": "D",
+          "word": "不择手段",
+          "zh": "为达目的，什么手段都使用",
+          "en": "use any means to reach a goal",
+          "note": "The passage is not about achieving a goal by any means."
+        }
+      ]
+    },
+    "46": {
+      "correct": "D",
+      "method": "Collocation（搭配）",
+      "why": "The natural phrase is 陷入僵局: become stuck in a situation with no progress.",
+      "options": [
+        {
+          "label": "A",
+          "word": "趋势",
+          "zh": "事物发展的方向",
+          "en": "trend; tendency",
+          "note": "A noun, not the verb needed before “僵局”."
+        },
+        {
+          "label": "B",
+          "word": "坠落",
+          "zh": "从高处往下掉",
+          "en": "fall; drop",
+          "note": "Usually describes a physical fall."
+        },
+        {
+          "label": "C",
+          "word": "沦落",
+          "zh": "落到较差的处境或地位",
+          "en": "sink into a poor condition",
+          "note": "Use: 沦落街头. Not the normal pairing with “僵局”."
+        },
+        {
+          "label": "D",
+          "word": "陷入",
+          "zh": "落入不利处境，难以脱身",
+          "en": "get trapped in; fall into",
+          "note": "Use: 陷入困境、陷入僵局."
+        }
+      ]
+    },
+    "47": {
+      "correct": "D",
+      "method": "Context + Collocation（语境·搭配）",
+      "why": "The next words are “感谢他人……的帮助”. They explain what a 感恩的心 means.",
+      "options": [
+        {
+          "label": "A",
+          "word": "感动",
+          "zh": "受到触动而产生情感",
+          "en": "be moved; touched",
+          "note": "A feeling caused by an event; not specifically thankfulness."
+        },
+        {
+          "label": "B",
+          "word": "感怀",
+          "zh": "有感触而怀念",
+          "en": "reflect on and remember",
+          "note": "Focuses on remembering with emotion."
+        },
+        {
+          "label": "C",
+          "word": "感慨",
+          "zh": "因有所感触而产生复杂的情绪",
+          "en": "feel deeply; sigh with emotion",
+          "note": "May include many feelings, not just gratitude."
+        },
+        {
+          "label": "D",
+          "word": "感恩",
+          "zh": "感谢别人给予的帮助或恩惠",
+          "en": "be grateful",
+          "note": "Use: 常怀感恩之心."
+        }
+      ]
+    },
+    "48": {
+      "correct": "C",
+      "method": "Context（语境）",
+      "why": "The passage asks us to forgive friends' mistakes. 过失 names those mistakes, not a lack of ability.",
+      "options": [
+        {
+          "label": "A",
+          "word": "弱势",
+          "zh": "较不利或较弱的地位、情况",
+          "en": "disadvantaged position",
+          "note": "A disadvantage is not a mistake to forgive."
+        },
+        {
+          "label": "B",
+          "word": "误差",
+          "zh": "测量值或计算结果与真实值的差别",
+          "en": "measurement error; deviation",
+          "note": "Usually used in measurement or calculation."
+        },
+        {
+          "label": "C",
+          "word": "过失",
+          "zh": "因疏忽等造成的错误",
+          "en": "fault; mistake",
+          "note": "Use: 宽容别人的过失."
+        },
+        {
+          "label": "D",
+          "word": "短板",
+          "zh": "能力或条件中较弱的一方面",
+          "en": "weak point; limitation",
+          "note": "A weakness is different from doing something wrong."
+        }
+      ]
+    },
+    "49": {
+      "correct": "B",
+      "method": "Context + Degree（语境·程度）",
+      "why": "“刻在心灵的深处” and “永不磨灭” point to remembering deeply: 铭记.",
+      "options": [
+        {
+          "label": "A",
+          "word": "惦记",
+          "zh": "心里牵挂，放心不下",
+          "en": "think about with concern",
+          "note": "Use: 惦记家人. Focuses on concern."
+        },
+        {
+          "label": "B",
+          "word": "铭记",
+          "zh": "深深地记在心里",
+          "en": "keep firmly in mind",
+          "note": "Use: 铭记恩情. Matches the image of carving a lasting memory."
+        },
+        {
+          "label": "C",
+          "word": "记录",
+          "zh": "把事情写下来或用其他方式保存",
+          "en": "record",
+          "note": "Focuses on recording information, not remembering deeply."
+        },
+        {
+          "label": "D",
+          "word": "记忆",
+          "zh": "记住或回想；也指记住的内容",
+          "en": "remember; memory",
+          "note": "A general memory word; 铭记 better expresses lasting gratitude here."
+        }
+      ]
+    },
+    "50": {
+      "correct": "A",
+      "method": "Collocation + Context（搭配·语境）",
+      "why": "真心对待朋友 means treating friends sincerely. It fits the message about friendship.",
+      "options": [
+        {
+          "label": "A",
+          "word": "对待",
+          "zh": "以某种态度处理人或事",
+          "en": "treat; deal with",
+          "note": "Use: 真心对待朋友."
+        },
+        {
+          "label": "B",
+          "word": "伺候",
+          "zh": "照料别人的生活需要",
+          "en": "wait on; attend to",
+          "note": "Friendship here is not about serving someone's daily needs."
+        },
+        {
+          "label": "C",
+          "word": "服务",
+          "zh": "为别人或社会提供帮助、便利",
+          "en": "serve; provide services",
+          "note": "Use: 为顾客服务. Not the intended relationship here."
+        },
+        {
+          "label": "D",
+          "word": "应付",
+          "zh": "设法处理；也可指不认真地敷衍",
+          "en": "cope with; deal with perfunctorily",
+          "note": "The passage calls for sincerity, not merely getting by."
+        }
+      ]
+    }
+  },
+  "paragraphs": [
+    "两个死党——国华和杰成一起参加学校主办的爬山活动。在途中，身为队长的国华<span class=\"clue\">做事一度不认真</span>，态度{41}。杰成看不过眼，在一次争执中给了国华一记耳光。国华在沙子上写下：“今天我的好朋友打了我一巴掌。”",
+    "他们接着往上爬，国华差点儿失足跌下山崖，{42}<span class=\"clue\">杰成伸手拉了他一把，救了他</span>。被救上来后，国华拿起一把小刀在石头上刻下：“今天我的好朋友救了我一命。”",
+    "杰成{43}地问：“<span class=\"clue\">为什么我打了你以后你要写在沙子上，而救了你以后却刻在石头上呢？</span>”",
+    "国华说：“当我们被朋友伤害时，要写在易忘的地方，风会负责抹去它；当我们得到他人的帮助时，要把它<span class=\"clue\">刻在心灵的深处</span>，让它<span class=\"clue\">永不</span>{44}。”",
+    "朋友之间，难免会面对友情的考验。如果我们<span class=\"clue\">没有宽容的胸怀</span>，凡事{45}，那么朋友就会离我们而去，这会使自己的人际关系{46}<span class=\"clue\">僵局</span>。",
+    "若我们常怀一颗{47}的心，<span class=\"clue\">感谢他人在平凡生活中的点滴帮助</span>；若我们能够宽以待人，<span class=\"clue\">宽容朋友的某些</span>{48}，那么我们也就会时时得到朋友的关怀与帮助。",
+    "有位哲人说：记住该记住的，忘记该忘记的！我想，那些<span class=\"clue\">善良美好的事物</span>，我们应该{49}；那些丑陋和不愉快的体验，我们应该学会忘记。<span class=\"clue\">真心</span>{50}<span class=\"clue\">你的朋友</span>，你将会得到真心的朋友！"
+  ]
+}
