@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>考前汉字手写复习｜华文通</title>
+<style>
+:root{--blue:#2563eb;--deep:#18324b;--pale:#eff6ff;--line:#cbd5e1;--green:#047857;--red:#b91c1c;--muted:#64748b;--bg:#f5f9ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--deep);font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif}
+button,select{font:inherit}.app{max-width:980px;margin:auto;padding:16px}h1{font-size:28px;margin:4px 0}.subtitle{margin:0;color:var(--muted);line-height:1.55}
+.card{background:#fff;border:1px solid #dbeafe;border-radius:18px;padding:18px;box-shadow:0 8px 24px rgba(30,64,175,.06);margin-top:14px}
+.modebar,.toolbar,.actions,.stats{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.modebtn,button,select{min-height:44px;border-radius:12px;border:1px solid var(--line);background:white;padding:9px 13px}button{cursor:pointer}
+.modebtn.active{background:var(--deep);color:white;border-color:var(--deep)}.primary{background:var(--blue);color:white;border-color:var(--blue);font-weight:700}
+.good{background:#ecfdf5;border-color:#a7f3d0;color:var(--green);font-weight:700}.badbtn{background:#fff1f2;border-color:#fecdd3;color:var(--red);font-weight:700}
+.label,.small{font-size:14px;color:var(--muted)}.progress{margin-left:auto;color:var(--muted);font-size:15px}
+.promptBox{background:var(--pale);border-radius:16px;padding:18px;margin-top:14px}.promptType{font-size:14px;color:var(--blue);font-weight:700}
+.promptMain{font-size:26px;line-height:1.55;margin:8px 0}.writeTitle{margin:18px 0 8px;font-weight:700}
+.canvasWrap{overflow-x:auto}.canvasShell{position:relative;width:100%;min-width:340px;height:250px;border:2px solid #94a3b8;border-radius:14px;background:white;overflow:hidden}
+#pad{width:100%;height:250px;display:block;touch-action:none}
+.answerBox{display:none;margin-top:14px;padding:14px;border-radius:14px;border:1px solid #bfdbfe;background:#f8fbff}
+.answerWord{font-family:KaiTi,"STKaiti",serif;font-size:42px;letter-spacing:.12em;font-weight:700}
+.feedback{margin-top:12px;padding:12px;border-radius:12px;background:#f8fafc;min-height:48px;line-height:1.5}
+.hidden{display:none!important}.weakGrid{display:flex;gap:8px;flex-wrap:wrap}.weakChip{border:1px solid #fecaca;background:#fff1f2;color:#991b1b;border-radius:999px;padding:7px 10px}
+.homeNote{background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:10px 12px;margin-top:12px;line-height:1.5}
+.sep{height:1px;background:#e2e8f0;margin:14px 0}.back{display:inline-block;margin-top:10px;text-decoration:none;color:var(--blue)}
+footer{color:var(--muted);font-size:13px;margin:14px 3px 24px}
+@media(max-width:650px){.app{padding:10px}.progress{width:100%;margin-left:0}h1{font-size:24px}.promptMain{font-size:23px}.answerWord{font-size:36px}.canvasShell,#pad{height:230px}}
+</style>
+</head>
+<body>
+<div class="app">
+<a class="back" href="/#1/vocab">← 华文通</a>
+<h1>✍️ 考前汉字手写复习</h1>
+<p class="subtitle">Listen → Write by hand → Check → Review weak words<br>听词 → 凭记忆手写 → 对照 → 错词再练</p>
+
+<div class="card">
+  <div class="modebar">
+    <button class="modebtn active" data-mode="class">🏫 Classroom 课堂</button>
+    <button class="modebtn" data-mode="home">🏠 Home 家庭</button>
+    <button class="modebtn" data-mode="weak">🎯 My Exam List 错词</button>
+  </div>
+  <div id="settings">
+    <div class="sep"></div>
+    <div class="toolbar">
+      <label><span class="label">Level 年级</span><br>
+        <select id="grade"><option>中一</option><option>中二</option></select>
+      </label>
+      <label><span class="label">Word list 词语表</span><br><select id="set"></select></label>
+      <label id="roundLabel"><span class="label">Round 本轮</span><br>
+        <select id="round"><option value="10">10 words</option><option value="20" selected>20 words</option><option value="all">全部</option></select>
+      </label>
+      <button id="start" class="primary" style="align-self:flex-end">Start 开始</button>
+    </div>
+    <div id="homeNote" class="homeNote hidden">Home mode（家庭模式）会优先抽以前写错的词。记录只保存在这台设备。</div>
+  </div>
+</div>
+
+<div id="practice" class="card hidden">
+  <div class="stats"><span id="setBadge" class="small"></span><span id="progress" class="progress"></span></div>
+  <div class="promptBox">
+    <div class="promptType">🎧 Listen & Write（听音写词）</div>
+    <div class="promptMain">听读音，然后把完整词语写出来。</div>
+    <div class="small">Listen. Recall the Chinese characters. Write the whole word.</div>
+    <div class="actions" style="margin-top:10px"><button id="speak">🔊 Play again 再听</button></div>
+  </div>
+  <div class="writeTitle">Write from memory（凭记忆写）</div>
+  <div class="canvasWrap"><div class="canvasShell"><canvas id="pad"></canvas></div></div>
+  <div class="actions" style="margin-top:10px">
+    <button id="undo">↶ Undo 撤销</button><button id="clear">🧽 Clear 清除</button><button id="check" class="primary">👁 Check 看答案</button>
+  </div>
+  <div id="answerBox" class="answerBox">
+    <div class="small">Correct writing（正确写法）</div>
+    <div id="answerWord" class="answerWord"></div>
+    <div class="sep"></div>
+    <div class="small">Compare character by character（逐字对照）</div>
+    <div class="actions" style="margin-top:8px">
+      <button id="markRight" class="good">✓ 写对了</button><button id="markWrong" class="badbtn">↻ 写错了</button>
+    </div>
+  </div>
+  <div id="feedback" class="feedback">先手写，再看答案。</div>
+</div>
+
+<div id="weakPanel" class="card hidden">
+  <h2 style="margin-top:0">🎯 My Exam List（我的考前错词）</h2>
+  <p>曾经写错的词会留在这里。点击任何词可立即重练。</p>
+  <div id="weakList" class="weakGrid"></div>
+  <div class="sep"></div>
+  <button id="practiceWeak" class="primary">Practice weak words 练错词</button>
+  <button id="resetData">Reset 清除记录</button>
+</div>
+
+<footer>Apple Pencil、触控笔或手指都可直接书写。系统不自动识别笔迹，避免误判；学生看标准答案后自行核对。</footer>
+</div>
+
+<script>
+const VOCAB={"中一":{"中一词语":["魅力","悠久","遗产","饱经风霜","同胞","融合","浓郁","探索","娘惹","拍摄","镶嵌","循环","映衬","盎然","松懈","领略","设施","投降","里程碑","尤其","发掘","擅长","紧凑","赞不绝口","起码","新颖","戏剧","尴尬","维护","友谊","有效","策略","嘉宾","赖床","辫子","恐惧","滋味","催促","哀求","挪窝","狼狈","缘故","泪痕","包袱","讲究","何必","亏","慢条斯理","起航","称赞","潜水","腾空而起","收拢","翘","悠然自得","袭击","浑身","颁布","手势","截至","行驶","延误","稳定","漏液","轨道","凌晨","就绪","隧道","扫描","顺畅","投入","全力以赴","职业","故障","岗位","奉献"]},"中二":{"中二词语":["自卑","羡慕","诱惑","毅力","茫然","魂不守舍","闪烁其词","嫌","逼","霸道","怄气","烹饪","符合","憋","委婉","反驳","吭声","诡异","蜷缩","瑟瑟","恐怖","通宵","惊悚","瞥","炙","掩饰","拘束","嘈杂","局促","沮丧","睿智","简陋","开辟","综合","富裕","变迁","障碍","驰名","屡次","荣誉","接触","翠绿","心旷神怡","曝晒","耸立","叮咛","温馨","欣赏","粗糙","婆娑","翱翔","同甘共苦","茁壮","接纳","患","流逝","叮嘱","嬉戏","俏皮","惬意","烦躁"],"单元六":["奢侈","仪式","秉持","枢纽","勾勒","高瞻远瞩","可谓","岛屿","汇集","赋予","椰浆饭","啧啧称奇","发芽","兼容并蓄","携手","辉煌","赞誉有加","得天独厚","海纳百川","砍","无远弗届","真伪","陷阱","步伐","询问","人云亦云","免疫"]}};
+const STORAGE="hcl_exam_handwriting_review_v1";
+let state=JSON.parse(localStorage.getItem(STORAGE)||'{"words":{}}');
+let mode="class",session=[],index=0,current=null,hasInk=false,revealed=false,strokes=[],activeStroke=null;
+const $=id=>document.getElementById(id),now=()=>Date.now();
+function save(){localStorage.setItem(STORAGE,JSON.stringify(state))}
+function rec(w){state.words[w] ||= {wrong:0,right:0,last:0};return state.words[w]}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function setListOptions(){
+ const g=$("grade").value; $("set").innerHTML='<option value="全部">全部</option>';
+ Object.keys(VOCAB[g]).forEach(s=>{const o=document.createElement("option");o.value=s;o.textContent=s;$("set").appendChild(o)});
+}
+function basePool(){
+ const g=$("grade").value,s=$("set").value;
+ const lists=s==="全部"?Object.values(VOCAB[g]):[VOCAB[g][s]];
+ return [...new Set(lists.flat())];
+}
+function weakPool(){
+ const allowed=new Set(basePool());
+ return Object.keys(state.words).filter(w=>allowed.has(w)&&rec(w).wrong>0).sort((a,b)=>rec(b).wrong-rec(a).wrong);
+}
+function setMode(m){
+ mode=m;document.querySelectorAll(".modebtn").forEach(b=>b.classList.toggle("active",b.dataset.mode===m));
+ $("weakPanel").classList.toggle("hidden",m!=="weak");$("settings").classList.toggle("hidden",m==="weak");$("practice").classList.add("hidden");
+ $("homeNote").classList.toggle("hidden",m!=="home");$("roundLabel").classList.toggle("hidden",m==="home");
+ if(m==="weak")renderWeak();
+}
+function startSession(forceWeak=false){
+ let p=forceWeak?weakPool():basePool();
+ if(mode==="home"&&!forceWeak){const weak=weakPool();p=[...weak,...shuffle(p.filter(w=>!weak.includes(w)))]}else p=shuffle(p);
+ if(!p.length){alert("目前没有可练的词。");return}
+ let n=mode==="home"?Math.min(15,p.length):($("round").value==="all"?p.length:Math.min(+$("round").value,p.length));
+ session=p.slice(0,n);index=0;$("weakPanel").classList.add("hidden");$("practice").classList.remove("hidden");showCard();
+}
+function showCard(){
+ if(index>=session.length){$("practice").innerHTML='<h2>Round complete（本轮完成）</h2><p>这一轮已经完成。写错的词已进入 My Exam List。</p><button class="primary" onclick="location.reload()">再来一轮</button>';return}
+ current=session[index];revealed=false;hasInk=false;strokes=[];activeStroke=null;$("answerBox").style.display="none";$("feedback").textContent="先手写，再看答案。";
+ $("setBadge").textContent=$("grade").value+" · "+$("set").value;$("progress").textContent=(index+1)+" / "+session.length;resizeCanvas(true);setTimeout(speakWord,220);
+}
+function speakWord(){
+ if(!current||!("speechSynthesis" in window))return;
+ speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(current+"。 。 。 "+current+"。 。 。 "+current);u.lang="zh-CN";u.rate=.75;u.pitch=1.05;
+ const voices=speechSynthesis.getVoices();const v=voices.find(x=>x.lang==="zh-CN"||x.lang==="zh_CN")||voices.find(x=>x.lang.startsWith("zh")&&!x.lang.toLowerCase().includes("hk"));if(v)u.voice=v;speechSynthesis.speak(u);
+}
+function reveal(){
+ if(!hasInk){$("feedback").innerHTML='<b style="color:#b91c1c">先写一写。</b> Write first, then check.';return}
+ revealed=true;$("answerWord").textContent=current;$("answerBox").style.display="block";$("feedback").textContent="逐字对照你的手写。";
+}
+function mark(ok){
+ if(!revealed)return;const r=rec(current);r.last=now();
+ if(ok){r.right++;$("feedback").innerHTML='<b style="color:#047857">✓ 已记录：这次写对。</b>'}
+ else{r.wrong++;$("feedback").innerHTML='<b style="color:#b91c1c">↻ 已加入 My Exam List。</b> 后面会优先再练。';const at=Math.min(session.length,index+3);if(!session.slice(index+1).includes(current))session.splice(at,0,current)}
+ save();setTimeout(()=>{index++;showCard()},550);
+}
+function renderWeak(){
+ const p=weakPool();$("weakList").innerHTML=p.length?p.map(w=>'<button class="weakChip" data-word="'+w+'">'+w+'　❌'+rec(w).wrong+'　✓'+rec(w).right+'</button>').join(""):'<span class="small">还没有错词记录。先做一轮手写听写。</span>';
+ document.querySelectorAll(".weakChip").forEach(b=>b.onclick=()=>{session=[b.dataset.word];index=0;$("weakPanel").classList.add("hidden");$("practice").classList.remove("hidden");showCard()});
+}
+const canvas=$("pad"),ctx=canvas.getContext("2d");
+function resizeCanvas(clear=false){
+ const rect=canvas.parentElement.getBoundingClientRect(),dpr=Math.max(1,devicePixelRatio||1);canvas.width=Math.floor(rect.width*dpr);canvas.height=Math.floor(rect.height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);drawGuides(rect.width,rect.height);if(!clear)redraw();
+}
+function drawGuides(w,h){
+ ctx.clearRect(0,0,w,h);const n=current?[...current].length:2;ctx.save();ctx.strokeStyle="#dbeafe";ctx.lineWidth=1.4;
+ for(let i=1;i<n;i++){const x=w*i/n;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()}
+ ctx.setLineDash([6,6]);ctx.strokeStyle="#e2e8f0";for(let i=0;i<n;i++){const x=w*(i+.5)/n;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()}ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();ctx.restore();
+}
+function pos(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
+canvas.addEventListener("pointerdown",e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);hasInk=true;activeStroke=[pos(e)];strokes.push(activeStroke)});
+canvas.addEventListener("pointermove",e=>{if(!activeStroke)return;e.preventDefault();const p=pos(e),a=activeStroke[activeStroke.length-1];ctx.save();ctx.setLineDash([]);ctx.strokeStyle="#172033";ctx.lineWidth=5;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(p.x,p.y);ctx.stroke();ctx.restore();activeStroke.push(p)});
+["pointerup","pointercancel","pointerleave"].forEach(ev=>canvas.addEventListener(ev,()=>activeStroke=null));
+function redraw(){const r=canvas.getBoundingClientRect();drawGuides(r.width,r.height);ctx.save();ctx.setLineDash([]);ctx.strokeStyle="#172033";ctx.lineWidth=5;ctx.lineCap="round";ctx.lineJoin="round";strokes.forEach(s=>{if(s.length<2)return;ctx.beginPath();ctx.moveTo(s[0].x,s[0].y);s.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));ctx.stroke()});ctx.restore()}
+function clearPad(){strokes=[];hasInk=false;activeStroke=null;resizeCanvas(true)}function undo(){strokes.pop();hasInk=strokes.length>0;activeStroke=null;resizeCanvas(false)}
+document.querySelectorAll(".modebtn").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+$("grade").onchange=()=>{setListOptions();renderWeak()};$("set").onchange=()=>{if(mode==="weak")renderWeak()};$("start").onclick=()=>startSession(false);$("speak").onclick=speakWord;$("check").onclick=reveal;$("markRight").onclick=()=>mark(true);$("markWrong").onclick=()=>mark(false);$("clear").onclick=clearPad;$("undo").onclick=undo;
+$("practiceWeak").onclick=()=>{mode="home";startSession(true)};$("resetData").onclick=()=>{if(confirm("清除这台设备的错词记录？")){state={words:{}};save();renderWeak()}};
+window.addEventListener("resize",()=>{if(current)resizeCanvas(false)});
+const params=new URLSearchParams(location.search);$("grade").value=params.get("grade")==="2"?"中二":"中一";setListOptions();setMode("class");
+</script>
+</body></html>
