@@ -404,6 +404,7 @@
         let timerRemaining = 0;
         let timerCallback = null;
         let strokePhaseToken = 0;
+        let resumeAfterPauseAction = null;
 
         function scheduleTask(callback, delay) {
             clearTimeout(timeoutId);
@@ -527,6 +528,7 @@
                 setSidebarVisible(true);
                 isPlaying = false;
                 isPaused = false;
+                resumeAfterPauseAction = null;
                 document.getElementById('pause-btn').disabled = true;
                 document.getElementById('pause-btn').innerText = '⏸ 暂停';
                 return;
@@ -569,10 +571,12 @@
                     if (!isPlaying || isPaused || movedOn || myStrokeToken !== strokePhaseToken) return;
                     if (minimumTimeDone && animationsDone) {
                         movedOn = true;
+                        resumeAfterPauseAction = null;
                         readCount = 4;
                         dictationLoop();
                     }
                 }
+                resumeAfterPauseAction = tryFinishStrokeStage;
 
                 // 从笔顺页面出现开始，至少完整停留10秒。
                 scheduleTask(() => {
@@ -723,9 +727,10 @@
                 synth.resume();
                 document.getElementById('pause-btn').innerText = '⏸ 暂停';
 
-                // 优先继续尚未结束的计时；若当前没有计时，则继续当前流程。
-                if (!resumeScheduledTask()) {
-                    dictationLoop();
+                // 优先继续尚未结束的计时。若暂停发生在笔顺动画阶段，
+                // 则从当前笔顺阶段继续，不重新启动该词。
+                if (!resumeScheduledTask() && resumeAfterPauseAction) {
+                    resumeAfterPauseAction();
                 }
             }
         });
@@ -734,6 +739,7 @@
             isPlaying = false;
             isPaused = false;
             strokePhaseToken++;
+            resumeAfterPauseAction = null;
             synth.cancel();
             clearScheduledTask();
             setSidebarVisible(true);
