@@ -62,14 +62,15 @@
 
     <div class="sidebar" id="sidebar"><a id="back-link" href="/#1/vocab/8" style="display:inline-block;margin-bottom:10px;color:#2980b9;text-decoration:none;font-weight:600;">← 返回听写</a>
         <h2>📚 2026考前自动听写</h2>
-        <p style="font-size:13px; color:#666; margin-top:0;">只保留考前复习词语。可自由勾选一个或多个单元／课文；每词读3遍，每遍后停2秒；笔顺展示8秒。</p>
+        <p style="font-size:13px; color:#666; margin-top:0;">只保留考前复习词语。可自由勾选一个或多个单元／课文；每词读3遍，每遍后停2秒；笔顺至少展示10秒。</p>
         
         <div class="menu-container" id="menu-container">
             </div>
         
         <div class="controls">
             <button id="start-btn">▶ 开始听写</button>
-            <button id="stop-btn">⏹ 暂停 / 重置</button>
+            <button id="pause-btn" style="background:#f39c12;color:white;" disabled>⏸ 暂停</button>
+            <button id="stop-btn">⏹ 停止 / 重置</button>
         </div>
     </div>
 
@@ -397,6 +398,56 @@
         let totalWordsCount = 0;
         let timeoutId = null;
         let hanziWriters = [];
+        let isPaused = false;
+        let timerStartedAt = 0;
+        let timerDelay = 0;
+        let timerRemaining = 0;
+        let timerCallback = null;
+        let strokePhaseToken = 0;
+
+        function scheduleTask(callback, delay) {
+            clearTimeout(timeoutId);
+            timerCallback = callback;
+            timerDelay = delay;
+            timerRemaining = delay;
+            timerStartedAt = Date.now();
+            timeoutId = setTimeout(() => {
+                timeoutId = null;
+                timerCallback = null;
+                timerRemaining = 0;
+                callback();
+            }, delay);
+        }
+
+        function pauseScheduledTask() {
+            if (!timeoutId || !timerCallback) return;
+            clearTimeout(timeoutId);
+            timeoutId = null;
+            const elapsed = Date.now() - timerStartedAt;
+            timerRemaining = Math.max(0, timerDelay - elapsed);
+        }
+
+        function resumeScheduledTask() {
+            if (!timerCallback || timerRemaining <= 0) return false;
+            const cb = timerCallback;
+            const remaining = timerRemaining;
+            timerDelay = remaining;
+            timerStartedAt = Date.now();
+            timeoutId = setTimeout(() => {
+                timeoutId = null;
+                timerCallback = null;
+                timerRemaining = 0;
+                cb();
+            }, remaining);
+            return true;
+        }
+
+        function clearScheduledTask() {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+            timerCallback = null;
+            timerRemaining = 0;
+        }
         const synth = window.speechSynthesis;
         let mandarinVoice = null;
 
@@ -475,6 +526,9 @@
                 document.getElementById('comparison-area').style.display = 'none';
                 setSidebarVisible(true);
                 isPlaying = false;
+                isPaused = false;
+                document.getElementById('pause-btn').disabled = true;
+                document.getElementById('pause-btn').innerText = '⏸ 暂停';
                 return;
             }
 
@@ -491,40 +545,81 @@
                 document.getElementById('comparison-area').style.display = 'none';
                 document.getElementById('status').innerText = `正在朗读... (第 ${readCount + 1}/3 遍)`;
                 speak(currentWord, () => {
-                    timeoutId = setTimeout(() => { readCount++; dictationLoop(); }, 2000);
+                    scheduleTask(() => { readCount++; dictationLoop(); }, 2000);
                 });
                 return;
             }
 
-            // 阶段二：显示词语与笔顺8秒 (HanziWriter)
+            // 阶段二：显示词语与笔顺。任何词至少停留10秒，并避免笔顺未完成就跳走。
             if (readCount === 3) {
-                document.getElementById('status').innerText = "请仔细对照笔顺和部首（8秒）：";
+                document.getElementById('status').innerText = "请仔细对照笔顺和部首（至少10秒）：";
                 document.getElementById('display-area').style.display = 'block';
                 document.getElementById('comparison-area').style.display = 'none';
                 document.getElementById('word-text').innerText = `【 ${currentWord} 】`;
                 document.getElementById('character-container').innerHTML = '';
                 hanziWriters = [];
-                
+
+                const myStrokeToken = ++strokePhaseToken;
+                let minimumTimeDone = false;
+                let animationsDone = false;
+                let movedOn = false;
+                let pendingAnimations = 0;
+
+                function tryFinishStrokeStage() {
+                    if (!isPlaying || isPaused || movedOn || myStrokeToken !== strokePhaseToken) return;
+                    if (minimumTimeDone && animationsDone) {
+                        movedOn = true;
+                        readCount = 4;
+                        dictationLoop();
+                    }
+                }
+
+                // 从笔顺页面出现开始，至少完整停留10秒。
+                scheduleTask(() => {
+                    minimumTimeDone = true;
+                    tryFinishStrokeStage();
+                }, 10000);
+
                 for (let char of currentWord) {
                     const box = document.createElement('div');
                     box.className = 'hanzi-box';
                     box.id = `char-${Math.random().toString(36).substr(2, 9)}`;
                     document.getElementById('character-container').appendChild(box);
-                    
+
                     if(/[\u4e00-\u9fa5]/.test(char)){
+                        pendingAnimations++;
                         let writer = HanziWriter.create(box.id, char, {
                             width: 150, height: 150, padding: 10, showOutline: true,
                             strokeAnimationSpeed: 1.5, delayBetweenStrokes: 150, radicalColor: '#e74c3c'
                         });
                         hanziWriters.push(writer);
-                        writer.animateCharacter();
+                        writer.animateCharacter({
+                            onComplete: () => {
+                                pendingAnimations--;
+                                if (pendingAnimations <= 0) {
+                                    animationsDone = true;
+                                    tryFinishStrokeStage();
+                                }
+                            }
+                        });
                     } else {
-                        box.style.display = 'flex'; box.style.alignItems = 'center'; box.style.justifyContent = 'center';
-                        box.style.fontSize = '50px'; box.innerText = char;
+                        box.style.display = 'flex';
+                        box.style.alignItems = 'center';
+                        box.style.justifyContent = 'center';
+                        box.style.fontSize = '50px';
+                        box.innerText = char;
                     }
                 }
 
-                timeoutId = setTimeout(() => { readCount = 4; dictationLoop(); }, 8000);
+                if (pendingAnimations === 0) animationsDone = true;
+
+                // 笔顺资源偶发加载失败时不永久卡死；20秒后允许视为动画完成。
+                setTimeout(() => {
+                    if (myStrokeToken !== strokePhaseToken || movedOn) return;
+                    animationsDone = true;
+                    tryFinishStrokeStage();
+                }, 20000);
+
                 return;
             }
 
@@ -539,7 +634,7 @@
                     // 这一组听写完了。如果组里有两个或以上的词，进入比较模式！
                     if (currentGroup.length > 1) {
                         showComparisonScreen(currentGroup);
-                        timeoutId = setTimeout(() => {
+                        scheduleTask(() => {
                             currentGroupIndex++;
                             currentWordIndex = 0;
                             readCount = 0;
@@ -605,18 +700,49 @@
             currentWordIndex = 0;
             readCount = 0;
             isPlaying = true;
+            isPaused = false;
+            clearScheduledTask();
+            document.getElementById('pause-btn').disabled = false;
+            document.getElementById('pause-btn').innerText = '⏸ 暂停';
             loadVoices();
             
             dictationLoop();
         });
 
+        document.getElementById('pause-btn').addEventListener('click', () => {
+            if (!isPlaying) return;
+
+            if (!isPaused) {
+                isPaused = true;
+                synth.pause();
+                pauseScheduledTask();
+                document.getElementById('pause-btn').innerText = '▶ 继续';
+                document.getElementById('status').innerText = '⏸ 已暂停。点击“继续”从这里恢复。';
+            } else {
+                isPaused = false;
+                synth.resume();
+                document.getElementById('pause-btn').innerText = '⏸ 暂停';
+
+                // 优先继续尚未结束的计时；若当前没有计时，则继续当前流程。
+                if (!resumeScheduledTask()) {
+                    dictationLoop();
+                }
+            }
+        });
+
         document.getElementById('stop-btn').addEventListener('click', () => {
             isPlaying = false;
+            isPaused = false;
+            strokePhaseToken++;
             synth.cancel();
-            clearTimeout(timeoutId);
+            clearScheduledTask();
             setSidebarVisible(true);
+            document.getElementById('pause-btn').disabled = true;
+            document.getElementById('pause-btn').innerText = '⏸ 暂停';
             document.getElementById('progress').style.display = 'none';
-            document.getElementById('status').innerText = "⏹ 听写已停止。重新选择或再次点击“开始”。";
+            document.getElementById('display-area').style.display = 'none';
+            document.getElementById('comparison-area').style.display = 'none';
+            document.getElementById('status').innerText = "⏹ 听写已停止。重新选择后可再次点击“开始”。";
         });
         
         loadVoices();
