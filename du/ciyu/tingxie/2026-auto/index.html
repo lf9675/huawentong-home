@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-SG">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-width=1.0">
+    <title>2026考前自动听写（笔顺）｜华文通</title>
+    <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; display: flex; height: 100vh; overflow: hidden; color: #333; }
+        
+        /* 左侧菜单栏样式 */
+        .sidebar { width: 350px; background: white; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; transition: transform 0.4s ease; z-index: 100; }
+        .sidebar.hidden { transform: translateX(-100%); position: absolute; height: 100%; }
+        .sidebar h2 { color: #2c3e50; margin-top: 0; font-size: 22px; }
+        .menu-container { flex: 1; overflow-y: auto; border: 1px solid #eee; padding: 10px; border-radius: 5px; background: #fafafa; }
+        
+        /* 树状菜单样式 */
+        .tree-node { margin-bottom: 5px; }
+        .tree-node label { cursor: pointer; display: flex; align-items: center; padding: 4px 0; font-weight: bold; color: #34495e; }
+        .tree-node label:hover { background-color: #ecf0f1; }
+        .tree-children { margin-left: 25px; display: none; border-left: 1px dashed #bdc3c7; padding-left: 10px; }
+        .tree-node.expanded > .tree-children { display: block; }
+        
+        .unit-node label { font-weight: normal; color: #2980b9; }
+        .lesson-node label { font-weight: normal; color: #7f8c8d; font-size: 14px; }
+        .toggle-icon { display: inline-block; width: 16px; text-align: center; margin-right: 5px; cursor: pointer; color: #7f8c8d; font-size: 12px; }
+
+        /* 控制按钮 */
+        .controls { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+        button { padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; width: 100%; }
+        #start-btn { background-color: #27ae60; color: white; }
+        #start-btn:hover { background-color: #219150; }
+        #stop-btn { background-color: #e74c3c; color: white; }
+        #stop-btn:hover { background-color: #c0392b; }
+
+        /* 主显示区 */
+        .main-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f4f7f6; position: relative; padding: 20px; transition: margin-left 0.4s ease; }
+        
+        /* 顶部工具栏 (含汉堡按钮和进度条) */
+        .top-bar { position: absolute; top: 20px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: center; }
+        #toggle-menu-btn { background: white; color: #2c3e50; border: 1px solid #bdc3c7; width: auto; padding: 8px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: none; }
+        #toggle-menu-btn:hover { background: #ecf0f1; }
+        #progress { font-size: 18px; font-weight: bold; color: #8e44ad; background: white; padding: 8px 20px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        /* 听写与比较区域 */
+        #status { font-size: 24px; color: #2980b9; font-weight: bold; text-align: center; margin-bottom: 30px; }
+        
+        #display-area { text-align: center; display: none; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        #word-text { font-size: 36px; color: #34495e; margin-bottom: 20px; font-weight: bold; letter-spacing: 2px; }
+        #character-container { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .hanzi-box { width: 150px; height: 150px; border: 2px dashed #bdc3c7; border-radius: 10px; background: #fafafa; }
+        
+        /* 比较学习区特有样式 */
+        #comparison-area { display: none; text-align: center; background: #fffde7; padding: 40px 60px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border: 2px solid #f1c40f; }
+        .compare-title { font-size: 28px; color: #d35400; margin-bottom: 30px; font-weight: bold; }
+        .compare-group { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+        .compare-word { font-size: 56px; font-weight: bold; color: #2c3e50; letter-spacing: 5px; background: white; padding: 10px 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .highlight-char { color: #e74c3c; } /* 共用字标红 */
+    </style>
+</head>
+<body>
+
+    <div class="sidebar" id="sidebar"><a id="back-link" href="/#1/vocab/8" style="display:inline-block;margin-bottom:10px;color:#2980b9;text-decoration:none;font-weight:600;">← 返回听写</a>
+        <h2>📚 2026考前自动听写</h2>
+        <p style="font-size:13px; color:#666; margin-top:0;">只保留考前复习词语。每词读3遍，每遍后停2秒；笔顺展示8秒。</p>
+        
+        <div class="menu-container" id="menu-container">
+            </div>
+        
+        <div class="controls">
+            <button id="start-btn">▶ 开始听写</button>
+            <button id="stop-btn">⏹ 暂停 / 重置</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <button id="toggle-menu-btn">≡ 展开菜单</button>
+            <div id="progress" style="display:none;">进度: 0 / 0</div>
+        </div>
+
+        <div id="status">👈 请在左侧勾选考前复习词语，然后点击“开始”</div>
+        
+        <div id="display-area">
+            <div id="word-text"></div>
+            <div id="character-container"></div>
+        </div>
+
+        <div id="comparison-area">
+            <div class="compare-title">✨ 发现形近/同部件字，请比较学习！ ✨</div>
+            <div class="compare-group" id="compare-group"></div>
+        </div>
+    </div>
+
+    <script>
+        // 1. 完整词语数据源
+        const allVocabData = {
+          "中一": {
+                    "2026考前复习": {
+                              "考前词语": [
+                                        "魅力",
+                                        "悠久",
+                                        "遗产",
+                                        "饱经风霜",
+                                        "同胞",
+                                        "融合",
+                                        "浓郁",
+                                        "探索",
+                                        "娘惹",
+                                        "拍摄",
+                                        "镶嵌",
+                                        "循环",
+                                        "映衬",
+                                        "盎然",
+                                        "松懈",
+                                        "领略",
+                                        "设施",
+                                        "投降",
+                                        "里程碑",
+                                        "尤其",
+                                        "发掘",
+                                        "擅长",
+                                        "紧凑",
+                                        "赞不绝口",
+                                        "起码",
+                                        "新颖",
+                                        "戏剧",
+                                        "尴尬",
+                                        "维护",
+                                        "友谊",
+                                        "有效",
+                                        "策略",
+                                        "嘉宾",
+                                        "赖床",
+                                        "辫子",
+                                        "恐惧",
+                                        "滋味",
+                                        "催促",
+                                        "哀求",
+                                        "挪窝",
+                                        "狼狈",
+                                        "缘故",
+                                        "泪痕",
+                                        "包袱",
+                                        "讲究",
+                                        "何必",
+                                        "亏",
+                                        "慢条斯理",
+                                        "起航",
+                                        "称赞",
+                                        "潜水",
+                                        "腾空而起",
+                                        "收拢",
+                                        "翘",
+                                        "悠然自得",
+                                        "袭击",
+                                        "浑身",
+                                        "颁布",
+                                        "手势",
+                                        "截至",
+                                        "行驶",
+                                        "延误",
+                                        "稳定",
+                                        "漏液",
+                                        "轨道",
+                                        "凌晨",
+                                        "就绪",
+                                        "隧道",
+                                        "扫描",
+                                        "顺畅",
+                                        "投入",
+                                        "全力以赴",
+                                        "职业",
+                                        "故障",
+                                        "岗位",
+                                        "奉献"
+                              ]
+                    }
+          },
+          "中二": {
+                    "2026考前复习": {
+                              "中二词语": [
+                                        "自卑",
+                                        "羡慕",
+                                        "诱惑",
+                                        "毅力",
+                                        "茫然",
+                                        "魂不守舍",
+                                        "闪烁其词",
+                                        "嫌",
+                                        "逼",
+                                        "霸道",
+                                        "怄气",
+                                        "烹饪",
+                                        "符合",
+                                        "憋",
+                                        "委婉",
+                                        "反驳",
+                                        "吭声",
+                                        "诡异",
+                                        "蜷缩",
+                                        "瑟瑟",
+                                        "恐怖",
+                                        "通宵",
+                                        "惊悚",
+                                        "瞥",
+                                        "炙",
+                                        "掩饰",
+                                        "拘束",
+                                        "嘈杂",
+                                        "局促",
+                                        "沮丧",
+                                        "睿智",
+                                        "简陋",
+                                        "开辟",
+                                        "综合",
+                                        "富裕",
+                                        "变迁",
+                                        "障碍",
+                                        "驰名",
+                                        "屡次",
+                                        "荣誉",
+                                        "接触",
+                                        "翠绿",
+                                        "心旷神怡",
+                                        "曝晒",
+                                        "耸立",
+                                        "叮咛",
+                                        "温馨",
+                                        "欣赏",
+                                        "粗糙",
+                                        "婆娑",
+                                        "翱翔",
+                                        "同甘共苦",
+                                        "茁壮",
+                                        "接纳",
+                                        "患",
+                                        "流逝",
+                                        "叮嘱",
+                                        "嬉戏",
+                                        "俏皮",
+                                        "惬意",
+                                        "烦躁"
+                              ],
+                              "单元六": [
+                                        "奢侈",
+                                        "仪式",
+                                        "秉持",
+                                        "枢纽",
+                                        "勾勒",
+                                        "高瞻远瞩",
+                                        "可谓",
+                                        "岛屿",
+                                        "汇集",
+                                        "赋予",
+                                        "椰浆饭",
+                                        "啧啧称奇",
+                                        "发芽",
+                                        "兼容并蓄",
+                                        "携手",
+                                        "辉煌",
+                                        "赞誉有加",
+                                        "得天独厚",
+                                        "海纳百川",
+                                        "砍",
+                                        "无远弗届",
+                                        "真伪",
+                                        "陷阱",
+                                        "步伐",
+                                        "询问",
+                                        "人云亦云",
+                                        "免疫"
+                              ]
+                    }
+          }
+};
+        const requestedGrade = new URLSearchParams(location.search).get('grade');
+        const requestedLevel = requestedGrade === '1' ? '中一' : requestedGrade === '2' ? '中二' : null;
+        const vocabData = requestedLevel ? { [requestedLevel]: allVocabData[requestedLevel] } : allVocabData;
+
+        // 2. 动态生成树状菜单
+        const menuContainer = document.getElementById('menu-container');
+        for (const level in vocabData) {
+            const levelDiv = document.createElement('div');
+            levelDiv.className = 'tree-node expanded';
+            levelDiv.innerHTML = `
+                <label><span class="toggle-icon">[-]</span><input type="checkbox" data-level="${level}" class="level-cb"> ${level}</label>
+                <div class="tree-children"></div>
+            `;
+            const levelChildren = levelDiv.querySelector('.tree-children');
+            for (const unit in vocabData[level]) {
+                const unitDiv = document.createElement('div');
+                unitDiv.className = 'tree-node unit-node';
+                unitDiv.innerHTML = `
+                    <label><span class="toggle-icon">[+]</span><input type="checkbox" data-level="${level}" data-unit="${unit}" class="unit-cb"> ${unit}</label>
+                    <div class="tree-children"></div>
+                `;
+                const unitChildren = unitDiv.querySelector('.tree-children');
+                for (const lesson in vocabData[level][unit]) {
+                    const words = vocabData[level][unit][lesson];
+                    const lessonDiv = document.createElement('div');
+                    lessonDiv.className = 'tree-node lesson-node';
+                    lessonDiv.innerHTML = `<label><span class="toggle-icon" style="visibility:hidden;"></span><input type="checkbox" class="lesson-cb" value='${JSON.stringify(words)}'> ${lesson} (${words.length}词)</label>`;
+                    unitChildren.appendChild(lessonDiv);
+                }
+                levelChildren.appendChild(unitDiv);
+            }
+            menuContainer.appendChild(levelDiv);
+        }
+
+        // 菜单交互逻辑
+        document.querySelectorAll('.toggle-icon').forEach(icon => {
+            icon.addEventListener('click', function(e) {
+                e.preventDefault();
+                const parentNode = this.closest('.tree-node');
+                parentNode.classList.toggle('expanded');
+                this.innerText = parentNode.classList.contains('expanded') ? '[-]' : '[+]';
+            });
+        });
+        menuContainer.addEventListener('change', function(e) {
+            if (e.target.tagName !== 'INPUT' || e.target.type !== 'checkbox') return;
+            const childrenContainer = e.target.closest('label').nextElementSibling;
+            if (childrenContainer && childrenContainer.classList.contains('tree-children')) {
+                childrenContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = e.target.checked);
+            }
+            document.querySelectorAll('.unit-node').forEach(node => {
+                const lessons = node.querySelectorAll('.lesson-cb');
+                node.querySelector('.unit-cb').checked = (lessons.length > 0 && lessons.length === node.querySelectorAll('.lesson-cb:checked').length);
+            });
+            document.querySelectorAll('.tree-node:not(.unit-node):not(.lesson-node)').forEach(node => {
+                const units = node.querySelectorAll('.unit-cb');
+                node.querySelector('.level-cb').checked = (units.length > 0 && units.length === node.querySelectorAll('.unit-cb:checked').length);
+            });
+        });
+
+        // UI 控制逻辑
+        const sidebar = document.getElementById('sidebar');
+        const toggleMenuBtn = document.getElementById('toggle-menu-btn');
+        function setSidebarVisible(visible) {
+            if (visible) {
+                sidebar.classList.remove('hidden');
+                toggleMenuBtn.style.display = 'none';
+            } else {
+                sidebar.classList.add('hidden');
+                toggleMenuBtn.style.display = 'block';
+            }
+        }
+        toggleMenuBtn.addEventListener('click', () => setSidebarVisible(true));
+
+        // 3. 听写系统与核心算法 ==========================================
+        let dictationGroups = []; // 数据结构变为二维数组: [ ["淘气"], ["称赞", "赞不绝口"], ["科技"] ]
+        let currentGroupIndex = 0;
+        let currentWordIndex = 0;
+        let readCount = 0;
+        let isPlaying = false;
+        let totalWordsCount = 0;
+        let timeoutId = null;
+        let hanziWriters = [];
+        const synth = window.speechSynthesis;
+        let mandarinVoice = null;
+
+        function loadVoices() {
+            const voices = synth.getVoices();
+            const zhCN = voices.filter(v => v.lang === 'zh-CN' || v.lang === 'zh_CN');
+            const preferredNameHints = ['Xiaoxiao','Xiaoyi','Tingting','Meijia','Huihui','Yaoyao','Kangkang','Yunxi','Yunjian','Yunyang'];
+            mandarinVoice = zhCN.find(v => preferredNameHints.some(h => v.name.toLowerCase().includes(h.toLowerCase())))
+                         || zhCN[0]
+                         || null;
+        }
+        speechSynthesis.onvoiceschanged = loadVoices;
+
+        // 【新算法】将共享汉字的词语打包成数组
+        function createDictationGroups(words) {
+            let groups = [];
+            let pool = [...new Set(words)]; // 去重
+            
+            while (pool.length > 0) {
+                let current = pool.shift();
+                let currentGroup = [current];
+                
+                for (let i = pool.length - 1; i >= 0; i--) {
+                    let hasCommonChar = false;
+                    for (let char of current) {
+                        if (pool[i].includes(char)) {
+                            hasCommonChar = true;
+                            break;
+                        }
+                    }
+                    if (hasCommonChar) {
+                        currentGroup.push(pool[i]);
+                        pool.splice(i, 1);
+                    }
+                }
+                groups.push(currentGroup);
+            }
+            return groups;
+        }
+
+        // 找出一个词组中共同出现的汉字（用于标红）
+        function getCommonChars(group) {
+            let charCounts = {};
+            let common = new Set();
+            group.forEach(word => {
+                let uniqueChars = new Set(word.split(''));
+                uniqueChars.forEach(char => {
+                    charCounts[char] = (charCounts[char] || 0) + 1;
+                    if (charCounts[char] > 1 && /[\u4e00-\u9fa5]/.test(char)) {
+                        common.add(char);
+                    }
+                });
+            });
+            return common;
+        }
+
+        function speak(text, callback) {
+            if (!isPlaying) return;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-CN';
+            if (mandarinVoice) utterance.voice = mandarinVoice;
+            utterance.rate = 0.70;
+            utterance.pitch = 0.95;
+            utterance.volume = 1.0;
+            utterance.onend = callback;
+            utterance.onerror = callback;
+            synth.speak(utterance);
+        }
+
+        function dictationLoop() {
+            if (!isPlaying) return;
+
+            if (currentGroupIndex >= dictationGroups.length) {
+                document.getElementById('status').innerText = "🎉 听写全部完成！你真棒！";
+                document.getElementById('display-area').style.display = 'none';
+                document.getElementById('comparison-area').style.display = 'none';
+                setSidebarVisible(true);
+                isPlaying = false;
+                return;
+            }
+
+            let currentGroup = dictationGroups[currentGroupIndex];
+            let currentWord = currentGroup[currentWordIndex];
+
+            // 计算进度
+            let wordsDone = dictationGroups.slice(0, currentGroupIndex).reduce((sum, g) => sum + g.length, 0) + currentWordIndex + 1;
+            document.getElementById('progress').innerText = `进度: ${wordsDone} / ${totalWordsCount}`;
+
+            // 阶段一：标准普通话朗读3遍；每遍结束停2秒
+            if (readCount < 3) {
+                document.getElementById('display-area').style.display = 'none';
+                document.getElementById('comparison-area').style.display = 'none';
+                document.getElementById('status').innerText = `正在朗读... (第 ${readCount + 1}/3 遍)`;
+                speak(currentWord, () => {
+                    timeoutId = setTimeout(() => { readCount++; dictationLoop(); }, 2000);
+                });
+                return;
+            }
+
+            // 阶段二：显示词语与笔顺8秒 (HanziWriter)
+            if (readCount === 3) {
+                document.getElementById('status').innerText = "请仔细对照笔顺和部首（8秒）：";
+                document.getElementById('display-area').style.display = 'block';
+                document.getElementById('comparison-area').style.display = 'none';
+                document.getElementById('word-text').innerText = `【 ${currentWord} 】`;
+                document.getElementById('character-container').innerHTML = '';
+                hanziWriters = [];
+                
+                for (let char of currentWord) {
+                    const box = document.createElement('div');
+                    box.className = 'hanzi-box';
+                    box.id = `char-${Math.random().toString(36).substr(2, 9)}`;
+                    document.getElementById('character-container').appendChild(box);
+                    
+                    if(/[\u4e00-\u9fa5]/.test(char)){
+                        let writer = HanziWriter.create(box.id, char, {
+                            width: 150, height: 150, padding: 10, showOutline: true,
+                            strokeAnimationSpeed: 1.5, delayBetweenStrokes: 150, radicalColor: '#e74c3c'
+                        });
+                        hanziWriters.push(writer);
+                        writer.animateCharacter();
+                    } else {
+                        box.style.display = 'flex'; box.style.alignItems = 'center'; box.style.justifyContent = 'center';
+                        box.style.fontSize = '50px'; box.innerText = char;
+                    }
+                }
+
+                timeoutId = setTimeout(() => { readCount = 4; dictationLoop(); }, 8000);
+                return;
+            }
+
+            // 阶段三：判断是听写下一个词，还是进入“比较学习”
+            if (readCount === 4) {
+                currentWordIndex++;
+                if (currentWordIndex < currentGroup.length) {
+                    // 同一组还有词，继续听写
+                    readCount = 0;
+                    dictationLoop();
+                } else {
+                    // 这一组听写完了。如果组里有两个或以上的词，进入比较模式！
+                    if (currentGroup.length > 1) {
+                        showComparisonScreen(currentGroup);
+                        timeoutId = setTimeout(() => {
+                            currentGroupIndex++;
+                            currentWordIndex = 0;
+                            readCount = 0;
+                            dictationLoop();
+                        }, 10000); // 比较屏幕停留10秒
+                    } else {
+                        // 组里只有一个词，直接跳到下一组
+                        currentGroupIndex++;
+                        currentWordIndex = 0;
+                        readCount = 0;
+                        dictationLoop();
+                    }
+                }
+            }
+        }
+
+        function showComparisonScreen(group) {
+            document.getElementById('display-area').style.display = 'none';
+            document.getElementById('status').innerText = "💡 知识点总结";
+            const compArea = document.getElementById('comparison-area');
+            const compGroup = document.getElementById('compare-group');
+            compArea.style.display = 'block';
+            
+            let commonChars = getCommonChars(group);
+            let html = '';
+            
+            group.forEach(word => {
+                html += '<div class="compare-word">';
+                for(let char of word) {
+                    if(commonChars.has(char)) {
+                        html += `<span class="highlight-char">${char}</span>`;
+                    } else {
+                        html += `<span>${char}</span>`;
+                    }
+                }
+                html += '</div>';
+            });
+            compGroup.innerHTML = html;
+        }
+
+        // 按钮事件
+        document.getElementById('start-btn').addEventListener('click', () => {
+            if (isPlaying) return;
+            
+            let rawWords = [];
+            document.querySelectorAll('.lesson-cb:checked').forEach(cb => {
+                rawWords = rawWords.concat(JSON.parse(cb.value));
+            });
+
+            if (rawWords.length === 0) {
+                alert("请先在左侧展开菜单，并勾选想要听写的课文或单元！");
+                return;
+            }
+
+            // 自动折叠侧边栏，显示进度条
+            setSidebarVisible(false);
+            document.getElementById('progress').style.display = 'block';
+
+            // 初始化数据
+            dictationGroups = createDictationGroups(rawWords);
+            totalWordsCount = dictationGroups.reduce((sum, g) => sum + g.length, 0);
+            currentGroupIndex = 0;
+            currentWordIndex = 0;
+            readCount = 0;
+            isPlaying = true;
+            loadVoices();
+            
+            dictationLoop();
+        });
+
+        document.getElementById('stop-btn').addEventListener('click', () => {
+            isPlaying = false;
+            synth.cancel();
+            clearTimeout(timeoutId);
+            setSidebarVisible(true);
+            document.getElementById('progress').style.display = 'none';
+            document.getElementById('status').innerText = "⏹ 听写已停止。重新选择或再次点击“开始”。";
+        });
+        
+        loadVoices();
+    </script>
+</body>
+</html>
