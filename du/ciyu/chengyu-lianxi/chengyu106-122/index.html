@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f7fc">
+<title>成语选词填空练习三（106-122）｜华文通</title>
+<link rel="stylesheet" href="../../ciyu-lianxi/xuanci-shared/app.css?v=20260925-idioms">
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="masthead">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">文</span>华文通<span class="brand-meta">词语与成语</span></div>
+    <a class="home-link" href="../../../../index.html#1/vocab/7">返回成语练习</a>
+    <span id="save-status" class="save-status" role="status">答案自动保存在本机</span>
+  </div>
+  <div class="title-row">
+    <h1 id="page-title">选词填空</h1>
+    <div class="score" id="score" title="首次核对的结果会保留，订正不会改动初答记录。">初答答对 <b>—</b></div>
+  </div>
+  <p class="instructions">读句子，留意<strong>红色关键词</strong>，从词语表选词填入横线，再点“核对”。<br>
+    <span lang="en">Read → Choose → Type → Check. Hover over or tap <span style="border-bottom:1px dashed">underlined words</span> for help.</span>
+  </p>
+  <div class="topline" role="progressbar" aria-label="已核对题数" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" id="progress"><span></span></div>
+  <div class="tabs" role="tablist" aria-label="练习与错题本">
+    <button id="practice-tab" role="tab" aria-selected="true" aria-controls="practice" type="button">成语练习</button>
+    <button id="notebook-tab" role="tab" aria-selected="false" aria-controls="notebook" tabindex="-1" type="button">我的错题本<span class="count" id="mistake-count">0</span></button>
+    <span class="tab-tail" id="checked-count">已核对 0 / 0</span>
+  </div>
+</header>
+<main class="layout">
+  <aside class="sidebar" aria-label="词语表与题号">
+    <section class="bank">
+      <h2>备选成语</h2><small lang="en">Choose from these words.</small>
+      <div class="word-grid" id="word-bank"></div>
+    </section>
+    <p class="nav-title">题号 · 每题 1 分</p>
+    <nav class="question-nav" id="question-nav" aria-label="跳到题目"></nav>
+    <p class="legend">✓ 蓝色：答对　× 红色：答错</p>
+    <button type="button" class="reset" id="reset">重置本练习</button>
+  </aside>
+  <div class="workarea">
+    <section id="practice" role="tabpanel" aria-labelledby="practice-tab">
+      <div class="section-label"><h2>选词填空</h2><span id="section-count"></span></div>
+      <div id="practice-questions"></div>
+    </section>
+    <section id="notebook" role="tabpanel" aria-labelledby="notebook-tab" hidden>
+      <div class="section-label"><h2>我的错题本</h2><span id="book-summary"></span></div>
+      <p class="review-intro" lang="en">Try again with the answer hidden. Check the context before you choose.</p>
+      <div class="book-controls">
+        <button type="button" data-filter="pending" aria-pressed="true">待重做</button>
+        <button type="button" data-filter="all" aria-pressed="false">全部错题</button>
+      </div>
+      <div id="book-questions"></div>
+    </section>
+  </div>
+</main>
+<footer class="footer">答案与错题仅保存在当前浏览器。换设备或清除浏览器数据后，不会自动恢复。</footer>
+</div>
+<script src="data.js?v=20260925-idioms"></script>
+<script src="../../ciyu-lianxi/xuanci-shared/app.js?v=20260925-idioms"></script>
+<noscript>请启用 JavaScript，以便填写和核对答案。</noscript>
+</body>
+</html>

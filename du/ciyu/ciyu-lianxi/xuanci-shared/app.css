@@ -122,3 +122,6 @@ h1{font-family:var(--kai);font-size:33px;line-height:1.2;margin:0;color:#14263e}
 .home-link{margin-left:auto;margin-right:16px;color:var(--brand);font-size:14px;text-decoration:none}
 .instructions [lang=en],.feedback [lang=en],.review-intro{font-family:var(--song)}
 @media(max-width:680px){.masthead{flex-wrap:wrap;gap:8px}.home-link{margin-left:auto;margin-right:0}.save-status{max-width:100%;width:100%}}
+/* Long idioms fit the blank and stay together in the word bank. */
+.word-long{grid-column:1/-1}
+.answer-input.long-answer{width:min(12em,calc(100% - .6em));min-width:0}

@@ -6,6 +6,8 @@ const $=(sel,root=document)=>root.querySelector(sel);
 const $$=(sel,root=document)=>[...root.querySelectorAll(sel)];
 const esc=s=>String(s).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const norm=s=>String(s||"").normalize("NFKC").replace(/[\s\u200b\uFEFF]/g,"");
+// Alternatives are opt-in per question; existing lessons keep exact-word marking.
+const isCorrect=(q,value)=>[q.answer,...(q.acceptedAnswers||[])].some(answer=>norm(answer)===norm(value));
 const questionById=new Map(DATA.questions.map(q=>[String(q.num),q]));
 function blankState(){return {answers:{},first:{},currentStatus:{},mistakes:{},retryAnswers:{},retryStatus:{},firstAnswers:{},checkedAnswers:{},history:{}};}
 let state=blankState(), storageBlocked=false, statusTimer=null, bookFilter="pending";
@@ -18,12 +20,12 @@ try{
   for(const q of DATA.questions){
    const n=q.num, value=norm(state.answers[n]), status=state.currentStatus[n];
    if(status){
-    const consistent=value&&((status==="correct") === (value===norm(q.answer)));
+    const consistent=value&&((status==="correct") === isCorrect(q,value));
     if(!consistent||(state.checkedAnswers[n]!==undefined&&state.checkedAnswers[n]!==value))state.currentStatus[n]="";
     else state.checkedAnswers[n]=value;
    }
    if(state.first[n]===false)state.mistakes[n]=true;
-   if(state.mistakes[n]&&!state.history[n])state.history[n]={firstWrong:"（旧版未记录原词）",lastWrong:status==="wrong"&&value!==norm(q.answer)?value:"（旧版未记录原词）",wrongCount:1,reviews:[],legacy:true};
+   if(state.mistakes[n]&&!state.history[n])state.history[n]={firstWrong:"（旧版未记录原词）",lastWrong:status==="wrong"&&!isCorrect(q,value)?value:"（旧版未记录原词）",wrongCount:1,reviews:[],legacy:true};
   }
  }
 }catch{storageBlocked=true;}
@@ -56,7 +58,7 @@ function decorateText(text,q){
 function draftFor(num){return reviewDrafts[num]||(reviewDrafts[num]={value:"",checked:null});}
 function sentenceParts(q,retry){
  const [before,after]=q.sentence.split(/_+/),value=retry?draftFor(q.num).value:state.answers[q.num]||"";
- return `${decorateText(before,q)}<input class="answer-input ${retry?"retry-input":"main-input"}" data-num="${esc(q.num)}" value="${esc(value)}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="第${esc(q.num)}题答案">${decorateText(after||"",q)}`;
+ return `${decorateText(before,q)}<input class="answer-input ${q.answer.length>6?"long-answer ":""}${retry?"retry-input":"main-input"}" data-num="${esc(q.num)}" value="${esc(value)}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="第${esc(q.num)}题答案">${decorateText(after||"",q)}`;
 }
 function feedbackHTML(q,ok){return `<p class="fb-title">${ok?"✓ 正确":"× 答错"}</p><p>正确答案：<span class="answer-word">${esc(q.answer)}</span></p><p>为什么：${esc(q.whyZh)}</p><p lang="en">${esc(q.whyEn)}</p>`;}
 function historyHTML(num){
@@ -105,7 +107,7 @@ function checkMain(num){
  // getElementById takes the literal ID, never CSS.escape(number).
  const card=document.getElementById(`q-${num}`);if(!q||!card)return;
  const input=$(".main-input",card);if(!validWord(input,card))return;
- const value=norm(input.value),ok=value===norm(q.answer);
+ const value=norm(input.value),ok=isCorrect(q,value);
  if(state.currentStatus[num]&&state.checkedAnswers[num]===value){updateCard(card,q,ok,false);return;}
  state.answers[num]=input.value;
  if(!Object.hasOwn(state.first,num)){state.first[num]=ok;state.firstAnswers[num]=value;}
@@ -144,7 +146,7 @@ function renderNotebook(){
 function checkRetry(num){
  const q=questionById.get(String(num)),card=document.getElementById(`book-q-${num}`);if(!q||!card)return;
  const input=$(".retry-input",card);if(!validWord(input,card))return;
- const value=norm(input.value),ok=value===norm(q.answer),draft=draftFor(num);
+ const value=norm(input.value),ok=isCorrect(q,value),draft=draftFor(num);
  if(draft.checked?.answer===value){updateCard(card,q,ok,true);return;}
  draft.value=input.value;draft.checked={answer:value,correct:ok};
  if(!ok)recordMistake(num,value);
@@ -189,5 +191,5 @@ $("button",glossary).addEventListener("click",()=>{const last=activeGloss;closeG
 window.addEventListener("scroll",closeGloss,{passive:true});window.addEventListener("resize",closeGloss);
 
 document.title=DATA.title+"｜华文通";$("#page-title").textContent=DATA.title;$("#section-count").textContent=`共${TOTAL}题 · 共${TOTAL}分`;$("#progress").setAttribute("aria-valuemax",TOTAL);
-$("#word-bank").innerHTML=DATA.wordBank.map(w=>`<div class="word">${esc(w)}</div>`).join("");
+$("#word-bank").innerHTML=DATA.wordBank.map(w=>`<div class="word ${w.length>6?"word-long":""}">${esc(w)}</div>`).join("");
 renderPractice();updateDashboard();renderNotebook();if(storageBlocked)flashStatus("");
