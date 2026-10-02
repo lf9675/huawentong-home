@@ -61,14 +61,7 @@ for old in original:
     l={k:old[k] for k in ['id','unit','lesson','title']}
     l['cloze']=[dict(word=w,sentence=s,hint=h) for id,w,s,h in cloze if id==l['id']]
     l['core']=cores[l['id']]
-    count=(len(l['cloze'])+4)//5
-    size,extra=divmod(len(l['cloze']),count)
-    l['groups']=[]
-    start=0
-    for g in range(count):
-        end=start+size+(g<extra)
-        l['groups'].append(list(range(start,end)))
-        start=end
+    l['groups']=[list(range(len(l['cloze']))) ]
     l['words']=[]
     for w in old['words']:
         word=w['word'];note,scene=C[word];q,*opts=Q[word]
@@ -96,11 +89,11 @@ for w in words:
     assert len(w['options'])==3 and len(set(w['options']))==3,w['word']
     assert len(w['scene'])<=110,w['word']
     assert len(w['explain'])<=110,(w['word'],w['explain'])
-D={'version':'20261002-all-cloze-1','lessons':lessons}
+D={'version':'20261002-full-bank-2','lessons':lessons}
 (ROOT/'concise-data.json').write_text(json.dumps(D,ensure_ascii=False,indent=2)+'\n')
 # Teacher reference is printable, with source quotations, never mixed into the initial student task.
 esc=html.escape
-h=['<!doctype html><html lang="zh-Hans"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>中二词语 · 教师参考</title><style>body{max-width:960px;margin:auto;padding:24px;font:18px/1.7 system-ui}h1,h2,h3,.cn{font-family:KaiTi,"Kaiti SC",serif}details{border-bottom:1px solid #ddd;padding:10px}summary{cursor:pointer}blockquote{color:#555;border-left:3px solid #aaa;padding-left:12px}small{color:#666}@media print{details>*{display:block}summary{font-weight:bold}h2{break-before:page}}</style><a href="index.html">学生学习单</a><h1>中二词语 · 教师参考</h1><p>每课保留 5 个课堂重点词；选词填空覆盖本课全部词语，每组 3—5 题。其余词义练习按需补练。中文情境是教学改编或新设，非逐字原句。教学目标：联系字词线索理解词义、辨明语境用法、迁移选词。无需打字，不计时、不排名。</p><p>字源有据才讲；语义拆解和形象联想不冒充字源。“疲／惫”的身体与精神只是记忆线索。首次选对、重试后选对分开记录在本机，不作考试评分。</p><p>词表核对：捧跤依原文改作摔跤；末课重复词去重。吨为词表延伸；“涂上颜色”为词表短语，课文相关说法是“涂了蜡似的小红嘴”。《猫》中的畏罪潜逃是人物的错误猜测；《恐怖事件》的诡异不证明有鬼。</p>']
+h=['<!doctype html><html lang="zh-Hans"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>中二词语 · 教师参考</title><style>body{max-width:960px;margin:auto;padding:24px;font:18px/1.7 system-ui}h1,h2,h3,.cn{font-family:KaiTi,"Kaiti SC",serif}details{border-bottom:1px solid #ddd;padding:10px}summary{cursor:pointer}blockquote{color:#555;border-left:3px solid #aaa;padding-left:12px}small{color:#666}@media print{details>*{display:block}summary{font-weight:bold}h2{break-before:page}}</style><a href="index.html">学生学习单</a><h1>中二词语 · 教师参考</h1><p>每课保留 5 个课堂重点词；选词填空覆盖本课全部词语，全课词语放在同一个词库中供每题选择。其余词义练习按需补练。中文情境是教学改编或新设，非逐字原句。教学目标：联系字词线索理解词义、辨明语境用法、迁移选词。无需打字，不计时、不排名。</p><p>字源有据才讲；语义拆解和形象联想不冒充字源。“疲／惫”的身体与精神只是记忆线索。首次选对、重试后选对分开记录在本机，不作考试评分。</p><p>词表核对：捧跤依原文改作摔跤；末课重复词去重。吨为词表延伸；“涂上颜色”为词表短语，课文相关说法是“涂了蜡似的小红嘴”。《猫》中的畏罪潜逃是人物的错误猜测；《恐怖事件》的诡异不证明有鬼。</p>']
 for l in lessons:
     h.append(f'<h2>单元{l["unit"]} · 第{l["lesson"]}课《{esc(l["title"])}》</h2><a href="index.html#{l["id"]}">打开本课</a><p>课堂重点：{esc("、".join(l["core"]))}</p>')
     for w in l['words']:
