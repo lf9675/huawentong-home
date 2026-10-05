@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-SG"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#153e52"><meta name="robots" content="noindex,nofollow"><title>作文访问码管理 · 华文通</title><link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./teacher.css"></head>
+<body><header><a href="/">华文通 <span>HUA WEN TONG</span></a><nav aria-label="页面导航"><a href="./">学生批改页</a><a href="/bei/">教师工作台</a></nav></header>
+<main><section class="intro teacherIntro"><div><div class="eyebrow">WRITING WORKSHOP · TEACHER</div><h1>作文访问码管理</h1><p>发给学生一枚访问码，从这里安排每一次练习。</p></div><span class="pill">教师专用</span></section>
+<div id="message" role="status" aria-live="polite">正在检查教师登录状态……</div>
+<section id="teacherLogin" class="card login"><div><h2>使用华文通教师密码登录</h2><p>与“教师备课工作台”共用密码；教师登录有效期为 8 小时。</p><p>原 Streamlit 管理密码与学生访问码不能用于此处。</p></div><form id="teacherLoginForm"><label for="teacherPassword">教师密码<input id="teacherPassword" type="password" autocomplete="current-password" required maxlength="256"></label><button type="submit">登录管理</button></form></section>
+<div id="workspace" hidden>
+<div class="account"><span>已登录 · 作文访问码管理</span><button id="teacherLogout" class="quiet">退出教师登录</button></div>
+<section class="card"><div class="sectionTitle"><b>01</b><div><h2>批量生成访问码</h2><p>新旧学生页面共用额度和记录。</p></div></div>
+<form id="generateForm"><fieldset id="generateFields"><div class="formGrid">
+<label>生成数量<input id="createCount" type="number" min="1" max="100" step="1" value="10" required></label>
+<label>考试段<select id="createExam"><option value="HCL">HCL · 高级华文</option><option value="O_CL">O_CL · O 水准华文</option><option value="N_CL">N_CL · N 水准华文</option></select></label>
+<label>每码新作文额度<input id="createNew" type="number" min="1" max="10000" step="1" value="5" required></label>
+<label>每码总次数（含重交）<input id="createTotal" type="number" min="1" max="10000" step="1" value="5" required></label>
+<label>有效期至（新加坡时间）<input id="createExpiry" type="date" required></label>
+<label>备注／班级（选填）<input id="createNote" maxlength="500" placeholder="例如：中三 HCL · 十月练习"></label>
+</div><p class="small">总次数须不少于新作文额度。有效期含当天。新版目前每次提交按一篇新作文计算；原学生端的重交仍使用总次数。</p><button type="submit">生成访问码</button></fieldset></form></section>
+<section id="issuedPanel" class="card issued" hidden><div class="actions"><h2>请保存这批访问码</h2><div><button id="downloadCodes">下载 CSV</button> <button id="copyCodes" class="quiet">复制访问码</button></div></div><p class="notice">完整访问码仅保留在当前页面，刷新或退出后无法查回。请先下载，再分发给学生。</p><p id="issuedNote"></p><div class="tableScroll"><table><caption class="srOnly">刚生成的访问码</caption><thead><tr><th>编号</th><th>完整访问码</th><th>新作文剩余</th><th>总次数剩余</th><th>有效期至</th><th>备注</th></tr></thead><tbody id="issuedRows"></tbody></table></div><div class="actions"><button id="copyStudentLink" class="quiet">复制学生网址</button><button id="dismissIssued" class="quiet">已保存，关闭清单</button></div></section>
+<section class="card"><div class="sectionTitle"><b>02</b><div><h2>管理已有访问码</h2><p>可按编号、使用者称呼、备注或完整访问码查找。</p></div></div>
+<form id="searchForm" class="searchBar"><label>搜索<input id="searchQuery" type="search" maxlength="100" placeholder="编号、备注或访问码" autocomplete="off"></label><label>状态<select id="statusFilter"><option value="all">全部</option><option value="available">可使用</option><option value="disabled">已停用</option><option value="expired">已过期</option><option value="exhausted">额度已用完</option></select></label><button type="submit">查询／刷新</button></form>
+<p id="listSummary" class="small"></p><div class="tableScroll"><table><caption class="srOnly">已有访问码记录</caption><thead><tr><th>编号／使用者</th><th>状态</th><th>新作文 已用／额度</th><th>总次数 已用／额度</th><th>考试段</th><th>有效期至</th><th>备注</th><th>操作</th></tr></thead><tbody id="codeRows"></tbody></table></div>
+<p class="small">旧码不保存明文。遗失时可在“管理”中更换访问码，保留编号、使用记录和额度。</p><div class="actions"><button id="previousPage" class="quiet">上一页</button><span id="pageLabel"></span><button id="nextPage" class="quiet">下一页</button></div></section>
+</div>
+<section id="pendingPanel" class="card notice" hidden><h2>这次操作尚未收到确认</h2><p>请保留此页，点击下方按钮查询或完成同一次操作。重复点击不会重复发码。</p><button id="retryPending">重试同一次操作</button></section>
+<dialog id="detailDialog" aria-labelledby="detailTitle"><div class="actions"><h2 id="detailTitle">管理访问码</h2><button id="closeDetail" class="quiet" aria-label="关闭管理详情">关闭</button></div><p id="detailSummary"></p><p id="detailMessage" role="status" aria-live="polite"></p>
+<form id="editForm"><fieldset id="editFields"><div class="formGrid"><label>使用者称呼<input id="editNickname" maxlength="100"></label><label>考试段<select id="editExam"><option value="HCL">HCL · 高级华文</option><option value="O_CL">O_CL · O 水准华文</option><option value="N_CL">N_CL · N 水准华文</option></select></label><label>新作文总额度（0 表示共用总次数）<input id="editNew" type="number" min="0" max="10000" step="1" required></label><label>总次数额度（含已使用）<input id="editTotal" type="number" min="1" max="10000" step="1" required></label><label>有效期至（留空表示不限期）<input id="editExpiry" type="date"></label><label>备注／班级<input id="editNote" maxlength="500"></label></div><p class="small">填写的是总额度，不是额外增加的次数；保存不会清零已用次数。日期按新加坡时间计算。</p><button type="submit">保存调整</button></fieldset></form>
+<div class="manageActions"><button id="toggleActive" class="quiet"></button><button id="rotateCode" class="quiet">更换访问码</button></div>
+<div id="rotateConfirm" class="notice" hidden><p>更换后旧码立即失效，新码保留原来的状态、编号、额度和使用记录。请保存并重新发给学生。</p><button id="confirmRotate">确认更换</button> <button id="cancelRotate" class="quiet">取消</button></div>
+<h3>最近 20 次使用</h3><p id="usageSummary" class="small"></p><div class="tableScroll"><table><caption class="srOnly">访问码使用记录</caption><thead><tr><th>使用时间（新加坡）</th><th>提交编号</th></tr></thead><tbody id="usageRows"></tbody></table></div></dialog>
+<footer><span>华文通 · 写作工坊</span><a href="./">打开学生批改页</a></footer></main><script type="module" src="./teacher.mjs"></script></body></html>
