@@ -1,0 +1,17 @@
+# 华文通·改（学生版）依赖清单
+# 2026-08-06 决策：
+#   ① streamlit 锁死在 1.61.0。该版本移除了 st.image 的 use_column_width
+#      参数，导致线上 TypeError；锁版本可防止官方再删参数时静默崩溃。
+#   ② 显式声明 requests。row_locator.py（逐行视觉圈注定位）import requests，
+#      此前靠 streamlit 的传递依赖侥幸可用；一旦 streamlit 换掉该依赖，
+#      圈注会整条静默失效（不报错、只是照片上没记号）。必须显式声明。
+streamlit==1.61.0
+openai>=1.40.0
+plotly>=5.0.0
+Pillow>=10.0.0
+edge-tts>=6.1.9
+psycopg2-binary>=2.9
+reportlab
+opencv-python-headless
+requests>=2.31.0
+

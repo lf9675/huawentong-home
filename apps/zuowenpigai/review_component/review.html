@@ -1,0 +1,75 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f4ef;color:#20304a;font:16px/1.6 system-ui,'Microsoft YaHei',sans-serif}button,select,input,textarea{font:inherit}button,select{padding:8px 12px;border:1px solid #b7c3cc;background:white;border-radius:8px;cursor:pointer}button:focus-visible,select:focus-visible{outline:3px solid #2665c1}header{position:sticky;top:0;z-index:20;background:#fff;padding:12px 18px;border-bottom:1px solid #d8dfe2}h1{font-size:21px;margin:0}h2{font-size:18px;margin:4px 0}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.score{margin-left:auto;font-weight:bold;color:#ac3028}.summary{font-size:14px;margin-top:5px}#top{margin:16px;padding:14px 18px;border-left:4px solid #ad302b;background:#fff}main{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,1fr);gap:16px;margin:16px}.photo{position:sticky;top:154px;align-self:start;max-height:80vh;overflow:auto;background:#fff;border-radius:8px}.wrap{position:relative;line-height:0}.wrap img{width:100%;height:auto;display:block}.mark{position:absolute;border:2px solid #bf302a;background:rgba(215,52,46,.06);padding:0;border-radius:50%;min-width:4px;min-height:4px}.mark.line{border:0;border-bottom:3px solid #bf302a;border-radius:0}.mark.region{border:2px dashed #b87917;border-radius:3px;background:rgba(200,148,32,.07)}.mark.wavy{border:0;border-bottom:3px solid #2b8552;border-radius:0}.mark.active{outline:3px solid #2768c5;z-index:3}.badge{position:absolute;left:0;top:-16px;background:#ab302a;color:#fff;font:12px/18px system-ui;border-radius:4px;padding:0 4px}.region .badge{background:#99650d}.card{background:#fff;border:1px solid #d8dfe2;border-radius:10px;padding:13px 15px;margin-bottom:10px;overflow-wrap:anywhere}.card.active{border:2px solid #2768c5}.status{font-size:13px;color:#835917}.quote{font-family:KaiTi,STKaiti,serif;font-size:21px;color:#ae2b28;margin:8px 0}.fix{color:#186c43}.muted{font-size:14px;color:#65737e}.cancelled{opacity:.55}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}details{margin:12px 0}summary{cursor:pointer}textarea{width:100%;min-height:64px}.editor{background:#eef4fc;padding:10px;border-radius:8px}.editor label{display:block;font-size:14px}.drawbox{position:absolute;border:2px solid #2768c5;background:#2768c122;pointer-events:none}.empty{padding:16px;background:white}#message{color:#2866a3}#drawHint{color:#a02921;font-weight:bold}#teacher{display:none;margin-top:8px}#teacher.on{display:block}.footer{margin:16px;color:#607078;font-size:14px}@media(max-width:760px){main{grid-template-columns:1fr}.photo{position:relative;top:0;max-height:none}header{position:relative}.wrap{touch-action:pan-y}}.drawing{touch-action:none!important}
+</style></head><body>
+<header><div class="bar"><h1>Photo review（原图批改）</h1><span class="score" id="score"></span></div>
+<div id="summary" class="summary"></div><div class="bar"><label>Page（页） <select id="page"></select></label><label>Show（显示） <select id="filter"><option value="all">All issues（全部）</option><option value="pending">Needs checking（待确认）</option><option value="error">Language（语言）</option></select></label></div>
+<div id="teacher"><div class="bar"><button id="add">Add note（补批注）</button><button id="save">Save changes（保存修正）</button><button id="reset">Discard edits（放弃未保存修改）</button></div><div id="drawHint"></div></div><div id="message" role="status"></div></header>
+<section id="top"></section><main><section class="photo"><div id="wrap" class="wrap"><img id="photo" alt="Student essay（学生作文原图）"></div></section><section><div id="issues"></div><details open><summary>Paragraph feedback（段落讲评）</summary><div id="paras"></div></details></section></main>
+<p class="footer">Solid marks = positioned. Dashed amber areas = region only, check the exact wording.（实线：已定位；黄色虚线：范围待确认。）</p>
+<script type="application/json" id="data">__REVIEW_DATA__</script><script>
+const D=JSON.parse(document.getElementById('data').textContent), $=id=>document.getElementById(id);
+const issues=D.pages.flatMap(p=>p.issues||[]), original=JSON.parse(JSON.stringify(issues));let page=0,selected=null,drawing=false,dirty=false,serial=0;
+const statusText={located:'Positioned（已定位）',manual:'Teacher positioned（人工定位）',approximate:'Region only（范围待确认）',unlocated:'Position needed（待定位）',uncertain:'Check handwriting（字迹待核对）',dismissed:'Cancelled（已取消）'};
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
+function speak(text){if(!window.speechSynthesis)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='zh-CN';window.speechSynthesis.speak(u);}
+function button(text,fn){const b=el('button','',text);b.onclick=fn;return b;}
+function changed(){dirty=true;$('message').textContent='Unsaved changes（修改尚未保存）';}
+$('score').textContent=D.score||'';
+D.pages.forEach((p,i)=>{const o=el('option','',String(i+1));o.value=i;$('page').append(o);});
+$('page').onchange=()=>{page=Number($('page').value);drawing=false;render();};$('filter').onchange=render;
+$('top').append(el('strong','',D.top?.title||'Check the wording and the marked position（核对文字与位置）'));
+if(D.top?.fix)$('top').append(el('p','',D.top.fix));
+$('teacher').classList.toggle('on',!!D.editable);
+function markType(a){if(!['located','manual'].includes(a.status))return 'region';if(a.kind==='praise')return 'wavy';return a.quote.length<=5?'circle':'line';}
+function render(){
+ $('page').value=page;const pg=D.pages[page];if(!pg)return;
+ $('photo').src='data:'+(pg.mime||'image/jpeg')+';base64,'+pg.img_b64;
+ document.querySelectorAll('.mark').forEach(x=>x.remove());
+ const active=issues.filter(a=>a.status!=='dismissed'), placed=active.filter(a=>['located','manual'].includes(a.status)).length;
+ $('summary').textContent=`${active.length} findings（已发现） · ${placed} positioned（已定位） · ${active.length-placed} need checking（待确认）`;
+ issues.forEach(a=>(a.locations||[]).filter(l=>l.page===page).forEach(l=>l.rects.forEach((r,ri)=>{
+  if(a.status==='dismissed')return;const m=el('button','mark '+markType(a)+(a.id===selected?' active':''));
+  m.style.left=r[0]+'%';m.style.top=r[1]+'%';m.style.width=r[2]+'%';m.style.height=r[3]+'%';m.title=a.quote+' → '+a.fix;m.setAttribute('aria-label','Issue '+a.n+' '+a.quote);
+  if(!ri)m.append(el('span','badge',a.n));m.onclick=e=>{e.stopPropagation();selected=a.id;render();document.getElementById('issue_'+a.id)?.scrollIntoView({block:'nearest'});};$('wrap').append(m);
+ })));
+ $('issues').replaceChildren();let visible=0;
+ issues.forEach(a=>{
+  // Unlocated findings remain visible on every page, so they cannot disappear.
+  if(a.locations?.length&&!a.locations.some(l=>l.page===page))return;
+  if($('filter').value==='pending'&&['located','manual','dismissed'].includes(a.status))return;
+  if($('filter').value==='error'&&a.kind==='suggestion')return;
+  visible++;const c=el('article','card'+(selected===a.id?' active':'')+(a.status==='dismissed'?' cancelled':''));c.id='issue_'+a.id;
+  c.append(el('strong','',a.n+'. '+a.cat),el('div','status',statusText[a.status]),el('div','quote',a.quote||'（补充批注）'),el('div','fix','Suggested edit（修改）: '+a.fix),el('p','',a.why));
+  if(a.reason_text)c.append(el('p','muted',a.reason_text));
+  c.append(button('Read aloud（朗读）',()=>speak(a.quote+'。'+a.fix+'。'+a.why)));
+  if(D.editable){const actions=el('div','actions');
+   actions.append(button('Set position（框选位置）',()=>{selected=a.id;drawing=true;render();}),button('Cancel finding（取消误判）',()=>{a.status='dismissed';a.locations=[];changed();render();}));
+   c.append(actions);
+   const detail=el('details');detail.append(el('summary','','Edit note（改批语）'));
+   for(const [field,label] of [['quote','Original（原文）'],['fix','Suggested edit（修改）'],['why','Why（原因）']]){
+    const lab=el('label','',label),ta=el('textarea');ta.value=a[field]||'';ta.oninput=()=>{a[field]=ta.value;changed();};lab.append(ta);detail.append(lab);
+   }c.append(detail);
+  }$('issues').append(c);
+ });if(!visible)$('issues').append(el('div','empty','No findings in this view（当前没有批注）'));
+ $('paras').replaceChildren();(pg.para_cards||[]).forEach(p=>{const c=el('article','card');c.append(el('h2','',p.n+'. '+p.title),el('p','',p.comment),button('Read aloud（朗读）',()=>speak(p.comment||'')));if(p.howto)c.append(el('p','',p.howto));if(p.top){const d=el('details');d.append(el('summary','','Example（示范）'),el('p','',p.top));c.append(d);}$('paras').append(c);});
+ $('wrap').classList.toggle('drawing',drawing);$('drawHint').textContent=drawing?'Draw a box on this page（在原图上框选；跨页可逐页补框）':'';
+}
+let start=null,temp=null;
+function point(e){const r=$('wrap').getBoundingClientRect();return [Math.max(0,Math.min(100,100*(e.clientX-r.left)/r.width)),Math.max(0,Math.min(100,100*(e.clientY-r.top)/r.height))];}
+function box(a,b){return [Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.abs(b[0]-a[0]),Math.abs(b[1]-a[1])];}
+$('wrap').onpointerdown=e=>{if(!D.editable||!drawing||!selected)return;e.preventDefault();start=point(e);$('wrap').setPointerCapture(e.pointerId);temp=el('div','drawbox');$('wrap').append(temp);};
+$('wrap').onpointermove=e=>{if(!start)return;const b=box(start,point(e));['left','top','width','height'].forEach((k,i)=>temp.style[k]=b[i]+'%');};
+$('wrap').onpointerup=e=>{if(!start)return;const b=box(start,point(e));start=null;temp?.remove();if(b[2]<.2||b[3]<.2)return;const a=issues.find(a=>a.id===selected);a.locations=(a.locations||[]).filter(l=>l.page!==page);a.locations.push({page,rects:[b]});a.status='manual';a.reason='';a.reason_text='Teacher positioned（人工定位）';drawing=false;changed();render();};
+$('wrap').onpointercancel=()=>{start=null;temp?.remove();};
+$('add').onclick=()=>{const a={id:'manual_'+Date.now()+'_'+(++serial),n:issues.length+1,quote:'',cat:'教师批注',fix:'',why:'',kind:'error',status:'unlocated',locations:[]};issues.push(a);selected=a.id;drawing=true;changed();render();};
+$('reset').onclick=()=>{if(dirty&&!confirm('Discard unsaved edits?（放弃未保存修改？）'))return;issues.splice(0,issues.length,...JSON.parse(JSON.stringify(original)));dirty=false;drawing=false;selected=null;$('message').textContent='';render();};
+$('save').onclick=()=>{
+ if(!D.editable)return;
+ // Only send changed findings; unconfirmed automatic regions cannot become manual.
+ const items=issues.filter(a=>JSON.stringify(a)!==JSON.stringify(original.find(o=>o.id===a.id))).map(a=>({id:a.id,quote:a.quote,fix:a.fix,why:a.why,dismissed:a.status==='dismissed',locations:a.status==='manual'?a.locations:[]}));
+ parent.postMessage({type:'annotation_save',value:{source_version:D.source_version,items,event_id:Date.now()+'_'+(++serial)}},'*');
+ $('message').textContent='Submitted for saving（已提交保存；以下方确认消息为准）';
+};
+render();
+</script></body></html>

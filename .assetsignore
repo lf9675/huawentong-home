@@ -1,0 +1,4 @@
+/apps/**
+/supabase/**
+/tests/**
+/.git/**

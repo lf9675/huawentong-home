@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-SG"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#153e52"><title>照片作文批改 · 华文通</title><link rel="stylesheet" href="./style.css"></head>
+<body><header><a href="/">华文通 <span>HUA WEN TONG</span></a><span class="pill">写作工坊 · 内测</span></header>
+<main><section class="intro"><div class="eyebrow">READ YOUR WRITING, ONE LINE AT A TIME</div><h1>把每一处修改，<br>放回你的作文里。</h1><p>上传照片，核对文字，再看原图上的批改建议。<br>看不清或无法确定的位置，会留在清单中等你核对。</p></section>
+<div id="service" role="status" class="service">正在检查服务连接……</div>
+<section id="loginPanel" class="card login"><div><h2>先输入老师的访问码</h2><p>沿用原来的访问码，无需注册新账号。</p></div><form id="loginForm"><label for="code">访问码</label><div class="inline"><input id="code" name="access-code" type="password" autocomplete="current-password" placeholder="HW-XXXX-XXXX" required maxlength="40"><button type="submit">进入批改</button></div><p class="small">访问码只用于本次登录，不会保存在此设备。</p></form></section>
+<div id="account" class="account" hidden><span id="accountInfo"></span><button id="logout" class="quiet">退出</button></div>
+<div id="recent" class="card" hidden><h2>最近的批改</h2><div id="recentList"></div></div>
+<section id="setup" class="card" hidden><div class="sectionTitle"><b>01</b><div><h2>准备作文</h2><p>一篇作文一次上传，最多六页。</p></div></div>
+<div class="columns"><label>文体<select id="genre"></select></label><label>特别要求（选填）<input id="requirements" maxlength="1000" placeholder="老师特别要求注意的地方"></label></div>
+<label>作文题目<textarea id="prompt" rows="3" maxlength="3000" placeholder="填写题目和材料，才能评内容分；留空则只检查语言。"></textarea></label>
+<label class="upload">选择作文照片<input id="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple><small>JPG、PNG 或 WebP · 按顺序排列 · 可以转正照片</small></label>
+<p class="small">照片会交由智谱识别，核对后的文字会交由 DeepSeek 批改。不要包含学生真实姓名或学校。原图仅保留在当前页面，文字与反馈保存至你的批改记录。</p>
+<div id="thumbs" class="thumbs"></div><button id="ocrButton" disabled>识别作文文字</button></section>
+<section id="verify" class="card" hidden><div class="sectionTitle"><b>02</b><div><h2>逐页核对文字</h2><p>请只修正识别错误，保留学生原来的写法。</p></div></div><p class="notice">修改识别文字后，该页旧坐标会失效，批注仍保留在清单中。</p><div id="editors"></div><div class="actions"><button id="cancel" class="quiet">取消本次，重新上传</button><button id="gradeButton">确认文字，开始批改</button></div></section>
+<section id="progressPanel" class="card" hidden><div class="sectionTitle"><b>03</b><div><h2>正在细读作文</h2><p id="progressText" role="status"></p></div></div><progress id="progress" max="100" value="0"></progress><p class="small">识别与复核按页、按段保存。失败可继续，不会重复扣除次数；全部完成后才扣一次。</p><button id="retry" hidden>继续未完成的步骤</button> <button id="progressCancel" class="quiet">取消本次</button></section>
+<section id="result" hidden><div class="card"><div class="sectionTitle"><b>✓</b><div><h2>这次批改，先看这里</h2><p id="resultStatus"></p></div></div><div id="score" class="score"></div><p id="comment"></p><div class="actions"><button id="export" class="quiet">下载完整报告</button><button id="newEssay" class="quiet">开始下一篇</button></div></div>
+<div class="reviewGrid"><section class="card photoPane"><div class="pageNav"><button id="prev" class="quiet" aria-label="上一页">←</button><strong id="pageLabel"></strong><button id="next" class="quiet" aria-label="下一页">→</button></div><div class="photoStage"><img id="photo" alt="作文原图"><svg id="overlay" viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="原图批注"></svg></div><p id="photoNote" class="small"></p><p class="legend"><span class="red">● 字级定位</span><span class="amber">● 待核对区域</span> 无坐标的问题也列在右侧</p></section><section class="card issues"><h2>完整批注清单 <span id="issueCount"></span></h2><p class="small">“复核完成”表示全文各段已检查，不保证发现了所有错误；建议由教师确认。</p><div id="issueList"></div></section></div>
+<section class="card"><h2>段落反馈</h2><div id="paragraphs"></div></section></section>
+<div id="error" role="alert" hidden></div>
+<footer>华文通 · 从读懂自己的文字开始 <a href="https://gradecomp.streamlit.app/student">原学生端</a></footer></main><script type="module" src="./app.mjs"></script></body></html>

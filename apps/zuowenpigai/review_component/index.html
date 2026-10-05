@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"></head><body style="margin:0">
+<iframe id="review" title="Essay review" sandbox="allow-scripts allow-downloads" style="width:100%;height:1050px;border:0"></iframe>
+<script>
+const frame=document.getElementById('review');let current='';
+function streamlit(type,extra={}){parent.postMessage({isStreamlitMessage:true,type,...extra},'*');}
+window.addEventListener('message',e=>{
+ if(e.source===parent&&e.data.type==='streamlit:render'){
+  const html=e.data.args.html;
+  if(html!==current){current=html;frame.srcdoc=html;}
+  streamlit('streamlit:setFrameHeight',{height:1055});
+ }
+ if(e.source===frame.contentWindow&&e.data?.type==='annotation_save'){
+  streamlit('streamlit:setComponentValue',{value:e.data.value,dataType:'json'});
+ }
+});
+streamlit('streamlit:componentReady',{apiVersion:1});
+</script></body></html>
