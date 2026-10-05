@@ -21,7 +21,8 @@ export async function providerFailure(service:'ocr'|'grading',response:Response)
  const label=service==='ocr'?'照片识别':'AI 批改',provider=service==='ocr'?'智谱':'DeepSeek';
  // Never return provider messages: they can echo keys, student text or request data.
  let code='';try{const data=await response.json(),value=String(data?.error?.code??data?.code??'');if(/^\d{3,5}$/.test(value))code=value;}catch{}
- const reason=response.status===401?`${provider}密钥未通过验证，请老师检查对应密钥。`:
+ const reason=service==='ocr'&&code==='1113'?'智谱账户余额不足，照片识别无法开始，请老师检查 API 账户余额与可用资源包。':
+  response.status===401?`${provider}密钥未通过验证，请老师检查对应密钥。`:
   response.status===402?`${provider}账户额度不足，请老师检查余额。`:
   response.status===403?`${provider}拒绝了此请求，请老师检查账户状态和模型权限。`:
   response.status===429?`${provider}调用受限，请稍后重试；若持续出现，请老师检查额度和并发限制。`:
@@ -80,6 +81,11 @@ export async function handle(req:Request){
   if(b.action==='login'){
    const recent=await db('hwt_essay_jobs?code_id=eq.'+c.id+'&status=neq.cancelled&select=id,status,created_at,expires_at,input,submission_id&order=created_at.desc&limit=20');
    result={nickname:c.nickname||'同学',exam:c.exam_level,remaining:Math.max(0,c.essays_total-c.essays_used),newRemaining:c.new_essays_total?Math.max(0,c.new_essays_total-c.new_essays_used):Math.max(0,c.essays_total-c.essays_used),expiry:c.expiry,services:configured(),recent};
+  }else if(b.action==='check_grading'){
+   // Fixed, tiny authenticated probe; no student data and no essay quota consumed.
+   await rate('essay-check-'+c.id,2,3600);
+   const check=await chat('这是服务连通性检查。仅返回 JSON 对象 {"ok":true}。',{},64);
+   result={service:'grading',ready:check.ok===true};
   }else{
    if(!uuid(b.id))fail('批改编号不正确。');
    if(b.action==='create'){
