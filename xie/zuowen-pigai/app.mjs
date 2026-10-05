@@ -10,7 +10,7 @@ async function api(action,data={}){
 async function health(){
  try{const r=await fetch(API,{signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error();const d=await r.json();
   const missing=[!d.services.database&&'数据库',!d.services.ocr&&'照片识别',!d.services.grading&&'AI 批改'].filter(Boolean);
-  $('service').textContent=missing.length?'页面已就绪；'+missing.join('、')+'服务尚未就绪，请老师检查配置。':'服务已连接 · 可以使用原访问码开始批改';$('service').classList.toggle('warn',missing.length>0);
+  $('service').textContent=missing.length?'页面已就绪；'+missing.join('、')+'服务尚未就绪，请老师检查配置。':'服务配置已读取 · 使用原访问码开始；识别与批改将在提交后验证';$('service').classList.toggle('warn',missing.length>0);
  }catch{$('service').textContent='页面已打开，但批改服务暂时无法连接。请稍后刷新，或联系老师。';$('service').classList.add('warn');}
 }
 function account(info){state.account=info;$('accountInfo').textContent=`${info.nickname} · ${info.exam} · 新作文余 ${info.newRemaining} 篇 / 总次数余 ${info.remaining} 次 · 有效至 ${info.expiry||'未设置'}`;show('account');show('loginPanel',false);

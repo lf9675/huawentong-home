@@ -4,7 +4,8 @@ import {loadRules} from './rules.mjs';
 const rules=await loadRules();
 import {norm,chunks,ledger,span} from './core.mjs';
 import {finalize} from './grade.mjs';
-const VERSION='2026-10-05.1';
+const VERSION='2026-10-05.2';
+const secret=(name:string)=>Deno.env.get(name)?.trim();
 const digest=async(s:string)=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s))),x=>x.toString(16).padStart(2,'0')).join('');
 const fail=(message:string,status=400):never=>{throw Object.assign(new Error(message),{status});};
 const uuid=(s:unknown)=>typeof s==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
@@ -15,7 +16,19 @@ async function db(path:string,body?:unknown){
  if(!r.ok)fail('数据库暂时不可用，请稍后重试。',503);return r.json();
 }
 async function rate(bucket:string,max:number,seconds=900){if(!await db('rpc/hwt_take_rate',{bucket,maximum:max,seconds}))fail('请求较多，请稍后再试。',429);}
-function configured(){return {ocr:!!Deno.env.get('ZHIPU_API_KEY'),grading:!!Deno.env.get('DEEPSEEK_API_KEY')};}
+function configured(){return {ocr:!!secret('ZHIPU_API_KEY'),grading:!!secret('DEEPSEEK_API_KEY')};}
+export async function providerFailure(service:'ocr'|'grading',response:Response):Promise<never>{
+ const label=service==='ocr'?'照片识别':'AI 批改',provider=service==='ocr'?'智谱':'DeepSeek';
+ // Never return provider messages: they can echo keys, student text or request data.
+ let code='';try{const data=await response.json(),value=String(data?.error?.code??data?.code??'');if(/^\d{3,5}$/.test(value))code=value;}catch{}
+ const reason=response.status===401?`${provider}密钥未通过验证，请老师检查对应密钥。`:
+  response.status===402?`${provider}账户额度不足，请老师检查余额。`:
+  response.status===403?`${provider}拒绝了此请求，请老师检查账户状态和模型权限。`:
+  response.status===429?`${provider}调用受限，请稍后重试；若持续出现，请老师检查额度和并发限制。`:
+  response.status===400||response.status===404||response.status===422?`${label}请求未被接受，请老师联系维护人员检查接口配置。`:
+  `${label}服务暂时不可用，请稍后重试。`;
+ fail(`${reason}（${provider} HTTP ${response.status}${code?'，错误码 '+code:''}；本次未扣作文次数）`,502);
+}
 async function authenticate(req:Request,b:any){
  const ip=req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()||'unknown';
  await rate('essay-ip-'+await digest(ip),180);
@@ -27,17 +40,17 @@ async function authenticate(req:Request,b:any){
 }
 async function job(hash:string,id:string,action:string,data:any={}){const r=await db('rpc/hwt_essay_job',{p_hash:hash,p_id:id,p_action:action,p_data:data});if(r.error)fail(r.error,409);return r;}
 async function chat(system:string,user:any,maxTokens=6000){
- const key=Deno.env.get('DEEPSEEK_API_KEY');if(!key)fail('批改服务尚未配置，请老师设置 DeepSeek 密钥。',503);
+ const key=secret('DEEPSEEK_API_KEY');if(!key)fail('批改服务尚未配置，请老师设置 DeepSeek 密钥。',503);
  const r=await fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({model:Deno.env.get('DEEPSEEK_MODEL')||'deepseek-flash',thinking:{type:'disabled'},temperature:0.2,max_tokens:maxTokens,response_format:{type:'json_object'},messages:[{role:'system',content:system},{role:'user',content:typeof user==='string'?user:JSON.stringify(user)}]}),signal:AbortSignal.timeout(110000)});
- if(!r.ok)fail('AI 批改服务暂时不可用，请稍后重试。',502);
+ if(!r.ok)await providerFailure('grading',r);
  const response=await r.json(),choice=response.choices?.[0];if(choice?.finish_reason!=='stop')fail('AI 输出未完整完成，请重试此步骤。',502);
  let data;try{data=JSON.parse(choice.message.content);}catch{fail('AI 返回格式不完整，请重试此步骤。',502);}return data;
 }
 async function ocr(image:string){
- const key=Deno.env.get('ZHIPU_API_KEY');if(!key)fail('照片识别服务尚未配置，请老师设置智谱密钥。',503);
+ const key=secret('ZHIPU_API_KEY');if(!key)fail('照片识别服务尚未配置，请老师设置智谱密钥。',503);
  if(!/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(image)||image.length>13000000)fail('照片格式或大小不符合要求。',413);
  const r=await fetch('https://open.bigmodel.cn/api/paas/v4/layout_parsing',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({model:'glm-ocr',file:image}),signal:AbortSignal.timeout(110000)});
- if(!r.ok)fail('照片识别暂时失败，请重试此页。',502);const data=await r.json();if(typeof data.md_results!=='string'||!data.md_results.trim())fail('没有识别到文字，请检查照片方向和清晰度。',422);
+ if(!r.ok)await providerFailure('ocr',r);const data=await r.json();if(typeof data.md_results!=='string'||!data.md_results.trim())fail('没有识别到文字，请检查照片方向和清晰度。',422);
  const size=data.data_info?.pages?.[0]||{};
  const text=data.md_results.replace(/<[^>]*>/g,'').split('\n').map((s:string)=>s.replace(/^\s*#{1,6}\s*/,'').replace(/\*\*/g,'').trim()).filter(Boolean).join('\n');
  return {text,layout:{elements:data.layout_details||[],width:size.width,height:size.height,coordinate_space:'pixel'},imageHash:await digest(image)};
