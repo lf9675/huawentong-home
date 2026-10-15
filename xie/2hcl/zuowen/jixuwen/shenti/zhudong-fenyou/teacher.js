@@ -1,0 +1,10 @@
+'use strict';
+(function(){
+ let record=null,timer;const $=id=>document.getElementById(id);
+ $('teacherNewMaterials').innerHTML='<details class="teacher-materials"><summary>展开完整范文与逐段红字批注</summary>'+HWTPractice.sample(true,true)+'</details>'+HWTPractice.teacherBank();
+ function toast(s){$('toast').textContent=s;$('toast').classList.add('show');clearTimeout(timer);timer=setTimeout(()=>$('toast').classList.remove('show'),5000);}
+ function show(r){if(!HWTModel.validateRecord(r))throw new Error('记录格式不完整');record=r;$('teacherReview').innerHTML=HWTRecord.report(r);$('feedbackForm').hidden=false;$('teacherStatus').textContent='已打开：'+(r.name||'未署名档案')+'。请核对作品后再填写反馈。';$('feedbackEvidence').value='';$('feedbackNext').value='';$('feedbackTarget').value=r.submissions.length?'新题独写':'本题学习';$('teacherReview').scrollIntoView({behavior:'smooth',block:'start'});}
+ $('teacherImport').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{if(f.size>12000000)throw new Error('文件太大');const b=JSON.parse(await f.text());if(b.format!=='huawentong-writing-cycle'||b.prompts?.teaching!==HWT.prompt||b.prompts?.transfer!==HWT.transferPrompt)throw new Error('请使用本练习导出的备份记录');show(b.record);}catch(err){toast('无法打开：'+err.message+'。');}e.target.value='';});
+ $('loadLocal').addEventListener('click',()=>{try{const raw=localStorage.getItem('hwt-writing-cycle-v4');if(!raw)return toast('本机还没有这轮练习的记录。');show(JSON.parse(raw));}catch(err){toast('无法读取：'+err.message+'。');}});
+ $('downloadFeedback').addEventListener('click',()=>{if(!record)return;const evidence=$('feedbackEvidence').value.trim(),next=$('feedbackNext').value.trim();if(!evidence||!next)return toast('请填写作品证据和下一次重点。');const feedback={id:HWTModel.uid(),at:HWTModel.now(),target:$('feedbackTarget').value,dimension:$('feedbackDimension').value,evidence,next};HWTRecord.download(JSON.stringify({format:'huawentong-feedback',version:1,recordId:record.id,feedback},null,2),'application/json','huawentong-teacher-feedback.json');toast('反馈文件已生成，请交回对应学生导入。');});
+})();
