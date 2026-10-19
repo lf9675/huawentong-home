@@ -6,6 +6,7 @@ const {geminiFailureInfo}=await import('../supabase/functions/hwt-essay/google.m
 const job={id:crypto.randomUUID(),status:'draft',input:{pageCount:1},result:{}};
 const requests=[];let mode='ok';
 globalThis.fetch=async(url,options={})=>{
+ if(url.includes('/storage/v1/object/'))return Response.json({Key:'test'});
  const body=options.body?JSON.parse(options.body):null;requests.push({url,options,body});
  if(url.includes('hwt_take_rate'))return Response.json(true);
  if(url.includes('access_codes?'))return Response.json([{id:1,is_active:1,expiry:'2100-01-01',exam_level:'HCL'}]);

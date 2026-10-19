@@ -7,7 +7,7 @@ export function finalize(f,exam,text,configs){
  const [threshold,floor]=practical?[180,6]:exam==='HCL'?[480,16]:[320,11];
  const ex=f.language_floor_exception||{},qs=(ex.unclear_quotes||[]).filter(q=>typeof q==='string'&&norm(q).length>=4&&norm(text).includes(norm(q)));
  if(norm(text).length>=threshold&&s.language>0&&s.language<floor&&!(ex.applies===true&&qs.length>=3)){s.language=floor;f.language_floor_applied=true;}
- const red=(f.paragraph_feedback||[]).flatMap(p=>p.red_issues||[]).filter(x=>String(x.type).includes('错')&&!String(x.type).includes('病')&&!String(x.type).includes('标点')).length;
+ const red=(f.paragraph_feedback||[]).flatMap(p=>p.red_issues||[]).filter(x=>!x.uncertain&&String(x.type).includes('错')&&!String(x.type).includes('病')&&!String(x.type).includes('标点')).length;
  if(Number.isFinite(s.language_band)){const typos=Math.max(Number.isFinite(s.typo_count)?Math.floor(s.typo_count):0,red);s.language=Math.max(0,Math.min(lm,Math.floor(s.language_band-Math.min(3*lm/30,0.5*lm/30*typos)+0.5)));}
  const cap=(field,value,why)=>{if(Number.isFinite(value)&&s[field]>value){notes.push(`${field==='content'?'内容':'语文'} ${s[field]}→${value}（${why}）`);s[field]=value;}};
  const g=f.content_gate;

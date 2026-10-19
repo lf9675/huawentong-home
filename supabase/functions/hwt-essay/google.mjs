@@ -57,7 +57,7 @@ export function geminiOcrResult(data){
  if(text.length>5000)throw Error('本页文字超过 5000 字，请拆分后重新上传。');
  const uncertainLines=[],elements=data.lines.map((line,index)=>{
   const uncertain=line.uncertain||line.text.includes('□');if(uncertain)uncertainLines.push(index+1);
-  return {index,label:'text',content:line.text.trim(),bbox_2d:estimatedBox(line.box_2d),uncertain};
+  return {index,label:'text',content:line.text.trim(),paragraph_end:line.paragraph_end,bbox_2d:estimatedBox(line.box_2d),uncertain};
  });
  return {text,layout:{coordinate_space:'normalized_1000',geometry_source:'model_estimate',elements},provider:'Gemini',uncertainLines};
 }

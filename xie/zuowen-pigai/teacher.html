@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="zh-SG"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#153e52"><meta name="robots" content="noindex,nofollow"><title>作文访问码管理 · 华文通</title><link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./teacher.css"></head>
-<body><header><a href="/">华文通 <span>HUA WEN TONG</span></a><nav aria-label="页面导航"><a href="./">学生批改页</a><a href="/bei/">教师工作台</a></nav></header>
+<body><header><a href="/">华文通 <span>HUA WEN TONG</span></a><nav aria-label="页面导航"><a href="./">学生批改页</a><a href="./teaching.html">作文审核与讲评</a><a href="/bei/">教师工作台</a></nav></header>
 <main><section class="intro teacherIntro"><div><div class="eyebrow">WRITING WORKSHOP · TEACHER</div><h1>作文访问码管理</h1><p>发给学生一枚访问码，从这里安排每一次练习。</p></div><span class="pill">教师专用</span></section>
 <div id="message" role="status" aria-live="polite">正在检查教师登录状态……</div>
 <section id="teacherLogin" class="card login"><div><h2>使用华文通教师密码登录</h2><p>与“教师备课工作台”共用密码；教师登录有效期为 8 小时。</p><p>原 Streamlit 管理密码与学生访问码不能用于此处。</p></div><form id="teacherLoginForm"><label for="teacherPassword">教师密码<input id="teacherPassword" type="password" autocomplete="current-password" required maxlength="256"></label><button type="submit">登录管理</button></form></section>
 <div id="workspace" hidden>
-<div class="account"><span>已登录 · 作文访问码管理</span><button id="teacherLogout" class="quiet">退出教师登录</button></div>
+<section class="card"><h2>作文审核与课堂讲评</h2><p>核对真实错误、调整原图记号，生成错误范文、教师答案及 PowerPoint。</p><a class="buttonLink" href="./teaching.html">打开作文审核与讲评</a></section><div class="account"><span>已登录 · 作文访问码管理</span><button id="teacherLogout" class="quiet">退出教师登录</button></div>
 <section class="card"><div class="sectionTitle"><b>01</b><div><h2>批量生成访问码</h2><p>新旧学生页面共用额度和记录。</p></div></div>
 <form id="generateForm"><fieldset id="generateFields"><div class="formGrid">
 <label>生成数量<input id="createCount" type="number" min="1" max="100" step="1" value="10" required></label>
