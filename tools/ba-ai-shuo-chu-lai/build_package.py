@@ -17,22 +17,22 @@ page=(LESSON/'reading.html').read_text()
 page=re.sub(r'<link rel="stylesheet"[^>]+>',lambda _: '<style>'+css+'</style>',page)
 page=page.replace('../../../../../assets/huawentong-logo.png',data(ROOT/'assets/huawentong-logo.png','image/png'))
 page=page.replace('href="../../../../../index.html"','href="'+BASE+'"').replace('href="index.html"','href="'+URL+'index.html"')
-page=page.replace('<main>','<main><p class="muted">Offline copy（离线版） · Export your record before closing（关闭前导出记录）.</p>')
+page=page.replace('<main>','<main><p class="muted">离线版 · 关闭前请导出学习记录。</p>')
 page=page.replace('<script src="content.js', '<script>window.LESSON_ASSETS='+json.dumps(assets)+';</script><script src="content.js',1)
 def inline(match):
     src=match[1].split('?')[0]
     p=(LESSON/src).resolve()
     return '<script>'+p.read_text().replace('</script','<\\/script')+'</script>'
 page=re.sub(r'<script src="([^"]+)"[^>]*></script>',inline,page)
-offline=LESSON/'downloads/student-offline.html'
+offline=OUT/'student-offline.html'
 offline.write_text(page)
 assert offline.stat().st_size<25*1024**2, 'Standalone file exceeds host limit'
 readme='''《把爱说出来》完整教学配套
 中二高级华文 · 单元一 · 建议3课时，每课50分钟；教师方案另附2课时版。
 
-1. 学生互动学习.html：直接用浏览器打开，含全文、原漫画、10项任务、词语本与闪卡。
-2. 可编辑课件.pptx：45页，先问题后讲评，教师提示在备注内。建议安装霞鹜文楷与思源宋体以保持字形。
-3. 教师流程与答案.docx：14页，含逐段对应、课堂流程、参考答案、得分意义及易错点。
+1. 学生互动学习.html：直接用浏览器打开，含全文、原漫画、按段落排列的问题、词语本与闪卡。
+2. 可编辑课件.pptx：50页，先问题后讲评，教师提示在备注内。建议安装霞鹜文楷与思源宋体以保持字形。
+3. 教师流程与答案.docx：含逐段对应、课堂流程、参考答案、得分意义及易错点。
 4. 在线投影.html：解压后打开，可离线翻页投影；请保留slides文件夹。
 5. 漫画原图：保留用户提供的3张完整原图。
 
@@ -71,4 +71,3 @@ for i,offset in enumerate(range(0,len(offline_raw),limit),1):
     offline_parts.append({'file':name,'bytes':len(chunk),'sha256':hashlib.sha256(chunk).hexdigest()})
 (LESSON/'downloads/offline-manifest.json').write_text(json.dumps({'name':'把爱说出来_学生互动学习.html','mime':'text/html;charset=utf-8','bytes':len(offline_raw),'sha256':hashlib.sha256(offline_raw).hexdigest(),'parts':offline_parts},ensure_ascii=False,indent=2))
 print(json.dumps({'offline_bytes':offline.stat().st_size,'package_bytes':len(raw),'parts':len(parts)},indent=2))
-offline.replace(OUT/'student-offline.html')

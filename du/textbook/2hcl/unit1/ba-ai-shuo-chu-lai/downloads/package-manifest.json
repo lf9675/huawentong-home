@@ -1,32 +1,32 @@
 {
   "name": "把爱说出来_完整教学配套.zip",
-  "bytes": 50470406,
-  "sha256": "d5a2cf9ffa84b455e5853a821a669e142dfe5d0988e72477b4b028cd2e7028c1",
+  "bytes": 50377748,
+  "sha256": "baf593313b6b902713208f87c6e818c0f3b2f0d2d579c629dbf03a1cb4039aeb",
   "parts": [
     {
       "file": "package.part01.bin",
       "bytes": 10485760,
-      "sha256": "eefd3b8ac91916ee94768ec9a0b3e57d5045bb5f2a379d6420ef4a95b98b80d0"
+      "sha256": "ff415cbc1f4c577d789341977f1fb38e21947a71789cf883bd4fb1888d157ee4"
     },
     {
       "file": "package.part02.bin",
       "bytes": 10485760,
-      "sha256": "9989ba2dc54b0e12e8556d9d6d7f8f5af0f046a2a7920cbea90f99260087e688"
+      "sha256": "943b67dbcbf21603249d5a2be30a7083dbafdee9d177f9d0ff8faa73ef3dd62b"
     },
     {
       "file": "package.part03.bin",
       "bytes": 10485760,
-      "sha256": "805931c9d253dbd1de06cd6d1918d1d1f55737b6c1bfea7808e47f5fe51f8d92"
+      "sha256": "64750374fe1762a2324fd7f7d858fc2d3c5c5df8968887be01e293c50111a74c"
     },
     {
       "file": "package.part04.bin",
       "bytes": 10485760,
-      "sha256": "f64a813309f8d064188836982d8f685a9a3eb170d62a8626f0cbf378d5cf1f51"
+      "sha256": "942174fa9d3468f702b4f76cf60a8602534994cfebedac12b8c988bbffe300fc"
     },
     {
       "file": "package.part05.bin",
-      "bytes": 8527366,
-      "sha256": "e17f027d5c002b51a97f99e9fb431ba72effbb68dfbb2e20c7783bf69ad66b76"
+      "bytes": 8434708,
+      "sha256": "a8b1d64e1410ca6e18ef2ac6efabd53ad3aae20ae70a73a4d073d5f7cdfc40b2"
     }
   ]
 }
