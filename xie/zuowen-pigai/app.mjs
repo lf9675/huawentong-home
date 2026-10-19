@@ -1,7 +1,7 @@
 import {importDocuments,renderData,releasePages} from './documents.mjs';
 const API='https://rodtizxezbtlhnuljzsc.supabase.co/functions/v1/hwt-essay';
 const $=id=>document.getElementById(id),show=(id,on=true)=>{$(id).hidden=!on;};
-const state={code:'',account:null,photos:[],job:null,page:0,busy:false,retry:null};
+const state={code:'',account:null,photos:[],job:null,page:0,busy:false,retry:null,services:null};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function error(e){$('error').textContent=e?.message||String(e);show('error');}
 async function api(action,data={}){
@@ -10,16 +10,16 @@ async function api(action,data={}){
 }
 async function health(){
  try{const r=await fetch(API,{signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error();const d=await r.json();
-  providerNotice(d.providers);
-  const missing=[!d.services.database&&'数据库',!d.services.ocr&&'照片识别',!d.services.grading&&'AI 批改'].filter(Boolean);
-  $('service').textContent=missing.length?'页面已就绪；'+missing.join('、')+'服务尚未就绪，请老师检查配置。':'服务配置已读取 · 使用原访问码开始；识别与批改将在提交后验证';$('service').classList.toggle('warn',missing.length>0);
+  state.services=d.services;providerNotice(d.providers);
+  const missing=[!d.services.database&&'数据库',(!d.services.ocr||!d.services.grading)&&'Gemini'].filter(Boolean);
+  $('service').textContent=missing.length?'图片和 PDF 可正常预览；'+missing.join('、')+'服务尚未开通，请联系老师。':'识别与批改均使用 Google Gemini · 已读取配置，实际调用将在提交后验证';$('service').classList.toggle('warn',missing.length>0);
  }catch{$('service').textContent='页面已打开，但批改服务暂时无法连接。请稍后刷新，或联系老师。';$('service').classList.add('warn');}
 }
 function providerNotice(providers){if(!providers)return;$('privacy').textContent=`开始识别后，页面图片会交由 ${providers.ocr||'待配置的识别服务'} 识别，核对后的文字会交由 ${providers.grading||'待配置的批改服务'} 批改。请遮住学生姓名和学校。原图只保留在当前页面，文字与反馈保存到批改记录。`;}
-function account(info){providerNotice(info.providers);state.account=info;$('accountInfo').textContent=`${info.nickname} · ${info.exam} · 新作文余 ${info.newRemaining} 篇 / 总次数余 ${info.remaining} 次 · 有效至 ${info.expiry||'未设置'}`;show('account');show('loginPanel',false);
+function account(info){state.services=info.services;providerNotice(info.providers);state.account=info;$('accountInfo').textContent=`${info.nickname} · ${info.exam} · 新作文余 ${info.newRemaining} 篇 / 总次数余 ${info.remaining} 次 · 有效至 ${info.expiry||'未设置'}`;show('account');show('loginPanel',false);
  const genres=info.exam==='HCL'?['记叙文','议论文','材料议论文','演讲词']:['记叙文','议论文'];$('genre').replaceChildren(...[...genres,'私人电邮','公务电邮','网上论坛'].map(g=>new Option(g,g)));
  $('recentList').replaceChildren();for(const row of info.recent||[]){if(row.status==='draft'&&new Date(row.expires_at)<new Date())continue;const b=document.createElement('button');b.className='quiet';b.textContent=`${row.created_at.slice(0,10)} · ${row.input.prompt?.slice(0,18)||'语言检查'} · ${row.status==='complete'?'查看':'继续'}`;b.onclick=()=>guard(()=>resume(row.id));$('recentList').append(b);}show('recent',$('recentList').childElementCount>0);show('setup');}
-async function guard(fn){if(state.busy)return;state.busy=true;show('error',false);const buttons=[...document.querySelectorAll('button,input[type=file]')];const disabled=buttons.map(b=>b.disabled);buttons.forEach(b=>b.disabled=true);try{return await fn();}catch(e){error(e);}finally{state.busy=false;buttons.forEach((b,i)=>b.disabled=disabled[i]);$('ocrButton').disabled=!state.account||!state.photos.length;if(state.job?.result.feedback){$('prev').disabled=state.page===0;$('next').disabled=state.page===state.job.input.pageCount-1;}$('gradeButton').disabled=!!state.job&&Array.from({length:state.job.input.pageCount},(_,i)=>state.job.result['ocr_'+i]).some(x=>!x);}}
+async function guard(fn){if(state.busy)return;state.busy=true;show('error',false);const buttons=[...document.querySelectorAll('button,input[type=file]')];const disabled=buttons.map(b=>b.disabled);buttons.forEach(b=>b.disabled=true);try{return await fn();}catch(e){error(e);}finally{state.busy=false;buttons.forEach((b,i)=>b.disabled=disabled[i]);$('ocrButton').disabled=!state.account||!state.photos.length||!state.services?.ocr||!state.services?.grading;if(state.job?.result.feedback){$('prev').disabled=state.page===0;$('next').disabled=state.page===state.job.input.pageCount-1;}$('gradeButton').disabled=!!state.job&&Array.from({length:state.job.input.pageCount},(_,i)=>state.job.result['ocr_'+i]).some(x=>!x);}}
 function setProgress(text,n){show('progressPanel');$('progressText').textContent=text;$('progress').value=n;show('retry',false);}
 async function run(fn){state.retry=fn;try{await fn();state.retry=null;show('retry',false);}catch(e){show('retry');throw e;}}
 $('retry').onclick=()=>guard(()=>run(state.retry));
@@ -35,7 +35,7 @@ function thumbs(){
   button('删除',()=>{releasePages([p]);state.photos.splice(i,1);thumbs();});$('thumbs').append(div);
  });
  $('pageCount').textContent=state.photos.length?`已准备 ${state.photos.length} / 6 页 · 请核对方向与顺序`:'尚未选择文件';
- $('ocrButton').disabled=!state.account||!state.photos.length;show('clearPhotos',state.photos.length>0);
+ $('ocrButton').disabled=!state.account||!state.photos.length||!state.services?.ocr||!state.services?.grading;show('clearPhotos',state.photos.length>0);
 }
 $('photos').onchange=()=>guard(async()=>{
  const files=[...$('photos').files];if(!files.length)return;
@@ -46,6 +46,7 @@ $('photos').onchange=()=>guard(async()=>{
 $('clearPhotos').onclick=()=>guard(()=>{releasePages(state.photos);state.photos=[];thumbs();$('uploadStatus').textContent='已清空，可以重新选择文件。';});
 async function ocrAll(){
  if(!state.account)throw Error('请先输入老师的访问码。');
+ if(!state.services?.ocr||!state.services?.grading)throw Error('Gemini 服务尚未开通，请联系老师。');
  if(!state.job){state.job=await api('create',{id:crypto.randomUUID(),genre:$('genre').value,prompt:$('prompt').value,requirements:$('requirements').value,pageCount:state.photos.length});state.photoJobId=state.job.id;show('setup',false);sessionStorage.setItem('hwt-essay-job',state.job.id);}
  for(let i=0;i<state.job.input.pageCount;i++){
   if(state.job.result['ocr_'+i])continue;if(!state.photos[i])throw Error('缺少原照片，请取消本次后重新上传。');setProgress(`正在识别第 ${i+1} / ${state.job.input.pageCount} 页`,(i/state.job.input.pageCount)*100);
@@ -58,7 +59,7 @@ function renderVerify(){
  for(let i=0;i<state.job.input.pageCount;i++){
   const row=document.createElement('section');row.className='verifyPage';const label=document.createElement('label');label.textContent=`第 ${i+1} 页`;
   const ocr=state.job.result['ocr_'+i],text=document.createElement('textarea');text.id='page-text-'+i;text.rows=14;text.value=state.job.result.pages?.[i]??ocr?.text??'';text.disabled=!!state.job.result.pages;label.append(text);
-  if(ocr?.lowConfidence){const notice=document.createElement('p');notice.className='small';notice.textContent=`识别服务报告 ${ocr.lowConfidence} 个低置信度字，请对照原图重点核对。`;label.append(notice);}
+  if(ocr?.uncertainLines?.length){const notice=document.createElement('p');notice.className='small';notice.textContent=`Gemini 标记第 ${ocr.uncertainLines.join('、')} 行有不确定文字；□ 表示看不清的字，请对照原图核对。`;label.append(notice);}
   const p=state.photoJobId===state.job.id?state.photos[i]:null;
   if(p){const image=new Image();image.src=p.data;image.alt=`第 ${i+1} 页原图，供核对文字`;row.append(image);}row.append(label);$('editors').append(row);
  }
@@ -85,11 +86,11 @@ function renderResult(){show('result');show('setup',false);show('verify',false);
  if(p.revised_top){const d=document.createElement('details'),summary=document.createElement('summary'),body=document.createElement('p');summary.textContent='查看修改示例';body.textContent=p.revised_top;d.append(summary,body);el.append(d);}
  $('paragraphs').append(el);});renderPage();$('result').scrollIntoView({behavior:'smooth'});
 }
-function renderPage(selected){const n=state.job.input.pageCount;$('pageLabel').textContent=`第 ${state.page+1} / ${n} 页`;$('prev').disabled=state.page===0;$('next').disabled=state.page===n-1;const p=state.photoJobId===state.job.id?state.photos[state.page]:null;$('photo').hidden=!p;$('photo').src=p?.data||'';$('photoNote').textContent=p?'黄色框表示 OCR 文字区域，不代表错误字的精确边界。':'历史记录保留文字与批改；原照片仅在上传时的页面中显示。';$('overlay').replaceChildren();if(!p)return;for(const a of state.job.result.feedback.annotations){if(selected&&selected!==a.id)continue;for(const mark of a.marks.filter(x=>x.page===state.page))for(const [x,y,w,h] of mark.rects){const r=document.createElementNS('http://www.w3.org/2000/svg','rect');for(const [k,v] of Object.entries({x,y,width:w,height:h,rx:.3}))r.setAttribute(k,String(v));if(mark.precision!=='character'||a.uncertain)r.classList.add('region');$('overlay').append(r);}}}
+function renderPage(selected){const n=state.job.input.pageCount;$('pageLabel').textContent=`第 ${state.page+1} / ${n} 页`;$('prev').disabled=state.page===0;$('next').disabled=state.page===n-1;const p=state.photoJobId===state.job.id?state.photos[state.page]:null;$('photo').hidden=!p;$('photo').src=p?.data||'';$('photoNote').textContent=p?'黄色框是待核对的文字区域；Gemini 返回的是估计位置，不是精确单字边界。':'历史记录保留文字与批改；原照片仅在上传时的页面中显示。';$('overlay').replaceChildren();if(!p)return;for(const a of state.job.result.feedback.annotations){if(selected&&selected!==a.id)continue;for(const mark of a.marks.filter(x=>x.page===state.page))for(const [x,y,w,h] of mark.rects){const r=document.createElementNS('http://www.w3.org/2000/svg','rect');for(const [k,v] of Object.entries({x,y,width:w,height:h,rx:.3}))r.setAttribute(k,String(v));if(mark.precision!=='character'||a.uncertain)r.classList.add('region');$('overlay').append(r);}}}
 $('prev').onclick=()=>{state.page--;renderPage();};$('next').onclick=()=>{state.page++;renderPage();};
 $('newEssay').onclick=()=>guard(async()=>{reset();releasePages(state.photos);state.photos=[];$('photos').value='';thumbs();account(await api('login'));});
 $('export').onclick=()=>{const f=state.job.result.feedback,issues=f.annotations.map((a,i)=>`<li><strong>${i+1}. ${esc(a.quote)}</strong> → ${esc(a.fix)}<p>${esc(val(a.why))} (${a.uncertain?'待核对':a.location==='character'?'字级定位':a.location==='region'?'待核对区域':'待定位'})</p></li>`).join('');const photos=(state.photoJobId===state.job.id?state.photos:[]).map((p,i)=>{const marks=f.annotations.flatMap(a=>a.marks.filter(m=>m.page===i).flatMap(m=>m.rects.map(([x,y,w,h])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="${m.precision==='character'&&!a.uncertain?'#c33':'#b80'}" stroke-width=".25"/>`))).join('');return `<h2>第 ${i+1} 页</h2><div style="position:relative;max-width:800px"><img alt="作文原图" style="width:100%;display:block" src="${p.data}"><svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 100 100" preserveAspectRatio="none">${marks}</svg></div>`;}).join('');
- const html=`<!doctype html><html lang="zh"><meta charset="utf-8"><title>华文通作文批改报告</title><style>body{font:16px/1.8 system-ui;margin:40px;max-width:1000px}li{margin:20px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere}@media print{h2{break-before:page}}</style><h1>华文通作文批改报告</h1><p>AI 建议，待教师核对。黄色区域不是精确字框；无法定位的建议仍列在完整清单中。</p><p>${esc($('score').textContent)}</p><p>${esc($('comment').textContent)}</p>${photos}<h2>完整批注清单（${f.annotations.length} 条）</h2><ol>${issues}</ol><h2>段落反馈</h2>${$('paragraphs').innerHTML}</html>`;
+ const html=`<!doctype html><html lang="zh"><meta charset="utf-8"><title>华文通作文批改报告</title><style>body{font:16px/1.8 system-ui;margin:40px;max-width:1000px}li{margin:20px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere}@media print{h2{break-before:page}}</style><h1>华文通作文批改报告</h1><p>AI 建议，待教师核对。黄色区域为待核对的位置，Gemini 估计框不是精确字框；无法定位的建议仍列在完整清单中。</p><p>${esc($('score').textContent)}</p><p>${esc($('comment').textContent)}</p>${photos}<h2>完整批注清单（${f.annotations.length} 条）</h2><ol>${issues}</ol><h2>段落反馈</h2>${$('paragraphs').innerHTML}</html>`;
  const url=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='huawentong-essay-report.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);
 };
 thumbs();

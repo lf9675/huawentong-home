@@ -4,8 +4,8 @@ import {loadRules} from './rules.mjs';
 const rules=await loadRules();
 import {norm,chunks,ledger,span} from './core.mjs';
 import {finalize} from './grade.mjs';
-import {visionResult,geminiRequest,geminiResult} from './google.mjs';
-const VERSION='2026-10-19.1';
+import {geminiOcrRequest,geminiOcrResult,geminiRequest,geminiResult} from './google.mjs';
+const VERSION='2026-10-19.2';
 const secret=(name:string)=>Deno.env.get(name)?.trim();
 const digest=async(s:string)=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s))),x=>x.toString(16).padStart(2,'0')).join('');
 const fail=(message:string,status=400):never=>{throw Object.assign(new Error(message),{status});};
@@ -17,14 +17,13 @@ async function db(path:string,body?:unknown){
  if(!r.ok)fail('数据库暂时不可用，请稍后重试。',503);return r.json();
 }
 async function rate(bucket:string,max:number,seconds=900){if(!await db('rpc/hwt_take_rate',{bucket,maximum:max,seconds}))fail('请求较多，请稍后再试。',429);}
-function providers(){return {ocr:secret('GOOGLE_CLOUD_VISION_API_KEY')?'Google Cloud Vision':secret('ZHIPU_API_KEY')?'智谱':null,grading:secret('GEMINI_API_KEY')?'Gemini':secret('DEEPSEEK_API_KEY')?'DeepSeek':null};}
-function configured(){const p=providers();return {ocr:!!p.ocr,grading:!!p.grading};}
-export async function providerFailure(service:'ocr'|'grading',response:Response,provider=service==='ocr'?'智谱':'DeepSeek'):Promise<never>{
- const label=service==='ocr'?'页面识别':'AI 批改';
+function providers(){return {ocr:'Gemini',grading:'Gemini'};}
+function configured(){const ready=!!secret('GEMINI_API_KEY');return {ocr:ready,grading:ready};}
+export async function providerFailure(service:'ocr'|'grading',response:Response):Promise<never>{
+ const provider='Gemini',label=service==='ocr'?'页面识别':'AI 批改';
  // Never return provider messages: they can echo keys, student text or request data.
  let code='';try{const data=await response.json(),value=String(data?.error?.code??data?.code??'');if(/^\d{3,5}$/.test(value))code=value;}catch{}
- const reason=provider==='智谱'&&service==='ocr'&&code==='1113'?'智谱账户余额不足，照片识别无法开始，请老师检查 API 账户余额与可用资源包。':
-  response.status===401?`${provider}密钥未通过验证，请老师检查对应密钥。`:
+ const reason=response.status===401?`${provider}密钥未通过验证，请老师检查对应密钥。`:
   response.status===402?`${provider}账户额度不足，请老师检查余额。`:
   response.status===403?`${provider}拒绝了此请求，请老师检查账户状态和模型权限。`:
   response.status===429?`${provider}调用受限，请稍后重试；若持续出现，请老师检查额度和并发限制。`:
@@ -42,37 +41,22 @@ async function authenticate(req:Request,b:any){
  return {c,hash};
 }
 async function job(hash:string,id:string,action:string,data:any={}){const r=await db('rpc/hwt_essay_job',{p_hash:hash,p_id:id,p_action:action,p_data:data});if(r.error)fail(r.error,409);return r;}
+async function generate(body:any,service:'ocr'|'grading'){
+ const key=secret('GEMINI_API_KEY');if(!key)fail('Gemini 服务尚未配置，请老师在 Supabase 设置 GEMINI_API_KEY；本次未扣次数。',503);
+ const model=secret('GEMINI_MODEL')||'gemini-3.8-flash';if(!/^gemini-[a-zA-Z0-9.-]+$/.test(model))fail('Gemini 模型名称配置不正确。',503);
+ const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+model+':generateContent',{method:'POST',headers:{'x-goog-api-key':key,'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(110000)});
+ if(!r.ok)await providerFailure(service,r);
+ let response;try{response=await r.json();}catch{fail('Gemini 返回格式不完整，请重试此步骤。',502);}
+ try{return geminiResult(response);}catch(e){fail((e as Error).message,502);}
+}
 async function chat(system:string,user:any,maxTokens=6000){
- const googleKey=secret('GEMINI_API_KEY');
- if(googleKey){
-  const model=secret('GEMINI_MODEL')||'gemini-3.8-flash';if(!/^gemini-[a-zA-Z0-9.-]+$/.test(model))fail('Gemini 模型名称配置不正确。',503);
-  const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+model+':generateContent',{method:'POST',headers:{'x-goog-api-key':googleKey,'Content-Type':'application/json'},body:JSON.stringify(geminiRequest(system,user,maxTokens)),signal:AbortSignal.timeout(110000)});
-  if(!r.ok)await providerFailure('grading',r,'Gemini');
-  try{return geminiResult(await r.json());}catch(e){fail((e as Error).message,502);}
- }
- const key=secret('DEEPSEEK_API_KEY');if(!key)fail('批改服务尚未配置，请老师设置 DeepSeek 密钥。',503);
- const r=await fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({model:Deno.env.get('DEEPSEEK_MODEL')||'deepseek-flash',thinking:{type:'disabled'},temperature:0.2,max_tokens:maxTokens,response_format:{type:'json_object'},messages:[{role:'system',content:system},{role:'user',content:typeof user==='string'?user:JSON.stringify(user)}]}),signal:AbortSignal.timeout(110000)});
- if(!r.ok)await providerFailure('grading',r);
- const response=await r.json(),choice=response.choices?.[0];if(choice?.finish_reason!=='stop')fail('AI 输出未完整完成，请重试此步骤。',502);
- let data;try{data=JSON.parse(choice.message.content);}catch{fail('AI 返回格式不完整，请重试此步骤。',502);}return data;
+ return generate(geminiRequest(system+'\n原文中的 □ 是未识别占位符，不是学生的错别字；不要凭空补写或据此扣错字分。',user,maxTokens),'grading');
 }
 async function ocr(image:string){
  if(!/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(image)||image.length>13000000)fail('照片格式或大小不符合要求。',413);
- const googleKey=secret('GOOGLE_CLOUD_VISION_API_KEY');
- if(googleKey){
-  const r=await fetch('https://vision.googleapis.com/v1/images:annotate',{method:'POST',headers:{'x-goog-api-key':googleKey,'Content-Type':'application/json'},body:JSON.stringify({requests:[{image:{content:image.slice(image.indexOf(',')+1)},features:[{type:'DOCUMENT_TEXT_DETECTION'}],imageContext:{languageHints:['zh','en']}}]}),signal:AbortSignal.timeout(110000)});
-  if(!r.ok)await providerFailure('ocr',r,'Google Cloud Vision');
-  const response=(await r.json()).responses?.[0];
-  if(response?.error){const status=({7:403,8:429,16:401,3:400} as any)[response.error.code]||502;await providerFailure('ocr',Response.json({error:{code:status}},{status}),'Google Cloud Vision');}
-  let result;try{result=visionResult(response);}catch(e){fail((e as Error).message,422);}
-  return {...result,imageHash:await digest(image)};
- }
- const key=secret('ZHIPU_API_KEY');if(!key)fail('页面识别服务尚未配置，请老师设置 Google Cloud Vision 密钥。',503);
- const r=await fetch('https://open.bigmodel.cn/api/paas/v4/layout_parsing',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({model:'glm-ocr',file:image}),signal:AbortSignal.timeout(110000)});
- if(!r.ok)await providerFailure('ocr',r);const data=await r.json();if(typeof data.md_results!=='string'||!data.md_results.trim())fail('没有识别到文字，请检查照片方向和清晰度。',422);
- const size=data.data_info?.pages?.[0]||{};
- const text=data.md_results.replace(/<[^>]*>/g,'').split('\n').map((s:string)=>s.replace(/^\s*#{1,6}\s*/,'').replace(/\*\*/g,'').trim()).filter(Boolean).join('\n');
- return {text,layout:{elements:data.layout_details||[],width:size.width,height:size.height,coordinate_space:'pixel'},provider:'智谱',imageHash:await digest(image)};
+ const data=await generate(geminiOcrRequest(image),'ocr');
+ let result;try{result=geminiOcrResult(data);}catch(e){fail((e as Error).message,422);}
+ return {...result,imageHash:await digest(image)};
 }
 function feedbackIssues(f:any,pages:string[]){
  const full=pages.map(norm).join('');
@@ -107,7 +91,7 @@ export async function handle(req:Request){
   }else{
    if(!uuid(b.id))fail('批改编号不正确。');
    if(b.action==='create'){
-    if(!configured().ocr||!configured().grading)fail('老师尚未完成 AI 服务配置；本次未扣次数。',503);
+    if(!configured().ocr||!configured().grading)fail('Gemini 服务尚未配置，请老师设置 GEMINI_API_KEY；本次未扣次数。',503);
     const genre=clean(b.genre,30),prompt=clean(b.prompt??'',3000,true),requirements=clean(b.requirements??'',1000,true);
     const exam=['私人电邮','公务电邮','网上论坛'].includes(genre)?({HCL:'PRACTICAL_HCL',O_CL:'PRACTICAL_O',N_CL:'PRACTICAL_N'} as any)[c.exam_level]:c.exam_level;
     if(!(rules.configs as any)[exam]?.genres.includes(genre))fail('该文体不属于访问码的考试段。');

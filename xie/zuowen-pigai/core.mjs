@@ -1,4 +1,4 @@
-// Geometry comes only from OCR boxes. Never divide a region uniformly into characters.
+// Never divide regions into characters. Gemini model estimates always remain regions.
 export const norm = x => String(x ?? '').replace(/\s/g, '');
 export function span(text, quote, left='', right='', lo=0, hi=text.length) {
   quote=norm(quote);left=norm(left);right=norm(right);if(!quote)return null;
@@ -28,17 +28,18 @@ export function locate(source, range, layout){
  const items=(layout.elements||[]).flat().filter(x=>['text','formula','doc_title','paragraph_title'].includes(x.label)).sort((a,b)=>(a.index||0)-(b.index||0));
  const text=items.map(x=>norm(x.content)).join('');source=norm(source);
  const s=text===source?range:span(text,source.slice(...range),source.slice(Math.max(0,range[0]-6),range[0]),source.slice(range[1],range[1]+6));
- if(!s)return null;let offset=0,precise=true,covered=0;const rects=[];
+ if(!s)return null;let offset=0,precise=true,covered=0,uncertain=false;const rects=[];
  for(const item of items){
   const t=norm(item.content),lo=Math.max(s[0],offset),hi=Math.min(s[1],offset+t.length);
   if(lo<hi){
+   uncertain ||= item.uncertain===true;
    const chars=item.char_boxes||[];const bs=chars.map(c=>box(c,layout));
-   if(chars.map(c=>norm(c.text)).join('')===t&&chars.length===t.length&&chars.every(c=>norm(c.text).length===1)&&bs.every(Boolean))rects.push(...bs.slice(lo-offset,hi-offset));
+   if(layout.geometry_source!=='model_estimate'&&chars.map(c=>norm(c.text)).join('')===t&&chars.length===t.length&&chars.every(c=>norm(c.text).length===1)&&bs.every(Boolean))rects.push(...bs.slice(lo-offset,hi-offset));
    else{const b=box(item,layout);if(!b)return null;rects.push(b);precise=false;}
    covered+=hi-lo;
   }offset+=t.length;
  }
- return covered===s[1]-s[0]?{rects,precision:precise?'character':'region'}:null;
+ return covered===s[1]-s[0]?{rects,precision:precise?'character':'region',...(uncertain?{uncertain:true}:{})}:null;
 }
 export function ledger(pages, findings, layouts=[]){
  const full=pages.map(norm).join(''),seen=new Set(),out=[];
@@ -47,8 +48,9 @@ export function ledger(pages, findings, layouts=[]){
   const key=JSON.stringify([s||['unlocated',out.length],norm(finding.quote),finding.fix]);if(seen.has(key))continue;seen.add(key);
   const marks=[];let offset=0;
   if(s)pages.forEach((p,i)=>{const n=norm(p).length,lo=Math.max(offset,s[0]),hi=Math.min(offset+n,s[1]);if(lo<hi){const pos=locate(p,[lo-offset,hi-offset],layouts[i]);marks.push({page:i,...(pos||{rects:[],precision:'pending'})});}offset+=n;});
-  out.push({...finding,id:'issue-'+(out.length+1),span:s,marks,uncertain:!!finding.uncertain||!s,location:!s||marks.some(m=>m.precision==='pending')?'pending':marks.some(m=>m.precision==='region')?'region':'character'});
+  out.push({...finding,id:'issue-'+(out.length+1),span:s,marks,uncertain:!!finding.uncertain||!s||marks.some(m=>m.uncertain),location:!s||marks.some(m=>m.precision==='pending')?'pending':marks.some(m=>m.precision==='region')?'region':'character'});
  }
  return out;
 }
 export function validRect(r){return Array.isArray(r)&&r.length===4&&r.every(Number.isFinite)&&r[0]>=0&&r[1]>=0&&r[2]>0&&r[3]>0&&r[0]+r[2]<=100&&r[1]+r[3]<=100;}
+
