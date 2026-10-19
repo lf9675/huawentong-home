@@ -5,7 +5,7 @@ const rules=await loadRules();
 import {norm,chunks,ledger,span} from './core.mjs';
 import {finalize} from './grade.mjs';
 import {geminiOcrRequest,geminiOcrResult,geminiRequest,geminiResult,geminiFailureInfo} from './google.mjs';
-import {TEACHING_RULES,PRESENTATION_STAGE_RULES,presentationInput,applyPresentation,OCR_REVIEW_RULES,VISUAL_RULES,paragraphsOf,bindOriginalParagraphs,validateTeaching,allFindings,mergeVisual,safeTypos,compareOcr,reconciledLayout,refinementTargets,applyRefinement,REFINE_RULES,visualTargets} from './pedagogy.mjs';
+import {TEACHING_RULES,PRESENTATION_STAGE_RULES,presentationInput,applyPresentation,compressionRepairs,COMPRESSION_RULES,applyCompression,OCR_REVIEW_RULES,VISUAL_RULES,paragraphsOf,bindOriginalParagraphs,validateTeaching,allFindings,mergeVisual,safeTypos,compareOcr,reconciledLayout,refinementTargets,applyRefinement,REFINE_RULES,visualTargets} from './pedagogy.mjs';
 import {savePage,pageData,pageUrls} from './storage.mjs';
 const VERSION='2026-10-19.10';
 const secret=(name:string)=>Deno.env.get(name)?.trim();
@@ -153,7 +153,7 @@ export async function handle(req:Request){
        if(j.input.mode==='grade'&&j.result.grade.presentation_version!==1){
         await rate('essay-ai-'+c.id,120,86400);const paragraphs=paragraphsOf(pages,j.result.layouts);
         const data=await chat(PRESENTATION_STAGE_RULES,presentationInput(j.result.grade,j.input,paragraphs),16000);
-        try{patch.grade=applyPresentation(j.result.grade,data,paragraphs,j.input);patch.presentation_required=false;}catch(e){fail((e as Error).message,502);}
+        try{let formatted=applyPresentation(j.result.grade,data,paragraphs,j.input);const targets=compressionRepairs(formatted);if(targets.length){const repair=await chat(COMPRESSION_RULES,{prompt:j.input.prompt,targets},6000);formatted=applyCompression(formatted,repair,j.input);}patch.grade=formatted;patch.presentation_required=false;}catch(e){fail((e as Error).message,502);}
        }
       }else if(b.action==='visual'){
        if(!j.result.grade||jobs.some((_:any,i:number)=>!j.result['audit_'+i]?.complete))fail('请先完成文字批改。');

@@ -9,10 +9,10 @@ export function emphasisParts(text,phrases=[]){
  const out=[];let cursor=0;for(const [a,b]of merged){if(a>cursor)out.push({text:text.slice(cursor,a),bold:false});out.push({text:text.slice(a,b),bold:true});cursor=b;}if(cursor<text.length)out.push({text:text.slice(cursor),bold:false});return out;
 }
 export function problemPhrases(card={}){
- if(card.emphasis?.length)return card.emphasis;
- // Older feedback has no semantic emphasis metadata: highlight its existing contrast clause only.
- const t=String(card.judgement||'');const marker=t.match(/但|不过|然而|未能|没有|重心偏|详略.{0,4}失|核心.*略写/);
- return marker?[t.slice(marker.index).replace(/[。；]$/,'')]:[];
+ const t=String(card.judgement||''),phrases=(card.emphasis||[]).filter(x=>typeof x==='string'&&x&&t.includes(x));
+ if(phrases.length&&phrases.every(x=>x.length<=Math.max(12,t.length*.65)&&!/[，。；]/.test(x)))return phrases;
+ const clauses=t.split(/[，。；]/).map(x=>x.replace(/^(但|然而|不过)/,'')).filter(Boolean),strongest=clauses.find(x=>/未能|没有|偏离|削弱|脱离/.test(x));
+ return strongest?[strongest.replace(/的主题$|的题目要求$/,'')]:clauses.filter(x=>/不够|不足|偏向|偏重|略写|一笔带过|太多|偏移/.test(x)).slice(-2);
 }
 const excerpt=t=>(String(t||'').match(/[^。！？]+[。！？]?/g)||[String(t||'')]).slice(0,2).join('');
 export function evidenceRows(f,kind){

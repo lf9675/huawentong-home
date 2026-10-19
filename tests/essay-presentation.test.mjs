@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {validatePresentation,applyPresentation,presentationInput} from '../supabase/functions/hwt-essay/pedagogy.mjs';
+import {validatePresentation,applyPresentation,presentationInput,emphasisFor,compressionRepairs,applyCompression} from '../supabase/functions/hwt-essay/pedagogy.mjs';
 import {evidenceRows,exampleParts,emphasisParts} from '../xie/zuowen-pigai/presentation.mjs';
 import {summaryHtml,exampleHtml} from '../xie/zuowen-pigai/review.mjs';
 const ps=[{id:1,text:'我决定试一试。'},{id:2,text:'我反复练习。我懂得了坚持。'}];
@@ -43,3 +43,6 @@ test('presentation action saves a separate checkpoint, rejects bad quotes, and r
  const call=action=>handle(new Request('https://site.invalid',{method:'POST',body:JSON.stringify({action,id:job.id,code:'HW-TEST-TEST'})}));
  try{let r=await call('finish');assert.equal(r.status,400);assert.equal(complete,0);r=await call('presentation');assert.equal(r.status,502);assert.equal(patches,0);assert.equal(job.result.grade.presentation_version,undefined);bad=false;r=await call('presentation');assert.equal(r.status,200);assert.equal(job.result.grade.presentation_version,1);assert.equal(job.result.presentation_required,false);assert.equal(job.result.grade.scores.total,40);await call('presentation');assert.equal(ai,2);assert.equal(complete,0);}finally{globalThis.fetch=saved;}
 });
+
+test('long emphasis falls back to the actual problem phrase instead of a whole verdict',()=>{const judgement='选材真实合乎校园生活，但事件发展偏向刻苦备赛，未能充分支撑勇敢尝试的主题。';assert.deepEqual(emphasisFor({judgement,emphasis:[judgement]}),['未能充分支撑勇敢尝试']);});
+test('compression advice requires a genuinely shorter worked example',()=>{const {f}=stageFixture(),p=f.paragraph_feedback[1];p.original_text=ps[1].text.repeat(10);p.revised_top=p.original_text.repeat(2);assert.equal(compressionRepairs(f).length,1);assert.throws(()=>applyCompression(f,{examples:[{paragraph:2,revised_top:p.revised_top,revision_notes:p.revision_notes}]},{genre:'记叙文'}),/尚未真正缩短/);const quote='我反复练习，遇到困难仍坚持。';const result=applyCompression(f,{examples:[{paragraph:2,revised_top:quote,revision_notes:[{quote,keyword:'勇敢尝试',why:'这只是辅助过程，不能代替决定尝试的一步。'}]}]},{genre:'记叙文'});assert.equal(compressionRepairs(result).length,0);assert.equal(p.revised_top,p.original_text.repeat(2));});
