@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {validatePresentation,applyPresentation,presentationInput,emphasisFor,compressionRepairs,applyCompression} from '../supabase/functions/hwt-essay/pedagogy.mjs';
+import {validatePresentation,applyPresentation,presentationInput,emphasisFor,compressionRepairs,applyCompression,citedParagraphs} from '../supabase/functions/hwt-essay/pedagogy.mjs';
 import {evidenceRows,exampleParts,emphasisParts} from '../xie/zuowen-pigai/presentation.mjs';
 import {summaryHtml,exampleHtml} from '../xie/zuowen-pigai/review.mjs';
 const ps=[{id:1,text:'我决定试一试。'},{id:2,text:'我反复练习。我懂得了坚持。'}];
@@ -46,3 +46,5 @@ test('presentation action saves a separate checkpoint, rejects bad quotes, and r
 
 test('long emphasis falls back to the actual problem phrase instead of a whole verdict',()=>{const judgement='选材真实合乎校园生活，但事件发展偏向刻苦备赛，未能充分支撑勇敢尝试的主题。';assert.deepEqual(emphasisFor({judgement,emphasis:[judgement]}),['未能充分支撑勇敢尝试']);});
 test('compression advice requires a genuinely shorter worked example',()=>{const {f}=stageFixture(),p=f.paragraph_feedback[1];p.original_text=ps[1].text.repeat(10);p.revised_top=p.original_text.repeat(2);assert.equal(compressionRepairs(f).length,1);assert.throws(()=>applyCompression(f,{examples:[{paragraph:2,revised_top:p.revised_top,revision_notes:p.revision_notes}]},{genre:'记叙文'}),/尚未真正缩短/);const quote='我反复练习，遇到困难仍坚持。';const result=applyCompression(f,{examples:[{paragraph:2,revised_top:quote,revision_notes:[{quote,keyword:'勇敢尝试',why:'这只是辅助过程，不能代替决定尝试的一步。'}]}]},{genre:'记叙文'});assert.equal(compressionRepairs(result).length,0);assert.equal(p.revised_top,p.original_text.repeat(2));});
+
+test('all paragraphs cited by a range or list remain visible, including overlong competition sections',()=>{assert.deepEqual(citedParagraphs('第2段决定尝试太短，而第5、6段比赛过程太长，第3-4段为准备。',9),[2,3,4,5,6]);assert.deepEqual(citedParagraphs('第3段到第6段详写偏重点',9),[3,4,5,6]);const f=fixture();f.paragraph_feedback=Array.from({length:6},(_,i)=>({para_num:i+1,original_text:'这是第'+(i+1)+'段的真实原句。',status:'keep'}));f.overall_review.keyword_detail={judgement:'比赛过程占了太多篇幅。',suggestion:'压缩辅助情节，展开决定尝试。',status:'off_focus',evidence:'第5、6段比赛过程太长',keywords:[],compress_paragraphs:[]};assert.deepEqual(evidenceRows(f,'keyword').map(x=>x.paragraph),[5,6]);});

@@ -59,15 +59,21 @@ export const PRESENTATION_STAGE_RULES=`你是教新加坡中学华文的老师�
 只返回JSON：{cards:{materials:{judgement,emphasis,suggestion},detail_balance:{judgement,emphasis,suggestion},keyword_detail:{judgement,emphasis,evidence_rows,flow},ending_reflection:{judgement,emphasis,evidence_rows,flow,example,example_notes}},examples:[{paragraph,revised_top,revision_notes}]}。
 【短标题下的总评】四项judgement各1-2句，约60字，保留已有主要判断。emphasis为judgement内的1-2个逐字短语，只加粗最关键的问题，不要整句全加粗。例如judgement“选材真实合乎校园生活，但事件发展偏向刻苦备赛，未能充分支撑勇敢尝试的主题。”，emphasis只能选“未能充分支撑勇敢尝试”。materials和detail_balance的suggestion各用一句简单话说明改法。
 【原句对照】keyword_detail和记叙文ending_reflection的evidence_rows每项为{paragraph:数字段号,quote:该段逐字连续原句,keyword:对应关键词,status:'met|thin|missing|off_focus',problem:一句短话,action:一句具体改法}。左格quote直接展示学生到底写了哪句话，不写“第2段只写一句对话”这样的转述。各选1-2句，尽量120字内，不能用省略号拼接不存在的原句；没有的内容quote为空且status=missing。problem和action各约30字，既有批语的错误不能省略。
-keyword_detail必须覆盖所有keywords、expand_paragraphs和compress_paragraphs段号；每段独立列行，不能只引用决定尝试却漏掉过长的准备/比赛段落。关键词名称沿用输入。ending_reflection覆盖所有有问题的结尾段，也承认已写出的感受/道理，不能把有但空泛说成完全没有。
+keyword_detail必须覆盖所有keywords、expand_paragraphs、compress_paragraphs和required_paragraphs段号（包括原总评提到的比赛段，不能只列改稿段）；每段独立列行，不能只引用决定尝试却漏掉过长的准备/比赛段落。关键词名称沿用输入。ending_reflection覆盖所有有问题的结尾段，也承认已写出的感受/道理，不能把有但空泛说成完全没有。
 【关系图】两项flow每项为{label:12字内的简单话,status:'met|thin|missing|off_focus',paragraphs:[段号]}，2-5步，按本题关键词关系排序。例如“害怕什么→为什么决定试→怎样开始做→学到什么”，但不能套用到无关题目。结尾“回扣经历→写出感受→说明扣题道理”。非记叙文的ending_reflection沿用不适用判断，evidence_rows/flow用空数组，example空字符串，example_notes空数组。
 【示范】examples恰好覆盖每个needs_revision段落。revised_top按原文与已有改法重新写完整正文，不加【动作】【心理】【细节】标签。operation=compress时必须实际缩短，最多保留原段约三分之二的字数，不额外扩写老师帮助、红笔草稿等细节。operation=expand时展开真正能证明关键词的关键选择与行动，不增加无关情节。保留原事结果、人物先后行动和具体事实；别改退稿次数、谁主动找谁、比赛结果，不凭空改成老师课后辅导。
 revision_notes每条为{quote:示范里的一句连续原文,keyword:题目关键词,why:约30字说明这句为什么扣题}，1-3条；quote在示范中位置唯一、互不重叠。红字旁批要解释具体意思，例如“虽然害怕出错，仍主动答应参加，写出了尝试的第一步”。不能只说动作、心理、细节，也不要“具象化、动因、思想交战、心理博弈、落地、催化剂”等难懂话。全文示范也用简单自然的学生话，不写“两个小人、打破心锁、逃兵、成长大门、遗憾苦果”等套话。
 特别防止假扣题：老师帮忙、努力改稿主要是辅助准备，不能直接当成充分体现勇敢尝试。辅助句的keyword可沿用题目词，但why必须清楚写“这只是准备/辅助，不能代替……”，不要硬贴宝贵经验。勇敢尝试强调面对害怕或不确定仍作出选择并行动；坚持强调开始后继续，两者不可混同。准备过长就压缩，把篇幅留给关键选择。
 结尾不足时example给完整简明结尾，example_notes同格式，指出哪句回扣经历、哪句感受、哪句讲清与关键词有关的道理；不要重复原文“坚持和请教”的偏题感悟，也不要夸大为从此不害怕。已有结尾充分则example空。`;
+export function citedParagraphs(text,count){
+ const ids=new Set(),add=n=>{if(Number.isInteger(n)&&n>=1&&n<=count)ids.add(n);};
+ for(const m of String(text||'').matchAll(/第?(\d+)段?\s*(?:到|至|[-—～~])\s*第?(\d+)段/g)){const a=Number(m[1]),b=Number(m[2]);if(b>=a&&b-a<count)for(let n=a;n<=b;n++)add(n);}
+ for(const m of String(text||'').matchAll(/第(\d+(?:[、，,和及与]\d+)*)段/g))for(const n of m[1].split(/[、，,和及与]/))add(Number(n));
+ return [...ids].sort((a,b)=>a-b);
+}
 export function presentationInput(grade,input,paragraphs){
  const review=structuredClone(grade.overall_review);delete review.ending_reflection.example;delete review.ending_reflection.example_notes;
- const k=review.keyword_detail;
+ const k=review.keyword_detail;k.required_paragraphs=[...new Set([...k.expand_paragraphs,...k.compress_paragraphs,...citedParagraphs(k.evidence,paragraphs.length)])];
  return {prompt:input.prompt,requirements:input.requirements,genre:input.genre,paragraphs,overall_review:review,paragraph_feedback:grade.paragraph_feedback.map(p=>({para_num:p.para_num,status:p.status,operation:k.expand_paragraphs.includes(p.para_num)?'expand':k.compress_paragraphs.includes(p.para_num)?'compress':'revise',why_and_how:p.why_and_how,structure_content_issues:(p.structure_content_issues||[]).map(x=>({problem:x.problem,suggestion:x.suggestion}))}))};
 }
 export function applyPresentation(grade,data,paragraphs,input){
@@ -114,12 +120,13 @@ export function validatePresentation(f,paragraphs,input){
   for(const id of new Set(required)){
    if(c.evidence_rows.some(x=>x.paragraph===id))continue;
    const p=f.paragraph_feedback[id-1],issue=p.structure_content_issues?.[0];
+   const citationOnly=!ending&&!c.expand_paragraphs.includes(id)&&!c.compress_paragraphs.includes(id);
    const k=!ending&&r.keyword_detail.keywords.find(k=>k.paragraphs.includes(id)&&k.quote&&norm(p.original_text).includes(norm(k.quote)));
    const quote=k?.quote||(p.original_text.match(/[^。！？]+[。！？]?/g)||[p.original_text]).slice(0,2).join('');
-   c.evidence_rows.push({paragraph:id,quote,keyword:ending?'结尾抒情议论':k?.keyword||'详写重点',status:ending?({adequate:'met',weak:'thin',off_topic:'off_focus',missing:'missing'}[c.status]):c.compress_paragraphs.includes(id)?'off_focus':k?.verdict||'thin',problem:issue?.problem||p.why_and_how||c.judgement,action:issue?.suggestion||p.why_and_how||c.suggestion,from_paragraph_feedback:true});
+   c.evidence_rows.push({paragraph:id,quote,keyword:ending?'结尾抒情议论':k?.keyword||'详写重点',status:ending?({adequate:'met',weak:'thin',off_topic:'off_focus',missing:'missing'}[c.status]):c.compress_paragraphs.includes(id)||citationOnly&&c.status==='off_focus'?'off_focus':k?.verdict||'thin',problem:citationOnly?c.judgement:issue?.problem||p.why_and_how||c.judgement,action:citationOnly?c.suggestion:issue?.suggestion||p.why_and_how||c.suggestion,from_paragraph_feedback:true});
   }
  };
- completeRows(r.keyword_detail,[...r.keyword_detail.expand_paragraphs,...r.keyword_detail.compress_paragraphs]);
+ completeRows(r.keyword_detail,[...r.keyword_detail.expand_paragraphs,...r.keyword_detail.compress_paragraphs,...citedParagraphs(r.keyword_detail.evidence,paragraphs.length)]);
  for(const k of r.keyword_detail.keywords){
   if(r.keyword_detail.evidence_rows.some(x=>norm(x.keyword)===norm(k.keyword)))continue;
   const id=k.paragraphs.find(id=>k.quote&&norm(paragraphs[id-1].text).includes(norm(k.quote)))||k.paragraphs[0]||r.keyword_detail.expand_paragraphs[0]||1;
@@ -132,7 +139,7 @@ export function validatePresentation(f,paragraphs,input){
   if(required.some(id=>!c.evidence_rows.some(x=>x.paragraph===id)))throw Error('对照表漏掉需要调整的段落，请重试。');
   if(c.flow.some(x=>!x.label||!ids(x.paragraphs)||!['met','thin','missing','off_focus'].includes(x.status)))throw Error('题目重点图示未完整返回，请重试。');
  };
- checkRows(r.keyword_detail,[...r.keyword_detail.expand_paragraphs,...r.keyword_detail.compress_paragraphs]);
+ checkRows(r.keyword_detail,[...r.keyword_detail.expand_paragraphs,...r.keyword_detail.compress_paragraphs,...citedParagraphs(r.keyword_detail.evidence,paragraphs.length)]);
  for(const k of r.keyword_detail.keywords)if(!r.keyword_detail.evidence_rows.some(x=>norm(x.keyword)===norm(k.keyword)))throw Error('对照表漏掉题目关键词，请重试。');
  const notes=(text,items)=>{
   text=String(text||'').replace(/【(?:动作|行动|心理|细节|对话|环境|分析|铺垫|抒情|点题|语言|神态)】/g,'');
