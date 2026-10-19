@@ -4,8 +4,8 @@ import {loadRules} from './rules.mjs';
 const rules=await loadRules();
 import {norm,chunks,ledger,span} from './core.mjs';
 import {finalize} from './grade.mjs';
-import {geminiOcrRequest,geminiOcrResult,geminiRequest,geminiResult} from './google.mjs';
-const VERSION='2026-10-19.2';
+import {geminiOcrRequest,geminiOcrResult,geminiRequest,geminiResult,geminiFailureInfo} from './google.mjs';
+const VERSION='2026-10-19.3';
 const secret=(name:string)=>Deno.env.get(name)?.trim();
 const digest=async(s:string)=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s))),x=>x.toString(16).padStart(2,'0')).join('');
 const fail=(message:string,status=400):never=>{throw Object.assign(new Error(message),{status});};
@@ -22,14 +22,15 @@ function configured(){const ready=!!secret('GEMINI_API_KEY');return {ocr:ready,g
 export async function providerFailure(service:'ocr'|'grading',response:Response):Promise<never>{
  const provider='Gemini',label=service==='ocr'?'页面识别':'AI 批改';
  // Never return provider messages: they can echo keys, student text or request data.
- let code='';try{const data=await response.json(),value=String(data?.error?.code??data?.code??'');if(/^\d{3,5}$/.test(value))code=value;}catch{}
+ let info={code:'',category:'upstream_rejected',field:''};try{info=geminiFailureInfo(await response.json());}catch{}
+ const {code,category,field}=info;
  const reason=response.status===401?`${provider}密钥未通过验证，请老师检查对应密钥。`:
   response.status===402?`${provider}账户额度不足，请老师检查余额。`:
   response.status===403?`${provider}拒绝了此请求，请老师检查账户状态和模型权限。`:
   response.status===429?`${provider}调用受限，请稍后重试；若持续出现，请老师检查额度和并发限制。`:
   response.status===400||response.status===404||response.status===422?`${label}请求未被接受，请老师联系维护人员检查接口配置。`:
   `${label}服务暂时不可用，请稍后重试。`;
- fail(`${reason}（${provider} HTTP ${response.status}${code?'，错误码 '+code:''}；本次未扣作文次数）`,502);
+ fail(`${reason}（${provider} HTTP ${response.status}${code?'，错误码 '+code:''}；诊断 ${category}${field?':'+field:''}；本次未扣作文次数）`,502);
 }
 async function authenticate(req:Request,b:any){
  const ip=req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()||'unknown';

@@ -20,8 +20,13 @@ test('Gemini estimates never become measured character boxes and invalid boxes p
  for(const value of [null,[],[0,0,NaN,400],[-1,0,50,400],[0,0,1001,400]]){s.lines[0].box_2d=value;assert.equal(geminiOcrResult(s).layout.elements[0].bbox_2d,null);}
 });
 test('partial or malformed OCR output is rejected rather than silently omitting pages or lines',()=>{const s=sample();s.complete=false;assert.throws(()=>geminiOcrResult(s));s.complete=true;delete s.lines[0].text;assert.throws(()=>geminiOcrResult(s));assert.throws(()=>geminiOcrResult({complete:true,lines:[]}));});
+test('compact generation schema still enforces page and coordinate limits at the boundary',()=>{
+ const line=sample().lines[0];assert.throws(()=>geminiOcrResult({complete:true,lines:Array(251).fill(line)}));
+ assert.throws(()=>geminiOcrResult({complete:true,lines:[{...line,text:'字'.repeat(5001)}]}));
+ const r=geminiOcrResult({complete:true,lines:[{...line,box_2d:[0,0,100,100,200]}]});assert.equal(r.layout.elements[0].bbox_2d,null);assert.equal(r.text,line.text);
+});
 test('Gemini requests separate instructions from input and reject truncation/thought text',()=>{
- const b=geminiRequest('rules',{essay:'student'},6000);assert.equal(b.systemInstruction.parts[0].text,'rules');assert.equal(b.generationConfig.responseFormat.text.mimeType,'application/json');
+ const b=geminiRequest('rules',{essay:'student'},6000);assert.equal(b.systemInstruction.parts[0].text,'rules');assert.equal(b.generationConfig.responseFormat.text.mimeType,'APPLICATION_JSON');
  const ocr=geminiOcrRequest('data:image/jpeg;base64,YWJj');assert.equal(ocr.contents[0].parts[0].inlineData.data,'YWJj');assert(ocr.generationConfig.responseFormat.text.schema.required.includes('lines'));
  assert.deepEqual(geminiResult({candidates:[{finishReason:'STOP',content:{parts:[{thought:true,text:'private thought'},{text:'{"complete":true}'}]}}]}),{complete:true});assert.throws(()=>geminiResult({candidates:[{finishReason:'MAX_TOKENS'}]}));
 });
