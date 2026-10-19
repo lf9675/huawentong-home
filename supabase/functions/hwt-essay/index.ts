@@ -4,7 +4,8 @@ import {loadRules} from './rules.mjs';
 const rules=await loadRules();
 import {norm,chunks,ledger,span} from './core.mjs';
 import {finalize} from './grade.mjs';
-const VERSION='2026-10-05.2';
+import {visionResult,geminiRequest,geminiResult} from './google.mjs';
+const VERSION='2026-10-19.1';
 const secret=(name:string)=>Deno.env.get(name)?.trim();
 const digest=async(s:string)=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s))),x=>x.toString(16).padStart(2,'0')).join('');
 const fail=(message:string,status=400):never=>{throw Object.assign(new Error(message),{status});};
@@ -16,12 +17,13 @@ async function db(path:string,body?:unknown){
  if(!r.ok)fail('数据库暂时不可用，请稍后重试。',503);return r.json();
 }
 async function rate(bucket:string,max:number,seconds=900){if(!await db('rpc/hwt_take_rate',{bucket,maximum:max,seconds}))fail('请求较多，请稍后再试。',429);}
-function configured(){return {ocr:!!secret('ZHIPU_API_KEY'),grading:!!secret('DEEPSEEK_API_KEY')};}
-export async function providerFailure(service:'ocr'|'grading',response:Response):Promise<never>{
- const label=service==='ocr'?'照片识别':'AI 批改',provider=service==='ocr'?'智谱':'DeepSeek';
+function providers(){return {ocr:secret('GOOGLE_CLOUD_VISION_API_KEY')?'Google Cloud Vision':secret('ZHIPU_API_KEY')?'智谱':null,grading:secret('GEMINI_API_KEY')?'Gemini':secret('DEEPSEEK_API_KEY')?'DeepSeek':null};}
+function configured(){const p=providers();return {ocr:!!p.ocr,grading:!!p.grading};}
+export async function providerFailure(service:'ocr'|'grading',response:Response,provider=service==='ocr'?'智谱':'DeepSeek'):Promise<never>{
+ const label=service==='ocr'?'页面识别':'AI 批改';
  // Never return provider messages: they can echo keys, student text or request data.
  let code='';try{const data=await response.json(),value=String(data?.error?.code??data?.code??'');if(/^\d{3,5}$/.test(value))code=value;}catch{}
- const reason=service==='ocr'&&code==='1113'?'智谱账户余额不足，照片识别无法开始，请老师检查 API 账户余额与可用资源包。':
+ const reason=provider==='智谱'&&service==='ocr'&&code==='1113'?'智谱账户余额不足，照片识别无法开始，请老师检查 API 账户余额与可用资源包。':
   response.status===401?`${provider}密钥未通过验证，请老师检查对应密钥。`:
   response.status===402?`${provider}账户额度不足，请老师检查余额。`:
   response.status===403?`${provider}拒绝了此请求，请老师检查账户状态和模型权限。`:
@@ -41,6 +43,13 @@ async function authenticate(req:Request,b:any){
 }
 async function job(hash:string,id:string,action:string,data:any={}){const r=await db('rpc/hwt_essay_job',{p_hash:hash,p_id:id,p_action:action,p_data:data});if(r.error)fail(r.error,409);return r;}
 async function chat(system:string,user:any,maxTokens=6000){
+ const googleKey=secret('GEMINI_API_KEY');
+ if(googleKey){
+  const model=secret('GEMINI_MODEL')||'gemini-3.8-flash';if(!/^gemini-[a-zA-Z0-9.-]+$/.test(model))fail('Gemini 模型名称配置不正确。',503);
+  const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+model+':generateContent',{method:'POST',headers:{'x-goog-api-key':googleKey,'Content-Type':'application/json'},body:JSON.stringify(geminiRequest(system,user,maxTokens)),signal:AbortSignal.timeout(110000)});
+  if(!r.ok)await providerFailure('grading',r,'Gemini');
+  try{return geminiResult(await r.json());}catch(e){fail((e as Error).message,502);}
+ }
  const key=secret('DEEPSEEK_API_KEY');if(!key)fail('批改服务尚未配置，请老师设置 DeepSeek 密钥。',503);
  const r=await fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({model:Deno.env.get('DEEPSEEK_MODEL')||'deepseek-flash',thinking:{type:'disabled'},temperature:0.2,max_tokens:maxTokens,response_format:{type:'json_object'},messages:[{role:'system',content:system},{role:'user',content:typeof user==='string'?user:JSON.stringify(user)}]}),signal:AbortSignal.timeout(110000)});
  if(!r.ok)await providerFailure('grading',r);
@@ -48,13 +57,22 @@ async function chat(system:string,user:any,maxTokens=6000){
  let data;try{data=JSON.parse(choice.message.content);}catch{fail('AI 返回格式不完整，请重试此步骤。',502);}return data;
 }
 async function ocr(image:string){
- const key=secret('ZHIPU_API_KEY');if(!key)fail('照片识别服务尚未配置，请老师设置智谱密钥。',503);
  if(!/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(image)||image.length>13000000)fail('照片格式或大小不符合要求。',413);
+ const googleKey=secret('GOOGLE_CLOUD_VISION_API_KEY');
+ if(googleKey){
+  const r=await fetch('https://vision.googleapis.com/v1/images:annotate',{method:'POST',headers:{'x-goog-api-key':googleKey,'Content-Type':'application/json'},body:JSON.stringify({requests:[{image:{content:image.slice(image.indexOf(',')+1)},features:[{type:'DOCUMENT_TEXT_DETECTION'}],imageContext:{languageHints:['zh','en']}}]}),signal:AbortSignal.timeout(110000)});
+  if(!r.ok)await providerFailure('ocr',r,'Google Cloud Vision');
+  const response=(await r.json()).responses?.[0];
+  if(response?.error){const status=({7:403,8:429,16:401,3:400} as any)[response.error.code]||502;await providerFailure('ocr',Response.json({error:{code:status}},{status}),'Google Cloud Vision');}
+  let result;try{result=visionResult(response);}catch(e){fail((e as Error).message,422);}
+  return {...result,imageHash:await digest(image)};
+ }
+ const key=secret('ZHIPU_API_KEY');if(!key)fail('页面识别服务尚未配置，请老师设置 Google Cloud Vision 密钥。',503);
  const r=await fetch('https://open.bigmodel.cn/api/paas/v4/layout_parsing',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({model:'glm-ocr',file:image}),signal:AbortSignal.timeout(110000)});
  if(!r.ok)await providerFailure('ocr',r);const data=await r.json();if(typeof data.md_results!=='string'||!data.md_results.trim())fail('没有识别到文字，请检查照片方向和清晰度。',422);
  const size=data.data_info?.pages?.[0]||{};
  const text=data.md_results.replace(/<[^>]*>/g,'').split('\n').map((s:string)=>s.replace(/^\s*#{1,6}\s*/,'').replace(/\*\*/g,'').trim()).filter(Boolean).join('\n');
- return {text,layout:{elements:data.layout_details||[],width:size.width,height:size.height,coordinate_space:'pixel'},imageHash:await digest(image)};
+ return {text,layout:{elements:data.layout_details||[],width:size.width,height:size.height,coordinate_space:'pixel'},provider:'智谱',imageHash:await digest(image)};
 }
 function feedbackIssues(f:any,pages:string[]){
  const full=pages.map(norm).join('');
@@ -71,7 +89,7 @@ export async function handle(req:Request){
   if(origin&&!allowed)fail('此来源不能调用批改服务。',403);
   if(req.method==='GET'){
    let database=false;try{await db('access_codes?select=id&limit=0');database=true;}catch{}
-   const services={database,...configured()};return new Response(JSON.stringify({version:VERSION,services,ready:Object.values(services).every(Boolean)}),{headers});
+   const services={database,...configured()};return new Response(JSON.stringify({version:VERSION,services,providers:providers(),ready:Object.values(services).every(Boolean)}),{headers});
   }
   if(req.method!=='POST')fail('请使用 POST。',405);
   if(Number(req.headers.get('content-length'))>13500000)fail('上传内容过大。',413);
@@ -80,7 +98,7 @@ export async function handle(req:Request){
   if(!b||typeof b.action!=='string')fail('缺少操作。');const {c,hash}=await authenticate(req,b);let result:any;
   if(b.action==='login'){
    const recent=await db('hwt_essay_jobs?code_id=eq.'+c.id+'&status=neq.cancelled&select=id,status,created_at,expires_at,input,submission_id&order=created_at.desc&limit=20');
-   result={nickname:c.nickname||'同学',exam:c.exam_level,remaining:Math.max(0,c.essays_total-c.essays_used),newRemaining:c.new_essays_total?Math.max(0,c.new_essays_total-c.new_essays_used):Math.max(0,c.essays_total-c.essays_used),expiry:c.expiry,services:configured(),recent};
+   result={nickname:c.nickname||'同学',exam:c.exam_level,remaining:Math.max(0,c.essays_total-c.essays_used),newRemaining:c.new_essays_total?Math.max(0,c.new_essays_total-c.new_essays_used):Math.max(0,c.essays_total-c.essays_used),expiry:c.expiry,services:configured(),providers:providers(),recent};
   }else if(b.action==='check_grading'){
    // Fixed, tiny authenticated probe; no student data and no essay quota consumed.
    await rate('essay-check-'+c.id,2,3600);
@@ -146,3 +164,4 @@ export async function handle(req:Request){
  }catch(e:any){return new Response(JSON.stringify({error:e.status?e.message:e.name==='TimeoutError'?'本步骤超时，已完成结果保留，请重试。':'暂时无法完成请求，请稍后重试。'}),{status:e.status||503,headers});}
 }
 Deno.serve(handle);
+
