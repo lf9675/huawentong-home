@@ -46,7 +46,12 @@ export function bindOriginalParagraphs(f,paragraphs){
  f.paragraph_feedback.forEach((p,i)=>{
   if(!p||p.para_num!==paragraphs[i].id)throw Error('段号与原文不对应，请重试批改步骤。');
   p.original_text=paragraphs[i].text;
-  if(!Array.isArray(p.red_issues)||p.red_issues.some(x=>!x||typeof x.original!=='string'||!norm(x.original)||!norm(p.original_text).includes(norm(x.original))))throw Error('语言批注引文与原段不一致，请重试。');
+  if(!Array.isArray(p.red_issues)||p.red_issues.some(x=>!x||typeof x.original!=='string'||!norm(x.original)||typeof x.improved!=='string'))throw Error('语言批注格式不完整，请重试。');
+  // An unmatched model quote is not evidence of a student error. Preserve it for review,
+  // with no mark/score, instead of discarding the entire otherwise useful essay report.
+  const unmatched=p.red_issues.filter(x=>!norm(p.original_text).includes(norm(x.original)));
+  p.unverified_red_issues=unmatched.map(x=>({...x,uncertain:true}));
+  p.red_issues=p.red_issues.filter(x=>norm(p.original_text).includes(norm(x.original)));
  });return f;
 }
 // Separate from full rubric grading so a display retry never discards the saved grade.
@@ -165,7 +170,9 @@ export function feedbackIssues(f,pages){
 export function allFindings(j){
  const audits=Object.keys(j.result).filter(k=>/^audit_\d+$/.test(k)).sort().flatMap(k=>j.result[k].issues||[]).map(x=>({...x,kind:'error'}));
  const unique=deduplicateTypos(ledger(j.result.pages,[...feedbackIssues(j.result.grade,j.result.pages),...audits],j.result.layouts));
- return ledger(j.result.pages,unique.map(a=>a.span?{...a,start:a.span[0],end:a.span[1],anchor_left:'',anchor_right:''}:a),j.result.layouts);
+ const anchored=ledger(j.result.pages,unique.map(a=>a.span?{...a,start:a.span[0],end:a.span[1],anchor_left:'',anchor_right:''}:a),j.result.layouts);
+ const pending=(j.result.grade.paragraph_feedback||[]).flatMap(p=>(p.unverified_red_issues||[]).map((x,i)=>({id:'unverified-'+p.para_num+'-'+(i+1),quote:x.original,fix:x.improved,why:'AI 引文未能与本段原文对应，请老师核对后再决定是否订正。',model_reason:x.explanation||'',category:x.type||'语言',kind:'error',paragraph:p.para_num,origin:'主批改待核对',span:null,marks:[],uncertain:true,location:'pending',visual_note:'未匹配到本段原句，不圈注、不计为已确认错字。'})));
+ return [...anchored,...pending];
 }
 // A primary check may quote one wrong character while an audit quotes the whole word.
 // Narrow spelling corrections to changed characters, then merge compatible overlapping edits.
@@ -228,7 +235,7 @@ export function mergeVisual(findings,visuals){
   const good=observations.filter(x=>['student_error','praise'].includes(x.verdict)&&norm(x.observed)&&norm(a.quote).includes(norm(x.observed)));
   const complete=required.length>0&&required.every(p=>good.some(x=>x.page===p));
   const marks=good.map(x=>({page:x.page,rects:(x.boxes||[]).map(visualRect).filter(Boolean),precision:'visual_estimate'})).filter(x=>x.rects.length);
-  return {...a,review_state:complete?'visual_checked':'pending',uncertain:!complete,visual_note:observations.map(x=>x.reason).filter(Boolean).join('；'),marks:complete&&marks.length?marks:a.marks,location:complete&&marks.length?'visual':'pending'};
+  return {...a,review_state:complete?'visual_checked':'pending',uncertain:!complete,visual_note:observations.map(x=>x.reason).filter(Boolean).join('；')||a.visual_note||'',marks:complete&&marks.length?marks:a.marks,location:complete&&marks.length?'visual':'pending'};
  });
 }
 export function safeTypos(feedback,annotations){
