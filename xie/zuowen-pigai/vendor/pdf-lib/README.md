@@ -1,0 +1,1 @@
+PDF-LIB 1.17.1 (MIT), vendored from the runtime package. Loaded only for a complete feedback PDF download. Text pages are rendered locally at 180 dpi to preserve Chinese system fonts without an external font service. Original image annotations are drawn into the exported page. No student content is uploaded by the PDF exporter.

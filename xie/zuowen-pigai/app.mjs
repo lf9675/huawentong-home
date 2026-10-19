@@ -1,6 +1,6 @@
 import {importDocuments,renderData,releasePages} from './documents.mjs';
 import {cropTargets} from './refine.mjs';
-import {renderReview} from './review.mjs';
+import {renderReview} from './review.mjs?v=20261019-9';
 const API='https://rodtizxezbtlhnuljzsc.supabase.co/functions/v1/hwt-essay-v2';
 const $=id=>document.getElementById(id),show=(id,on=true)=>{$(id).hidden=!on;};
 const state={code:'',account:null,photos:[],job:null,page:0,busy:false,retry:null,services:null};
@@ -88,7 +88,7 @@ async function resume(id){
  else if(Array.from({length:state.job.input.pageCount},(_,i)=>state.job.result['ocr_'+i]).every(Boolean))await run(ocrAll);
  else {renderVerify();error(Error('部分页面尚未上传，请取消本次，再上传同一篇作文。'));$('gradeButton').disabled=true;}
 }
-function renderResult(){show('result');show('setup',false);show('verify',false);show('progressPanel',false);show('recent',false);renderReview($('result'),state.job,state.photoJobId===state.job.id?state.photos:[],{newEssay:()=>guard(async()=>{reset();releasePages(state.photos.filter(Boolean));state.photos=[];$('photos').value='';thumbs();account(await api('login'));})});$('result').scrollIntoView({behavior:'smooth'});}
+function renderResult(){show('result');show('setup',false);show('verify',false);show('progressPanel',false);show('recent',false);renderReview($('result'),state.job,state.photoJobId===state.job.id?state.photos:[],{getPhotos:async()=>{if(state.photos.length===state.job.input.pageCount&&state.photos.every(p=>p?.data?.startsWith('data:')))return state.photos;return (await api('images',{id:state.job.id})).urls;},newEssay:()=>guard(async()=>{reset();releasePages(state.photos.filter(Boolean));state.photos=[];$('photos').value='';thumbs();account(await api('login'));})});$('result').scrollIntoView({behavior:'smooth'});}
 thumbs();
 health();
 

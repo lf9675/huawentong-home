@@ -1,4 +1,4 @@
-import {renderReview,escapeHtml as e} from './review.mjs';
+import {renderReview,escapeHtml as e} from './review.mjs?v=20261019-9';
 import {lessonHtml,printHandout,downloadPpt} from './lesson.mjs';
 const $=id=>document.getElementById(id),base='https://rodtizxezbtlhnuljzsc.supabase.co/functions/v1/';
 let token=sessionStorage.getItem('hwt_teacher_session')||'',busy=false,page=1,hasNext=false,current=null,selected=null,marks=[],pack=null,pendingPack=null;
@@ -20,7 +20,7 @@ function renderCurrent(){
  const j=current.job,edits=current.review.annotations||{};
  j.result.feedback.annotations=j.result.feedback.annotations.map(a=>({...a,...edits[a.id]}));for(const [id,a]of Object.entries(edits))if(id.startsWith('teacher-')&&!j.result.feedback.annotations.some(x=>x.id===id))j.result.feedback.annotations.push({id,...a});for(const [i,p] of (j.result.feedback.paragraph_feedback||[]).entries()){const x=edits['paragraph-'+(i+1)];if(x?.review_state==='teacher_rejected')p.status='keep';else if(x?.review_state==='teacher_confirmed'){p.why_and_how=x.why||p.why_and_how;p.revised_top=x.fix||p.revised_top;}}
  $('reviewTitle').textContent='审核作文 · 提交 #'+j.submission_id;$('reviewPanel').hidden=false;renderCandidates();
- renderReview($('reviewBody'),j,current.urls.filter((_,i)=>i<j.input.pageCount),{onSelect:a=>{if(selected?.id===a.id)return;}});
+ renderReview($('reviewBody'),j,current.urls.filter((_,i)=>i<j.input.pageCount),{getPhotos:async()=>(await api('detail',{id:j.id})).urls,onSelect:a=>{if(selected?.id===a.id)return;}});
  $('editPanel').hidden=true;selected=null;$('drawMode').checked=false;$('reviewBody').classList.remove('drawEnabled');
 }
 async function openJob(id){current=await api('detail',{id});renderCurrent();$('reviewPanel').scrollIntoView({behavior:'smooth'});say('请回看原文，确认影响选材、详略与表达的真实问题。');}
