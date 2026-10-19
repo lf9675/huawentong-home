@@ -1,3 +1,4 @@
+import {emphasisParts,problemPhrases,evidenceRows,focusFlow,exampleParts,verdictLabel} from './presentation.mjs';
 // Entire report, rendered locally in bounded A4 canvases. No DOM screenshots or external fonts.
 const W=595.28,H=841.89,M=42,SCALE=2.5;
 const RED='#b52c36',BLUE='#185e9a',INK='#243744';
@@ -7,20 +8,21 @@ const clean=s=>String(s??'').replace(/\r/g,'');
 const labels={adequate:'充分',missing:'缺少',weak:'尚未充分展开',off_topic:'感悟偏离重点',not_applicable:'本体裁不适用',aligned:'重点与详写匹配',underdeveloped:'重点正确但未展开',off_focus:'详写偏向另一重点'};
 export function reportBlocks(job){
  const f=job.result.feedback||{},r=f.overall_review||{},out=[];
- const add=(text,kind='text',color=INK)=>{if(clean(text).trim())out.push({text:clean(text),kind,color});};
+ const add=(text,kind='text',color=INK,phrases=[])=>{if(clean(text).trim())out.push({text:clean(text),kind,color,phrases});};
  const section=t=>add(t,'section');
- const card=(title,x)=>{if(!x)return;add(title,'heading');add((labels[x.status]?labels[x.status]+'：':'')+(x.judgement||''));add(x.evidence&&'依据：'+x.evidence);add(x.suggestion&&'怎么改：'+x.suggestion);};
+ const card=(title,x,action=true)=>{if(!x)return;add(title,'reviewHeading',RED);add(x.judgement,'text',INK,problemPhrases(x));if(action)add(x.suggestion);};
+ const compare=kind=>{const steps=focusFlow(f,kind),rows=evidenceRows(f,kind);if(steps.length)out.push({kind:'flow',steps});if(rows.length)out.push({kind:'table',rows});};
+ const example=(text,notes)=>{const parts=exampleParts(text,notes),runs=parts.flatMap(x=>x.note?[{text:x.text,color:RED,bold:true},{text:'〔扣“'+x.note.keyword+'”：'+x.note.why+'〕',color:RED,bold:true}]:[{text:x.text}]);out.push({kind:'text',text:runs.map(x=>x.text).join(''),runs});};
  add('华文通 · 完整作文批改报告','title');
  add(job.input.genre||'作文','small');add('题目：'+(job.input.prompt||'未提供题目，本次只检查语言。'));
  add(job.input.requirements&&'特别要求：'+job.input.requirements);
  add('AI 初评；待核对项目不作为确定的学生错误。红圈标错字，红波浪线标病句，蓝波浪线标好句。悬停内容已展开为文字订正。','small');
- section('一、先看选材与详略');
  card('选材与扣题',r.materials||{judgement:f.material_review||f.overall_comment});
- card('紧扣关键词进行详写',r.keyword_detail);
- if(r.keyword_detail){add('实际详写：'+r.keyword_detail.actual_focus);for(const x of r.keyword_detail.keywords||[]){add('关键词：'+x.keyword+' — '+x.meaning,'heading');add((x.paragraphs?.length?'第 '+x.paragraphs.join('、')+' 段；':'')+({met:'已体现',thin:'写得不足',missing:'尚未体现'}[x.verdict]||''));add(x.quote&&'原文：“'+x.quote+'”');}}
- else if(job.input.mode!=='language')add('此旧记录尚未做关键词详写专项检查；PDF 保留原来的批改结果。','small');
- card('详略安排',r.detail_balance);card('结尾抒情议论',r.ending_reflection);
- if(r.ending_reflection?.example){add('结尾修改示范','heading',RED);add(r.ending_reflection.example,'text',RED);}
+ card('详略安排',r.detail_balance);
+ card('紧扣关键词详写',r.keyword_detail,false);compare('keyword');
+ if(!r.keyword_detail&&job.input.mode!=='language')add('此旧记录尚未提供关键词专项点评。','small');
+ if(r.ending_reflection&&r.ending_reflection.status!=='not_applicable'){card('结尾抒情议论',r.ending_reflection,false);compare('ending');}
+ if(r.ending_reflection?.example){add('结尾修改示范','heading',RED);example(r.ending_reflection.example,r.ending_reflection.example_notes);}
  for(const text of f.strengths||[])add('值得保留：'+text,'text',BLUE);
  for(const [i,text] of (r.priorities||[]).entries())add('先改 '+(i+1)+'：'+text,'text',RED);
  add(f.overall_suggestion);add(f.encouragement);
@@ -40,7 +42,7 @@ export function reportBlocks(job){
   add(p.why_and_how&&(revise?'主要问题与改法：':'本段点评：')+p.why_and_how,'text',revise?RED:p.status==='good'?BLUE:INK);
   for(const x of p.structure_content_issues||[])add([x.problem,x.suggestion].filter(Boolean).join('；'),'text',revise?RED:INK);
   const en=p.explanation_en||(p.structure_content_issues||[]).map(x=>x.voice_en).filter(Boolean).join(' ');add(en&&'English explanation: '+en,'small');
-  if(revise&&p.revised_top){add('修改示范','heading',RED);add(p.revised_top);}
+  if(revise&&p.revised_top){add('修改示范','heading',RED);example(p.revised_top,p.revision_notes);}
  }
  section('五、全部字词、句子批注与核对记录');
  if(!f.annotations?.length)add('暂无批注记录。');
@@ -53,7 +55,7 @@ export function reportBlocks(job){
  }
  section('六、整篇修改示范（未改段落保留原文）');
  add('以下是内容修改示范；字词订正及待核对项目请同时参照批注清单。','small');
- for(const p of paragraphs)add(p.status==='needs_revision'&&p.revised_top?p.revised_top:p.original_text);
+ for(const p of paragraphs){if(p.status==='needs_revision'&&p.revised_top)example(p.revised_top,p.revision_notes);else add(p.original_text);}
  section('七、学习建议与讲解');
  for(const t of f.coaching_advice||[])add(t);
  if(f.top_issue){add(f.top_issue.problem,'heading',RED);add(f.top_issue.evidence_quote);add(f.top_issue.why);add(f.top_issue.fix);}
@@ -91,6 +93,9 @@ export async function createReportPdf(job,photos=[],options={}){
  const reset=()=>{ctx.setTransform(SCALE,0,0,SCALE,0,0);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.textBaseline='top';y=M;hasContent=false;};
  reset();
  const flush=async()=>{if(!hasContent)return;ctx.fillStyle='#6b747a';font(9);ctx.fillText('华文通 · 作文批改',M,H-26);ctx.fillText(String(++page),W-M-20,H-26);const img=await pdf.embedJpg(canvas.toDataURL('image/jpeg',.94));pdf.addPage([W,H]).drawImage(img,{x:0,y:0,width:W,height:H});options.onProgress?.('正在生成 PDF：已完成 '+page+' 页');await new Promise(resolve=>setTimeout(resolve,0));reset();};
+ // Measure bold and normal runs separately, preserving every character across page breaks.
+ const richLines=(runs,maxWidth,size)=>{const lines=[];let current=[],width=0;const push=()=>{lines.push(current);current=[];width=0;};for(const run of runs){for(const ch of clean(run.text)){if(ch==='\n'){push();continue;}font(size,!!run.bold);const w=ctx.measureText(ch).width;if(current.length&&width+w>maxWidth)push();const last=current.at(-1);if(last&&last.bold===!!run.bold&&last.color===(run.color||INK))last.text+=ch;else current.push({text:ch,bold:!!run.bold,color:run.color||INK});width+=w;}}if(current.length)push();return lines;};
+ const drawLine=(runs,x,top,size)=>{const start=x;for(const run of runs){font(size,run.bold);ctx.fillStyle=run.color;ctx.fillText(run.text,x,top);x+=ctx.measureText(run.text).width;}layout.push({kind:'line',text:runs.map(x=>x.text).join(''),pdfPage:page+1,y:top,size,x:start,width:x-start,runs});};
  try{
   for(const block of reportBlocks(job)){
    if(block.kind==='photo'){
@@ -102,12 +107,40 @@ export async function createReportPdf(job,photos=[],options={}){
      const box={x:(W-width*scale)/2,y:M+36,w:width*scale,h:height*scale};ctx.drawImage(img,box.x,box.y,box.w,box.h);drawMarks(ctx,job.result.feedback?.annotations,block.page,box);img.close?.();layout.push({kind:'photo',sourcePage:block.page,pdfPage:page+1,box});
     }await flush();continue;
    }
-   const size=block.kind==='title'?23:block.kind==='section'?17:block.kind==='heading'?14:block.kind==='small'?10:12;
-   const lineHeight=size*1.75,bold=['title','section','heading'].includes(block.kind);
-   if(block.kind==='section'&&hasContent){if(y>H-M-140)await flush();else y+=18;}
-   font(size,bold);let lines=wrapText(ctx,block.text,W-2*M);
+   if(block.kind==='table'){
+    const col=(W-2*M)/2,pad=12,lh=20,size=11.5;
+    const header=async()=>{if(y+70>H-M)await flush();ctx.fillStyle='#eef0e9';ctx.fillRect(M,y,W-2*M,32);font(12,true);ctx.fillStyle=INK;ctx.fillText('你的原句',M+pad,y+7);ctx.fillText('对照题目，怎样改',M+col+pad,y+7);y+=32;hasContent=true;};
+    await header();
+    for(const row of block.rows){
+     const left=[{text:(row.paragraph?'第 '+row.paragraph+' 段':'原文')+'\n',color:'#68746c'},{text:row.quote||'原文尚未写出这一点。',bold:true}];
+     const right=[{text:row.keyword+' · '+verdictLabel(row.status)+'\n',bold:true},{text:row.problem+'\n',bold:true,color:row.status==='met'?BLUE:RED},{text:row.action===row.problem?'':row.action}];
+     const cells=[left,right].map(runs=>richLines(runs,col-2*pad,size)),pos=[0,0];
+     const total=Math.max(...cells.map(x=>x.length))*lh+2*pad;
+     if(y+total>H-M&&total<H-2*M-32){await flush();await header();}
+     while(pos.some((p,i)=>p<cells[i].length)){
+      let limit=Math.floor((H-M-y-2*pad)/lh);if(limit<1){await flush();await header();limit=Math.floor((H-M-y-2*pad)/lh);}
+      const slices=cells.map((lines,i)=>lines.slice(pos[i],pos[i]+limit)),height=Math.max(...slices.map(a=>a.length))*lh+2*pad;
+      ctx.strokeStyle='#dce1da';ctx.lineWidth=.7;ctx.strokeRect(M,y,col,height);ctx.strokeRect(M+col,y,col,height);
+      slices.forEach((lines,i)=>{lines.forEach((runs,n)=>drawLine(runs,M+i*col+pad,y+pad+n*lh,size));pos[i]+=lines.length;});
+      layout.push({kind:'tableRow',paragraph:row.paragraph,pdfPage:page+1,y,height});y+=height;hasContent=true;
+      if(pos.some((p,i)=>p<cells[i].length)){await flush();await header();}
+     }
+    }y+=18;continue;
+   }
+   if(block.kind==='flow'){
+    const gap=14,col=(W-2*M-gap*(block.steps.length-1))/block.steps.length,size=10.5,lh=18;
+    const lines=block.steps.map(x=>richLines([{text:x.label+'\n',bold:true},{text:x.status==='guide'?'':verdictLabel(x.status)}],col-14,size));
+    const height=Math.max(...lines.map(x=>x.length))*lh+18;if(y+height+12>H-M)await flush();
+    block.steps.forEach((x,i)=>{const left=M+i*(col+gap);ctx.fillStyle=x.status==='met'?'#edf5fb':'#fff3ec';ctx.fillRect(left,y,col,height);ctx.strokeStyle='#d8cbc6';ctx.strokeRect(left,y,col,height);lines[i].forEach((runs,n)=>drawLine(runs,left+7,y+9+n*lh,size));if(i){font(12);ctx.fillStyle='#68746c';ctx.fillText('→',left-gap,y+height/2-7);}});
+    layout.push({kind:'flow',pdfPage:page+1,y,height});y+=height+18;hasContent=true;continue;
+   }
+   const size=block.kind==='title'?23:block.kind==='reviewHeading'?19:block.kind==='section'?17:block.kind==='heading'?14:block.kind==='small'?10:12;
+   const lineHeight=size*1.75,bold=['title','section','heading','reviewHeading'].includes(block.kind);
+   if((block.kind==='section'||block.kind==='reviewHeading')&&hasContent){if(y>H-M-140)await flush();else y+=14;}
+   const runs=block.runs||emphasisParts(block.text,block.phrases).map(x=>({...x,bold:bold||x.bold,color:block.color}));
+   const lines=richLines(runs,W-2*M,size);
    if(bold&&y+Math.min(lines.length,2)*lineHeight+25>H-M)await flush();
-   for(const line of lines){if(y+lineHeight>H-M)await flush();font(size,bold);ctx.fillStyle=block.color||INK;ctx.fillText(line,M,y);layout.push({kind:'line',text:line,pdfPage:page+1,y,size});hasContent=true;y+=lineHeight;}y+=bold?9:6;
+   for(const runs of lines){if(y+lineHeight>H-M)await flush();drawLine(runs,M,y,size);hasContent=true;y+=lineHeight;}y+=bold?9:6;
   }await flush();return {bytes:await pdf.save(),pageCount:page,layout};
  }finally{canvas.width=1;canvas.height=1;}
 }

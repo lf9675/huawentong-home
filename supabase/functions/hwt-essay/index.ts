@@ -5,9 +5,9 @@ const rules=await loadRules();
 import {norm,chunks,ledger,span} from './core.mjs';
 import {finalize} from './grade.mjs';
 import {geminiOcrRequest,geminiOcrResult,geminiRequest,geminiResult,geminiFailureInfo} from './google.mjs';
-import {TEACHING_RULES,OCR_REVIEW_RULES,VISUAL_RULES,paragraphsOf,bindOriginalParagraphs,validateTeaching,allFindings,mergeVisual,safeTypos,compareOcr,reconciledLayout,refinementTargets,applyRefinement,REFINE_RULES,visualTargets} from './pedagogy.mjs';
+import {TEACHING_RULES,PRESENTATION_STAGE_RULES,presentationInput,applyPresentation,OCR_REVIEW_RULES,VISUAL_RULES,paragraphsOf,bindOriginalParagraphs,validateTeaching,allFindings,mergeVisual,safeTypos,compareOcr,reconciledLayout,refinementTargets,applyRefinement,REFINE_RULES,visualTargets} from './pedagogy.mjs';
 import {savePage,pageData,pageUrls} from './storage.mjs';
-const VERSION='2026-10-19.9';
+const VERSION='2026-10-19.10';
 const secret=(name:string)=>Deno.env.get(name)?.trim();
 const digest=async(s:string)=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s))),x=>x.toString(16).padStart(2,'0')).join('');
 const fail=(message:string,status=400):never=>{throw Object.assign(new Error(message),{status});};
@@ -107,7 +107,7 @@ export async function handle(req:Request){
    }else if(b.action==='get'||b.action==='cancel')result=await job(hash,b.id,b.action);
    else if(b.action==='images'){const j=await job(hash,b.id,'get');result={urls:await pageUrls(j)};}
    else if(b.action==='refine_targets'){const j=await job(hash,b.id,'get');if(!Number.isInteger(b.page)||b.page<0||b.page>=j.input.pageCount||!j.result['visual_'+b.page]?.complete)fail('请先完成原图核对。');result={targets:refinementTargets(j,b.page)};}
-   else if(['ocr','ocr_review','confirm','audit','grade','visual','refine','finish'].includes(b.action)){
+   else if(['ocr','ocr_review','confirm','audit','grade','presentation','visual','refine','finish'].includes(b.action)){
     let j=await job(hash,b.id,'get');if(j.status==='complete')return new Response(JSON.stringify(j),{headers});
     const lease=crypto.randomUUID();await job(hash,b.id,'claim',{lease});
     try{
@@ -147,7 +147,14 @@ export async function handle(req:Request){
         const data=await chat(system+'\n'+TEACHING_RULES,{prompt:j.input.prompt,requirements:j.input.requirements,genre:j.input.genre,paragraphs,essay:pages.join('\n')},40000);
         try{bindOriginalParagraphs(data,paragraphs);}catch(e){fail((e as Error).message,502);}
         if(!Array.isArray(data.paragraph_feedback)||!data.paragraph_feedback.length||!data.paragraph_feedback.every((p:any)=>p&&typeof p.original_text==='string'&&p.original_text.trim()&&Array.isArray(p.red_issues)&&p.red_issues.every((x:any)=>x&&typeof x.original==='string'&&typeof x.improved==='string')))fail('段落批改未完整返回，请重试。',502);
-        try{patch.grade=validateTeaching(data,paragraphs,j.input);}catch(e){fail((e as Error).message,502);}}
+        try{patch.grade=validateTeaching(data,paragraphs,j.input);patch.presentation_required=true;}catch(e){fail((e as Error).message,502);}}
+      }else if(b.action==='presentation'){
+       if(!j.result.grade)fail('请先完成全文批改。');
+       if(j.input.mode==='grade'&&j.result.grade.presentation_version!==1){
+        await rate('essay-ai-'+c.id,120,86400);const paragraphs=paragraphsOf(pages,j.result.layouts);
+        const data=await chat(PRESENTATION_STAGE_RULES,presentationInput(j.result.grade,j.input,paragraphs),16000);
+        try{patch.grade=applyPresentation(j.result.grade,data,paragraphs,j.input);patch.presentation_required=false;}catch(e){fail((e as Error).message,502);}
+       }
       }else if(b.action==='visual'){
        if(!j.result.grade||jobs.some((_:any,i:number)=>!j.result['audit_'+i]?.complete))fail('请先完成文字批改。');
        if(!Number.isInteger(b.page)||b.page<0||b.page>=j.input.pageCount)fail('页码不正确。');
@@ -171,6 +178,7 @@ export async function handle(req:Request){
         patch[key]={complete:true,targets:targets.length};
        }
       }else if(b.action==='finish'){
+       if(j.result.presentation_required&&j.result.grade?.presentation_version!==1)fail('对照表和扣题旁批尚未整理完成，请刷新网页后继续批改。');
        if(!j.result.grade||jobs.some((_:any,i:number)=>!j.result['audit_'+i]?.complete))fail('尚有批改步骤未完成，请继续重试。');
        const issues=jobs.flatMap((_:any,i:number)=>j.result['audit_'+i].issues);
        if(Array.from({length:j.input.pageCount},(_,i)=>i).some(i=>!j.result['visual_'+i]?.complete))fail('尚未完成原笔迹核对，请继续。');

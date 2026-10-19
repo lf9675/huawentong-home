@@ -1,4 +1,4 @@
-import {renderReview,escapeHtml as e} from './review.mjs?v=20261019-9';
+import {renderReview,escapeHtml as e} from './review.mjs?v=20261019-10';
 import {lessonHtml,printHandout,downloadPpt} from './lesson.mjs';
 const $=id=>document.getElementById(id),base='https://rodtizxezbtlhnuljzsc.supabase.co/functions/v1/';
 let token=sessionStorage.getItem('hwt_teacher_session')||'',busy=false,page=1,hasNext=false,current=null,selected=null,marks=[],pack=null,pendingPack=null;

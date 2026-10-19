@@ -1,6 +1,6 @@
 import {importDocuments,renderData,releasePages} from './documents.mjs';
 import {cropTargets} from './refine.mjs';
-import {renderReview} from './review.mjs?v=20261019-9';
+import {renderReview} from './review.mjs?v=20261019-10';
 const API='https://rodtizxezbtlhnuljzsc.supabase.co/functions/v1/hwt-essay-v2';
 const $=id=>document.getElementById(id),show=(id,on=true)=>{$(id).hidden=!on;};
 const state={code:'',account:null,photos:[],job:null,page:0,busy:false,retry:null,services:null};
@@ -72,10 +72,11 @@ $('cancel').onclick=()=>guard(async()=>{if(state.job)await api('cancel',{id:stat
 function reset(){state.job=null;state.page=0;state.retry=null;sessionStorage.removeItem('hwt-essay-job');show('verify',false);show('result',false);show('progressPanel',false);show('setup');}
 async function grading(){
  if(!state.job.result.pages){const pages=Array.from({length:state.job.input.pageCount},(_,i)=>$('page-text-'+i).value);if(!pages.every((_,i)=>$('ack-'+i)?.checked))throw Error('请逐页核对识别结果，并勾选确认。');state.job=await api('confirm',{id:state.job.id,pages,acknowledged:true});}
- show('verify',false);const count=state.job.result.chunkCount,total=count+state.job.input.pageCount+2;let done=0;
+ show('verify',false);const count=state.job.result.chunkCount,total=count+state.job.input.pageCount+3;let done=0;
  for(let i=0;i<count;i++){setProgress(`逐句复核语言：第 ${i+1} / ${count} 段`,Math.round(done/total*100));if(!state.job.result['audit_'+i])state.job=await api('audit',{id:state.job.id,chunk:i});done++;}
  setProgress(state.job.input.mode==='grade'?'正在按题目和评分规则评阅全文……':'正在整理语言检查结果……',Math.round(done/total*100));if(!state.job.result.grade)state.job=await api('grade',{id:state.job.id});
- for(let i=0;i<state.job.input.pageCount;i++){setProgress(`回看原笔迹、定位红蓝批注：第 ${i+1} 页`,Math.round((count+1+i)/total*100));if(!state.job.result['visual_'+i])state.job=await api('visual',{id:state.job.id,page:i});if(!state.job.result['refine_'+i]){setProgress(`局部放大核对错字位置：第 ${i+1} 页`,Math.round((count+1+i)/total*100));const {targets}=await api('refine_targets',{id:state.job.id,page:i});const crops=await cropTargets(state.photos[i]?.data,targets);state.job=await api('refine',{id:state.job.id,page:i,crops});}}
+ if(state.job.input.mode==='grade'&&state.job.result.grade.presentation_version!==1){setProgress('正在整理原句对照表与逐句扣题说明……',Math.round((count+1)/total*100));state.job=await api('presentation',{id:state.job.id});}
+ for(let i=0;i<state.job.input.pageCount;i++){setProgress(`回看原笔迹、定位红蓝批注：第 ${i+1} 页`,Math.round((count+2+i)/total*100));if(!state.job.result['visual_'+i])state.job=await api('visual',{id:state.job.id,page:i});if(!state.job.result['refine_'+i]){setProgress(`局部放大核对错字位置：第 ${i+1} 页`,Math.round((count+2+i)/total*100));const {targets}=await api('refine_targets',{id:state.job.id,page:i});const crops=await cropTargets(state.photos[i]?.data,targets);state.job=await api('refine',{id:state.job.id,page:i,crops});}}
  setProgress('正在保存批改与用量……',95);state.job=await api('finish',{id:state.job.id});renderResult();const info=await api('login');$('accountInfo').textContent=`${info.nickname} · ${info.exam} · 新作文余 ${info.newRemaining} 篇 / 总次数余 ${info.remaining} 次 · 有效至 ${info.expiry}`;
 }
 $('gradeButton').onclick=()=>guard(()=>run(grading));
