@@ -4,11 +4,11 @@
   if(url)return;e.preventDefault();if(busy)return;busy=true;link.setAttribute('aria-disabled','true');
   try{
    status.textContent='正在准备整套资料，请稍候……';
-   const response=await fetch('downloads/resource-pack.json');if(!response.ok)throw Error('manifest');
+   const response=await fetch('downloads/resource-pack.json',{cache:'no-store'});if(!response.ok)throw Error('manifest');
    const manifest=await response.json(),parts=[];
    for(let i=0;i<manifest.parts.length;i++){
     status.textContent='正在准备资料 '+(i+1)+' / '+manifest.parts.length+'……';
-    const part=manifest.parts[i],r=await fetch(part.url);if(!r.ok)throw Error('download');
+    const part=manifest.parts[i],r=await fetch(part.url,{cache:'no-store'});if(!r.ok)throw Error('download');
     const buffer=await r.arrayBuffer();if(buffer.byteLength!==part.bytes)throw Error('size');parts.push(buffer);
    }
    const blob=new Blob(parts,{type:'application/zip'});if(blob.size!==manifest.bytes)throw Error('size');
