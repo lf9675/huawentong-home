@@ -1,0 +1,23 @@
+{
+  "name": "把爱说出来_学生互动学习.html",
+  "mime": "text/html;charset=utf-8",
+  "bytes": 22579273,
+  "sha256": "7a8db929d2b8cbb9c1a81c5d63c3cc6f980912bd94f7ff7f7ed8f2e445dd8b36",
+  "parts": [
+    {
+      "file": "offline.part01.bin",
+      "bytes": 10485760,
+      "sha256": "a7505d54d123ddb7a89acafca5215cca97a4b00e0c3a16c88b581ce25a655527"
+    },
+    {
+      "file": "offline.part02.bin",
+      "bytes": 10485760,
+      "sha256": "1b51fb2ef3c3ea3103c844f704002b7490c7353e721d7152aae3382dd249d3f2"
+    },
+    {
+      "file": "offline.part03.bin",
+      "bytes": 1607753,
+      "sha256": "a5065d99ab86ec1e1b8a724b86134c52c5c1c64628874d1c47097b045f79d31f"
+    }
+  ]
+}

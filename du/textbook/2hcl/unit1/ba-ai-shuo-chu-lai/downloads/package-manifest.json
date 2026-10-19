@@ -1,0 +1,32 @@
+{
+  "name": "把爱说出来_完整教学配套.zip",
+  "bytes": 50470406,
+  "sha256": "d5a2cf9ffa84b455e5853a821a669e142dfe5d0988e72477b4b028cd2e7028c1",
+  "parts": [
+    {
+      "file": "package.part01.bin",
+      "bytes": 10485760,
+      "sha256": "eefd3b8ac91916ee94768ec9a0b3e57d5045bb5f2a379d6420ef4a95b98b80d0"
+    },
+    {
+      "file": "package.part02.bin",
+      "bytes": 10485760,
+      "sha256": "9989ba2dc54b0e12e8556d9d6d7f8f5af0f046a2a7920cbea90f99260087e688"
+    },
+    {
+      "file": "package.part03.bin",
+      "bytes": 10485760,
+      "sha256": "805931c9d253dbd1de06cd6d1918d1d1f55737b6c1bfea7808e47f5fe51f8d92"
+    },
+    {
+      "file": "package.part04.bin",
+      "bytes": 10485760,
+      "sha256": "f64a813309f8d064188836982d8f685a9a3eb170d62a8626f0cbf378d5cf1f51"
+    },
+    {
+      "file": "package.part05.bin",
+      "bytes": 8527366,
+      "sha256": "e17f027d5c002b51a97f99e9fb431ba72effbb68dfbb2e20c7783bf69ad66b76"
+    }
+  ]
+}
