@@ -1,4 +1,4 @@
-import {emphasisParts,problemPhrases,evidenceRows,focusFlow,exampleParts,verdictLabel} from './presentation.mjs';
+import {emphasisParts,problemPhrases,evidenceRows,focusFlow,exampleParts,verdictLabel,isSupportNote,noteLabel} from './presentation.mjs';
 // Entire report, rendered locally in bounded A4 canvases. No DOM screenshots or external fonts.
 const W=595.28,H=841.89,M=42,SCALE=2.5;
 const RED='#b52c36',BLUE='#185e9a',INK='#243744';
@@ -12,7 +12,7 @@ export function reportBlocks(job){
  const section=t=>add(t,'section');
  const card=(title,x,action=true)=>{if(!x)return;add(title,'reviewHeading',RED);add(x.judgement,'text',INK,problemPhrases(x));if(action)add(x.suggestion);};
  const compare=kind=>{const steps=focusFlow(f,kind),rows=evidenceRows(f,kind);if(steps.length)out.push({kind:'flow',steps});if(rows.length)out.push({kind:'table',rows});};
- const example=(text,notes)=>{const parts=exampleParts(text,notes),runs=parts.flatMap(x=>x.note?[{text:x.text,color:RED,bold:true},{text:'〔扣“'+x.note.keyword+'”：'+x.note.why+'〕',color:RED,bold:true}]:[{text:x.text}]);out.push({kind:'text',text:runs.map(x=>x.text).join(''),runs});};
+ const example=(text,notes)=>{const parts=exampleParts(text,notes),runs=parts.flatMap(x=>x.note?[{text:x.text,color:isSupportNote(x.note)?INK:RED,bold:!isSupportNote(x.note)},{text:'〔'+noteLabel(x.note)+'：'+x.note.why+'〕',color:RED,bold:true}]:[{text:x.text}]);out.push({kind:'text',text:runs.map(x=>x.text).join(''),runs});};
  add('华文通 · 完整作文批改报告','title');
  add(job.input.genre||'作文','small');add('题目：'+(job.input.prompt||'未提供题目，本次只检查语言。'));
  add(job.input.requirements&&'特别要求：'+job.input.requirements);
@@ -110,11 +110,17 @@ export async function createReportPdf(job,photos=[],options={}){
    if(block.kind==='table'){
     const col=(W-2*M)/2,pad=12,lh=20,size=11.5;
     const header=async()=>{if(y+70>H-M)await flush();ctx.fillStyle='#eef0e9';ctx.fillRect(M,y,W-2*M,32);font(12,true);ctx.fillStyle=INK;ctx.fillText('你的原句',M+pad,y+7);ctx.fillText('对照题目，怎样改',M+col+pad,y+7);y+=32;hasContent=true;};
-    await header();
-    for(const row of block.rows){
+    const cellsFor=row=>{
      const left=[{text:(row.paragraph?'第 '+row.paragraph+' 段':'原文')+'\n',color:'#68746c'},{text:row.quote||'原文尚未写出这一点。',bold:true}];
      const right=[{text:row.keyword+' · '+verdictLabel(row.status)+'\n',bold:true},{text:row.problem+'\n',bold:true,color:row.status==='met'?BLUE:RED},{text:row.action===row.problem?'':row.action}];
-     const cells=[left,right].map(runs=>richLines(runs,col-2*pad,size)),pos=[0,0];
+     return [left,right].map(runs=>richLines(runs,col-2*pad,size));
+    };
+    // Keep the table header with its first row instead of leaving a lone header at page end.
+    const firstHeight=block.rows.length?Math.max(...cellsFor(block.rows[0]).map(x=>x.length))*lh+2*pad:0;
+    if(y+32+Math.min(firstHeight,H-2*M-32)>H-M)await flush();
+    await header();
+    for(const row of block.rows){
+     const cells=cellsFor(row),pos=[0,0];
      const total=Math.max(...cells.map(x=>x.length))*lh+2*pad;
      if(y+total>H-M&&total<H-2*M-32){await flush();await header();}
      while(pos.some((p,i)=>p<cells[i].length)){

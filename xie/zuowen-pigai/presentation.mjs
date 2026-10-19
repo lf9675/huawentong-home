@@ -48,3 +48,6 @@ export function exampleParts(text,notes=[]){
  ranges.sort((a,b)=>a.a-b.a);const out=[];let cursor=0;
  for(const r of ranges){if(r.a<cursor)continue;if(r.a>cursor)out.push({text:text.slice(cursor,r.a)});out.push({text:text.slice(r.a,r.b),note:r.note});cursor=r.b;}if(cursor<text.length)out.push({text:text.slice(cursor)});return out;
 }
+
+export const isSupportNote=note=>/辅助|不能代替/.test(note?.why||'');
+export const noteLabel=note=>isSupportNote(note)?'辅助说明（'+note.keyword+'）':'扣“'+note.keyword+'”';

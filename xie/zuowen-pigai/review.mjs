@@ -1,5 +1,5 @@
 import {norm,span} from './core.mjs';
-import {emphasisParts,problemPhrases,evidenceRows,focusFlow,exampleParts,plainExample,verdictLabel} from './presentation.mjs';
+import {emphasisParts,problemPhrases,evidenceRows,focusFlow,exampleParts,plainExample,verdictLabel,isSupportNote,noteLabel} from './presentation.mjs';
 export const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const e=escapeHtml;
 export const isExcluded=a=>['ocr_error','deleted_text','not_error','teacher_rejected'].includes(a.review_state);
@@ -14,7 +14,7 @@ function voice(zh,en=''){return `<div class="voiceControls">${zh?`<button class=
 export const emphasisHtml=(text,phrases=[])=>emphasisParts(text,phrases).map(x=>x.bold?`<strong>${e(x.text)}</strong>`:e(x.text)).join('');
 export function exampleHtml(text,notes=[]){
  const parts=exampleParts(text,notes),hasNotes=parts.some(x=>x.note);
- return `<div class="annotatedExample manuscript">${parts.map(x=>x.note?`<span class="keywordSentence">${e(x.text)}</span><span class="keywordNote">〔扣“${e(x.note.keyword)}”：${e(x.note.why)}〕</span>`:e(x.text)).join('')}</div>${!hasNotes?'<p class="small">这份示范未附可对应的逐句扣题说明。</p>':''}`;
+ return `<div class="annotatedExample manuscript">${parts.map(x=>x.note?`<span class="${isSupportNote(x.note)?'supportSentence':'keywordSentence'}">${e(x.text)}</span><span class="keywordNote">〔${e(noteLabel(x.note))}：${e(x.note.why)}〕</span>`:e(x.text)).join('')}</div>${!hasNotes?'<p class="small">这份示范未附可对应的逐句扣题说明。</p>':''}`;
 }
 export function comparisonHtml(rows){
  if(!rows.length)return '';
