@@ -1,0 +1,32 @@
+{
+  "name": "放风筝_完整教学配套.zip",
+  "bytes": 45485730,
+  "sha256": "007ef95af4a700d5607dc639053e596a8253776af81651338f1aa3ce924bb0f1",
+  "parts": [
+    {
+      "file": "package.part01.bin",
+      "bytes": 10485760,
+      "sha256": "1c314626032efbdad5a8d278b22cfbc7cbe871c4689e400288558c656b220cfa"
+    },
+    {
+      "file": "package.part02.bin",
+      "bytes": 10485760,
+      "sha256": "5da3ff6389e2a8c8966f32b69305ce7692c174005ebfc0f1db899195af201459"
+    },
+    {
+      "file": "package.part03.bin",
+      "bytes": 10485760,
+      "sha256": "a68cc7601361c47b0d97c4499a317aa06a5c6f51e1da21f227e49b222bb6f094"
+    },
+    {
+      "file": "package.part04.bin",
+      "bytes": 10485760,
+      "sha256": "d41104951b3a224ccc0ca34257eb9ec47ea6c2e8481575760a4d7a652a3ea31c"
+    },
+    {
+      "file": "package.part05.bin",
+      "bytes": 3542690,
+      "sha256": "a79daafb304eb63431d3c549f6e1532722c04694480ec69af8a27ae7cbdb67f8"
+    }
+  ]
+}

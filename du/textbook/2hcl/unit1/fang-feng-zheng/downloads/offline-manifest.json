@@ -1,0 +1,23 @@
+{
+  "name": "放风筝_学生互动学习.html",
+  "mime": "text/html;charset=utf-8",
+  "bytes": 22594555,
+  "sha256": "87124de7043eef909b3a973631be7c257a59b1cd12e6de1e669c6c173baca309",
+  "parts": [
+    {
+      "file": "offline.part01.bin",
+      "bytes": 10485760,
+      "sha256": "f09a4eb15e6e8b93490df0300cebf92062a1531f59d925931323d9fc97e75e5d"
+    },
+    {
+      "file": "offline.part02.bin",
+      "bytes": 10485760,
+      "sha256": "2c9875212a6922efa12c2b4c768c0a36f40f5edd8f7025cec5321b9cf4b418ba"
+    },
+    {
+      "file": "offline.part03.bin",
+      "bytes": 1623035,
+      "sha256": "758cb97da65f724c9b3d80d379c97306cddfc7f3dc852836cecfc4893aeb1aad"
+    }
+  ]
+}
