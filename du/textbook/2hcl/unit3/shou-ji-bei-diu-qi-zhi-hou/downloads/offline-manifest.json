@@ -1,0 +1,58 @@
+{
+  "name": "手机被丢弃之后-离线学习单.html",
+  "mime": "text/html",
+  "bytes": 28751969,
+  "sha256": "0984d5fb7899833a50ff81910c220c67e8dbd5acb62f43c3870015ae49832309",
+  "parts": [
+    {
+      "file": "offline.part01.bin",
+      "bytes": 3145728,
+      "sha256": "455eab03dcb132e12d67f27e716f030c1b35c0c4da9b0bd1c54eb2a5968904d3"
+    },
+    {
+      "file": "offline.part02.bin",
+      "bytes": 3145728,
+      "sha256": "63665211569bbd5784ea1812b30f9f46b558fc04da325a3559dcf26de366be86"
+    },
+    {
+      "file": "offline.part03.bin",
+      "bytes": 3145728,
+      "sha256": "8fd5c65ea91d6719c6f8863fd40235964a9ad4c997285d8857dcd86c8a46aa6b"
+    },
+    {
+      "file": "offline.part04.bin",
+      "bytes": 3145728,
+      "sha256": "d06e0b955e308559321a736d46adc7d89a64ac09673eadb0edad5b822fd0e287"
+    },
+    {
+      "file": "offline.part05.bin",
+      "bytes": 3145728,
+      "sha256": "6a1a8ec6277578f1a63d9e617b11a331468776d9c687c7b5e3077d16b01d18ca"
+    },
+    {
+      "file": "offline.part06.bin",
+      "bytes": 3145728,
+      "sha256": "58920bc045b60ab7a5962588169722c58ffc314cd8f86dd5b57abf06ee28a611"
+    },
+    {
+      "file": "offline.part07.bin",
+      "bytes": 3145728,
+      "sha256": "9a8a11c32a148241450d8ab3584f34194ea0d403f21b4cf1f8c2dd674a970b76"
+    },
+    {
+      "file": "offline.part08.bin",
+      "bytes": 3145728,
+      "sha256": "6d7ffc397ffa72105070438234d50d6c4de948c5d2b4f612ed619f775fba9277"
+    },
+    {
+      "file": "offline.part09.bin",
+      "bytes": 3145728,
+      "sha256": "abd88b17013087d13356761fa98f0353cccd20d320ff455b8394ed73895ac5f0"
+    },
+    {
+      "file": "offline.part10.bin",
+      "bytes": 440417,
+      "sha256": "434eff913f05e16d9ef140f154dffbd9ecc40e23ff236279509628388732f67e"
+    }
+  ]
+}

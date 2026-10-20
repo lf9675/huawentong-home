@@ -1,0 +1,103 @@
+{
+  "name": "手机被丢弃之后-完整教学配套.zip",
+  "mime": "application/zip",
+  "bytes": 58928494,
+  "sha256": "1c3727a41e8d0cf13f25dcca243f6d91d3b9ae0ba82f31a451bd4786a59dce4d",
+  "parts": [
+    {
+      "file": "package.part01.bin",
+      "bytes": 3145728,
+      "sha256": "45549529925983a3ac2af1c1568ac10847894ae6d85a0d6ac34b84559ed28021"
+    },
+    {
+      "file": "package.part02.bin",
+      "bytes": 3145728,
+      "sha256": "9c15722a0df40ad39fa79c2d99ba6bee63e0602faf21681d1507ca986c373069"
+    },
+    {
+      "file": "package.part03.bin",
+      "bytes": 3145728,
+      "sha256": "6c1646cf38e3cb1ee21f7e3227920e8a1999c250b56ac340edf441d7bfeb2f35"
+    },
+    {
+      "file": "package.part04.bin",
+      "bytes": 3145728,
+      "sha256": "8c1f1580a9bd585c25ca4e2115603132aecd4a09ebd16045e4a55151d904c081"
+    },
+    {
+      "file": "package.part05.bin",
+      "bytes": 3145728,
+      "sha256": "32585e2b267d06912ac2d2e26301705a0c7604a0a5225d636e7967786865033b"
+    },
+    {
+      "file": "package.part06.bin",
+      "bytes": 3145728,
+      "sha256": "eab965e142a5a8194dba79c494ab23e29a2f9d2ab599e737785ee8c425cca6ee"
+    },
+    {
+      "file": "package.part07.bin",
+      "bytes": 3145728,
+      "sha256": "8717702c492b750c3652957cfd37c5999f3966b3d493fc60b9c462343489b865"
+    },
+    {
+      "file": "package.part08.bin",
+      "bytes": 3145728,
+      "sha256": "c4f1a1ae8b82111c6474c550c00148a1b8f1a4aa7d44a158c63005106428872d"
+    },
+    {
+      "file": "package.part09.bin",
+      "bytes": 3145728,
+      "sha256": "267e4c908fc067e01e81c08941bcfa706b4478cab786eb6961fbd063227e491f"
+    },
+    {
+      "file": "package.part10.bin",
+      "bytes": 3145728,
+      "sha256": "a795623707b9ccee20c51e3f0db58ab0e291f28091f6133cca5cad4b2b426503"
+    },
+    {
+      "file": "package.part11.bin",
+      "bytes": 3145728,
+      "sha256": "b55c1913b154db70d0d54ecc543276ff941b62690b2c6d64dde5f218fd59dcf0"
+    },
+    {
+      "file": "package.part12.bin",
+      "bytes": 3145728,
+      "sha256": "83185ae8e7bfd3620d41969d618613b2b59b5f10f412adfd64d5d6e92c96324e"
+    },
+    {
+      "file": "package.part13.bin",
+      "bytes": 3145728,
+      "sha256": "fe7e1b7489ba2454d6db0582240dbe0e5423724b6478fbc912f96675f4beffac"
+    },
+    {
+      "file": "package.part14.bin",
+      "bytes": 3145728,
+      "sha256": "a9c728a385a56e93f89fc3758f0924f37d06ff5a9fa697efb2b6b2b248756335"
+    },
+    {
+      "file": "package.part15.bin",
+      "bytes": 3145728,
+      "sha256": "68c113cc2bd316697de5e060767bee7033b7c68a9504baead837b9072ec03256"
+    },
+    {
+      "file": "package.part16.bin",
+      "bytes": 3145728,
+      "sha256": "263fabc4ac328983f9c332ff903d0caa528578e7bace848ff289a8a1f53a95ba"
+    },
+    {
+      "file": "package.part17.bin",
+      "bytes": 3145728,
+      "sha256": "f76456bf982d130b08dc78da2c174b16c3de166a57b87055dd6855473152abe3"
+    },
+    {
+      "file": "package.part18.bin",
+      "bytes": 3145728,
+      "sha256": "0e5ebc3b8a33788c158ce443af25e180132142d9dfaed3e2ab469501599a7570"
+    },
+    {
+      "file": "package.part19.bin",
+      "bytes": 2305390,
+      "sha256": "b51339004a417d7f6ae98c07d503501ddcd24af9008c13b5fd1ddea7164d6606"
+    }
+  ]
+}
