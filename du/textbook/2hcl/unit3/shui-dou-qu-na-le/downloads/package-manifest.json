@@ -1,0 +1,78 @@
+{
+  "name": "水都去哪儿了-完整教学配套.zip",
+  "mime": "application/zip",
+  "bytes": 40959564,
+  "sha256": "4646e54bb61e756859096cf06d20ea19394c74d8ffda26a034f8ceec38972fa8",
+  "parts": [
+    {
+      "file": "package.part01.bin",
+      "bytes": 3145728,
+      "sha256": "821cf4b18e2cc453efe3ca5bbf2be9628cbfb2b9a9c357f7b3401117a407f332"
+    },
+    {
+      "file": "package.part02.bin",
+      "bytes": 3145728,
+      "sha256": "86323560ee41e6933bc7b2036b2ee753ff539ef217c5b4feb64908c8a1124bb7"
+    },
+    {
+      "file": "package.part03.bin",
+      "bytes": 3145728,
+      "sha256": "a3af72238f51f57cb7e5f3538d9b79129bb6e5b65466ee6c03bfc43755882e1b"
+    },
+    {
+      "file": "package.part04.bin",
+      "bytes": 3145728,
+      "sha256": "b6e7bfd0f98d25252329d66b50586a3aeaf0dd856528f2f244302840b30e2934"
+    },
+    {
+      "file": "package.part05.bin",
+      "bytes": 3145728,
+      "sha256": "dac3bb604944475e7dfef740176ab1dc4256773ec8a4460c083c281457f4d3d6"
+    },
+    {
+      "file": "package.part06.bin",
+      "bytes": 3145728,
+      "sha256": "38ed0c7d71477f2e10a3092075eb258bdb173d271225b10a193c72ca2887a688"
+    },
+    {
+      "file": "package.part07.bin",
+      "bytes": 3145728,
+      "sha256": "1043cd46dc0e41c9a1371c69083d751fa2f54726599f95ee09c846594175bddb"
+    },
+    {
+      "file": "package.part08.bin",
+      "bytes": 3145728,
+      "sha256": "e8715a82da10109e066a6685c4c2408169a802c2ee760e750b7064171fa09910"
+    },
+    {
+      "file": "package.part09.bin",
+      "bytes": 3145728,
+      "sha256": "542c5ed1662a4cfef054d3dbaa7f49185912c8ffcb6808bd09d98efcd1f2c310"
+    },
+    {
+      "file": "package.part10.bin",
+      "bytes": 3145728,
+      "sha256": "9300ed19139e0e6b28d0e463761b46a8a34025c1b02ed9480fd1922723d1da5f"
+    },
+    {
+      "file": "package.part11.bin",
+      "bytes": 3145728,
+      "sha256": "2f1a503210829f703ca2bc91dfda6f2ba1414564a5b9c392cd3b026b9682bf58"
+    },
+    {
+      "file": "package.part12.bin",
+      "bytes": 3145728,
+      "sha256": "c41086d9706bc6800f9d6ae65e0b64f79fbe41066528127b277c7ffc1f058856"
+    },
+    {
+      "file": "package.part13.bin",
+      "bytes": 3145728,
+      "sha256": "319d1d224c6d2d184cfdc1ea6466cd1bffb5cd54f783665cc4d671692276e64c"
+    },
+    {
+      "file": "package.part14.bin",
+      "bytes": 65100,
+      "sha256": "ec5c191fc3db049f5a9c2d934baa8122e6d4c67ecc319f3579dfba61ae684266"
+    }
+  ]
+}

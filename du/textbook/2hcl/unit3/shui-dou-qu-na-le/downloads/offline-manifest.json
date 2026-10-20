@@ -1,0 +1,48 @@
+{
+  "name": "水都去哪儿了-离线学习单.html",
+  "mime": "text/html",
+  "bytes": 22889910,
+  "sha256": "654f8f1bcb82c06f559a9600df7dea37aa0b38bc25e39e272cf8a490abf741b1",
+  "parts": [
+    {
+      "file": "offline.part01.bin",
+      "bytes": 3145728,
+      "sha256": "50ba52b5e0fe63385c7d4baf62fc715d7af70f83ad3b71f009d7110128f4cacd"
+    },
+    {
+      "file": "offline.part02.bin",
+      "bytes": 3145728,
+      "sha256": "6ada2618feda60426d091ff7bbe2fd130cbdee0884b9ebd8d7a426b34a52973c"
+    },
+    {
+      "file": "offline.part03.bin",
+      "bytes": 3145728,
+      "sha256": "3b66d49ae98429dc825d41e8191912ad986b6e71c7bf878f0bc1ba0d62d3b97e"
+    },
+    {
+      "file": "offline.part04.bin",
+      "bytes": 3145728,
+      "sha256": "56bcdae9ad70c718b47235391cdd93cf530250d8e5914fb78b109a2a9c77d166"
+    },
+    {
+      "file": "offline.part05.bin",
+      "bytes": 3145728,
+      "sha256": "1e3b191e1951906e973c8e55d48e436a6796b350bb55d46cbc3a063bbea176cc"
+    },
+    {
+      "file": "offline.part06.bin",
+      "bytes": 3145728,
+      "sha256": "8d2d42ea7e2ed75a6f8048b3ea4530d3a4c1b375d14e93a79341046a08370b39"
+    },
+    {
+      "file": "offline.part07.bin",
+      "bytes": 3145728,
+      "sha256": "e35cec6a4ff05ae5198bb5027a24e913835a8a27af865cd290f42a5cd19d716b"
+    },
+    {
+      "file": "offline.part08.bin",
+      "bytes": 869814,
+      "sha256": "48e76d389fa5ce5a455f72cd71e1da842abc2d7d514ca0ccebe4de24a339ef76"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "minutes": [
+    [
+      "导入与水的重要性",
+      3
+    ],
+    [
+      "四大水喉与挑战",
+      9
+    ],
+    [
+      "全国与家庭用水图表",
+      10
+    ],
+    [
+      "每人用水量：独立概括",
+      8
+    ],
+    [
+      "结尾解释与词语巩固",
+      7
+    ],
+    [
+      "课本蓄水池搜寻",
+      5
+    ],
+    [
+      "独立节水建议与订正",
+      8
+    ]
+  ],
+  "reservoirs": [
+    [
+      "中央",
+      "MacRitchie、Lower Peirce、Upper Peirce、Upper Seletar"
+    ],
+    [
+      "北部／东北部",
+      "Kranji、Lower Seletar、Punggol、Serangoon"
+    ],
+    [
+      "西部",
+      "Tengeh、Poyan、Murai、Sarimbun、Jurong Lake、Pandan"
+    ],
+    [
+      "东部",
+      "Bedok"
+    ],
+    [
+      "南部市区",
+      "Marina"
+    ],
+    [
+      "东北外岛",
+      "Tekong"
+    ]
+  ],
+  "sources": [
+    "https://www.pub.gov.sg/Public/WaterLoop/OurWaterStory/Local-Catchment-Water",
+    "https://www.pub.gov.sg/-/media/PUB/SG-Water-Loop/localcatchmentwater/Reservoir_Blue_Map_SG.png"
+  ],
+  "mapping": [
+    {
+      "part": 1,
+      "label": "水的重要性",
+      "panels": [
+        1
+      ]
+    },
+    {
+      "part": 2,
+      "label": "我国的“四大水喉”",
+      "panels": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "part": 3,
+      "label": "我国的每日用水需求",
+      "panels": [
+        7,
+        8
+      ]
+    },
+    {
+      "part": 4,
+      "label": "我国家庭用水的比例",
+      "panels": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "part": 5,
+      "label": "每人每日平均用水量及目标",
+      "panels": [
+        19,
+        20
+      ]
+    },
+    {
+      "part": 6,
+      "label": "开源节流",
+      "panels": [
+        21,
+        22,
+        23,
+        24
+      ]
+    }
+  ]
+}
