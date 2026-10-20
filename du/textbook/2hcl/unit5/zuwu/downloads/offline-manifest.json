@@ -1,0 +1,58 @@
+{
+  "name": "组屋-离线学习单.html",
+  "mime": "text/html",
+  "bytes": 29182375,
+  "sha256": "3b5e6864e94a57b2233a30d7d6d39e3c3f43446512ad64ac105ca1dc1a46b184",
+  "parts": [
+    {
+      "file": "offline.part01.bin",
+      "bytes": 3145728,
+      "sha256": "f8b1f0ed8ead0686ef6b02d0f8feb750cda92c625873c3ba34ca24bf08741201"
+    },
+    {
+      "file": "offline.part02.bin",
+      "bytes": 3145728,
+      "sha256": "b745f201001e9652b2278ad82c1cca6eec5ad6436fabf994e94492c8fdba2b28"
+    },
+    {
+      "file": "offline.part03.bin",
+      "bytes": 3145728,
+      "sha256": "572f48427de8239f7de3b0f167f4bd7e7e670a5b2092a375b73714dcaf4e784d"
+    },
+    {
+      "file": "offline.part04.bin",
+      "bytes": 3145728,
+      "sha256": "f2eb6e9593ba808fd23ce47532a0db7b0c191b8f27785ec9e5d73fcfefb994b5"
+    },
+    {
+      "file": "offline.part05.bin",
+      "bytes": 3145728,
+      "sha256": "5cf2aac6a2043e38390cc5a37762877758e17734750bd395db65cf5703480373"
+    },
+    {
+      "file": "offline.part06.bin",
+      "bytes": 3145728,
+      "sha256": "0c9987a99d6ac95b00f1a0c17f845f64eeb8722f16102c75c7e0b52ca4cafaee"
+    },
+    {
+      "file": "offline.part07.bin",
+      "bytes": 3145728,
+      "sha256": "6b1cd5d2e2ad445955845d9295d1bdacfe9994a510ff8900b2837b312100cf3c"
+    },
+    {
+      "file": "offline.part08.bin",
+      "bytes": 3145728,
+      "sha256": "53bcbce2f79bfda216867c50060b6f2a5ba4f50d4b16a3f619b7daca7b8fec20"
+    },
+    {
+      "file": "offline.part09.bin",
+      "bytes": 3145728,
+      "sha256": "87c4ebe22e48945b12fa2941fc55f5b6a01ae413a36a7b2ea11bce59983d2f58"
+    },
+    {
+      "file": "offline.part10.bin",
+      "bytes": 870823,
+      "sha256": "f8f08bf5ea9e80d03c68c14f0abc6add6961c28ffd2b17bd97887857438b3706"
+    }
+  ]
+}

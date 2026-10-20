@@ -1,0 +1,113 @@
+{
+  "name": "组屋-完整教学配套.zip",
+  "mime": "application/zip",
+  "bytes": 63966926,
+  "sha256": "7b31cabda4ad8d3097847952eb6186910544bc025326b7d345148bf45c2881f5",
+  "parts": [
+    {
+      "file": "package.part01.bin",
+      "bytes": 3145728,
+      "sha256": "542644aa09a336d259e9adf86d9ecef9760bb8d9005295b6d29a62464f1b4ff4"
+    },
+    {
+      "file": "package.part02.bin",
+      "bytes": 3145728,
+      "sha256": "390f15a7597715dba9a5cb064a11dacbeb1e204673d1b3498af8515fae73f95d"
+    },
+    {
+      "file": "package.part03.bin",
+      "bytes": 3145728,
+      "sha256": "89070912a937c73e6f3b01fa5583d96addb1cd2fac8febd956a803fdffff13b9"
+    },
+    {
+      "file": "package.part04.bin",
+      "bytes": 3145728,
+      "sha256": "8503c5e4f89242189e376580b5eb14a92a8b8e3bfb8871be9e9e00fbcd166f8a"
+    },
+    {
+      "file": "package.part05.bin",
+      "bytes": 3145728,
+      "sha256": "8ff9ee225fbfe375f87b8a7f22e9f0626de18c70d8cc19cb49698a69311f6a47"
+    },
+    {
+      "file": "package.part06.bin",
+      "bytes": 3145728,
+      "sha256": "b99582fad2de4a58b96fafd30b3d9666d94756461d0e57a2f21a7620372d6c3f"
+    },
+    {
+      "file": "package.part07.bin",
+      "bytes": 3145728,
+      "sha256": "5d2675ad4cc47f692a23cbaa1dfa11935448d4c5f4936e2bde3dd0d2a1e1ce59"
+    },
+    {
+      "file": "package.part08.bin",
+      "bytes": 3145728,
+      "sha256": "c876c43f07e1b140ee2fabe0560bf097c88009909488e171fb1d19229fcf1638"
+    },
+    {
+      "file": "package.part09.bin",
+      "bytes": 3145728,
+      "sha256": "5325ca4c7f5e682f91e5af2c41076e9b271ae82415be05ddc3a6fc1c027eca7a"
+    },
+    {
+      "file": "package.part10.bin",
+      "bytes": 3145728,
+      "sha256": "f8d612aedc6c67345a115be334f2998780f43870aea844b1f92c5ee218f1c097"
+    },
+    {
+      "file": "package.part11.bin",
+      "bytes": 3145728,
+      "sha256": "aa1250ca0cff7bd4a30a80a775bab57661fc9b5a0dd5b4c105f764639f02431c"
+    },
+    {
+      "file": "package.part12.bin",
+      "bytes": 3145728,
+      "sha256": "df8b23594cdbc8464a42f657c8075f31d89adc464a630babc8f4be45ba924c2a"
+    },
+    {
+      "file": "package.part13.bin",
+      "bytes": 3145728,
+      "sha256": "58126dde8b3912a40bf7cc12e9fc7758b032592e5ba76714e61381f39ed7d3a4"
+    },
+    {
+      "file": "package.part14.bin",
+      "bytes": 3145728,
+      "sha256": "a36830fb1f84534ae2181b23660669fd7fde6db3051fa71ad0eb87cd28d1cf68"
+    },
+    {
+      "file": "package.part15.bin",
+      "bytes": 3145728,
+      "sha256": "153f6f6f5ef0820bf14b0dcc345dbff89b820eeb52422ae93206d725ec3612eb"
+    },
+    {
+      "file": "package.part16.bin",
+      "bytes": 3145728,
+      "sha256": "59a70272e8fbd75033dcfc28f7c50c9ddcf552a4c5f01eb88897a9fe77519ff3"
+    },
+    {
+      "file": "package.part17.bin",
+      "bytes": 3145728,
+      "sha256": "40c4cde01caa8898a0dc5b843f81b6fa07acddaa5cf45c2ae272682547f4b7de"
+    },
+    {
+      "file": "package.part18.bin",
+      "bytes": 3145728,
+      "sha256": "e42b5ac2bab49fd319700651c9417c4cc6ebc78c6c17cdf574e08a4a4978f1f4"
+    },
+    {
+      "file": "package.part19.bin",
+      "bytes": 3145728,
+      "sha256": "d5858c0cbde062d2c01b5322c21ce09767f4158a098c2e6056a1800077bf11ce"
+    },
+    {
+      "file": "package.part20.bin",
+      "bytes": 3145728,
+      "sha256": "0f5c1cb4b40bda36e51c9e602146b0b6516efad229d0ae5eb236e368e455f424"
+    },
+    {
+      "file": "package.part21.bin",
+      "bytes": 1052366,
+      "sha256": "02b2e8e067bab33d26225d60ec8804c4c6d1632a10fa45475ae85bf4f0673faf"
+    }
+  ]
+}

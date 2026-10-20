@@ -1,0 +1,38 @@
+{
+  "name": "组屋-可编辑课件.pptx",
+  "mime": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "bytes": 16088308,
+  "sha256": "f994a1f95f3c998edc61903af023c3e4c162c702fb6a5b58ee6d72cfb9ff0d16",
+  "parts": [
+    {
+      "file": "ppt.part01.bin",
+      "bytes": 3145728,
+      "sha256": "f2252b2b20bd13e275e81555f087ac4a2b0cb526c7596e7f6259f690b68f67f4"
+    },
+    {
+      "file": "ppt.part02.bin",
+      "bytes": 3145728,
+      "sha256": "7979d8a8f73bceda93d9683af9c9a92a6269fcb5cca41c6d627462bc5ea08daf"
+    },
+    {
+      "file": "ppt.part03.bin",
+      "bytes": 3145728,
+      "sha256": "0320fb0d29093459d571679e6e0a51ab2f5b8f3a0b0fa76ee52c752f44ace818"
+    },
+    {
+      "file": "ppt.part04.bin",
+      "bytes": 3145728,
+      "sha256": "11ed10b14ed90c498ff750b6579389160e97f874776a048c3b26db6a8d288222"
+    },
+    {
+      "file": "ppt.part05.bin",
+      "bytes": 3145728,
+      "sha256": "05d92f08d2cb5de9ba3523b971d85636806d28db03f82de8e9355d651270c26f"
+    },
+    {
+      "file": "ppt.part06.bin",
+      "bytes": 359668,
+      "sha256": "dc5a54a5137c050f6455a94e87132686d8cb1342b4ffa375f1aab072693b5a08"
+    }
+  ]
+}
