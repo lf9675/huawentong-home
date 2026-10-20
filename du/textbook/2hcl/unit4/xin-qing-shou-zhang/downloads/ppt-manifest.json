@@ -1,0 +1,33 @@
+{
+  "name": "心情手账-可编辑课件.pptx",
+  "mime": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "bytes": 14804816,
+  "sha256": "97503e77fe28e9084baed582f2e7fd637652e705c9d17c8ef9add7ba7d172957",
+  "parts": [
+    {
+      "file": "ppt.part01.bin",
+      "bytes": 3145728,
+      "sha256": "3d8c60e601a650bec01d8fbf27e64421246926b097bee6ada7ff68621b1ea891"
+    },
+    {
+      "file": "ppt.part02.bin",
+      "bytes": 3145728,
+      "sha256": "8413c0d425a0a37e809c2dd817bfee44296078ba2ec3708b5e82dcb8c69d1aba"
+    },
+    {
+      "file": "ppt.part03.bin",
+      "bytes": 3145728,
+      "sha256": "fc52afe109a89402eedf29b6525b5f8675dd7c5363dc2a8bac4bbbe16fa39653"
+    },
+    {
+      "file": "ppt.part04.bin",
+      "bytes": 3145728,
+      "sha256": "bf8fd36124f88a914a49184dbf8697983ab663d7858098699063fff3f6ce9f5c"
+    },
+    {
+      "file": "ppt.part05.bin",
+      "bytes": 2221904,
+      "sha256": "3dfdc44266a0f44556e13031c0321019c5f21f4cdc707ef990ec29cdd5a24f08"
+    }
+  ]
+}

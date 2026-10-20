@@ -1,0 +1,108 @@
+{
+  "name": "心情手账-完整教学配套.zip",
+  "mime": "application/zip",
+  "bytes": 60146759,
+  "sha256": "7983d2a8cbeb5181695eba68129bcd89fadb658326f5a1d9e324007ab9c2b5c7",
+  "parts": [
+    {
+      "file": "package.part01.bin",
+      "bytes": 3145728,
+      "sha256": "fb50be7d14e431c4de831f480a0b15e23243460275d062cc00a25df1d05106e5"
+    },
+    {
+      "file": "package.part02.bin",
+      "bytes": 3145728,
+      "sha256": "d8ea9821cf0b86ef4f1400ccaf2f7ec05c0543b9db63dfd421bc14d4a4ca65a1"
+    },
+    {
+      "file": "package.part03.bin",
+      "bytes": 3145728,
+      "sha256": "d6e94ab3a10108ce1c51dfd515a6e1d6035aa3e45f8171c9522cc7b3de0dbb2d"
+    },
+    {
+      "file": "package.part04.bin",
+      "bytes": 3145728,
+      "sha256": "b2d72a2848e83586b4e54a8fab8ca8f621316b4667d32382dd75e67c5e028978"
+    },
+    {
+      "file": "package.part05.bin",
+      "bytes": 3145728,
+      "sha256": "b74c6c6a581e41a5540c6965ff0fea836279c790e6b708421eb965f0a832fc5f"
+    },
+    {
+      "file": "package.part06.bin",
+      "bytes": 3145728,
+      "sha256": "3e1d22986aab409b51a5df87821b38144edb95f88366fd725f49ff8d9d19c5cd"
+    },
+    {
+      "file": "package.part07.bin",
+      "bytes": 3145728,
+      "sha256": "18cabb847f4a26289caf9e78d117190c509a154b7bb812ce5081bd267a031edd"
+    },
+    {
+      "file": "package.part08.bin",
+      "bytes": 3145728,
+      "sha256": "4a648683de4e634e29a3206b3655e88f7abca31adf6edcdec3ecc17d468b209a"
+    },
+    {
+      "file": "package.part09.bin",
+      "bytes": 3145728,
+      "sha256": "1d90b94f5fb139e53fd7d4b791b948a21aadb11149327a6ba152fd03edb06a0d"
+    },
+    {
+      "file": "package.part10.bin",
+      "bytes": 3145728,
+      "sha256": "6992b2012a442e1f7f84b3a8bfb42b991fe24447e04ab4cdc67538f801bd842f"
+    },
+    {
+      "file": "package.part11.bin",
+      "bytes": 3145728,
+      "sha256": "c19febe61563ad5469719f06f4f1cf0ebf712cc62415c68b931c3cae9d1e123e"
+    },
+    {
+      "file": "package.part12.bin",
+      "bytes": 3145728,
+      "sha256": "cc72d9c40792cc26f66205dd8b889e99a72004b253ed2faa94de5558d8897972"
+    },
+    {
+      "file": "package.part13.bin",
+      "bytes": 3145728,
+      "sha256": "3e8c20ba1d87914f4d62b8271b408f9e806e085b78b047d70622edae64144aa1"
+    },
+    {
+      "file": "package.part14.bin",
+      "bytes": 3145728,
+      "sha256": "a665d88ea63e168d62f4302238e5139921544b5d16e17c4b3b2a1db649eb6201"
+    },
+    {
+      "file": "package.part15.bin",
+      "bytes": 3145728,
+      "sha256": "d20cad4e6eb550bc7728fbef8fb4a8304d6042b1c9675e5efc9cebc098dda660"
+    },
+    {
+      "file": "package.part16.bin",
+      "bytes": 3145728,
+      "sha256": "60d21a3066395de4ecc832c4128818b01d1229c316b62eab49cc6c94a5cdfc5a"
+    },
+    {
+      "file": "package.part17.bin",
+      "bytes": 3145728,
+      "sha256": "6ff2656d88f413cf57e12e0f974ba812f823f1fe272286213b78df1fc8e754c9"
+    },
+    {
+      "file": "package.part18.bin",
+      "bytes": 3145728,
+      "sha256": "da8a3922e11ed80a6666b46dd54e370fb7b9204ec019aecdeea962be952b23cf"
+    },
+    {
+      "file": "package.part19.bin",
+      "bytes": 3145728,
+      "sha256": "06e83bc9944f21cebeb5d418bee0923559d5544dfcb3758047e45656bf96af93"
+    },
+    {
+      "file": "package.part20.bin",
+      "bytes": 377927,
+      "sha256": "9d12d71ff4153f7e93d63c0016acd8cd8b065e1d15cbac7c3e4a55413d124042"
+    }
+  ]
+}

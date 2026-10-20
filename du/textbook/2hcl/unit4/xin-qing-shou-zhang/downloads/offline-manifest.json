@@ -1,0 +1,53 @@
+{
+  "name": "心情手账-离线学习单.html",
+  "mime": "text/html",
+  "bytes": 27472891,
+  "sha256": "cf022cd95c4efc418cde57b4463866944b99736cc882cc74904060f01ec15124",
+  "parts": [
+    {
+      "file": "offline.part01.bin",
+      "bytes": 3145728,
+      "sha256": "f598052f3ba50d61bc508f26cb92624e7746b78293f1b55ce1b125ea929c05b2"
+    },
+    {
+      "file": "offline.part02.bin",
+      "bytes": 3145728,
+      "sha256": "fda998cd151702b22dcdf7681f65e68587c41035db42be84e60ea8f6b74e6195"
+    },
+    {
+      "file": "offline.part03.bin",
+      "bytes": 3145728,
+      "sha256": "1695ff1d4bbd1f416cc7af04820e6125284e6ab8d0c6995df7ce494fc192dc56"
+    },
+    {
+      "file": "offline.part04.bin",
+      "bytes": 3145728,
+      "sha256": "79a85489e2bbe47a09b79773c40745a8083924e5d725bb3e2061bf93cc2a95bb"
+    },
+    {
+      "file": "offline.part05.bin",
+      "bytes": 3145728,
+      "sha256": "65f3f5b21495d56cc8a0ec641b26fbd9ab1d3f7f6dcb8bc76fed397ca8a95eeb"
+    },
+    {
+      "file": "offline.part06.bin",
+      "bytes": 3145728,
+      "sha256": "34f697bba0aa2c2bc306eb324c956331d880ba82e71ab29746cfae6078410403"
+    },
+    {
+      "file": "offline.part07.bin",
+      "bytes": 3145728,
+      "sha256": "e3d6d27d0e80994ab174540e3829d65924badf29af4b5ab828169c8fd26cb9a5"
+    },
+    {
+      "file": "offline.part08.bin",
+      "bytes": 3145728,
+      "sha256": "52b3e45ec3297ab77045ccd1fc29b0e054503edb484f490157e5bcbbcee9d898"
+    },
+    {
+      "file": "offline.part09.bin",
+      "bytes": 2307067,
+      "sha256": "f2f99caa50ab190b47f635afd4ad2c8f37316fc9baefb913352162bd6e900f16"
+    }
+  ]
+}
