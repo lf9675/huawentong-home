@@ -1,0 +1,13 @@
+{
+  "name": "最美的姿势-可编辑课件.pptx",
+  "mime": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "bytes": 7081792,
+  "sha256": "688cc9a90dc2e6b86f3dc239c6aef4f0532dc06750d2ee1b95bd261d999443a1",
+  "parts": [
+    {
+      "file": "ppt.pptx",
+      "bytes": 7081792,
+      "sha256": "688cc9a90dc2e6b86f3dc239c6aef4f0532dc06750d2ee1b95bd261d999443a1"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "name": "最美的姿势-完整教学配套.zip",
+  "mime": "application/zip",
+  "bytes": 50993506,
+  "sha256": "4d0d070b48af1be4e0b41cfd3d98ba8bc693eea78fc445ed26fd3d470091a4ef",
+  "parts": [
+    {
+      "file": "package.part01.bin",
+      "bytes": 3145728,
+      "sha256": "78e409521f6658f9485d30e9b479feadcb2b692597e2b944a4cba88c678a0d9f"
+    },
+    {
+      "file": "package.part02.bin",
+      "bytes": 3145728,
+      "sha256": "45090f1adb52d783657241920ac83e2f0b17bf3e1a6bfe4ba946f430d902b79f"
+    },
+    {
+      "file": "package.part03.bin",
+      "bytes": 3145728,
+      "sha256": "e4813d47b7fa0376f0c91d0f4ee0ce94522b5ea08bbca13e94738bf4149e00df"
+    },
+    {
+      "file": "package.part04.bin",
+      "bytes": 3145728,
+      "sha256": "63c0313853fa3a8dfd49470de930a8e93e1866479b21a489ffa200bc4a2298c7"
+    },
+    {
+      "file": "package.part05.bin",
+      "bytes": 3145728,
+      "sha256": "2b55f358af267cf7cd5cdf94f5162ed3398316caf7023d0140b92a4212dc8500"
+    },
+    {
+      "file": "package.part06.bin",
+      "bytes": 3145728,
+      "sha256": "e34e95694fdf0f837a26c0871725486fe5f8e95bee963536c01a8f54d43366c7"
+    },
+    {
+      "file": "package.part07.bin",
+      "bytes": 3145728,
+      "sha256": "6c92d78baea6b79340a18749df931714753383de0ccb57e80096a3f76b3aee33"
+    },
+    {
+      "file": "package.part08.bin",
+      "bytes": 3145728,
+      "sha256": "d9e94613bca77c131338cd6f2ab64ca833c2c654e6b13327b6f4daadfe880e46"
+    },
+    {
+      "file": "package.part09.bin",
+      "bytes": 3145728,
+      "sha256": "034c1a4db759e352609259fdc79ba1a6280eae0117dd57ce810ad723164d2cd6"
+    },
+    {
+      "file": "package.part10.bin",
+      "bytes": 3145728,
+      "sha256": "72a687dd20339aacbde7b5b42a55fb1640b8da1e45c5e4ddcaed0fc6be9a25f2"
+    },
+    {
+      "file": "package.part11.bin",
+      "bytes": 3145728,
+      "sha256": "691a6af09ad627659c0f8c8cbce28f14a749db36e759e6645978396e6c0ec041"
+    },
+    {
+      "file": "package.part12.bin",
+      "bytes": 3145728,
+      "sha256": "4c2a3e9c039bdf00918f0030e00c03f6af74b4d5a3507fc6d605c9bfc1cbac90"
+    },
+    {
+      "file": "package.part13.bin",
+      "bytes": 3145728,
+      "sha256": "de40a9982fbe82fb2aee52d283b0fe7f8c63a410ec1f3f1cf2f9899bfeffe4b5"
+    },
+    {
+      "file": "package.part14.bin",
+      "bytes": 3145728,
+      "sha256": "16d2110ddefe33335392605ca262dfc1e12e84384f55601347dc290f26123f26"
+    },
+    {
+      "file": "package.part15.bin",
+      "bytes": 3145728,
+      "sha256": "f585c454473e1bed35120c01b96509b7e2a63af0bf42932b68297b11a5940c39"
+    },
+    {
+      "file": "package.part16.bin",
+      "bytes": 3145728,
+      "sha256": "b5e704b69c0adc64c9dd488cd33872037d2bdf754e958f4a7fd849d6f8f2f20f"
+    },
+    {
+      "file": "package.part17.bin",
+      "bytes": 661858,
+      "sha256": "30214bfd058d05760d32804f225866499d739f92ab4d7d59ffb1147830a14579"
+    }
+  ]
+}

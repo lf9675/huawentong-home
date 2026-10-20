@@ -1,0 +1,106 @@
+from pathlib import Path
+import json
+from docx import Document
+from docx.shared import Inches,Pt,RGBColor
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+O=Path(__file__).resolve().parents[2]/'du/textbook/2hcl/unit4/zui-mei-de-zi-shi';L=json.loads((O/'lesson.json').read_text());B=json.loads((O/'teaching-brief.json').read_text());D=Document();sec=D.sections[0]
+sec.page_height=Inches(11.7);sec.page_width=Inches(8.3);sec.top_margin=sec.bottom_margin=Inches(.65);sec.left_margin=sec.right_margin=Inches(.72)
+for name,size in [('Normal',11.5),('Title',24),('Heading 1',19),('Heading 2',14),('Heading 3',12)]:
+ s=D.styles[name];s.font.name='Noto Serif CJK SC';s._element.get_or_add_rPr().rFonts.set(qn('w:eastAsia'),'Noto Serif CJK SC');s.font.size=Pt(size);s.font.color.rgb=RGBColor.from_string('000000'if name=='Title'else'243D37');s.paragraph_format.space_after=Pt(3);s.paragraph_format.line_spacing=Pt(16 if name=='Normal'else 25);s.paragraph_format.space_before=Pt(0 if name in ['Normal','Title']else 6)
+D.core_properties.title='最美的姿势 教师流程与参考答案';D.core_properties.author='华文通'
+def p(s='',style=None):return D.add_paragraph(s,style)
+def h(s,level=1):D.add_heading(s,level)
+def new(s):D.add_page_break();h(s)
+def table(headers,rows,widths):
+ t=D.add_table(rows=1,cols=len(headers));t.style='Table Grid';t.autofit=False
+ for i,w in enumerate(widths):t.columns[i].width=Inches(w)
+ for c,s in zip(t.rows[0].cells,headers):c.text=s;sh=OxmlElement('w:shd');sh.set(qn('w:fill'),'EAF1ED');c._tc.get_or_add_tcPr().append(sh)
+ repeat=OxmlElement('w:tblHeader');t.rows[0]._tr.get_or_add_trPr().append(repeat)
+ for row in rows:
+  for c,s in zip(t.add_row().cells,row):c.text=str(s)
+ for row in t.rows:
+  no=OxmlElement('w:cantSplit');row._tr.get_or_add_trPr().append(no)
+  for i,c in enumerate(row.cells):
+   c.width=Inches(widths[i])
+   for para in c.paragraphs:para.paragraph_format.space_after=Pt(3);para.paragraph_format.line_spacing=Pt(15)
+ return t
+def task(t,brief=False):
+ h(t['title'],2);p('来源：'+t['source']+'。课堂身份：'+t['role']+'。')
+ for q in t['questions']:p(q)
+ p('参考：'+t['answer']);p('解析：'+t['explain'])
+ if not brief:
+  p('提示一：'+t['hints'][0]);p('提示二：'+t['hints'][1]);p('常见误读：'+t['reject']);p(t['scoreGuide'])
+def get(id):return next(t for t in L['tasks']if t['id']==id)
+p('最美的姿势 教师流程与参考答案','Title');p('中二高级华文　单元四　巩固阅读　两课时')
+p('本课通过宜欣参与照片展的经历，引导学生理解自卑心理、他人的鼓励与自信的建立。教学按原文顺序推进，重点训练具体表达作用、反应与原因、关键句与主题、开放评价。每课按50分钟设计。')
+h('教学目标',2)
+for i,g in enumerate(B['goals'],1):p(str(i)+'. '+g)
+h('文本结构',2);table(['段落','作用','要点'],B['structure'],[1,.9,4.5])
+h('学生困难与支架',2)
+p('词句：利箭、炙烤、假想敌、心防均需放回语境理解。心理：分清人物的主观感受与同学的真实意图。结构：沿着照片展读出“自卑—受助—获肯定—自信”的变化。表达：反应与原因分别回答；作用题不止于“生动形象”；开放题用具体例子解释理由。')
+p('第一课两项文字作答：一句仿句、反应与原因。第二课两项文字作答：主题与内容依据、必做交友开放题。其余采用点选、多句取证或口头讨论，不新增课后短文及一周小测。')
+new('两课时教学流程')
+table(['课时','时间','教学与产出'],B['schedule'],[.8,.7,4.9])
+p('第一课合计50分钟，第二课合计50分钟。10组12个步骤，不以每个问号另立任务。教师先示范比喻作用，再让学生独立分析反应与原因；第二课综合主题与开放题由学生先写，再比较订正。')
+p('读文区一次一段，左原文、右漫画，词语积累在漫画下方。用“本段问题”进入相应任务；问题页默认显示当前相关段落，回看已读前文。PPT题目与答案分页，教师控制翻页。')
+new('逐段证据与漫画对应')
+rows=[]
+barriers={1:'敏感、利箭、炙烤',2:'独来独往、假想敌、缺陷',3:'兴致勃勃、谷底',4:'拘束、局促不安',5:'沮丧',6:'最美丽的姿势',7:'七嘴八舌、若有所思',8:'附和、睿智',9:'肯定、突破心防',10:'姿势、或多或少'}
+for i in range(10):rows.append([str(i+1),L['paragraphIdeas'][i],barriers[i+1],','.join(map(str,L['panels'][i]))])
+table(['段','内容及理解重点','词语障碍','原漫画格号'],rows,[.35,3.4,1.55,1.1])
+h('关键证据边界',2)
+for s in B['sourceBoundary'][3:]:p(s)
+p('主要证据：第1段“即使”“不经意”“我觉得”；第2段“掩饰不了”；第4段动作与心理；第6—7段师生的肯定和帮助；第8段称赞、掌声；第9段“信心和勇气”“主动与同学交流”；第10段两句议论。')
+new('第一课 第一段与第二段')
+task(get('p1-metaphor'));task(get('p2-confidence'),True)
+p('两项点选答案顺序为B、D；第2段点选为A。选择题用于支架，完整作用由教师示范，不能把答对选项等同于独立书面掌握。')
+new('第一课 仿句与心情比较')
+task(get('p2-imitation'));task(get('p3-mood'))
+p('“丑小鸭就是丑小鸭”是宜欣当时的自我否定。仿句只练句式，不让学生内化这个判断，也不把它当作作者最终观点。')
+new('第一课 反应与原因')
+t=get('p4-response');task(t)
+h('原文定位与加工',2)
+p('第4段“慢吞吞”“拘束”“心里一片慌乱”“更加局促不安”“脸红得发烫”属于反应；第5段“我没有什么美的姿势”“沮丧极了”可补充心理；第2段“掩饰不了自己的缺陷”帮助解释原因。')
+table(['意义单位','分值','接受与不接受'],[['两种不同反应','2','动作、心理、神态可选，准确各1分；重复形容同一情绪不反复计分。'],['对外表没有信心','1','自卑、自我否定等义可；只说不喜欢拍照未解释根源。'],['面对镜头或注视的困难','1','不知道如何面对或害怕暴露缺陷可；“因为紧张”循环解释不可。']],[1.7,.5,4.2])
+for q,a in t['oral']:h(q,2);p(a)
+p('各意义单位独立给分。不能因漏写一种反应，就清零已成立的原因分。证据框可连续加入多句、编辑、粘贴；学生先答后看参考。')
+new('第二课 老师的话与照片展用意')
+task(get('p6-meaning'));task(get('p7-purpose'))
+p('“每个人都有可自信的一面”与“每个人都没有缺点”不同。老师说话、同学协助摆姿势是文本事实；办展的完整动机并未直接交代，所以目的分析应表述为有依据的推测。')
+new('第二课 掌声与改变')
+task(get('p8-applause'));task(get('p9-change'))
+p('讲评顺序：同学称赞、鼓掌 → 宜欣感动 → 认识到自己也可以很美 → 重拾信心 → 主动交友。不能把后来的感动倒写为先前鼓掌的原因；也不能把身体恢复当作改变原因。')
+new('第二课 姿势与关键句')
+task(get('p10-posture'));t=get('theme');h(t['title'],2)
+for q in t['questions']:p(q)
+p('来源：'+t['source']+'。课堂身份：学生独立。第二课文字作答1。')
+table(['类型','参考句','判断依据'],[['抒情句','原来，我也可以很美！','直接抒发重新认识自己的欣喜。'],['议论句','其实，每个人或多或少都有不完美的地方。但是，我们都可以找到自己最美的姿势，都可以活得自信，活出精彩。','由个人经历推广到每个人，提出看法和道理。']],[.7,4.3,1.4])
+p('议论句要考虑第10段两句话的完整关系。取证框支持多句累加，不能只允许选一句。其他关键句选择若有充分解释，由教师按意义判断。')
+new('主题的表达与评分')
+t=get('theme');p('参考：'+t['answer']);p('解析：'+t['explain']);p(t['scoreGuide'])
+table(['项目','分值','核对重点'],[['抒情句','1','能表达“我”发现自己美的欣喜。'],['议论句','1','保留不完美但可自信生活的完整意思。'],['接纳不完美与发现优点','1','不是只谈摆出好看动作。'],['自信生活','1','可以活出精彩，不以他人赞美为价值前提。'],['内容关系','1','用照片、帮助和肯定后的改变说明道理。']],[1.7,.5,4.2])
+h('三种回答比较',2)
+p('只有引用：抄出第10段。能显示定位，但没有结合经历解释。')
+p('只有情节：宜欣拍了好看的照片，交了朋友。能复述，却没说文章要表达的道理。')
+p('完整联系：每个人都有不完美之处，但能发现自己的优点、自信生活。宜欣受到师生帮助和肯定，重新认识自己并主动交友，这体现了自信带来的改变。')
+p('提示一：'+t['hints'][0]);p('提示二：'+t['hints'][1]);p('常见误读：'+t['reject'])
+new('交友开放题 必做')
+t=get('open-friendship');p(t['questions'][0]);p('来源：课本巩固练习三；教参3.3。学生独立先答，教师后揭示范。')
+table(['步骤','学生要回答什么','核对'],[['看法','比较看重什么？','先回应人们实际交友的情况，可限定初识或长期相处。'],['理由','为什么？','解释影响或需要，不重复“重要因为重要”。'],['例子','哪件事说明？','可用课文或具体生活情境；不必捏造个人经历。'],['回扣','例子怎样支持观点？','连接具体行为、对友谊的影响和看法。']],[.7,1.9,3.8])
+h('参考示范',2);p(t['answer']);p(t['explain'])
+for s in t['alternatives']:p(s)
+p(t['scoreGuide']);p('常见误读：'+t['reject']);p('提示：'+t['hints'][1])
+new('原题覆盖与课堂操作')
+table(['来源','对应位置'],[['课本第1、2、3段旁注','步骤1、2、4：比喻作用、没有自信、心情比较'],['课本第4、6、8、10段旁注','步骤5、6、8、10：反应原因、老师话语、鼓掌、姿势含义'],['巩固练习一','步骤3：在第2段后练句式，保留完整原例与填空格式'],['巩固练习二','步骤11：抒情句、议论句、主题与内容'],['巩固练习三','步骤12：必做开放回应，说明为什么'],['教参安静原因、办展用意、后来变化','步骤5口头追问、步骤7口头任务、步骤9点选'],['教参课后练习建议','由教师按原教学安排处理，本配套不增加作业本题或额外课时']],[2.3,4.1])
+h('存储与设备',2)
+p('学生姓名、班级、学号／组别、首次答案、每次提交、提示使用、时间、订正与自检均保存在当前浏览器。本课独立标识s2u4l3，重置不删除个人词语本。检查页可导出JSON、逐题CSV和文字记录。没有账号同步或教师自动收件。')
+p('七个客观任务共八个选择检查；正确率按“任务首次全部正确”统计。四个主观任务由教师按意义核对；一个口头任务不计自动分。不将客观比例与人工建议分数混合为总分。')
+p('34项预设语境词不强制收藏；学生可自由输入其他词。未知词建卡后显示释义待补充，可编辑。词语本汇总已接入同域课文收藏，支持年级、单元、课文筛选及闪卡、导入导出。清理浏览器前先导出。')
+p('整套ZIP解压后打开“开始使用.html”；独立HTML含原图、字体与脚本。平台词语预习需要网络。PPT原生文字可编辑，使用霞鹜文楷与思源宋体；未安装可能替换，在线投影为同版图片。教师资料为公开页。')
+h('交付检查',2)
+for s in B['checks']:p(s)
+foot=sec.footer.paragraphs[0];foot.alignment=2;fld=OxmlElement('w:fldSimple');fld.set(qn('w:instr'),'PAGE');foot._p.append(fld)
+for root in [D.element,D.styles.element]:
+ for border in root.xpath('.//w:pBdr'):border.getparent().remove(border)
+D.save(O/'downloads/teacher-guide.docx');print('Teacher DOCX created')
