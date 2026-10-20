@@ -1,0 +1,23 @@
+{
+  "name": "我想对你说_学生互动学习.html",
+  "mime": "text/html;charset=utf-8",
+  "bytes": 21060939,
+  "sha256": "83dfe6cc6f12ce7a1bf43084ca167fb0cb88c722e9b61ecbbdb5fc632ec89889",
+  "parts": [
+    {
+      "file": "offline.part01.bin",
+      "bytes": 10485760,
+      "sha256": "7cf16a621bf263809519d28e67b7689a37ec7a0cdade20e9fab69d38090db76e"
+    },
+    {
+      "file": "offline.part02.bin",
+      "bytes": 10485760,
+      "sha256": "91c9133097819d6e92e0f152a67f075ed52bee415634306393d786cd227cf865"
+    },
+    {
+      "file": "offline.part03.bin",
+      "bytes": 89419,
+      "sha256": "80bdd5d4fe1b52564869b3d6cac779247a943b4daf0ca516129bd82612a19b9b"
+    }
+  ]
+}

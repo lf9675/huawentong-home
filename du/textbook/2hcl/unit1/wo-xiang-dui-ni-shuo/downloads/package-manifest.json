@@ -1,0 +1,27 @@
+{
+  "name": "我想对你说_完整教学配套.zip",
+  "bytes": 41065404,
+  "sha256": "d4fb01e448e8335db4c4ce7de5167f7e5103c5f19652ab5b51c4ac992e7ae635",
+  "parts": [
+    {
+      "file": "package.part01.bin",
+      "bytes": 10485760,
+      "sha256": "6d41729dced5c08d9d48d8a18f1b91cdad9af30fb1d5cbb4219c6882dc4f6c80"
+    },
+    {
+      "file": "package.part02.bin",
+      "bytes": 10485760,
+      "sha256": "b60db28f086c10466cfe25135d770536b17a80c8d0541812d833219c53c54068"
+    },
+    {
+      "file": "package.part03.bin",
+      "bytes": 10485760,
+      "sha256": "9190a36fa0bacc6c43439c13dc3c9991f71c9e5e3da44d1c834b9cb85a9c0e01"
+    },
+    {
+      "file": "package.part04.bin",
+      "bytes": 9608124,
+      "sha256": "0fca5c534b055d8f16f8e18a375171813d6556bc07bc528b212db607a109eb89"
+    }
+  ]
+}
