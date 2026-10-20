@@ -1,0 +1,37 @@
+{
+  "name": "猫_完整教学配套.zip",
+  "bytes": 58945118,
+  "sha256": "23307f2ee3e3c5b462f7fceb23a0647625d0b922edca40f5d2fbf8f954e902a0",
+  "parts": [
+    {
+      "file": "package.part01.bin",
+      "bytes": 10485760,
+      "sha256": "8c1ffc5cf65538c6018ea63eb2f3e33fd646e34bb220b4cffc25321c4ec7529a"
+    },
+    {
+      "file": "package.part02.bin",
+      "bytes": 10485760,
+      "sha256": "335c6f19875c6394cc30ad4a94af675513c4bc30cfe839d8c343af2f62731035"
+    },
+    {
+      "file": "package.part03.bin",
+      "bytes": 10485760,
+      "sha256": "3f50f1352d4758edafc7c29706b61770865f7c9b994b9d63e41509c54ce62dc3"
+    },
+    {
+      "file": "package.part04.bin",
+      "bytes": 10485760,
+      "sha256": "b499597889db2ed1685fff8d36d669da05b55c34cce791a30e7cfd4f04dc47f3"
+    },
+    {
+      "file": "package.part05.bin",
+      "bytes": 10485760,
+      "sha256": "b2b309148b7289c143d253e80db17898a2ed7c80298cce864d9cc0cf6c23d6bf"
+    },
+    {
+      "file": "package.part06.bin",
+      "bytes": 6516318,
+      "sha256": "f54e876e71ebcf3c8e97fa8bb676745b6105801ead5d7476d8776a7b5f5e67b1"
+    }
+  ]
+}

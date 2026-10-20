@@ -1,0 +1,23 @@
+{
+  "name": "猫_学生互动学习.html",
+  "mime": "text/html;charset=utf-8",
+  "bytes": 28036235,
+  "sha256": "4f225b6e29956eb93abcac606b73e842640093336a9b0f16fa14f5e3e7d8dc1f",
+  "parts": [
+    {
+      "file": "offline.part01.bin",
+      "bytes": 10485760,
+      "sha256": "2fa82d95081820bdc886d670eecdf8c2521943f9b646e27e5aad864159ba8b8b"
+    },
+    {
+      "file": "offline.part02.bin",
+      "bytes": 10485760,
+      "sha256": "3a3a120ff077ef0731bb45f2ee20e8f2bec2cc94f593424c6be5ac7dcddf83b1"
+    },
+    {
+      "file": "offline.part03.bin",
+      "bytes": 7064715,
+      "sha256": "f900785d2748ce21242c63cac8c1737ed130a4730e4a4d576ffc81aeca386e32"
+    }
+  ]
+}

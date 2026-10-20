@@ -11,7 +11,7 @@ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state));persistFaile
 const a=id=>state.answers[id]||(state.answers[id]={fields:{},choices:{},evidence:{},attempts:[],hintCount:0,revision:'',points:[],unlocked:false});
 const task=()=>L.tasks[Math.max(0,Math.min(L.tasks.length-1,state.position.task))];
 function kw(s,words=[]){let result=esc(s);[...words].sort((a,b)=>b.length-a.length).forEach(w=>result=result.split(esc(w)).join('<span class="key">'+esc(w)+'</span>'));return result}
-function panel(n){const r=L.panelRects[n-1],src=window.LESSON_ASSETS?.['comic'+Math.ceil(n/10)]||'assets/comic'+Math.ceil(n/10)+'.png';return `<div class="panel" style="aspect-ratio:${r[2]}/${r[3]}"><img src="${src}" alt="原有漫画第${n}格" style="width:${1024/r[2]*100}%;left:${-r[0]/r[2]*100}%;top:${-r[1]/r[3]*100}%" loading="lazy"></div>`}
+function panel(n){const r=L.panelRects[n-1],sheet=L.panelSheets?.[n-1]||Math.ceil(n/10),src=window.LESSON_ASSETS?.['comic'+sheet]||'assets/comic'+sheet+'.png';return `<div class="panel" style="aspect-ratio:${r[2]}/${r[3]}"><img src="${src}" alt="原有漫画第${n}格" style="width:${1024/r[2]*100}%;left:${-r[0]/r[2]*100}%;top:${-r[1]/r[3]*100}%" loading="lazy"></div>`}
 const pName=p=>'第'+(cn[p-1]||p)+'段';
 const sentences=p=>L.paragraphs[p-1].match(/[^。！？]+[。！？][”’]?|[^。！？]+$/g)||[L.paragraphs[p-1]];
 function marked(s){const aliases=window.WORD_ALIASES||{},words=[...Object.keys(window.LESSON_WORDS),...Object.keys(aliases)].filter(w=>s.includes(w)).sort((a,b)=>b.length-a.length);if(!words.length)return esc(s);const re=new RegExp('('+words.join('|')+')','g');return s.split(re).map(v=>window.LESSON_WORDS[aliases[v]||v]?`<span class="word" role="button" tabindex="0" data-word="${esc(aliases[v]||v)}">${esc(v)}</span>`:esc(v)).join('')}
