@@ -1,0 +1,63 @@
+{
+  "name": "人类最糟糕的发明-离线学习单.html",
+  "mime": "text/html",
+  "bytes": 34564805,
+  "sha256": "a462440cb75baea9f6f2a088be5b5995a9cab54395f8229478a10ddc4e9ebaca",
+  "parts": [
+    {
+      "file": "offline.part01.bin",
+      "bytes": 3145728,
+      "sha256": "e4b9aeca0119390ba02d7b4025ab4897ffa9e93ed359df6304b39396a220c9a4"
+    },
+    {
+      "file": "offline.part02.bin",
+      "bytes": 3145728,
+      "sha256": "7d70fa81fd0708eb8e381a28fc54697a622e6de9082aca086b48f49b1434ce34"
+    },
+    {
+      "file": "offline.part03.bin",
+      "bytes": 3145728,
+      "sha256": "3b4e641941477b22b7e5dde2acb2e4a0d53a46d9deaa344b46443dc296f851c6"
+    },
+    {
+      "file": "offline.part04.bin",
+      "bytes": 3145728,
+      "sha256": "120d798cbed95edb7e3f6c7e3c0d92e3f2cf788acd16876ead07b56a72f0ca63"
+    },
+    {
+      "file": "offline.part05.bin",
+      "bytes": 3145728,
+      "sha256": "0237bb97df9dfb690ca969e3e46ad41379decb8da7808b42244d639e2dcda662"
+    },
+    {
+      "file": "offline.part06.bin",
+      "bytes": 3145728,
+      "sha256": "c03b9e59ba89df593324c8dc456f2ce9dc9baf9062df80fbf301187f72970737"
+    },
+    {
+      "file": "offline.part07.bin",
+      "bytes": 3145728,
+      "sha256": "424369b780fd2edd947f928f61958eccffc00df12342266cb3d83035f37c009f"
+    },
+    {
+      "file": "offline.part08.bin",
+      "bytes": 3145728,
+      "sha256": "5fe9c1342060c6cce49d377c7a863180cc7d9ac4d31a0aa8c3193d9de2139d7f"
+    },
+    {
+      "file": "offline.part09.bin",
+      "bytes": 3145728,
+      "sha256": "f1d0186dd4e06aaae341de921b6e385c3aa4337dcd87df9a0be0a67559db3158"
+    },
+    {
+      "file": "offline.part10.bin",
+      "bytes": 3145728,
+      "sha256": "b05e92b7b705e9df1890c33a9fac2c58b124d1d94ea58f0252dff1371bddab15"
+    },
+    {
+      "file": "offline.part11.bin",
+      "bytes": 3107525,
+      "sha256": "cabbe5097a3b23023ca670ef7551cc54907e237f7162e81f80648c719ddf3199"
+    }
+  ]
+}

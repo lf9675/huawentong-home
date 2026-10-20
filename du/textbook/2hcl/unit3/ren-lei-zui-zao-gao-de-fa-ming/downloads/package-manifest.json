@@ -1,0 +1,118 @@
+{
+  "name": "人类最糟糕的发明-完整教学配套.zip",
+  "mime": "application/zip",
+  "bytes": 66149407,
+  "sha256": "ca08edf087f7364ff94001be8e9878d927439f6987ca640416c53a69a97eb69c",
+  "parts": [
+    {
+      "file": "package.part01.bin",
+      "bytes": 3145728,
+      "sha256": "19c0c54b8ab1c78a0dc0259822a905970f123969ab9d2ceb5c993020d16d6f88"
+    },
+    {
+      "file": "package.part02.bin",
+      "bytes": 3145728,
+      "sha256": "490728282f5d0cf0e6ffd88d924fcfb3df8f6794cf5e8abd78ca11fbc5974231"
+    },
+    {
+      "file": "package.part03.bin",
+      "bytes": 3145728,
+      "sha256": "37841d9b1b8d13e2a0a822dab96c81e7bd11f83f2688b5ba322f1fc01eeb7f4c"
+    },
+    {
+      "file": "package.part04.bin",
+      "bytes": 3145728,
+      "sha256": "5464bdc0e32c5dceb5c5507d8c975410a9616d38515baea1de5ddb63fbc9a60d"
+    },
+    {
+      "file": "package.part05.bin",
+      "bytes": 3145728,
+      "sha256": "1fbd14eaf6f6d6e52a0e2e536264f4128f9e014a4311cdf7d1429bf7d74fe745"
+    },
+    {
+      "file": "package.part06.bin",
+      "bytes": 3145728,
+      "sha256": "8c6feeb403feb3d7c671d7e423374a2ec7b41cb56920cf087de933ba272a5be7"
+    },
+    {
+      "file": "package.part07.bin",
+      "bytes": 3145728,
+      "sha256": "025cfda25833947335864957e44701c1b53aee698e63c7e4c3f43716d2af821c"
+    },
+    {
+      "file": "package.part08.bin",
+      "bytes": 3145728,
+      "sha256": "6ebb6d74ff37c663b433c2d7279af7e9e2aa68a331e03774f6d495c464a01eee"
+    },
+    {
+      "file": "package.part09.bin",
+      "bytes": 3145728,
+      "sha256": "8635e1b0d45829ec2ca4ef8ae42d6aaa5df6e14106dd5563cb072d27bb2af8fb"
+    },
+    {
+      "file": "package.part10.bin",
+      "bytes": 3145728,
+      "sha256": "42ba9093e4ad5d818d602eaf3ce08c5d2077192118e5c3be7f9a99877d3b82a9"
+    },
+    {
+      "file": "package.part11.bin",
+      "bytes": 3145728,
+      "sha256": "1c8907f43a53f3003c517d4ab81e00d0df8ea32ad124d27ffcf43c8506ed8562"
+    },
+    {
+      "file": "package.part12.bin",
+      "bytes": 3145728,
+      "sha256": "8aefd1df28d7ec8d49878069af3a5fcbe4075e128eacecd1733e6c531cf0b186"
+    },
+    {
+      "file": "package.part13.bin",
+      "bytes": 3145728,
+      "sha256": "ae58b6facbb5e2cb46cab9bdb96b9eef9a29824deb62ef5e47d48c83abd45191"
+    },
+    {
+      "file": "package.part14.bin",
+      "bytes": 3145728,
+      "sha256": "3be0475522f72e861eea8c4b97c839184ff108380730b0a651dff1baf5f63d86"
+    },
+    {
+      "file": "package.part15.bin",
+      "bytes": 3145728,
+      "sha256": "2f558cd69987283a5e6e4d0f2e6ef541e95d2754e775de3df76749718aedc434"
+    },
+    {
+      "file": "package.part16.bin",
+      "bytes": 3145728,
+      "sha256": "edfb1d6bb52e809d6fcbf73099de2be74e05631e603e30d270e0a84ba26b1932"
+    },
+    {
+      "file": "package.part17.bin",
+      "bytes": 3145728,
+      "sha256": "60e91311ee9eaf8231ed29df2f51970af62f4b4647f571db79a9fa373639f30f"
+    },
+    {
+      "file": "package.part18.bin",
+      "bytes": 3145728,
+      "sha256": "d1824890e020b29ea35b37d3243a55a217bb5b2360abd22ca692221b736454c9"
+    },
+    {
+      "file": "package.part19.bin",
+      "bytes": 3145728,
+      "sha256": "f616a30bb7dd87f2845b865ce1126c45f59fc28760895ae1720652207f73692f"
+    },
+    {
+      "file": "package.part20.bin",
+      "bytes": 3145728,
+      "sha256": "f50c9816f6aa4dde4c1d74dc011ca26d3eeca93eca27a49b37a455496524c831"
+    },
+    {
+      "file": "package.part21.bin",
+      "bytes": 3145728,
+      "sha256": "e24325f99a3d624d33fef25d97b7ac10109f08e497b1520a16984d4bb00a58d4"
+    },
+    {
+      "file": "package.part22.bin",
+      "bytes": 89119,
+      "sha256": "8e855f369b7acc93e12c3a95d530baef65bcd6646ecb194c0b7d7aceb2e99c7e"
+    }
+  ]
+}
