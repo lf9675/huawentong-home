@@ -1,7 +1,7 @@
 /* Reusable textbook lesson engine. Content and stable question IDs live in content.js. */
 (()=>{'use strict';
 const L=window.LESSON,$=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const KEY='huawentong-lesson-'+L.id+'-v1', cn=['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六'];
+const KEY='huawentong-lesson-'+L.id+'-v1', cn=['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九'];
 const empty=()=>({schema:'huawentong-lesson-v1',lessonId:L.id,contentVersion:L.version,sequenceVersion:L.sequenceVersion,sources:{},position:{view:'read',p:1,task:0},identity:{name:'',class:'',number:''},answers:{}});
 let state=empty(),selected=null,persistFailed=false;try{const v=JSON.parse(localStorage.getItem(KEY));if(v?.lessonId===L.id&&v?.schema===state.schema)state={...state,...v,sequenceVersion:v.sequenceVersion||1}}catch{}
 state.answers=state.answers||{};state.identity=state.identity||{name:'',class:'',number:''};

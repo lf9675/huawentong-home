@@ -1,0 +1,98 @@
+{
+  "name": "恐怖事件-完整教学配套.zip",
+  "mime": "application/zip",
+  "bytes": 56260649,
+  "sha256": "6bed4a0143203885a48ea9466f2a2e6356bd4bc011442e6c6ddf2387ab6b0953",
+  "parts": [
+    {
+      "file": "package.part01.bin",
+      "bytes": 3145728,
+      "sha256": "415eb9e17c492c96eb02b0624fea732c90695b1f1c76780dd131bdc6ed8ce281"
+    },
+    {
+      "file": "package.part02.bin",
+      "bytes": 3145728,
+      "sha256": "35c6c2030e38c52aabdcd03fc8b86f2e1dbf9ec2e1a09c574f79deaaf1fc8c92"
+    },
+    {
+      "file": "package.part03.bin",
+      "bytes": 3145728,
+      "sha256": "3a5f01a9304535063c07f0e3e3cb27d7f0ce09c5c0958295ebb8dbd672d315d3"
+    },
+    {
+      "file": "package.part04.bin",
+      "bytes": 3145728,
+      "sha256": "3091d8ea9dad152c6da0f2ce284d22de1638322f63c78e6af8380599e4730d1f"
+    },
+    {
+      "file": "package.part05.bin",
+      "bytes": 3145728,
+      "sha256": "38644304b6d11e1e74d8225b3b4c74e66ad43266c3426b6e4666fb235d70c912"
+    },
+    {
+      "file": "package.part06.bin",
+      "bytes": 3145728,
+      "sha256": "30d1689088f171708e55365811c5de4927c78ec4549ea510519a2999854f4a93"
+    },
+    {
+      "file": "package.part07.bin",
+      "bytes": 3145728,
+      "sha256": "fb85ead54c80fc37449d16504a1b286ffcad55701fd5cfa24e72d278e8bfcb21"
+    },
+    {
+      "file": "package.part08.bin",
+      "bytes": 3145728,
+      "sha256": "da62191525b4a7e882f5a994f76b6b994b5677561fbb726981d9a3331e67c2b4"
+    },
+    {
+      "file": "package.part09.bin",
+      "bytes": 3145728,
+      "sha256": "953a2e90926aeb52b1e44a3abcf0c91c512fc5d7bca8dbdbd5fde47545e7ce49"
+    },
+    {
+      "file": "package.part10.bin",
+      "bytes": 3145728,
+      "sha256": "c5fef10367a9175ddefa1805f4540c9f8ff1d4f8e00e203d3d78e599669c7327"
+    },
+    {
+      "file": "package.part11.bin",
+      "bytes": 3145728,
+      "sha256": "9f630f7ccf93cfd073065a1c597010e938eceea449447c5fcc2466219c13c36f"
+    },
+    {
+      "file": "package.part12.bin",
+      "bytes": 3145728,
+      "sha256": "df8684ac611ecd884f386e9c4cc895272d43521dcb3d9b0ef258926a11fbda8c"
+    },
+    {
+      "file": "package.part13.bin",
+      "bytes": 3145728,
+      "sha256": "067945f3ec1fa71a30c03684882fe472d3a6f92e4d42d3b882dbe4adc1ee8713"
+    },
+    {
+      "file": "package.part14.bin",
+      "bytes": 3145728,
+      "sha256": "1253c26c0401d9945cb4829ef113ca6f6e2a3162168c2d50f7788ad4953a4e1e"
+    },
+    {
+      "file": "package.part15.bin",
+      "bytes": 3145728,
+      "sha256": "1c917f0e8c87dccacf2bc0540eb7405bcb7e7c59ee79caadc05af1c5fe82f397"
+    },
+    {
+      "file": "package.part16.bin",
+      "bytes": 3145728,
+      "sha256": "fdaf477ede57eb2d53424fe75b8ce4c5f2238a4b7b4e6ed3d61d2fd4ac70a420"
+    },
+    {
+      "file": "package.part17.bin",
+      "bytes": 3145728,
+      "sha256": "905a059553812decd3b34a16e0fc40508cee65dcb382b4ee13e779cf83345864"
+    },
+    {
+      "file": "package.part18.bin",
+      "bytes": 2783273,
+      "sha256": "35f4b1a0df90c9ae8d17ffbd20ec1aae7b4f57f16f5b7ea11dd413be78b30c31"
+    }
+  ]
+}

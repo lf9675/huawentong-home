@@ -1,0 +1,58 @@
+{
+  "name": "恐怖事件-离线学习单.html",
+  "mime": "text/html",
+  "bytes": 29861541,
+  "sha256": "46e195a561d9555e4d06158a6df5d126bab421f9a39eafc47be7fb80982e24d3",
+  "parts": [
+    {
+      "file": "offline.part01.bin",
+      "bytes": 3145728,
+      "sha256": "437ac4deeecfe27700830edac3c04cf2e02777672f28e1bd0e3462c15c669543"
+    },
+    {
+      "file": "offline.part02.bin",
+      "bytes": 3145728,
+      "sha256": "fda998cd151702b22dcdf7681f65e68587c41035db42be84e60ea8f6b74e6195"
+    },
+    {
+      "file": "offline.part03.bin",
+      "bytes": 3145728,
+      "sha256": "a7cc66b97a962eec03f70f9c808e1efe4b8c74fdc449fa65f650ba355a0371ea"
+    },
+    {
+      "file": "offline.part04.bin",
+      "bytes": 3145728,
+      "sha256": "f16145d027bc72f267908987aaead06a3b7141888063f66bb0c908dd5ba6ced3"
+    },
+    {
+      "file": "offline.part05.bin",
+      "bytes": 3145728,
+      "sha256": "230f8c745b5e766b82a360f4c2d4b3ef592e6fc2f48a62e9792ad159e80dccfe"
+    },
+    {
+      "file": "offline.part06.bin",
+      "bytes": 3145728,
+      "sha256": "3032297b8232266e79587a42af166271e978f90c8ebaf2d828616da71d9bc584"
+    },
+    {
+      "file": "offline.part07.bin",
+      "bytes": 3145728,
+      "sha256": "951c6b98602f2c68ed5786a56391aca608eb48c637837ec26b5c3bedef72ab4e"
+    },
+    {
+      "file": "offline.part08.bin",
+      "bytes": 3145728,
+      "sha256": "c1bbf06cea68481a67a958dad5b96e94b7ca5ca928c008c25ae54ce20b1054a5"
+    },
+    {
+      "file": "offline.part09.bin",
+      "bytes": 3145728,
+      "sha256": "0a163d7079f9b0e32ab5dfcea4c8ea9ad9b5919d2443df9f415e78d548044ec7"
+    },
+    {
+      "file": "offline.part10.bin",
+      "bytes": 1549989,
+      "sha256": "a102dbeb17735223d57fa1e63f2909e010826baf4eba4a232e9bc8fd5e6c6634"
+    }
+  ]
+}
