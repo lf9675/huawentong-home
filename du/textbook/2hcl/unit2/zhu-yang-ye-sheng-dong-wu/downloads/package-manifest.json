@@ -1,0 +1,37 @@
+{
+  "name": "助养野生动物_完整教学配套.zip",
+  "bytes": 54309374,
+  "sha256": "af402a699d30ed84f493cacde0d5c36693f1569d688b07120dcf725e4682386d",
+  "parts": [
+    {
+      "file": "package.part01.bin",
+      "bytes": 10485760,
+      "sha256": "7a1524d10b21d174262e2e7d4eb2840864fa41f74aefe8aca57089938623c2a9"
+    },
+    {
+      "file": "package.part02.bin",
+      "bytes": 10485760,
+      "sha256": "fb85e2f834ac417c4e907d26f958a0fb16e96f83e4d27aeb18ee8930938b2379"
+    },
+    {
+      "file": "package.part03.bin",
+      "bytes": 10485760,
+      "sha256": "1a614b67c1be80c76037e64612ad93c97a09dfc255fb27a8e38a396c00d90c10"
+    },
+    {
+      "file": "package.part04.bin",
+      "bytes": 10485760,
+      "sha256": "a81c23ffba853864d3d50ab12a95534e1eb6b61f9cbd6bbcc7c6ed737795993e"
+    },
+    {
+      "file": "package.part05.bin",
+      "bytes": 10485760,
+      "sha256": "9cf774db9253d0571e247792d567bec1fff9373dc293d63a48f23a6632bd35dd"
+    },
+    {
+      "file": "package.part06.bin",
+      "bytes": 1880574,
+      "sha256": "fa199c2e4482e9c559e94bc05d8ab9b72428b462e664dad255cba5e92eb98bf3"
+    }
+  ]
+}

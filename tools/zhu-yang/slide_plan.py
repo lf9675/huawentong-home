@@ -1,0 +1,45 @@
+from pathlib import Path
+import json
+R=Path(__file__).resolve().parents[2];D=R/'du/textbook/2hcl/unit2/zhu-yang-ye-sheng-dong-wu'
+L=json.loads((Path(__file__).parent/'lesson.json').read_text());S=[]
+def add(title,lines,kind='content',panel=None,task=None,notes=''):
+ t=next((t for t in L['tasks'] if t['id']==task),None)
+ if t:notes+='\n'+t['source']+'。'+t['role']+'。\n参考：'+t['answer']+'\n易错：'+t['reject']
+ d=dict(title=title,lines=lines,kind=kind,lesson=1,notes=notes,number=len(S)+1)
+ if panel:d['panel']=panel
+ if task:d['task']=task
+ S.append(d)
+add('助养野生动物',['中二高级华文　单元二','生活空间　1课时'],'cover',1,notes='一课时按50分钟：导入3，助养信息12，四种动物18，公益分享12，检查5。')
+add('你会怎样关爱动物？',['先说一种做法。','今天读懂助养计划。','再认识四种动物。'],'question',24,notes='口头导入，不扩展成额外书写任务。')
+add('第一段：助养方式',[L['paragraphs'][0]],task='method')
+add('怎样参与助养？',['你可以通过什么方式助养野生动物？','找出说明“怎样参加”的原句。'],'question',task='method')
+add('助养方式',['参加助养计划。','通过捐款献出爱心。'],'answer',2,'method')
+add('第二段：捐款用途',['拯救野生动物。','购买医疗设备，为动物提供更好的护理。','购买食物，为动物提供高品质的饮食。'],task='uses',notes='五项用途分两页完整展示，仍属于第二段。')
+add('第二段：捐款用途（续）',['作为活动经费，为动物设计活动，丰富它们的生活。','支持实地调查研究，开展野生动物保育计划。'],task='uses')
+add('捐款用在哪里？',['捐款的用途有哪些？','找词语：提供救助，帮助脱离危险。'],'question',task='uses')
+add('五项用途',['拯救、医疗护理、饮食。','活动、调查研究与保育。','课本词语：拯救。'],'answer',task='uses',notes='逐一点明五项，不把“医疗护理和饮食”合成不清楚的一项。')
+add('第三段：期限与优惠',[L['paragraphs'][2].replace('\n','')],task='term-benefits')
+add('时间与助养者所得',['助养期限多久？','参与助养的公众能获得什么优惠？'],'question',task='term-benefits')
+add('一年及三类优惠',['期限：一年。','证书、动物园门票。','购物折扣券等。'],'answer',8,'term-benefits')
+add('怎样概括特点？',['概括（summarise）：选主要信息，删重复说法。','身体怎样？动作怎样？性情怎样？'],'concept',notes='概念先解释。下一段由教师示范，再逐渐交给学生口头概括。')
+add('第四段：阿明',[L['paragraphs'][3]],task='orangutan')
+add('阿明有哪些主要特点？',['概括红毛猩猩的主要特点。','找词语：迅速而灵敏；来回活动。'],'question',task='orangutan')
+add('阿明的主要特点',['四肢长而有力。','动作敏捷，穿梭自如。','亲切友善。','词语：敏捷、穿梭。'],'answer',11,'orangutan',notes='我做：圈“四肢、动作、性情”，删重复“阿明”，合成短句。亲善大使是身份，不代替特点。')
+add('第五段：班杰和贝拉',[L['paragraphs'][4]],task='penguins')
+add('非洲企鹅有哪些主要特点？',['概括非洲企鹅的主要特点。','课文给出的辨识依据是什么？'],'question',task='penguins')
+add('行为与斑纹',['喜欢大摇大摆地探索新事物。','羽毛斑纹独一无二。','可凭胸前斑纹辨识它们。'],'answer',14,'penguins',notes='原图中斑纹仅为示意。课文没有提供每只企鹅的斑点数量，不能把漫画画法当成事实。')
+add('第六段：可可',[L['paragraphs'][5]],task='tortoise')
+add('转折后的信息',['“虽然……但……”和“却”常提示转折。','概括时，前后两面的关系都要保留。'],'concept',notes='先解释转折，再让学生概括可可。不要把可可概括成笨重迟缓。')
+add('可可有哪些主要特点？',['概括亚达伯拉象龟的主要特点。','找词语：看见好吃的食物就想吃。'],'question',task='tortoise')
+add('可可的主要特点',['害羞，喜欢在阴凉处休息。','嘴馋，重120公斤。','见到食物，动作还是挺快的。','课本词语：馋。'],'answer',19,'tortoise')
+add('第七段：小哈',[L['paragraphs'][6]],task='sun-bear')
+add('小哈有哪些主要特点？',['概括马来熊的主要特点。','找词语：双方相抱，运用力气和技巧，使对方倒下的体育运动。'],'question',task='sun-bear',notes='教师版保留教材第五个词义题完整句。此页口头读题，注意“却”。')
+add('小哈的主要特点',['调皮，常和同伴玩摔跤。','最爱甜食，给葡萄时乐意配合。','个头不大，却很凶猛。','课本词语：摔跤。'],'answer',21,'sun-bear')
+add('课本特点表',['红毛猩猩：用自己的话概括。','非洲企鹅：用自己的话概括。','亚达伯拉象龟：用自己的话概括。','马来熊：用自己的话概括。'],'question',notes='按教参2.2口头完成表格，随后核对。网页保存原句依据；口头概括不计入自动正确率。教师资料提供完整参考表。')
+add('公益广告分享',['上网搜一搜，找一个关爱动物的公益广告，和同学分享。','分享时交代发布者和主要建议。'],'question',task='public-message',notes='原题完整保留。可选NParks海报第3页 Wildlife and Us，或学生自行找到的真实公益广告。官方入口：https://www.nparks.gov.sg/learn/resources/responsible-human-wildlife-encounters')
+add('你的建议与理由',['你愿意实践哪个建议？为什么？','结合广告内容或具体情境说明。','用3—4句话写下来。'],'question',task='public-message')
+add('开放回应的顺序',['建议：我愿意做什么？','理由：为什么？','例子：哪项内容或情境能说明？','回扣：这怎样帮助动物？'],'concept',task='public-message')
+add('回应示例',['我愿意实践不喂食野生动物的建议。','人的食物可能使野生动物生病。','在公园遇见它们，我会收好食物。','这样能减少伤害和干扰。'],'answer',task='public-message',notes='学生先答，之后展示。示例依据NParks公益海报 Wildlife and Us：“Do not feed wildlife.”及相关健康提示。示例中的公园情境是假设，不宣称个人真实经历。不同合理建议均可。')
+add('当堂检查',['助养信息：有没有混淆对象？','动物特点：有没有漏掉转折？','开放回应：有没有解释为什么？','订正后，把需要复习的词加入词语本。'],notes='5分钟内对照、订正、导出。没有课后一周小测或额外新短文。')
+(D/'slides.json').write_text(json.dumps(S,ensure_ascii=False,indent=2))
+print(len(S),'slides')

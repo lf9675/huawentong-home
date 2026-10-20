@@ -1,0 +1,23 @@
+{
+  "name": "助养野生动物_学生互动学习.html",
+  "mime": "text/html;charset=utf-8",
+  "bytes": 24335226,
+  "sha256": "0a9013b44a2e311683cd6352dfe6cc95633a41ac1b70b0d752ea3ef48b8b84a4",
+  "parts": [
+    {
+      "file": "offline.part01.bin",
+      "bytes": 10485760,
+      "sha256": "9a317e8a558f44834df98ed6e187e16cb92a658064d1705d602c3b74c627f9f2"
+    },
+    {
+      "file": "offline.part02.bin",
+      "bytes": 10485760,
+      "sha256": "76d5c91f97ff53363c2fdeef43382bb5ed8fdd1bbe738eb7442cc0c17728ff8a"
+    },
+    {
+      "file": "offline.part03.bin",
+      "bytes": 3363706,
+      "sha256": "75dfb4284d5ec6bd0ddb4f3e4850c2880bb387ed67776fcd256deade583eed80"
+    }
+  ]
+}
