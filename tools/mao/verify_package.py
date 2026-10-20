@@ -25,8 +25,9 @@ with zipfile.ZipFile(D/'downloads/teacher-guide.docx') as z:assert 'word/documen
 assert len(list((D/'slides').glob('*.png')))==53
 L=json.loads((R/'tools/mao/lesson.json').read_text());assert len(L['paragraphs'])==12 and len(L['tasks'])==17
 for x,y,w,h in L['panelRects']:assert min(x,y,w,h)>0 and x+w<=1024 and y+h<=1536
-for i in range(1,5):assert (D/f'assets/comic{i}.png').read_bytes()==(R.parent/f'upload/猫-{i}.png').read_bytes()
-prior=subprocess.check_output(['git','show','HEAD:index.html'],cwd=R,text=True);current=(R/'index.html').read_text()
+original_hashes=['7cf604fb3585d026a05445545f7e903fc9ea13d2ccee613f3f18e3266e8572d9', '822d8e9963b03ba2ee3ba003b97491c4f2ba881e6574fc871e21aa4513f12b82', '801be4b1cd9e2a487a578dcf121f6a96b67baad19b9ae6dc1f5321391257290d', '774a917408a378c75bcb2ce19e5ea6bb5de56acc28486429c7c6d6e2ed36c318']
+for i in range(1,5):assert hashlib.sha256((D/f'assets/comic{i}.png').read_bytes()).hexdigest()==original_hashes[i-1]
+prior=subprocess.check_output(['git','show','b4fd22316547e5bfa42548f913a129c042633d71:index.html'],cwd=R,text=True);current=(R/'index.html').read_text()
 def data(s):return json.loads(re.search(r'const DATA=(.*?);\n',s)[1])
 a,b=data(prior),data(current);units=b['2']['texts'];new=next(u for u in units if u['title']=='单元二');assert new['items'][0]['url']=='du/textbook/2hcl/unit2/mao/index.html';units.remove(new);assert a==b
 print('PASS: local links, 53 native-text PPT slides (>=30pt), 53 projector images, DOCX, original comics, checked multipart offline/ZIP downloads, isolated homepage insertion.')

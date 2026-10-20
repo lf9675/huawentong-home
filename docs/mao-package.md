@@ -36,3 +36,11 @@
 ## 构建
 
 依次运行 tools/mao 下 build_content.py、slide_plan.py、build_pages.py、build_deck.mjs、build_guide.py、build_package.py。课件使用运行环境的 @oai/artifact-tool 与演示文稿finalizer，文档使用运行环境的python-docx；渲染需霞鹜文楷与思源宋体。构建中间产物不放入站点。
+
+## 发布验收（2026-10-20）
+
+发布提交977b45aa86b8ebf6eede3338b3c86e6e23827b9f的Cloudflare Workers构建已完成，结论success；部署版本72256aeb-ffd3-4eb5-8705-47461b83e37f。
+
+首页新增入口、课文主页、学生阅读、教师页、投影页、内容及两份下载清单均HTTP 200，内容逐字节对应本地版本。整包6块、离线HTML 3块、PPT、DOCX、抽检首尾原漫画及投影图、共享引擎与词语目录共17份资源HTTP 200且SHA-256一致。正式入口重定向到 /du/textbook/2hcl/unit2/mao/reading 与 /teacher。
+
+云端浏览器被URL策略阻止，未完成真实浏览器视觉／点击检查或真实iPad验证。上面发布与资源检查是HTTP文件核验，互动行为检查是DOM模拟，不将其声称为实机触控测试。
