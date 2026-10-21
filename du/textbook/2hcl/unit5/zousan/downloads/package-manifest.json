@@ -1,0 +1,33 @@
+{
+  "name": "如果走散了_完整教学配套.zip",
+  "mime": "application/zip",
+  "bytes": 36078928,
+  "sha256": "4ab3f7d73335749c6a024055e7c60d5cbc16373ef6cb212e4c87d8b6a8ac3dcf",
+  "parts": [
+    {
+      "file": "package-01.bin",
+      "bytes": 8388608,
+      "sha256": "7804262f593d7518f200ff658abd9ce0bebaa74be9e8a0b88c977f1e1b7cd9f1"
+    },
+    {
+      "file": "package-02.bin",
+      "bytes": 8388608,
+      "sha256": "3cdb232964e179589fe7b53c2bd4193509c23c0ae1e7822de4c4b3c76021cf23"
+    },
+    {
+      "file": "package-03.bin",
+      "bytes": 8388608,
+      "sha256": "d8b1a39c18a7f90f4d8c6a8bc4115885520117dd86265bb53154d60c76dd1b75"
+    },
+    {
+      "file": "package-04.bin",
+      "bytes": 8388608,
+      "sha256": "2aa5163c8710052a857adee80d73561c5c1458c56ba30a020c368fd988042d52"
+    },
+    {
+      "file": "package-05.bin",
+      "bytes": 2524496,
+      "sha256": "db30c31f13f284341c33cea26493892eaa051da5cef6acc078cd3f9f63c4882e"
+    }
+  ]
+}

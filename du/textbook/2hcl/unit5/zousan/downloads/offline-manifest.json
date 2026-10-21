@@ -1,0 +1,28 @@
+{
+  "name": "如果走散了_离线互动学习单.html",
+  "mime": "text/html;charset=utf-8",
+  "bytes": 33331389,
+  "sha256": "82d1ad69fa37c98a3e6145d639c05d195f24f878657b65efc5c49d6b7787de7f",
+  "parts": [
+    {
+      "file": "offline-01.bin",
+      "bytes": 8388608,
+      "sha256": "ecc58cafe4fd92e6978b39dcd4f73f3da0f7d8aa033e2fe4899d09749b579148"
+    },
+    {
+      "file": "offline-02.bin",
+      "bytes": 8388608,
+      "sha256": "cb84c942590e69348cdeb3582e470a6ff74802eaf9e507afc14b8a98e4dbe31e"
+    },
+    {
+      "file": "offline-03.bin",
+      "bytes": 8388608,
+      "sha256": "72b55764a2c7c2f02d2555a96930799f747c3b71547fe3282b15b2668222b545"
+    },
+    {
+      "file": "offline-04.bin",
+      "bytes": 8165565,
+      "sha256": "2029a8e9781ca10847fdc9d858dd91d1641cafcfa9e801b9cd1b833d22c79a3e"
+    }
+  ]
+}
