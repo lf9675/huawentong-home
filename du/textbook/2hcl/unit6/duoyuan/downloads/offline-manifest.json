@@ -1,0 +1,37 @@
+{
+  "filename": "duoyuan-offline.zip",
+  "bytes": 22493577,
+  "sha256": "606808a92f90b21a0707833ad4da1dd631a3369cd405e0b53a0b7ef44c28c0c0",
+  "parts": [
+    {
+      "file": "downloads/offline-01.bin",
+      "bytes": 4194304,
+      "sha256": "f2d1534f31c82c64b2aaf5e80027c926fe6fc4c3f1d2329d4d0e3fe780ffe681"
+    },
+    {
+      "file": "downloads/offline-02.bin",
+      "bytes": 4194304,
+      "sha256": "a2a042727d9ebd782b5cd3962e9e831f141cd2628c9b650f6c6cf52f1989e88f"
+    },
+    {
+      "file": "downloads/offline-03.bin",
+      "bytes": 4194304,
+      "sha256": "be0120eabde3f44a7a572652c16c4bf28eed7ba3c556c97f131526ab1dd321c9"
+    },
+    {
+      "file": "downloads/offline-04.bin",
+      "bytes": 4194304,
+      "sha256": "c574c30e2f61325271949513a522e210b8d2c84197db6ba19c09a40b9fa68fc9"
+    },
+    {
+      "file": "downloads/offline-05.bin",
+      "bytes": 4194304,
+      "sha256": "4130861c5f3446019dc55cf9c7e2639f7fb1e809138c41a8dd50920b44897071"
+    },
+    {
+      "file": "downloads/offline-06.bin",
+      "bytes": 1522057,
+      "sha256": "782a14d64c5ffb3e1b71c7e23bd4bdd9b55df6a77f1f698e2204d44fb671250e"
+    }
+  ]
+}

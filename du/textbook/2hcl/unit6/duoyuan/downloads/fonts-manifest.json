@@ -1,0 +1,17 @@
+{
+  "filename": "fonts.zip",
+  "bytes": 6486396,
+  "sha256": "0939002ccb600063295f441ba0febf7e3cc11913e7e27a24986641bd7357a28a",
+  "parts": [
+    {
+      "file": "downloads/fonts-01.bin",
+      "bytes": 4194304,
+      "sha256": "aaa6b88c4d142f8355b8d2225cda164ffe1ab2ec6ba00f01751af02d558b4fe2"
+    },
+    {
+      "file": "downloads/fonts-02.bin",
+      "bytes": 2292092,
+      "sha256": "e6b2346b96876504ca5255a860f7a0341486a93d8b387d4a4443ea1ff1c7f2b8"
+    }
+  ]
+}

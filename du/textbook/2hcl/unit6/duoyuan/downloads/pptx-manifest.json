@@ -1,0 +1,37 @@
+{
+  "filename": "duoyuan.pptx",
+  "bytes": 21071013,
+  "sha256": "91d4d8e75712cbe6ba603c8977ed26ed37bb2640ff382d6b1d5235ca4eb3d5b0",
+  "parts": [
+    {
+      "file": "downloads/pptx-01.bin",
+      "bytes": 4194304,
+      "sha256": "2bce2b27d2777540a87578b9c49ada308704fb4a5ff05dd271800059d9985dde"
+    },
+    {
+      "file": "downloads/pptx-02.bin",
+      "bytes": 4194304,
+      "sha256": "1a20253e9c336599dd0105137aec82cce47cd5083fff4fdf0f533a8800b53e20"
+    },
+    {
+      "file": "downloads/pptx-03.bin",
+      "bytes": 4194304,
+      "sha256": "a7d7f7a66d05254e7c12aee07e8c16186e47eb76ea26666b9f719313d798cb56"
+    },
+    {
+      "file": "downloads/pptx-04.bin",
+      "bytes": 4194304,
+      "sha256": "efad3e8f15941caeb0c56d79bd29835b1a510be70556fe7024dbb8f7b59366ed"
+    },
+    {
+      "file": "downloads/pptx-05.bin",
+      "bytes": 4194304,
+      "sha256": "c3e6d5a289e3b715b2dbb1745d7d23d316e9c51beb585ef2a5eb3269ab34257d"
+    },
+    {
+      "file": "downloads/pptx-06.bin",
+      "bytes": 99493,
+      "sha256": "003e9cccf446c08fd593c84c5c441ae8c012f6a17156092f0177cd1ae1f2b4cd"
+    }
+  ]
+}
