@@ -1,0 +1,42 @@
+{
+  "filename": "singapore-world-teaching-package.zip",
+  "bytes": 52106033,
+  "sha256": "7c4bdd1019d9d22ef29476347e88b89e01eda8f16f010e20ab1c0fdc00d5ef7d",
+  "parts": [
+    {
+      "file": "package-part-01.bin",
+      "bytes": 8388608,
+      "sha256": "7feedf8c5dd5d1333a94647725e76fe617adab53f2dbd6fe44e488a44004f87e"
+    },
+    {
+      "file": "package-part-02.bin",
+      "bytes": 8388608,
+      "sha256": "1b55c972ed1482558117359e8a0272909c8aa89ef4271bcb0bc97151cff36202"
+    },
+    {
+      "file": "package-part-03.bin",
+      "bytes": 8388608,
+      "sha256": "b662b2b1ee98e604faf6c3350886f66841e17cf73eabca6156596dd76b263bc3"
+    },
+    {
+      "file": "package-part-04.bin",
+      "bytes": 8388608,
+      "sha256": "66a8bc01d0fbcca02b958542157ed80b488a6428d0ea9919e607d9503ad74c64"
+    },
+    {
+      "file": "package-part-05.bin",
+      "bytes": 8388608,
+      "sha256": "6c21b4183518adf2c97559637ffedd70a2f783e0603637d9e1787c4bb64c2b3d"
+    },
+    {
+      "file": "package-part-06.bin",
+      "bytes": 8388608,
+      "sha256": "841177f5040a6c3867410c7a60429256c59ae917e06329ef3c7dc9b32076f5b3"
+    },
+    {
+      "file": "package-part-07.bin",
+      "bytes": 1774385,
+      "sha256": "acd22dfd34ceb33c4b03df321556af3dfb4ecd4d9b0ea31b07670db88f0dd97a"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "filename": "singapore-world.pptx",
+  "bytes": 16549919,
+  "sha256": "471f683a768df9c5a23a34e13ec7ba21b225230ec8d97ce998337e5709278993",
+  "parts": [
+    {
+      "file": "pptx-part-01.bin",
+      "bytes": 6291456,
+      "sha256": "11eb924b0d87fd346eca85281b8c155331661b34dfe9b0355ed06e5e48d013d0"
+    },
+    {
+      "file": "pptx-part-02.bin",
+      "bytes": 6291456,
+      "sha256": "9d7721b875a9cd496b52ebf2b333ed2c875e61c084a18b86bd40ffb48f187cb5"
+    },
+    {
+      "file": "pptx-part-03.bin",
+      "bytes": 3967007,
+      "sha256": "8daac968b978c12453eeb1ffd08cfc4aac3c447c3492c66b7ec52f895b7d8b5f"
+    }
+  ]
+}

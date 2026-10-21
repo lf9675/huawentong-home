@@ -1,0 +1,32 @@
+{
+  "filename": "offline-learning.html",
+  "bytes": 25296742,
+  "sha256": "e6a507e9aa3bc2e4770f6fe2307c06220883bea3ecfc21b700abbdbefc717219",
+  "parts": [
+    {
+      "file": "offline-part-01.bin",
+      "bytes": 6291456,
+      "sha256": "4b0416ab3be0df0b9013b5ec0b868668de4f92f4417626b4d1b8dfcc88bc87b5"
+    },
+    {
+      "file": "offline-part-02.bin",
+      "bytes": 6291456,
+      "sha256": "3bb65a16b8c294c3810e64e817eddcd57d56a16cbf983d7592f187820dea0f0e"
+    },
+    {
+      "file": "offline-part-03.bin",
+      "bytes": 6291456,
+      "sha256": "61f40b99ff3c573e7876076a015e6a0f9c9517c64a1d4b8d6982459e5e2af35e"
+    },
+    {
+      "file": "offline-part-04.bin",
+      "bytes": 6291456,
+      "sha256": "42a84e53463f5647ceb27286bb027669ddf543b5cb9ddea4850ef1ccbaa16d19"
+    },
+    {
+      "file": "offline-part-05.bin",
+      "bytes": 130918,
+      "sha256": "87e2bcce0e272d3759b66954ce1e8f5456b4bca3de6a7004e3eb0e69465daad8"
+    }
+  ]
+}
