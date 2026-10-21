@@ -1,0 +1,68 @@
+{
+  "name": "雨树_离线互动学习单.html",
+  "mime": "text/html",
+  "bytes": 36485592,
+  "sha256": "5c9116c2b89e33b1ab82e1a4f7651b2b883e48767a65a73ebeaac473740a8af2",
+  "parts": [
+    {
+      "file": "offline-01.bin",
+      "bytes": 3145728,
+      "sha256": "467553e58eff1cc2afb4a7e817423fba8b1fc8de9ab0c367d08d900d645988e9"
+    },
+    {
+      "file": "offline-02.bin",
+      "bytes": 3145728,
+      "sha256": "b05a93a0749ed88470458f7fbd42d90ec4b652cdc3db35f79a9a9698d096de84"
+    },
+    {
+      "file": "offline-03.bin",
+      "bytes": 3145728,
+      "sha256": "06327e41ae1fd66c2bd2f66e668501ad963883511eebb0d4a9979c13ce1dc114"
+    },
+    {
+      "file": "offline-04.bin",
+      "bytes": 3145728,
+      "sha256": "92ca23bf007428c26dca9d24a28974a04ab9d7d5c549d146bef9dd4c18526c7d"
+    },
+    {
+      "file": "offline-05.bin",
+      "bytes": 3145728,
+      "sha256": "75fd7f7c98ccde4dcee87fd652603ca6213f8d807ef62dcd0cab8b889481f7c4"
+    },
+    {
+      "file": "offline-06.bin",
+      "bytes": 3145728,
+      "sha256": "9b94b27e90638efad3294c70823e1583f328d3bc11465584285d120dd060ebb5"
+    },
+    {
+      "file": "offline-07.bin",
+      "bytes": 3145728,
+      "sha256": "e7767b49a4e7e9221b9659b1eb7ffc3a3fc466dbcd62395df7e4350222ae30f1"
+    },
+    {
+      "file": "offline-08.bin",
+      "bytes": 3145728,
+      "sha256": "711a671baf55739991274f50396fa308b67fa68ece639a39cae22887442e8a5b"
+    },
+    {
+      "file": "offline-09.bin",
+      "bytes": 3145728,
+      "sha256": "95842bfd45b6772f436fec0b05ba1b71fccab166dbc807e181e12c4a5851791b"
+    },
+    {
+      "file": "offline-10.bin",
+      "bytes": 3145728,
+      "sha256": "aacec69fc14910b69e814e746b16363e8665e560e0b10b608c21b46487dd2b58"
+    },
+    {
+      "file": "offline-11.bin",
+      "bytes": 3145728,
+      "sha256": "05191c4785dc624f203464b1231e956482e761f5aaf6d0d32691993739631029"
+    },
+    {
+      "file": "offline-12.bin",
+      "bytes": 1882584,
+      "sha256": "098a945c4125fb1f1e57e07d279ca47ae2a3ca088c033e36314821d7d75ed183"
+    }
+  ]
+}

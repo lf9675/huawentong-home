@@ -1,0 +1,133 @@
+{
+  "name": "雨树_完整教学配套.zip",
+  "mime": "application/zip",
+  "bytes": 78049268,
+  "sha256": "45ce2d183cfacd0ca8792e13fdd4e2826a5dc2278de339924f724e439ab39b53",
+  "parts": [
+    {
+      "file": "package-01.bin",
+      "bytes": 3145728,
+      "sha256": "06517eb9a14b10aed5561e165a9eeedfee2474fc3035087a4e3e93fd6502298f"
+    },
+    {
+      "file": "package-02.bin",
+      "bytes": 3145728,
+      "sha256": "799457057c2b1a754a4cdf9fcd4cf05395e196dc8b3668d6ab6e5fa0156b985e"
+    },
+    {
+      "file": "package-03.bin",
+      "bytes": 3145728,
+      "sha256": "4a24456f66bf6197ccdf9dae268ba6ee30e2509df19770fc7a30261661737f10"
+    },
+    {
+      "file": "package-04.bin",
+      "bytes": 3145728,
+      "sha256": "4ae4e1fc17900ade4571e78edc1744c00b29dbdb0084c413d702fc85b9e12c72"
+    },
+    {
+      "file": "package-05.bin",
+      "bytes": 3145728,
+      "sha256": "ae5a81af193efa5821952be36e0e653353ab68f8ec62d90730f70fa340c65242"
+    },
+    {
+      "file": "package-06.bin",
+      "bytes": 3145728,
+      "sha256": "067db89eda9aa865d6389ad290edf31865aa68a51f66e4f686da7e9038ee45b0"
+    },
+    {
+      "file": "package-07.bin",
+      "bytes": 3145728,
+      "sha256": "8bc01f560e61aff6ccd098b64a049f178eb2ad2cc0310ca4e93404477b0a089a"
+    },
+    {
+      "file": "package-08.bin",
+      "bytes": 3145728,
+      "sha256": "e199b34501340bdb9f740739c8e826db1b217770606286a8c8bf14eac2412b3b"
+    },
+    {
+      "file": "package-09.bin",
+      "bytes": 3145728,
+      "sha256": "cfe09babed3f4b119592fe1304ffb85dd39150b7ec6c6f94e78907d909febf08"
+    },
+    {
+      "file": "package-10.bin",
+      "bytes": 3145728,
+      "sha256": "3aa788342ddc1ef3328a6aaaadad26a378e6c32e4e449839be8d201d0a49869c"
+    },
+    {
+      "file": "package-11.bin",
+      "bytes": 3145728,
+      "sha256": "e339c64b8cc9a1679e27a0c084cc5be94c85b2bccbeed91c4ae7f81e67db65d6"
+    },
+    {
+      "file": "package-12.bin",
+      "bytes": 3145728,
+      "sha256": "cbfe8c16617da786cf0f6f1622191a48fd68485a06a456d9ba89fd80d15f9119"
+    },
+    {
+      "file": "package-13.bin",
+      "bytes": 3145728,
+      "sha256": "cdea18c3e5dbaa1dfdba3213e8332ada48877f12f73d15cc62484963f193203c"
+    },
+    {
+      "file": "package-14.bin",
+      "bytes": 3145728,
+      "sha256": "53e65c37bd87941ff01a0cbb0fe1f48ba124d4dd8c73268bab9e04c601c3f24c"
+    },
+    {
+      "file": "package-15.bin",
+      "bytes": 3145728,
+      "sha256": "28a4677ea12a5552a8d87da9c0fadcd202772508a853e2430d582188cbe2e7ba"
+    },
+    {
+      "file": "package-16.bin",
+      "bytes": 3145728,
+      "sha256": "b327031e75a2ccd3a23f18872bbcd99c7c0fc938985de4ed6ffd8602502b2dfa"
+    },
+    {
+      "file": "package-17.bin",
+      "bytes": 3145728,
+      "sha256": "68c7b0ae3d023983e6345b5e59a3dc18c910c252485842318a0fc1925c50b4bc"
+    },
+    {
+      "file": "package-18.bin",
+      "bytes": 3145728,
+      "sha256": "6e7be70c06048aebb840f8b3225ea1201b3e6e0bf0e4000b4c6b8680c13561eb"
+    },
+    {
+      "file": "package-19.bin",
+      "bytes": 3145728,
+      "sha256": "059f4524c7316ff5f83d9438e2d1a164ed9ddb1f42fe36fd84d4efa9c80e5d22"
+    },
+    {
+      "file": "package-20.bin",
+      "bytes": 3145728,
+      "sha256": "974d511e8105195f3ca644468be7d6755cdf7bee9d147b6b3dc44d1492922ee9"
+    },
+    {
+      "file": "package-21.bin",
+      "bytes": 3145728,
+      "sha256": "501653afdd7b8478848a15336b1d0138370aa9695d1504e664d6fae37a0088dc"
+    },
+    {
+      "file": "package-22.bin",
+      "bytes": 3145728,
+      "sha256": "853b15e28644fb2f6c04f86ef39afe47ec68ec2598764466c81a51109bb2b917"
+    },
+    {
+      "file": "package-23.bin",
+      "bytes": 3145728,
+      "sha256": "6d63c074df5a7468be4fd19c9c52c7040943391acceea73accdbe5503c191035"
+    },
+    {
+      "file": "package-24.bin",
+      "bytes": 3145728,
+      "sha256": "053429616b69196bb6a9205dd3c05046eeb66346bcd40292fa772ce58e33854b"
+    },
+    {
+      "file": "package-25.bin",
+      "bytes": 2551796,
+      "sha256": "724c619f3c576a594a48da094798fbca2b9e076fafe9cc617d337882599f72cb"
+    }
+  ]
+}

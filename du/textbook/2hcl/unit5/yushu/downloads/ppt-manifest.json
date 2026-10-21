@@ -1,0 +1,38 @@
+{
+  "name": "雨树_可编辑教学课件.pptx",
+  "mime": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "bytes": 17224670,
+  "sha256": "07fdd43451bbde45781350ba00919de3022be12c8b4a062ab153cee31cc60f4c",
+  "parts": [
+    {
+      "file": "ppt-01.bin",
+      "bytes": 3145728,
+      "sha256": "d7d2d5d7ac8d96bfa15cfc56b4e7744d6a4b27dd60624faf6c70c42f7ed65941"
+    },
+    {
+      "file": "ppt-02.bin",
+      "bytes": 3145728,
+      "sha256": "d959e932f248ec835cbd3e0d72b4602bb933f5be4fa4549a5066c57548512ca4"
+    },
+    {
+      "file": "ppt-03.bin",
+      "bytes": 3145728,
+      "sha256": "1e486792a0f16b4364324a348e320ec6dba406d019498691936aaee543bba7fb"
+    },
+    {
+      "file": "ppt-04.bin",
+      "bytes": 3145728,
+      "sha256": "33fe89727704224455ea2778dccdf882dd5e0edeace198d74ebfac3e08cbe6df"
+    },
+    {
+      "file": "ppt-05.bin",
+      "bytes": 3145728,
+      "sha256": "7d8d6262e0fb51506a6a0dbd2b70a2f1f5c8077590efd72b06aea92b2175eb07"
+    },
+    {
+      "file": "ppt-06.bin",
+      "bytes": 1496030,
+      "sha256": "a625b9b26c8f732d009a0e2c55cb2c347f4c0df1417220879afe04743a6dbc69"
+    }
+  ]
+}
