@@ -1,0 +1,5 @@
+本课以 lesson.json 为内容来源。编辑后同步 content.js、教师页、课件及教案。
+网页复用 du/textbook/shared/lesson-v1 引擎；source.zip 内 shared/lesson-v1 是当前依赖副本，部署时置回该路径。
+保留 lessonId=s1u2l1，不改变个人词语本存储格式。
+create_slides.mjs 在配有 @oai/artifact-tool 的 Codex 环境执行；create_docx.py 需要 python-docx。所有生成后需重新校验并更新下载清单。
+原漫画位于整套包 original-comics，保留原内容。

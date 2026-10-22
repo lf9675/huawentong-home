@@ -1,0 +1,27 @@
+{
+  "filename": "xinnian-offline.zip",
+  "bytes": 12763077,
+  "sha256": "4564a71fd48bda3d366b2140ba20c674b53583eb759f1248d6058e1a0743864b",
+  "chunks": [
+    {
+      "file": "downloads/chunks/offline-1.bin",
+      "bytes": 4194304,
+      "sha256": "f323736073ecdb4bdad3389cfeede4c137f886dc80e01398289a0ca91d071daa"
+    },
+    {
+      "file": "downloads/chunks/offline-2.bin",
+      "bytes": 4194304,
+      "sha256": "9e90b04c486bc02576e920d832a0ed6c6fe0d080474837cfd37c9cf02611c22e"
+    },
+    {
+      "file": "downloads/chunks/offline-3.bin",
+      "bytes": 4194304,
+      "sha256": "1a2a2ff2ff16457339140e7292269012a637132c1fe7907dae332ecc5aad8f7a"
+    },
+    {
+      "file": "downloads/chunks/offline-4.bin",
+      "bytes": 180165,
+      "sha256": "c2b3976c410734f31e904e40c60024016a7991758105e9e4774df2cd4fd356ed"
+    }
+  ]
+}
