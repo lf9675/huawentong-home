@@ -1,12 +1,12 @@
 (()=>{'use strict';
 const randomId=()=>{const b=crypto.getRandomValues(new Uint8Array(16));b[6]=(b[6]&15)|64;b[8]=(b[8]&63)|128;const h=Array.from(b,x=>x.toString(16).padStart(2,'0')).join('');return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20)};
 const L=window.LESSON,engine=window.LessonEngine,c=window.HWTTextbookConnection,endpoint='https://rodtizxezbtlhnuljzsc.supabase.co/functions/v1/hwt-textbook';
-const host=document.createElement('section');host.className='paper cloud-collection';host.setAttribute('aria-label','课堂收件');document.querySelector('main').prepend(host);
+const host=document.createElement('section');host.className='paper cloud-collection';host.setAttribute('aria-label','课堂收件');(document.querySelector('main')||document.querySelector('.wrap')).prepend(host);
 const make=(tag,text,parent=host)=>{const n=document.createElement(tag);n.textContent=text;parent.append(n);return n};
 make('strong','课堂收件');const status=make('p',''),actions=make('div','');actions.className='actions';status.setAttribute('role','status');
 if(!c){status.textContent='当前为个人练习，记录保存在本机。课堂作答请打开教师发给你的专属学习链接。';return}
 const sync=make('button','立即同步',actions),final=make('button','交齐本课',actions),restore=make('button','从云端恢复',actions),leave=make('button','退出课堂',actions);final.className='primary';restore.hidden=true;
-document.body.classList.add('hwt-classroom');const style=document.createElement('style');style.textContent='.hwt-classroom .identity,.hwt-classroom #resetLesson{display:none}.cloud-collection{margin-bottom:20px}.cloud-collection button{min-height:44px}';document.head.append(style);
+document.body.classList.add('hwt-classroom');const style=document.createElement('style');style.textContent='.hwt-classroom .identity,.hwt-classroom #resetLesson,.hwt-classroom #reset{display:none}.cloud-collection{margin-bottom:20px;padding:16px;background:#fff;border:1px solid #bacfe3;border-radius:12px}.hwt-classroom .idbar,.hwt-classroom #clearAll{display:none}.cloud-collection button{min-height:44px}';document.head.append(style);
 const metaKey=window.LESSON_STORAGE_KEY+'-sync',pendingKey=metaKey+'-pending';let meta={},pending=null,connected=false,busy=false,timer=null,dirty=false,disposed=false,finalWanted=false;
 try{meta=JSON.parse(localStorage.getItem(metaKey))||{};pending=JSON.parse(localStorage.getItem(pendingKey))}catch{}
 const storage=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value));return true}catch{return false}};
@@ -15,7 +15,7 @@ async function call(action,body={}){const ac=new AbortController(),timeout=setTi
 function body(isFinal=false){const s=engine.state();return {lessonId:L.id,contentVersion:L.version,records:L.tasks.filter(t=>s.answers[t.id]?.first).map(t=>{const x=s.answers[t.id];return {taskId:t.id,first:x.first,latest:x.attempts?.at(-1)||x.first,revision:x.revision||'',hintCount:x.hintCount||0}}),readParagraphs:s.cloudReadParagraphs||[],final:isFinal};}
 const signature=b=>JSON.stringify({lessonId:b.lessonId,contentVersion:b.contentVersion,records:b.records,readParagraphs:b.readParagraphs});
 function applyCloud(data){
- const state=engine.state();const answers={};for(const r of data.responses)answers[r.task_id]={fields:r.latest_answer.fields,choices:r.latest_answer.choices,evidence:r.latest_answer.evidence,attempts:[{...r.latest_answer,correct:r.latest_result.correct}],hintCount:r.hint_count,revision:r.revision_text,points:[],unlocked:r.latest_result.correct!==false,first:r.first_answer,firstCorrect:r.first_result.correct};
+ const state=engine.state();const answers={};for(const r of data.responses)answers[r.task_id]={summary:r.latest_answer.summary||'',fields:r.latest_answer.fields,choices:r.latest_answer.choices,evidence:r.latest_answer.evidence,attempts:[{...r.latest_answer,correct:r.latest_result.correct}],hintCount:r.hint_count,revision:r.revision_text,points:[],unlocked:r.latest_result.correct!==false,first:r.first_answer,firstCorrect:r.first_result.correct};
  engine.restore({...state,identity:{name:'',class:data.assignment.className,number:data.student.student_no},answers,cloudReadParagraphs:data.student.read_paragraphs});
  meta={revision:data.student.revision,signature:signature(body()),lastReceived:data.student.last_seen_at,submittedAt:data.student.submitted_at};storage(metaKey,meta);
 }
@@ -23,7 +23,7 @@ function label(data){if(c.volatile)make('p','本机无法记住课堂身份，�
 async function connect(replace=false){
  if(busy)return;busy=true;sync.disabled=final.disabled=true;setStatus('正在连接课堂……');
  try{const data=await call('connect');if(data.assignment.lessonId!==L.id||data.assignment.contentVersion!==L.version)throw Error('课文版本不符，请联系教师。');
- const s=engine.state();if(replace){if(!storage(window.LESSON_STORAGE_KEY+'-before-cloud-restore-'+Date.now(),s))throw Error('本机备份失败，未覆盖本机答案。');applyCloud(data);pending=null;try{localStorage.removeItem(pendingKey)}catch{}}
+ const s=engine.state();if(replace){if(!storage(window.LESSON_STORAGE_KEY+'-before-cloud-restore-'+Date.now(),engine.backup?.()||s))throw Error('本机备份失败，未覆盖本机答案。');applyCloud(data);pending=null;try{localStorage.removeItem(pendingKey)}catch{}}
  else if(!Object.values(s.answers).some(x=>x.first)&&!pending&&data.responses.length)applyCloud(data);
  else if(meta.revision===undefined)meta.revision=data.student.revision;
  else if(meta.revision!==data.student.revision&&!pending){restore.hidden=false;throw Error('另一台设备有更新。点“从云端恢复”继续；当前答案会先留作本机备份。');}
@@ -49,9 +49,9 @@ async function flush(isFinal=false){
  if([401,403,409,410].includes(e.status)){connected=false;restore.hidden=e.status!==409;}
  }finally{busy=false;sync.disabled=false;final.disabled=!connected;if(dirty&&connected)setTimeout(()=>flush(finalWanted),500)}
 }
-function changed(){if(disposed)return;const s=engine.state();if(s.position.view==='read'){const seen=new Set(s.cloudReadParagraphs||[]);seen.add(s.position.p);s.cloudReadParagraphs=[...seen];try{localStorage.setItem(window.LESSON_STORAGE_KEY,JSON.stringify(s))}catch{}}
+function changed(){if(disposed)return;const s=engine.state();if(s.position.view==='read'){if(engine.recordRead){engine.recordRead(s.position.p)}else{const seen=new Set(s.cloudReadParagraphs||[]);seen.add(s.position.p);s.cloudReadParagraphs=[...seen];try{localStorage.setItem(window.LESSON_STORAGE_KEY,JSON.stringify(s))}catch{}}}
  dirty=true;clearTimeout(timer);timer=setTimeout(()=>flush(),1800);}
-sync.onclick=()=>connected?flush():connect();restore.onclick=()=>{if(confirm('将先保留本机备份，再恢复教师已收到的记录。继续吗？'))connect(true)};final.onclick=()=>flush(true);
+sync.onclick=()=>connected?flush():connect();restore.onclick=()=>{if(confirm('将先保留本机备份，再恢复教师已收到的记录。继续吗？'))connect(true)};final.onclick=()=>{if(engine.prepareFinal&&!engine.prepareFinal()){setStatus('请先补齐开放题，再交齐本课。');return}flush(true)};window.addEventListener('hwt:lesson-final',()=>final.onclick());
 leave.onclick=()=>{if(!confirm('退出后返回个人练习。课堂记录仍保留；下次需重新打开自己的学习链接。'))return;disposed=true;clearTimeout(timer);try{localStorage.removeItem('hwt-textbook-connection-'+L.id)}catch{}location.replace(location.pathname)};
 window.addEventListener('hwt:lesson-saved',changed);window.addEventListener('online',()=>connected?flush():connect());window.addEventListener('focus',()=>{if(!connected)connect();else flush()});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&connected)flush()});

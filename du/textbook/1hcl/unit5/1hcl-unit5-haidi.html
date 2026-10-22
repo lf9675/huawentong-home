@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hans-SG">
-<head>
+<head><meta name="referrer" content="no-referrer">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>海底牧场游记 · 实习导游任务单</title>
@@ -218,7 +218,7 @@ button:focus-visible{outline:3px solid var(--amber); outline-offset:2px}
   <div class="rail-item" data-rail="s5"><span class="rail-dot"></span><span class="rail-label">浮出海面 · 讨论</span></div>
 </nav>
 
-<div class="wrap">
+<div class="wrap"><p><a href="/bei/management/textbook/?lesson=s1u5l2">教师：打开本课课堂看板</a></p>
 
 <header class="hero">
   <p class="eyebrow">中一高级华文 · 单元五 创新与改变</p>
@@ -369,6 +369,7 @@ button:focus-visible{outline:3px solid var(--amber); outline-offset:2px}
 
 </div>
 
+<script src="haidi-cloud-lesson.js?v=tb2"></script><script src="/du/textbook/shared/lesson-v1/cloud-bootstrap.js?v=tb2"></script><script src="/du/textbook/shared/lesson-v1/worksheet-storage.js?v=tb2"></script>
 <script>
 /* ================= 数据 ================= */
 const VOC_A = [
@@ -445,6 +446,7 @@ let store = {};
 const flag = document.getElementById("saveflag");
 let saveTimer;
 function save(){
+  window.HWTWorksheetSaved?.(store);
   clearTimeout(saveTimer);
   saveTimer = setTimeout(async ()=>{
     try{ await window.storage.set(KEY, JSON.stringify(store));
@@ -618,6 +620,7 @@ function medalSVG(c1,c2){
   </svg>`;
 }
 document.getElementById("submitAll").addEventListener("click", ()=>{
+  if(window.HWTTextbookConnection){window.HWTWorksheetSubmit?.();return;}
   const total = { voc:14, route:6, fig:8, verb:6, talk:2 };
   const got = {
     voc: scoreOf(VOC_A,"a")+scoreOf(VOC_B,"b")+scoreOf(VOC_C,"c"),
@@ -713,7 +716,7 @@ const obs = new IntersectionObserver(es=>{
 ["s1","s2","s3","s4","s5"].forEach(id=>{ const el=document.getElementById(id); if(el) obs.observe(el); });
 
 /* ================= 启动 ================= */
-(async function init(){
+window.HWTWorksheetReady=(async function init(){
   try{
     const r = await window.storage.get(KEY);
     if(r && r.value){ store = JSON.parse(r.value); }
@@ -734,6 +737,9 @@ const obs = new IntersectionObserver(es=>{
   }
   updateProgress();
 })();
+
+window.HWTWorksheet={state:()=>store,restore:value=>{store=value;localStorage.setItem(window.LESSON_STORAGE_KEY,JSON.stringify(store));}};
 </script>
-<script src="/du/textbook/shared/lesson-v1/catalog.js?v=20261019-2"></script><script src="/du/textbook/shared/lesson-v1/wordbook-bridge.js?v=20261019-2" data-lesson="s1u5l2"></script></body>
+<script src="/du/textbook/shared/lesson-v1/catalog.js?v=20261019-2"></script><script src="/du/textbook/shared/lesson-v1/wordbook-bridge.js?v=20261019-2" data-lesson="s1u5l2"></script><script src="/du/textbook/shared/lesson-v1/worksheet-cloud.js?v=tb2"></script></body>
 </html>
+

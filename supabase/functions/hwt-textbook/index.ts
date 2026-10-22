@@ -1,4 +1,5 @@
 import lesson from './lesson.json' with {type:'json'};
+import lessons from './lessons.json' with {type:'json'};
 import {fail,text,normalize,summarize} from './core.mjs';
 const digest=async(s:string)=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s))),x=>x.toString(16).padStart(2,'0')).join('');
 const token=()=>Array.from(crypto.getRandomValues(new Uint8Array(32)),x=>x.toString(16).padStart(2,'0')).join('');
@@ -25,7 +26,7 @@ export async function handle(req:Request){
  const raw=await req.text();if(raw.length>250000)fail('提交内容过大。',413);let b:any;try{b=JSON.parse(raw)}catch{fail('资料格式无效。')}
  if(!b||typeof b.action!=='string')fail('缺少操作。');
  let result:any;
- if(b.action==='health')return Response.json({ok:true,service:'hwt-textbook-v1',lessonId:lesson.id,version:lesson.version},{headers});
+ if(b.action==='health')return Response.json({ok:true,service:'hwt-textbook-v2',lessonId:lesson.id,version:lesson.version,lessonCount:lessons.length},{headers});
  if(['connect','submit'].includes(b.action)){
  await rate('tb-entry-'+await digest(req.headers.get('x-forwarded-for')?.split(',')[0]||'unknown'),600);
  const {s,h}=await student(req,b),a=await assignment(s.assignment_id);
@@ -42,16 +43,17 @@ export async function handle(req:Request){
  }
  }else{
  await teacher(req);
- if(b.action==='catalog')result={lesson:{id:lesson.id,title:lesson.title,version:lesson.version,tasks:lesson.tasks.map(t=>({id:t.id,title:t.title,mode:t.mode,role:t.role}))}};
+ if(b.action==='catalog')result={lessons:lessons.map(l=>({id:l.id,title:l.title,version:l.version,grade:l.grade,gradeLabel:l.gradeLabel,unit:l.unit,readingPath:l.readingPath}))};
  else if(b.action==='list')result={assignments:await readRows('hwt_tb_assignments?select=id,class_name,lesson_id,content_version,is_open,expires_at,created_at&order=created_at.desc')};
  else if(b.action==='create'){
- const requestId=id(b.assignmentId);const existing=(await db('hwt_tb_assignments?id=eq.'+requestId+'&select=id'))[0];if(existing)return Response.json({saved:true,assignmentId:requestId,links:[]},{headers});
+ const chosen=lessons.find(l=>l.id===(b.lessonId||lesson.id));if(!chosen)fail('这篇课文尚未接入，请刷新课文目录。');
+ const requestId=id(b.assignmentId);const existing=(await db('hwt_tb_assignments?id=eq.'+requestId+'&select=id,lesson_id,lesson'))[0];if(existing){if(existing.lesson_id!==chosen.id)fail('此任务编号已用于另一篇课文，请刷新后重新建立。',409);return Response.json({saved:true,assignmentId:requestId,lessonId:existing.lesson_id,readingPath:existing.lesson.readingPath||chosen.readingPath,links:[]},{headers});}
  const className=text(b.className,60,true);if(!Array.isArray(b.numbers)||!b.numbers.length||b.numbers.length>80)fail('每次请登记1至80个学号。');const numbers=b.numbers.map((n:any)=>text(n,30,true));if(new Set(numbers).size!==numbers.length)fail('学号不能重复。');
  const days=Number(b.days??30);if(!Number.isInteger(days)||days<1||days>90)fail('收件期限为1至90天。');
  const assignmentId=requestId,students=await Promise.all(numbers.map(async(n:string)=>{const t=token();return {id:crypto.randomUUID(),student_no:n,token_hash:await digest(t),token:t}}));
- const a={id:assignmentId,class_name:className,lesson_id:lesson.id,content_version:lesson.version,lesson,expires_at:new Date(Date.now()+days*86400000).toISOString()};
+ const a={id:assignmentId,class_name:className,lesson_id:chosen.id,content_version:chosen.version,lesson:chosen,expires_at:new Date(Date.now()+days*86400000).toISOString()};
  await db('rpc/hwt_tb_create','POST',{p_assignment:a,p_students:students.map(({token,...s})=>s)});
- result={saved:true,assignmentId,links:students.map(s=>({studentId:s.id,number:s.student_no,token:s.token}))};
+ result={saved:true,assignmentId,lessonId:chosen.id,readingPath:chosen.readingPath,links:students.map(s=>({studentId:s.id,number:s.student_no,token:s.token}))};
  }else if(b.action==='dashboard'){
  const a=await assignment(b.assignmentId),students=await db('hwt_tb_students?assignment_id=eq.'+a.id+'&select=id,student_no,revision,last_seen_at,submitted_at,read_paragraphs&order=student_no');
  const ids=students.map((s:any)=>s.id).join(',');const [responses,reviews]=await Promise.all([readRows('hwt_tb_responses?student_id=in.('+ids+')&select=*&order=student_id,task_id'),readRows('hwt_tb_reviews?student_id=in.('+ids+')&select=*&order=student_id,task_id')]);

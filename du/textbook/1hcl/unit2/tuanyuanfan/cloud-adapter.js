@@ -1,0 +1,10 @@
+/* Keep the published nine-task engine and all legacy local records intact. */
+(()=>{'use strict';const L=window.LESSON,legacy=window.TuanyuanfanEngine;
+function normalize(t,x){if(!x)return undefined;const fields={...x.fields},choices={};if(t.legacyType==='write')fields.response=x.text||'';if(t.legacyType==='open')fields.stance=['认同','部分认同','不认同'][Number(x.values.stance)];for(const q of t.checks||[])choices[q.id]=Number(x.values[q.id]);for(const [i,q]of(t.tokenSelections||[]).entries())choices[q.id]=x.quotes[i];return {fields,choices,evidence:x.evidence||{},timestamp:x.timestamp,assisted:x.assisted===true};}
+function original(t,s){const fields={...s.fields},values={...s.choices};if(t.legacyType==='open')values.stance=String(['认同','部分认同','不认同'].indexOf(fields.stance));let text=fields.response||'';if(t.legacyType==='thread')text='线索：'+fields.thread+'\n主题：'+fields.theme;if(t.legacyType==='open')text='我'+fields.stance+'。'+fields.reason+fields.example+fields.link;const evidence={};for(const [i,e]of Object.entries(s.evidence||{}))evidence[i]={text:e.text,p:L.paragraphs.findIndex(p=>p.includes(e.text))+1};return {fields,values,evidence,text,quotes:(t.tokenSelections||[]).map(q=>s.choices[q.id]),timestamp:s.timestamp,assisted:s.assisted};}
+window.LessonEngine={
+ state(){const raw=legacy.state(),answers={};for(const t of L.tasks){const x=raw.answers[t.id];if(x?.first)answers[t.id]={first:normalize(t,x.first),attempts:[normalize(t,x.latestSnapshot||x.first)],revision:x.revision||'',hintCount:x.hints||0};}return {answers,position:{view:raw.stage==='read'?'read':'task',p:raw.chunk+1},cloudReadParagraphs:raw.cloudReadParagraphs||[]};},
+ backup:()=>legacy.state(),recordRead:p=>legacy.recordRead(p),
+ restore(s){const raw=legacy.state(),answers={};for(const t of L.tasks){const x=s.answers[t.id];if(!x)continue;const latest=original(t,x.attempts.at(-1)||x.first),first=original(t,x.first);answers[t.id]={...latest,first,latestSnapshot:latest,firstCorrect:x.firstCorrect,revision:x.revision,hints:x.hintCount,attempts:1,points:[],unlocked:x.unlocked};}legacy.restore({...raw,answers,cloudReadParagraphs:s.cloudReadParagraphs});}
+};
+})();
