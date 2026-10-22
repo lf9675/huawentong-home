@@ -30,6 +30,16 @@
     "taskCount": 10
   },
   {
+    "id": "s1u3l2",
+    "title": "魅力四射 星耀樟宜",
+    "version": "20261022-1",
+    "grade": "1hcl",
+    "gradeLabel": "中一高级华文",
+    "unit": 3,
+    "readingPath": "/du/textbook/1hcl/unit3/xingyao-changi/reading.html",
+    "taskCount": 10
+  },
+  {
     "id": "s1u5l2",
     "title": "海底牧场游记",
     "version": "haidi-collection-v1",

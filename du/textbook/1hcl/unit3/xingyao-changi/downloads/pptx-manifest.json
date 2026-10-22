@@ -1,0 +1,32 @@
+{
+  "filename": "魅力四射_星耀樟宜.pptx",
+  "bytes": 21831210,
+  "sha256": "850ed575deedcc19658bb3ab70650d34d50745b770bb9939fa4062469f5dac5d",
+  "parts": [
+    {
+      "url": "downloads/pptx-part-01.bin",
+      "bytes": 5242880,
+      "sha256": "ca0ca63bc14e02d5bc4d969a8503c2e7b247100dadca154692369a0c6d79b569"
+    },
+    {
+      "url": "downloads/pptx-part-02.bin",
+      "bytes": 5242880,
+      "sha256": "cdcbd7c0887b0b1e195dd144476840ad73651d151a2183dad5d7c5a1b9cd0de6"
+    },
+    {
+      "url": "downloads/pptx-part-03.bin",
+      "bytes": 5242880,
+      "sha256": "d19efde96c3e219c5f41b1eb2672e9d7f9113fe345ff49fb8f549316f9008fe6"
+    },
+    {
+      "url": "downloads/pptx-part-04.bin",
+      "bytes": 5242880,
+      "sha256": "27bfb751a3f4ae1580e8376f22ee88fd1920533623ba6b9645c888b3f6f7caab"
+    },
+    {
+      "url": "downloads/pptx-part-05.bin",
+      "bytes": 859690,
+      "sha256": "4888176a8d51ad2394876b169f22c4a63296c7fa00b08b843b5cdf121d83da86"
+    }
+  ]
+}

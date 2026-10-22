@@ -1,0 +1,11 @@
+(()=>{'use strict';
+ const L=window.LESSON,host=document.querySelector('#source');
+ function draw(){const id=location.hash.replace('#task-','');
+ if(['ending','recommend'].includes(id)&&!document.querySelector('#ownSummary')){
+ const wrap=document.createElement('section');wrap.id='ownSummary';const h=document.createElement('h3');h.textContent='我的五方面统整表';wrap.append(h);const note=document.createElement('p');note.className='guide';note.textContent='这是你前面填的答案。点说明对象，可以回去订正。';wrap.append(note);
+ const scroll=document.createElement('div');scroll.className='summary-scroll';const table=document.createElement('table');table.className='own-summary';const thead=document.createElement('thead'),tr=document.createElement('tr');['说明对象',...L.summaryColumns.map(c=>c.label)].forEach(v=>{const th=document.createElement('th');th.textContent=v;tr.append(th)});thead.append(tr);table.append(thead);const body=document.createElement('tbody');const state=window.LessonEngine.state();for(const row of L.summaryItems){const tr=document.createElement('tr'),th=document.createElement('th'),a=document.createElement('a');a.href='#task-'+row.id;a.textContent=row.name;th.append(a);tr.append(th);for(const c of L.summaryColumns){const td=document.createElement('td');td.textContent=state.answers[row.id]?.fields?.[c.key]||'未填写';tr.append(td)}body.append(tr)}table.append(body);scroll.append(table);wrap.append(scroll);host.append(wrap);
+ }
+ if(id==='word-families'&&!document.querySelector('#wordExamples')){const existing=host.querySelector('.source-paragraph');if(existing)existing.hidden=true;const e=document.createElement('section');e.id='wordExamples';const h=document.createElement('h3');h.textContent='课本例子';e.append(h);for(const [w,words] of [['木','树木、灌木、草木、木材、木柴'],['桥','天悬桥、波浪桥、木桥、铁桥、吊桥'],['顶','屋顶、房顶、山顶、楼顶、头顶'],['习','学习、练习、补习、预习、复习']]){const p=document.createElement('p');p.className='word-family-example';p.textContent=w+'：'+words;e.append(p)}host.append(e);}
+ }
+ new MutationObserver(draw).observe(host,{childList:true});draw();
+})();

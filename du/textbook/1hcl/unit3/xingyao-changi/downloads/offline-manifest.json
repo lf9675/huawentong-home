@@ -1,0 +1,131 @@
+{
+  "filename": "魅力四射_星耀樟宜_离线学习包.zip",
+  "entries": [
+    {
+      "url": "downloads/offline/reading.html",
+      "path": "reading.html",
+      "bytes": 1925,
+      "sha256": "1ad5183ec9c93ae9d3f3762d93a2510d0e6b457ad09591610e10a40e67e3ed53"
+    },
+    {
+      "url": "downloads/offline/index.html",
+      "path": "index.html",
+      "bytes": 2099,
+      "sha256": "624c364b658576516efc0f5f64481592e072c3c35ca17db3be92a6ab0f62eeec"
+    },
+    {
+      "url": "downloads/offline/comics.html",
+      "path": "comics.html",
+      "bytes": 5014,
+      "sha256": "3920705f12c3e8bfa43c303533fbe579cceac295335e4f4c69718b825432839b"
+    },
+    {
+      "url": "lesson.css",
+      "path": "lesson.css",
+      "bytes": 2942,
+      "sha256": "4ac8671ad713e08d662795a8cdb98abe3ae25a5360d51a62de4613775462b824"
+    },
+    {
+      "url": "lesson-support.js",
+      "path": "lesson-support.js",
+      "bytes": 2239,
+      "sha256": "e70faa784767c40217f8ec007134396fa68f2a28cb2ab8f0f8cbcd10dcfda494"
+    },
+    {
+      "url": "content.js",
+      "path": "content.js",
+      "bytes": 38361,
+      "sha256": "3536ba0a93754fb6af4a2eb5c4199f9ff0d8bb7ea5b7a09539fc5c9386fc4d39"
+    },
+    {
+      "url": "lexicon.js",
+      "path": "lexicon.js",
+      "bytes": 3681,
+      "sha256": "bb0ff4e3edfe8d7b98419eef360a25df6d1c56686086e5fb2c55c7480b43411c"
+    },
+    {
+      "url": "README.txt",
+      "path": "README.txt",
+      "bytes": 542,
+      "sha256": "ffeb4f3373b154a2cd5068ae7b066b893b609ea4dc68f38bc893a6f4842b522d"
+    },
+    {
+      "url": "assets/comic1.png",
+      "path": "assets/comic1.png",
+      "bytes": 4309288,
+      "sha256": "a418e1e72d001b58c20039cf197569a939975ef14ef575505c9dbe6e3a6f53fa"
+    },
+    {
+      "url": "assets/comic2.png",
+      "path": "assets/comic2.png",
+      "bytes": 4283279,
+      "sha256": "9c8d9a9d50161218218c7df96c3dfff181374f3cad8199e70a61ddaa510b301b"
+    },
+    {
+      "url": "assets/comic3.png",
+      "path": "assets/comic3.png",
+      "bytes": 4385802,
+      "sha256": "6592600446192201b64538365c78cb78b92e492dc506a53a23c4d640c41c52a9"
+    },
+    {
+      "url": "assets/comic4.png",
+      "path": "assets/comic4.png",
+      "bytes": 4418012,
+      "sha256": "264fe7d70cd00ac450f8593b63e6fdbc0d6e09edcac611e4771ab585d820a850"
+    },
+    {
+      "url": "assets/comic5.png",
+      "path": "assets/comic5.png",
+      "bytes": 4264267,
+      "sha256": "9a15247e6a1cc69059f69cd77f8499b7798eebf354844027395396565a404af1"
+    },
+    {
+      "url": "../../../shared/lesson-v1/app.js",
+      "path": "shared/app.js",
+      "bytes": 28904,
+      "sha256": "624000b5f93a9f6ae220edc9a4852db363eaa3510412f9dc4c5533e71ea82f8c"
+    },
+    {
+      "url": "../../../shared/lesson-v1/wordbook.js",
+      "path": "shared/wordbook.js",
+      "bytes": 17628,
+      "sha256": "9e50fd4e435e2f505a86604ebbfb9bc2a5cb3f7a7a7ae41ab096d173126f474a"
+    },
+    {
+      "url": "../../../shared/lesson-v1/catalog.js",
+      "path": "shared/catalog.js",
+      "bytes": 3608,
+      "sha256": "f2780886b3c7725c86bc5d06506136515898822641761b980f3dea076f1cf149"
+    },
+    {
+      "url": "../../../shared/lesson-v1/identity.js",
+      "path": "shared/identity.js",
+      "bytes": 956,
+      "sha256": "968c2bea60b9d25144bcbe861c180c7b8ae7a9ae3796c10af89aaed249f12012"
+    },
+    {
+      "url": "../../../shared/lesson-v1/style.css",
+      "path": "shared/style.css",
+      "bytes": 9267,
+      "sha256": "57d4ae4bba340ebb87c72c70c993750fca306a8bc9d77e38f7c54d2c6a56920c"
+    },
+    {
+      "url": "../../../shared/lesson-v1/wenkai.woff2",
+      "path": "shared/wenkai.woff2",
+      "bytes": 1818720,
+      "sha256": "4d66f4496eead7d7d3bc008604671074e19d9e7f19c91b5554bc0d015c587209"
+    },
+    {
+      "url": "../../../shared/lesson-v1/songti.woff2",
+      "path": "shared/songti.woff2",
+      "bytes": 3382592,
+      "sha256": "c5c46d474c4ea0ec54a731f0e245ed1f810f4755a7d93700d3057ae700002f8d"
+    },
+    {
+      "url": "../../../../../assets/huawentong-logo.png",
+      "path": "assets/huawentong-logo.png",
+      "bytes": 642241,
+      "sha256": "4853a20bcae0a4ace1d3ce35141e26e1c0eda4b312cd77edb1e94ef6260cd99c"
+    }
+  ]
+}
