@@ -1,0 +1,125 @@
+{
+  "filename": "幸运饺子_离线学习包.zip",
+  "entries": [
+    {
+      "url": "downloads/offline/reading.html",
+      "path": "reading.html",
+      "bytes": 1866,
+      "sha256": "cc69a2518481585b9ae84eed7a533f74d46f983768575f1dd079e5c374e34e9d"
+    },
+    {
+      "url": "downloads/offline/index.html",
+      "path": "index.html",
+      "bytes": 1763,
+      "sha256": "ce57511a1c0b13c3121417d1763ed5f24bc47a9ed3d366ab150326dd6b07413c"
+    },
+    {
+      "url": "downloads/offline/comics.html",
+      "path": "comics.html",
+      "bytes": 4652,
+      "sha256": "684febba997a950c0f042e8c4faf83104c812eb20047596e26a381f948fe3812"
+    },
+    {
+      "url": "lesson.css",
+      "path": "lesson.css",
+      "bytes": 2373,
+      "sha256": "7088267801f71feb793f3b1fdcab6665798099454aec32bdfa8f1783091f04fb"
+    },
+    {
+      "url": "lesson-support.js",
+      "path": "lesson-support.js",
+      "bytes": 1789,
+      "sha256": "beffd302f75444f572f9051fb4092e43965b1ec228ed12dc0014da34ac623898"
+    },
+    {
+      "url": "content.js",
+      "path": "content.js",
+      "bytes": 25371,
+      "sha256": "8fd2a5e1c1c33f019ffd80467dfff5717eb3e521d97d4035349d4a4ad7f47110"
+    },
+    {
+      "url": "lexicon.js",
+      "path": "lexicon.js",
+      "bytes": 2799,
+      "sha256": "377bad2d66117946b0b6a1d755ca0450a37575599a9e006f47c1609b999fceec"
+    },
+    {
+      "url": "README.txt",
+      "path": "README.txt",
+      "bytes": 401,
+      "sha256": "dacefc35f4ded2a60adac03243f66f67fe1b0743f7064eb14a1e97d96c95df25"
+    },
+    {
+      "url": "assets/comic1.png",
+      "path": "assets/comic1.png",
+      "bytes": 3807423,
+      "sha256": "371b955f9489b1ec92352f4222263d6953534b0820e569d3d23cb0f30513bc40"
+    },
+    {
+      "url": "assets/comic2.png",
+      "path": "assets/comic2.png",
+      "bytes": 3796998,
+      "sha256": "bccfdd09f2f0b799e3c640b818da2cc23b4c2ea03e90c249da665b2983a1765d"
+    },
+    {
+      "url": "assets/comic3.png",
+      "path": "assets/comic3.png",
+      "bytes": 3907371,
+      "sha256": "253b2051c3203b4a6041621368f5ad870d045123eee1c4cbc7b3cf35800b047c"
+    },
+    {
+      "url": "assets/comic4.png",
+      "path": "assets/comic4.png",
+      "bytes": 3912878,
+      "sha256": "98c62d8d4036e3e621d6b010f26da905c221e883b399768b9e23da60d840ff84"
+    },
+    {
+      "url": "../../../shared/lesson-v1/app.js",
+      "path": "shared/app.js",
+      "bytes": 28904,
+      "sha256": "624000b5f93a9f6ae220edc9a4852db363eaa3510412f9dc4c5533e71ea82f8c"
+    },
+    {
+      "url": "../../../shared/lesson-v1/wordbook.js",
+      "path": "shared/wordbook.js",
+      "bytes": 17628,
+      "sha256": "9e50fd4e435e2f505a86604ebbfb9bc2a5cb3f7a7a7ae41ab096d173126f474a"
+    },
+    {
+      "url": "../../../shared/lesson-v1/catalog.js",
+      "path": "shared/catalog.js",
+      "bytes": 3608,
+      "sha256": "f2780886b3c7725c86bc5d06506136515898822641761b980f3dea076f1cf149"
+    },
+    {
+      "url": "../../../shared/lesson-v1/identity.js",
+      "path": "shared/identity.js",
+      "bytes": 956,
+      "sha256": "968c2bea60b9d25144bcbe861c180c7b8ae7a9ae3796c10af89aaed249f12012"
+    },
+    {
+      "url": "../../../shared/lesson-v1/style.css",
+      "path": "shared/style.css",
+      "bytes": 9267,
+      "sha256": "57d4ae4bba340ebb87c72c70c993750fca306a8bc9d77e38f7c54d2c6a56920c"
+    },
+    {
+      "url": "../../../shared/lesson-v1/wenkai.woff2",
+      "path": "shared/wenkai.woff2",
+      "bytes": 1818720,
+      "sha256": "4d66f4496eead7d7d3bc008604671074e19d9e7f19c91b5554bc0d015c587209"
+    },
+    {
+      "url": "../../../shared/lesson-v1/songti.woff2",
+      "path": "shared/songti.woff2",
+      "bytes": 3382592,
+      "sha256": "c5c46d474c4ea0ec54a731f0e245ed1f810f4755a7d93700d3057ae700002f8d"
+    },
+    {
+      "url": "../../../../../assets/huawentong-logo.png",
+      "path": "assets/huawentong-logo.png",
+      "bytes": 642241,
+      "sha256": "4853a20bcae0a4ace1d3ce35141e26e1c0eda4b312cd77edb1e94ef6260cd99c"
+    }
+  ]
+}
