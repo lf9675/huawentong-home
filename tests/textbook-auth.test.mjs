@@ -1,0 +1,13 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+globalThis.Deno={env:{get:k=>k==='SUPABASE_URL'?'https://mock.invalid':k==='SUPABASE_SERVICE_ROLE_KEY'?'test-key':undefined},serve:()=>{}};
+const {handle}=await import('../supabase/functions/hwt-textbook/index.ts');
+const response=(x,status=200)=>new Response(JSON.stringify(x),{status});
+globalThis.fetch=async(url,opts)=>{const u=String(url);if(u.includes('rpc/hwt_take_rate'))return response(true);if(u.includes('hwt_sessions?'))return response([]);if(u.includes('hwt_tb_students?'))return response([]);throw Error('Unexpected mock fetch '+u)};
+const send=(body,headers={})=>handle(new Request('https://mock.invalid/functions/v1/hwt-textbook',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://huawentong-home.lyqlym2015.workers.dev',...headers},body:JSON.stringify(body)}));
+test('anonymous cannot list students or assignments',async()=>{assert.equal((await send({action:'list'})).status,401);assert.equal((await send({action:'dashboard',assignmentId:'11111111-1111-4111-8111-111111111111'})).status,401)});
+test('expired teacher session rejected',async()=>assert.equal((await send({action:'list'},{'x-hwt-session':'a'.repeat(64)})).status,401));
+test('student credential never grants teacher access',async()=>assert.equal((await send({action:'list'},{'x-hwt-student':'a'.repeat(64)})).status,401));
+test('guessed/cross-student credential rejected',async()=>assert.equal((await send({action:'connect',studentId:'00000000-0000-4000-8000-000000000001',assignmentId:'11111111-1111-4111-8111-111111111111'},{'x-hwt-student':'a'.repeat(64)})).status,403));
+test('unapproved browser origin denied, even for health',async()=>assert.equal((await send({action:'health'},{Origin:'https://attacker.invalid'})).status,403));
+test('health contains no private roster or keys',async()=>{const r=await send({action:'health'});assert.equal(r.status,200);const d=await r.json();assert.deepEqual(Object.keys(d).sort(),['lessonId','ok','service','version']);assert.equal(r.headers.get('Cache-Control'),'no-store')});
+test('oversized payload rejected',async()=>assert.equal((await send({action:'submit',padding:'x'.repeat(260000)})).status,413));
