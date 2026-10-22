@@ -1,6 +1,6 @@
 window.LESSON={
   "id": "2hcl-u1-ba-ai-shuo-chu-lai",
-  "version": "20261019-2",
+  "version": "20261022-ipad1",
   "title": "把爱说出来",
   "label": "中二高级华文 · 单元一",
   "author": "本文改编自廖玉蕙的《示爱》。",
@@ -1355,6 +1355,39 @@ window.LESSON={
     "reflection-decision": "reflection-decision-v2",
     "details-effect": "details-effect-v2"
   },
-  "sequenceVersion": 2
+  "sequenceVersion": 2,
+  "wordEnglishVisible": true,
+  "panelImages": [
+    "assets/panels/panel-01.png",
+    "assets/panels/panel-02.png",
+    "assets/panels/panel-03.png",
+    "assets/panels/panel-04.png",
+    "assets/panels/panel-05.png",
+    "assets/panels/panel-06.png",
+    "assets/panels/panel-07.png",
+    "assets/panels/panel-08.png",
+    "assets/panels/panel-09.png",
+    "assets/panels/panel-10.png",
+    "assets/panels/panel-11.png",
+    "assets/panels/panel-12.png",
+    "assets/panels/panel-13.png",
+    "assets/panels/panel-14.png",
+    "assets/panels/panel-15.png",
+    "assets/panels/panel-16.png",
+    "assets/panels/panel-17.png",
+    "assets/panels/panel-18.png",
+    "assets/panels/panel-19.png",
+    "assets/panels/panel-20.png",
+    "assets/panels/panel-21.png",
+    "assets/panels/panel-22.png",
+    "assets/panels/panel-23.png",
+    "assets/panels/panel-24.png",
+    "assets/panels/panel-25.png",
+    "assets/panels/panel-26.png",
+    "assets/panels/panel-27.png",
+    "assets/panels/panel-28.png",
+    "assets/panels/panel-29.png",
+    "assets/panels/panel-30.png"
+  ]
 };
 window.DATA={lessonId:LESSON.id,lessonTitle:LESSON.title,grade:LESSON.grade,unit:LESSON.unit,paragraphs:LESSON.paragraphs};

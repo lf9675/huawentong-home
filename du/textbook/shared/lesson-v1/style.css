@@ -4,3 +4,10 @@
 .evidence-input{display:block;width:100%;min-height:8em;resize:vertical;font:1.2rem/1.9 LessonKai,serif;padding:.7rem;border:1px solid #a2b5aa;border-radius:8px;background:#fffdf7}.reference-nav{display:block;margin:.5rem 0} .reference-nav select{max-width:100%}
 
 .answer-table{table-layout:fixed}.answer-table th:first-child{width:16%}.answer-table td{padding:8px}.answer-table textarea{font-size:21px;min-height:10em;padding:8px}.answer-table th{font-size:17px}@media(max-width:480px){.answer-table{display:block}.answer-table thead{display:none}.answer-table tbody,.answer-table tr,.answer-table td,.answer-table th{display:block;width:100%!important}.answer-table textarea{min-height:6em}}
+
+/* Enabled per lesson while the teacher reviews the iPad repair. */
+.word-support-visible .word{color:#bd202b;-webkit-text-fill-color:#bd202b;font-weight:700;text-decoration-line:underline;text-decoration-style:solid;text-decoration-color:#bd202b;text-decoration-thickness:1px;text-underline-offset:5px}
+.word-support-visible .word:focus-visible{outline:2px solid #bd202b;outline-offset:3px}
+.word-english{font-family:Arial,sans-serif;font-size:18px;line-height:1.6;color:#34443d;margin:8px 0 18px}
+.panel.panel-direct{background:transparent;overflow:visible}
+.panel.panel-direct img{position:static;display:block;width:100%;max-width:100%;height:auto;left:auto;top:auto}

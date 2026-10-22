@@ -41,3 +41,29 @@ const legacy={schema:'huawentong-lesson-v1',lessonId:w.LESSON.id,contentVersion:
 console.log('PASS: all paragraphs and ordered questions; multi-sentence evidence and paste/reload; exact idiom alias; hints/first answers/revisions; exports; cross-grade wordbook filters and merge/roundtrip; legacy record migration.');
 
 const tabA=setup(),tabB=setup();tabA.window.WordBook.add("严谨");tabB.window.WordBook.add("细心");const multi=JSON.parse(storage.get(wordKey));assert(multi.entries.some(e=>e.word==="严谨")&&multi.entries.some(e=>e.word==="细心"));console.log("PASS: collection from two open lesson tabs retains both additions.");
+
+// iPad repair: ordinary intrinsic-size images and immediately readable English.
+storage.clear();env=setup();({$,route,window:w}=env);
+for(let p=1;p<=16;p++){
+ route('paragraph-'+p);
+ for(const img of w.document.querySelectorAll('.panel img')){
+  assert(fs.existsSync(path.join(dir,img.getAttribute('src'))));
+  assert(Number(img.getAttribute('width'))>0&&Number(img.getAttribute('height'))>0);
+  assert.equal(img.getAttribute('loading'),'eager');
+  assert(!img.getAttribute('style'),'images do not use off-screen sprite offsets');
+ }
+ for(const word of w.document.querySelectorAll('[data-word]')){
+  word.click();assert($('#dialogContent .word-english')?.textContent.trim());
+  assert(!$('#dialogContent details'),'English is visible without a second tap');
+  $('#dialogClose').click();
+ }
+}
+for(const d of Object.values(w.LESSON_WORDS))assert(d.meaning&&d.en);
+route('paragraph-12');$('[data-word="打退堂鼓"]').click();$('#collectWord').click();$('#dialogClose').click();
+w.WordBook.open();assert($('#wordDialogContent .word-english').textContent.includes('back out'));
+$('#wordFlashTab').click();assert(!$('.flash-back'));$('#flipCard').click();assert($('.flash-back .word-english').textContent.includes('back out'));
+$('#wordDialogClose').click();
+// A lesson without the review opt-in keeps the existing renderer.
+w.LESSON.wordEnglishVisible=false;delete w.LESSON.panelImages;
+route('paragraph-1');assert($('.panel img').getAttribute('style'));$('[data-word]').click();assert($('#dialogContent details'));
+console.log('PASS: all 30 direct images, all displayed word glosses, 53 bilingual entries, idiom alias, wordbook/flashcard English, and non-opt-in lesson compatibility.');

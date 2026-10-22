@@ -12,7 +12,7 @@ def data(p,mime):return 'data:'+mime+';base64,'+base64.b64encode(p.read_bytes())
 css=(SHARED/'style.css').read_text()
 for name in ['wenkai.woff2','songti.woff2']:
     css=css.replace(name,data(SHARED/name,'font/woff2'))
-assets={f'comic{i}':data(LESSON/f'assets/comic{i}.png','image/png') for i in range(1,4)}
+assets={str(p.relative_to(LESSON)):data(p,'image/png') for p in sorted((LESSON/'assets/panels').glob('*.png'))}
 page=(LESSON/'reading.html').read_text()
 page=re.sub(r'<link rel="stylesheet"[^>]+>',lambda _: '<style>'+css+'</style>',page)
 page=page.replace('../../../../../assets/huawentong-logo.png',data(ROOT/'assets/huawentong-logo.png','image/png'))
@@ -21,6 +21,7 @@ page=page.replace('<main>','<main><p class="muted">离线版 · 关闭前请导�
 page=page.replace('<script src="content.js', '<script>window.LESSON_ASSETS='+json.dumps(assets)+';</script><script src="content.js',1)
 def inline(match):
     src=match[1].split('?')[0]
+    if src.endswith(('cloud.js','cloud-bootstrap.js')):return ''
     p=(LESSON/src).resolve()
     return '<script>'+p.read_text().replace('</script','<\\/script')+'</script>'
 page=re.sub(r'<script src="([^"]+)"[^>]*></script>',inline,page)
@@ -39,6 +40,7 @@ readme='''《把爱说出来》完整教学配套
 学习记录保存在当前浏览器，可导出JSON、CSV或文字，不会自动上传或发送教师。
 个人词语本可独立导入、导出。同词保留已有释义和熟悉状态，本课不同语境义另列。
 离线文件与在线版记录不会自动互通；浏览器可能限制本地文件保存，请及时导出备份。
+2026-10-22修订：漫画按原有格框直接显示；课文词语标红；点词释义、词语本和闪卡直接显示中英文。
 人物比较和开放题须自主书面作答。允许有理有据的不同观点，无须公开私人家庭经历。
 教师答案为公开资源，课堂向学生发送reading.html直达链接。
 
