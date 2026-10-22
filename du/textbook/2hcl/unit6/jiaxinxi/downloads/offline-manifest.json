@@ -1,0 +1,32 @@
+{
+  "filename": "jiaxinxi-offline.zip",
+  "bytes": 20535620,
+  "sha256": "7f47abc0e18d820048de385c726e485b8cce930c15d068793aa997432cfc0629",
+  "parts": [
+    {
+      "file": "downloads/offline-01.bin",
+      "bytes": 4194304,
+      "sha256": "d6f8474d9676493edae0ad6df9b892faebba60ad4998ecd3da5c5ae8c7ce465b"
+    },
+    {
+      "file": "downloads/offline-02.bin",
+      "bytes": 4194304,
+      "sha256": "5205b80e02a07cae29f926bf4cc7406b8c92006a78df1c3db8ab50ee9dfc20ca"
+    },
+    {
+      "file": "downloads/offline-03.bin",
+      "bytes": 4194304,
+      "sha256": "1a615a9340b84c45baa1686c7250cef82548fa3f5076d69a035a14677309e04d"
+    },
+    {
+      "file": "downloads/offline-04.bin",
+      "bytes": 4194304,
+      "sha256": "d28a3c2118a60fd7dd87848b63c9d23570308ab7d80d6bc4f27c41777adfe8db"
+    },
+    {
+      "file": "downloads/offline-05.bin",
+      "bytes": 3758404,
+      "sha256": "d10f99a65d56700a5b7bb862b0bf3f0b815c617b340197904bf2b15860fedcf8"
+    }
+  ]
+}

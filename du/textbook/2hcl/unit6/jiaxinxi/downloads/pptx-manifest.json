@@ -1,0 +1,32 @@
+{
+  "filename": "jiaxinxi.pptx",
+  "bytes": 19176294,
+  "sha256": "989b04ed79e1e4e081fd251c2556c774d3b6f3847be766cd6ba42d9602ac9b11",
+  "parts": [
+    {
+      "file": "downloads/pptx-01.bin",
+      "bytes": 4194304,
+      "sha256": "5fdcf895f25d8d36740b3fcd824e5a455a4e5564381ba36a4824538caa80c62b"
+    },
+    {
+      "file": "downloads/pptx-02.bin",
+      "bytes": 4194304,
+      "sha256": "dd82414d32f1b3ce1c9d8d01a4a3fd417fb7b0d9e7ead456c66895c403406523"
+    },
+    {
+      "file": "downloads/pptx-03.bin",
+      "bytes": 4194304,
+      "sha256": "ac308b9c9864ed817596dbec8291e76d72db9fc94cc6923063d05c3842d2671d"
+    },
+    {
+      "file": "downloads/pptx-04.bin",
+      "bytes": 4194304,
+      "sha256": "ece12ebd79f6c3471f9e9c1fc530709b295ad048abf83048af88575d5ef00d64"
+    },
+    {
+      "file": "downloads/pptx-05.bin",
+      "bytes": 2399078,
+      "sha256": "53fce8c582e4bc9504beb0c391de54bf0d38fa80b097a6ede208ba41f3de6f52"
+    }
+  ]
+}

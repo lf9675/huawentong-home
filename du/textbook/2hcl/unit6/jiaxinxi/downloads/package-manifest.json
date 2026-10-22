@@ -1,0 +1,151 @@
+{
+  "filename": "jiaxinxi-package.zip",
+  "bytes": 65333759,
+  "sha256": "eded2e2d267bc9dcdde5cc9fd5bcd8a3e960b301d9d6d8c843cd903218397412",
+  "parts": [
+    {
+      "file": "downloads/jiaxinxi.pptx",
+      "name": "jiaxinxi.pptx",
+      "bytes": 19176294,
+      "sha256": "989b04ed79e1e4e081fd251c2556c774d3b6f3847be766cd6ba42d9602ac9b11",
+      "header": "UEsDBBQAAAAAADEgVl12WqpZZpskAWabJAENAAAAamlheGlueGkucHB0eA==",
+      "segments": [
+        {
+          "file": "downloads/pptx-01.bin",
+          "bytes": 4194304,
+          "sha256": "5fdcf895f25d8d36740b3fcd824e5a455a4e5564381ba36a4824538caa80c62b"
+        },
+        {
+          "file": "downloads/pptx-02.bin",
+          "bytes": 4194304,
+          "sha256": "dd82414d32f1b3ce1c9d8d01a4a3fd417fb7b0d9e7ead456c66895c403406523"
+        },
+        {
+          "file": "downloads/pptx-03.bin",
+          "bytes": 4194304,
+          "sha256": "ac308b9c9864ed817596dbec8291e76d72db9fc94cc6923063d05c3842d2671d"
+        },
+        {
+          "file": "downloads/pptx-04.bin",
+          "bytes": 4194304,
+          "sha256": "ece12ebd79f6c3471f9e9c1fc530709b295ad048abf83048af88575d5ef00d64"
+        },
+        {
+          "file": "downloads/pptx-05.bin",
+          "bytes": 2399078,
+          "sha256": "53fce8c582e4bc9504beb0c391de54bf0d38fa80b097a6ede208ba41f3de6f52"
+        }
+      ]
+    },
+    {
+      "file": "downloads/teacher-guide.docx",
+      "name": "teacher-guide.docx",
+      "bytes": 49608,
+      "sha256": "0e8fcac71ae256dc9c15f39dc82d007f90fc40e7b3af4a382aca5ae4d834cb39",
+      "header": "UEsDBBQAAAAAAGogVl1i22tEyMEAAMjBAAASAAAAdGVhY2hlci1ndWlkZS5kb2N4"
+    },
+    {
+      "file": "downloads/jiaxinxi-offline.zip",
+      "name": "jiaxinxi-offline.zip",
+      "bytes": 20535620,
+      "sha256": "7f47abc0e18d820048de385c726e485b8cce930c15d068793aa997432cfc0629",
+      "header": "UEsDBBQAAAAAAHUhVl2tF2LSRFk5AURZOQEUAAAAamlheGlueGktb2ZmbGluZS56aXA=",
+      "segments": [
+        {
+          "file": "downloads/offline-01.bin",
+          "bytes": 4194304,
+          "sha256": "d6f8474d9676493edae0ad6df9b892faebba60ad4998ecd3da5c5ae8c7ce465b"
+        },
+        {
+          "file": "downloads/offline-02.bin",
+          "bytes": 4194304,
+          "sha256": "5205b80e02a07cae29f926bf4cc7406b8c92006a78df1c3db8ab50ee9dfc20ca"
+        },
+        {
+          "file": "downloads/offline-03.bin",
+          "bytes": 4194304,
+          "sha256": "1a615a9340b84c45baa1686c7250cef82548fa3f5076d69a035a14677309e04d"
+        },
+        {
+          "file": "downloads/offline-04.bin",
+          "bytes": 4194304,
+          "sha256": "d28a3c2118a60fd7dd87848b63c9d23570308ab7d80d6bc4f27c41777adfe8db"
+        },
+        {
+          "file": "downloads/offline-05.bin",
+          "bytes": 3758404,
+          "sha256": "d10f99a65d56700a5b7bb862b0bf3f0b815c617b340197904bf2b15860fedcf8"
+        }
+      ]
+    },
+    {
+      "file": "downloads/fonts.zip",
+      "name": "fonts.zip",
+      "bytes": 6486396,
+      "sha256": "5918f8ca0da5a18f826487eb7d4739a4414a67ae5a1c4782b6fc96414726a31d",
+      "header": "UEsDBBQAAAAAAHUhVl1A9qsofPliAHz5YgAJAAAAZm9udHMuemlw",
+      "segments": [
+        {
+          "file": "downloads/fonts-01.bin",
+          "bytes": 4194304,
+          "sha256": "28d4bcd7ae1cee6f2dddb049cc51a5c98202fd997d235f5de4625d3b75a6bf02"
+        },
+        {
+          "file": "downloads/fonts-02.bin",
+          "bytes": 2292092,
+          "sha256": "95fccf626c2168abeeab5704113a11af60d9dd80729e177a60801c1fe13e19b2"
+        }
+      ]
+    },
+    {
+      "file": "downloads/source.zip",
+      "name": "source.zip",
+      "bytes": 84649,
+      "sha256": "93ed52f18926a263da92f920e9a246b688d71729fb703c227e966badf6fea218",
+      "header": "UEsDBBQAAAAAAHUhVl2Rm0OgqUoBAKlKAQAKAAAAc291cmNlLnppcA=="
+    },
+    {
+      "file": "README.txt",
+      "name": "README.txt",
+      "bytes": 617,
+      "sha256": "231349ec5e5d89e57f7b7b673ea0d3ca25ce433cfc26bc67c0bb4368ae073ff8",
+      "header": "UEsDBBQAAAAAAHUhVl0H2MHraQIAAGkCAAAKAAAAUkVBRE1FLnR4dA=="
+    },
+    {
+      "file": "assets/comic1.png",
+      "name": "original-comics/comic1.png",
+      "bytes": 3924713,
+      "sha256": "82025fb37400d2a619387abcf45975b786844988f2cd91cb1afe0839ddcec94a",
+      "header": "UEsDBBQAAAAAABgeVl123+xv6eI7AOniOwAaAAAAb3JpZ2luYWwtY29taWNzL2NvbWljMS5wbmc="
+    },
+    {
+      "file": "assets/comic2.png",
+      "name": "original-comics/comic2.png",
+      "bytes": 3811508,
+      "sha256": "e734e3d551e119764654709dfe310e5a71cc89112e2f8a210a78ef6a1a0f0684",
+      "header": "UEsDBBQAAAAAABgeVl0QwAzMtCg6ALQoOgAaAAAAb3JpZ2luYWwtY29taWNzL2NvbWljMi5wbmc="
+    },
+    {
+      "file": "assets/comic3.png",
+      "name": "original-comics/comic3.png",
+      "bytes": 3769135,
+      "sha256": "a81a4f4084e0f2df086e7f418ad945f689d8229b9abc6c9a794cc837282aa390",
+      "header": "UEsDBBQAAAAAABgeVl1LO9EbL4M5AC+DOQAaAAAAb3JpZ2luYWwtY29taWNzL2NvbWljMy5wbmc="
+    },
+    {
+      "file": "assets/comic4.png",
+      "name": "original-comics/comic4.png",
+      "bytes": 3734426,
+      "sha256": "4796723d67e574c7bf08056f3b1d69d8fd8a23997d9de9e375b8b4b3d54e29a7",
+      "header": "UEsDBBQAAAAAABgeVl15ZvHJmvs4AJr7OAAaAAAAb3JpZ2luYWwtY29taWNzL2NvbWljNC5wbmc="
+    },
+    {
+      "file": "assets/comic5.png",
+      "name": "original-comics/comic5.png",
+      "bytes": 3759515,
+      "sha256": "922a70dc92a11405d890e6193b50864350c0f8d9537c92045d3e2ed4cd902b5f",
+      "header": "UEsDBBQAAAAAABgeVl3QfwpAm105AJtdOQAaAAAAb3JpZ2luYWwtY29taWNzL2NvbWljNS5wbmc="
+    }
+  ],
+  "tail": "UEsBAhQDFAAAAAAAMSBWXXZaqllmmyQBZpskAQ0AAAAAAAAAAAAAAICBAAAAAGppYXhpbnhpLnBwdHhQSwECFAMUAAAAAABqIFZdYttrRMjBAADIwQAAEgAAAAAAAAAAAAAApIGRmyQBdGVhY2hlci1ndWlkZS5kb2N4UEsBAhQDFAAAAAAAdSFWXa0XYtJEWTkBRFk5ARQAAAAAAAAAAAAAAKSBiV0lAWppYXhpbnhpLW9mZmxpbmUuemlwUEsBAhQDFAAAAAAAdSFWXUD2qyh8+WIAfPliAAkAAAAAAAAAAAAAAKSB/7ZeAmZvbnRzLnppcFBLAQIUAxQAAAAAAHUhVl2Rm0OgqUoBAKlKAQAKAAAAAAAAAAAAAACkgaKwwQJzb3VyY2UuemlwUEsBAhQDFAAAAAAAdSFWXQfYwetpAgAAaQIAAAoAAAAAAAAAAAAAAKSBc/vCAlJFQURNRS50eHRQSwECFAMUAAAAAAAYHlZddt/sb+niOwDp4jsAGgAAAAAAAAAAAAAApIEE/sICb3JpZ2luYWwtY29taWNzL2NvbWljMS5wbmdQSwECFAMUAAAAAAAYHlZdEMAMzLQoOgC0KDoAGgAAAAAAAAAAAAAApIEl4f4Cb3JpZ2luYWwtY29taWNzL2NvbWljMi5wbmdQSwECFAMUAAAAAAAYHlZdSzvRGy+DOQAvgzkAGgAAAAAAAAAAAAAApIERCjkDb3JpZ2luYWwtY29taWNzL2NvbWljMy5wbmdQSwECFAMUAAAAAAAYHlZdeWbxyZr7OACa+zgAGgAAAAAAAAAAAAAApIF4jXIDb3JpZ2luYWwtY29taWNzL2NvbWljNC5wbmdQSwECFAMUAAAAAAAYHlZd0H8KQJtdOQCbXTkAGgAAAAAAAAAAAAAApIFKiasDb3JpZ2luYWwtY29taWNzL2NvbWljNS5wbmdQSwUGAAAAAAsACwDMAgAAHefkAwAA"
+}
