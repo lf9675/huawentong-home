@@ -4,7 +4,7 @@
   "label": "中一高级华文 · 单元二 · 生活空间",
   "grade": 1,
   "unit": 2,
-  "version": "20261022-1",
+  "version": "20261023-ipad-all1",
   "sequenceVersion": 1,
   "paragraphs": [
     "当教堂的钟声在午夜12点响起时，大家都争着吃葡萄，如果能跟着钟声连续吃下12颗，就象征新的一年12个月都事事如意。",
@@ -973,5 +973,26 @@
       "published": "2018-12-21",
       "checked": "2026-10-22"
     }
+  ],
+  "wordEnglishVisible": true,
+  "panelImages": [
+    "assets/panels/panel-01.png",
+    "assets/panels/panel-02.png",
+    "assets/panels/panel-03.png",
+    "assets/panels/panel-04.png",
+    "assets/panels/panel-05.png",
+    "assets/panels/panel-06.png",
+    "assets/panels/panel-07.png",
+    "assets/panels/panel-08.png",
+    "assets/panels/panel-09.png",
+    "assets/panels/panel-10.png",
+    "assets/panels/panel-11.png",
+    "assets/panels/panel-12.png",
+    "assets/panels/panel-13.png",
+    "assets/panels/panel-14.png",
+    "assets/panels/panel-15.png",
+    "assets/panels/panel-16.png",
+    "assets/panels/panel-17.png",
+    "assets/panels/panel-18.png"
   ]
 }
