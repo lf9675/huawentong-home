@@ -328,6 +328,7 @@ button:focus-visible{outline:3px solid var(--amber); outline-offset:2px}
 </div>
 
 <script src="shicheng-cloud-lesson.js?v=tb2"></script><script src="/du/textbook/shared/lesson-v1/cloud-bootstrap.js?v=tb2"></script><script src="/du/textbook/shared/lesson-v1/worksheet-storage.js?v=tb2"></script>
+<script src="/du/textbook/shared/lesson-v1/legacy-vocabulary.js?v=20261023-ipad-all1" data-lesson="s1u6l2"></script>
 <script>
 /* ================= 题库 ================= */
 const VOC_A = [
@@ -448,6 +449,7 @@ function renderMCQ(host, list, prefix, opts){
       const ok = j===ans;
       d.classList.add(ok?"right":"wrong");
       d.querySelector(".fb").innerHTML = (ok?"✓ 对了。":"✗ 正确答案是「"+choices[ans]+"」。")+why;
+      HWTLegacyVocabulary.feedback(d.querySelector(".fb"),prefix,i);
     }
     choices.forEach((c,j)=>{
       const b=document.createElement("button");
@@ -503,6 +505,7 @@ function renderJudge(){
       const ok = (val==="fact")===isFact;
       d.classList.add(ok?"right":"wrong");
       d.querySelector(".fb").innerHTML = (ok?"✓ 对了。":"✗ 这是"+(isFact?"事实":"意见")+"。")+why;
+      HWTLegacyVocabulary.feedback(d.querySelector(".fb"),prefix,i);
     }
     d.querySelectorAll(".jbtns button").forEach(b=>{
       b.addEventListener("click",()=>{ if(store[id]!==undefined) return; store[id]=b.dataset.a; save(); lock(b.dataset.a); updateProgress(); });
@@ -632,11 +635,12 @@ window.HWTWorksheetReady=(async function init(){
   renderMCQ(document.getElementById("hero"), HERO, "h");
   document.querySelectorAll("[data-save]").forEach(el=>{ if(store[el.dataset.save]) el.value=store[el.dataset.save]; });
   if(store.stance) document.querySelectorAll("#stances button").forEach(b=>b.classList.toggle("picked", b.dataset.v===store.stance));
+  HWTLegacyVocabulary.mark(document.querySelector(".wrap"));
   updateProgress();
 })();
 
 window.HWTWorksheet={state:()=>store,restore:value=>{store=value;localStorage.setItem(window.LESSON_STORAGE_KEY,JSON.stringify(store));}};
 </script>
-<script src="/du/textbook/shared/lesson-v1/catalog.js?v=20261019-2"></script><script src="/du/textbook/shared/lesson-v1/wordbook-bridge.js?v=20261019-2" data-lesson="s1u6l2"></script><script src="/du/textbook/shared/lesson-v1/worksheet-cloud.js?v=tb2"></script></body>
+<script src="/du/textbook/shared/lesson-v1/catalog.js?v=20261019-2"></script><script src="/du/textbook/shared/lesson-v1/wordbook-bridge.js?v=20261023-ipad-all1" data-lesson="s1u6l2"></script><script src="/du/textbook/shared/lesson-v1/worksheet-cloud.js?v=tb2"></script></body>
 </html>
 

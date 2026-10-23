@@ -2,7 +2,7 @@
   "id": "s2u3l2",
   "title": "人类最糟糕的发明",
   "label": "中二高级华文 · 单元三 · 核心课文",
-  "version": "20261020-plastic-1",
+  "version": "20261023-ipad-all1",
   "sequenceVersion": 1,
   "paragraphs": [
     "英国媒体曾经评出二十世纪人类最糟糕的发明，“得奖”的正是人们每天大量使用的塑料袋。",
@@ -1334,7 +1334,8 @@
         372
       ],
       "note": "教材原折线图。横轴是年份，纵轴单位为百万吨。按教材图理解整体变化，不推算未标出的逐年精确值。",
-      "alt": "1950年以后全球塑料产量整体快速上升，局部有短暂回落。"
+      "alt": "1950年以后全球塑料产量整体快速上升，局部有短暂回落。",
+      "directSrc": "assets/panels/figure-2.png"
     },
     "4": {
       "kind": "pie",
@@ -1389,9 +1390,53 @@
         201,
         610,
         541
-      ]
+      ],
+      "directSrc": "assets/panels/figure-5.png"
     }
   },
   "accuracyLabel": "客观任务首次全部答对比例",
-  "simpleTaskGuide": true
+  "simpleTaskGuide": true,
+  "wordEnglishVisible": true,
+  "panelImages": [
+    "assets/panels/panel-01.png",
+    "assets/panels/panel-02.png",
+    "assets/panels/panel-03.png",
+    "assets/panels/panel-04.png",
+    "assets/panels/panel-05.png",
+    "assets/panels/panel-06.png",
+    "assets/panels/panel-07.png",
+    "assets/panels/panel-08.png",
+    "assets/panels/panel-09.png",
+    "assets/panels/panel-10.png",
+    "assets/panels/panel-11.png",
+    "assets/panels/panel-12.png",
+    "assets/panels/panel-13.png",
+    "assets/panels/panel-14.png",
+    "assets/panels/panel-15.png",
+    "assets/panels/panel-16.png",
+    "assets/panels/panel-17.png",
+    "assets/panels/panel-18.png",
+    "assets/panels/panel-19.png",
+    "assets/panels/panel-20.png",
+    "assets/panels/panel-21.png",
+    "assets/panels/panel-22.png",
+    "assets/panels/panel-23.png",
+    "assets/panels/panel-24.png",
+    "assets/panels/panel-25.png",
+    "assets/panels/panel-26.png",
+    "assets/panels/panel-27.png",
+    "assets/panels/panel-28.png",
+    "assets/panels/panel-29.png",
+    "assets/panels/panel-30.png",
+    "assets/panels/panel-31.png",
+    "assets/panels/panel-32.png",
+    "assets/panels/panel-33.png",
+    "assets/panels/panel-34.png",
+    "assets/panels/panel-35.png",
+    "assets/panels/panel-36.png",
+    "assets/panels/panel-37.png",
+    "assets/panels/panel-38.png",
+    "assets/panels/panel-39.png",
+    "assets/panels/panel-40.png"
+  ]
 }

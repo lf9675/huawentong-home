@@ -1,6 +1,6 @@
 window.LESSON={
   "id": "2hcl-u2-zhu-yang-ye-sheng-dong-wu",
-  "version": "20261020-zy-1",
+  "version": "20261023-ipad-all1",
   "sequenceVersion": 1,
   "title": "助养野生动物",
   "label": "中二高级华文 · 单元二",
@@ -236,23 +236,28 @@ window.LESSON={
   "idioms": [
     [
       "拯救",
-      "提供救助，帮助脱离危险。"
+      "提供救助，帮助脱离危险。",
+      "rescue; help someone or something out of danger"
     ],
     [
       "敏捷",
-      "迅速而灵敏。"
+      "迅速而灵敏。",
+      "quick and agile in movement"
     ],
     [
       "穿梭",
-      "来回活动。"
+      "来回活动。",
+      "move back and forth between places"
     ],
     [
       "馋",
-      "看见好吃的食物就想吃。"
+      "看见好吃的食物就想吃。",
+      "eager to eat tempting food"
     ],
     [
       "摔跤",
-      "双方相抱，运用力气和技巧使对方倒下的体育运动。"
+      "双方相抱，运用力气和技巧使对方倒下的体育运动。",
+      "wrestling; a sport in which opponents try to bring each other down"
     ]
   ],
   "objectives": [
@@ -935,5 +940,32 @@ window.LESSON={
         }
       ]
     }
+  ],
+  "wordEnglishVisible": true,
+  "panelImages": [
+    "assets/panels/panel-01.png",
+    "assets/panels/panel-02.png",
+    "assets/panels/panel-03.png",
+    "assets/panels/panel-04.png",
+    "assets/panels/panel-05.png",
+    "assets/panels/panel-06.png",
+    "assets/panels/panel-07.png",
+    "assets/panels/panel-08.png",
+    "assets/panels/panel-09.png",
+    "assets/panels/panel-10.png",
+    "assets/panels/panel-11.png",
+    "assets/panels/panel-12.png",
+    "assets/panels/panel-13.png",
+    "assets/panels/panel-14.png",
+    "assets/panels/panel-15.png",
+    "assets/panels/panel-16.png",
+    "assets/panels/panel-17.png",
+    "assets/panels/panel-18.png",
+    "assets/panels/panel-19.png",
+    "assets/panels/panel-20.png",
+    "assets/panels/panel-21.png",
+    "assets/panels/panel-22.png",
+    "assets/panels/panel-23.png",
+    "assets/panels/panel-24.png"
   ]
 };

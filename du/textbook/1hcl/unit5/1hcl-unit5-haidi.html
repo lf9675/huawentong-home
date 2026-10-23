@@ -370,6 +370,7 @@ button:focus-visible{outline:3px solid var(--amber); outline-offset:2px}
 </div>
 
 <script src="haidi-cloud-lesson.js?v=tb2"></script><script src="/du/textbook/shared/lesson-v1/cloud-bootstrap.js?v=tb2"></script><script src="/du/textbook/shared/lesson-v1/worksheet-storage.js?v=tb2"></script>
+<script src="/du/textbook/shared/lesson-v1/legacy-vocabulary.js?v=20261023-ipad-all1" data-lesson="s1u5l2"></script>
 <script>
 /* ================= 数据 ================= */
 const VOC_A = [
@@ -479,6 +480,7 @@ function renderMCQ(host, list, prefix, opts){
         const ok = j === ans;
         d.classList.add(ok ? "right" : "wrong");
         d.querySelector(".fb").innerHTML = (ok ? "✓ 对了。" : "✗ 正确答案是「"+choices[ans]+"」。") + why;
+      HWTLegacyVocabulary.feedback(d.querySelector(".fb"),prefix,i);
         updateProgress();
       });
       bar.appendChild(b);
@@ -493,6 +495,7 @@ function renderMCQ(host, list, prefix, opts){
       const ok = j === ans;
       d.classList.add(ok ? "right" : "wrong");
       d.querySelector(".fb").innerHTML = (ok ? "✓ 对了。" : "✗ 正确答案是「"+choices[ans]+"」。") + why;
+      HWTLegacyVocabulary.feedback(d.querySelector(".fb"),prefix,i);
     }
   });
 }
@@ -735,11 +738,12 @@ window.HWTWorksheetReady=(async function init(){
     });
     gradeVerbs();
   }
+  HWTLegacyVocabulary.mark(document.querySelector(".wrap"));
   updateProgress();
 })();
 
 window.HWTWorksheet={state:()=>store,restore:value=>{store=value;localStorage.setItem(window.LESSON_STORAGE_KEY,JSON.stringify(store));}};
 </script>
-<script src="/du/textbook/shared/lesson-v1/catalog.js?v=20261019-2"></script><script src="/du/textbook/shared/lesson-v1/wordbook-bridge.js?v=20261019-2" data-lesson="s1u5l2"></script><script src="/du/textbook/shared/lesson-v1/worksheet-cloud.js?v=tb2"></script></body>
+<script src="/du/textbook/shared/lesson-v1/catalog.js?v=20261019-2"></script><script src="/du/textbook/shared/lesson-v1/wordbook-bridge.js?v=20261023-ipad-all1" data-lesson="s1u5l2"></script><script src="/du/textbook/shared/lesson-v1/worksheet-cloud.js?v=tb2"></script></body>
 </html>
 

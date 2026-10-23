@@ -4,7 +4,7 @@ window.LESSON = {
   "label": "中二高级华文 · 单元一",
   "grade": 2,
   "unit": 1,
-  "version": "20261020-wx-1",
+  "version": "20261023-ipad-all1",
   "sequenceVersion": 1,
   "paragraphs": [
     "我爸爸最近总是很晚才回来，看起来疲惫不堪，而且还闷闷不乐的。我想安慰他，又怕打扰他，我不知道该怎么做。我很苦恼。",
@@ -251,27 +251,33 @@ window.LESSON = {
   "idioms": [
     [
       "犹豫",
-      "拿不定主意。"
+      "拿不定主意。",
+      "hesitate; be unable to decide"
     ],
     [
       "委屈",
-      "受到不应有的指责而心里难过。"
+      "受到不应有的指责而心里难过。",
+      "feel hurt because one has been misunderstood, unfairly blamed or treated unfairly"
     ],
     [
       "内疚",
-      "内心感到惭愧。"
+      "内心感到惭愧。",
+      "feel guilty for letting someone down or doing something wrong"
     ],
     [
       "匿名",
-      "不写出姓名。"
+      "不写出姓名。",
+      "without giving one's name; anonymous"
     ],
     [
       "窒息",
-      "呼吸困难，甚至停止。"
+      "呼吸困难，甚至停止。",
+      "suffocate; here, feel emotionally stifled by restrictions"
     ],
     [
       "迎刃而解",
-      "比喻关键问题解决了，其他相关问题就很容易解决。"
+      "比喻关键问题解决了，其他相关问题就很容易解决。",
+      "become easy to solve once the key difficulty is overcome"
     ]
   ],
   "tasks": [
@@ -950,5 +956,32 @@ window.LESSON = {
     "按顺序筛选三位同学的烦恼与辅导员建议，区分背景与真正的困难。",
     "理解词语在语境中的意思，留意“如果”“说不定”“有些人”“也许”的范围。",
     "说明建议怎样回应烦恼，并独立写出有理由、有具体情境的简短回应。"
+  ],
+  "wordEnglishVisible": true,
+  "panelImages": [
+    "assets/panels/panel-01.png",
+    "assets/panels/panel-02.png",
+    "assets/panels/panel-03.png",
+    "assets/panels/panel-04.png",
+    "assets/panels/panel-05.png",
+    "assets/panels/panel-06.png",
+    "assets/panels/panel-07.png",
+    "assets/panels/panel-08.png",
+    "assets/panels/panel-09.png",
+    "assets/panels/panel-10.png",
+    "assets/panels/panel-11.png",
+    "assets/panels/panel-12.png",
+    "assets/panels/panel-13.png",
+    "assets/panels/panel-14.png",
+    "assets/panels/panel-15.png",
+    "assets/panels/panel-16.png",
+    "assets/panels/panel-17.png",
+    "assets/panels/panel-18.png",
+    "assets/panels/panel-19.png",
+    "assets/panels/panel-20.png",
+    "assets/panels/panel-21.png",
+    "assets/panels/panel-22.png",
+    "assets/panels/panel-23.png",
+    "assets/panels/panel-24.png"
   ]
 };

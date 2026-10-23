@@ -1,6 +1,6 @@
 window.LESSON={
   "id": "2hcl-u1-ba-ai-shuo-chu-lai",
-  "version": "20261022-ipad1",
+  "version": "20261023-ipad-all1",
   "title": "把爱说出来",
   "label": "中二高级华文 · 单元一",
   "author": "本文改编自廖玉蕙的《示爱》。",
