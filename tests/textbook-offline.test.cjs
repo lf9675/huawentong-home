@@ -1,0 +1,7 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert'),path=require('path'),{parseHTML}=require(process.env.LINKEDOM_PATH||'linkedom');
+const inv=require('../tools/textbook-ipad/inventory.cjs')(),out=process.argv[2];
+for(const a of inv){const slug=path.basename(a.dir),s=fs.readFileSync(path.join(out,slug+'.html'),'utf8'),{window:w}=parseHTML(s),location={hash:''},store=new Map();Object.assign(w,{console,Blob,location,localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)},setTimeout:()=>1,clearTimeout:()=>{},scrollTo:()=>{},confirm:()=>true,speechSynthesis:{cancel:()=>{},speak:()=>{}},URL:{createObjectURL:()=>'',revokeObjectURL:()=>{}}});w.window=w;const ctx=vm.createContext(w);
+ assert(!/<script[^>]+src=/.test(s));assert(!/cloud-bootstrap\.js/.test(s));
+ for(const m of s.matchAll(/<script>([\s\S]*?)<\/script>/g))vm.runInContext(m[1],ctx);
+ const legacy=slug==='tuanyuanfan';for(let p=1;p<=a.L.paragraphs.length;p++){location.hash='#paragraph-'+p;w.dispatchEvent(new w.Event('hashchange'));const images=w.document.querySelectorAll(legacy?'.comic-panel img':'#activity .panel img');assert(images.length);for(const img of images)assert(img.getAttribute('src').startsWith('data:image/'));}
+ w.document.querySelector('#source [data-word]')?.click();assert(w.document.querySelector('#dialogContent .word-english'));console.log('PASS standalone',slug);global.gc?.();}

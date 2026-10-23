@@ -2,7 +2,7 @@ window.LESSON={
   "id": "s2u3l1",
   "title": "水都去哪儿了",
   "label": "中二高级华文 · 单元三 · 生活空间",
-  "version": "20261020-water-1",
+  "version": "20261023-ipad-all1",
   "sequenceVersion": 1,
   "unitNoun": "部分",
   "paragraphs": [
@@ -1098,23 +1098,28 @@ window.LESSON={
   "idioms": [
     [
       "艰巨",
-      "困难很多，任务繁重。"
+      "困难很多，任务繁重。",
+      "very difficult and demanding"
     ],
     [
       "昂贵",
-      "价格或成本很高。"
+      "价格或成本很高。",
+      "expensive; costing a great deal"
     ],
     [
       "消耗",
-      "在使用过程中逐渐耗去。"
+      "在使用过程中逐渐耗去。",
+      "use up gradually"
     ],
     [
       "干旱",
-      "长时间降雨不足而缺水。"
+      "长时间降雨不足而缺水。",
+      "drought; a long period with too little rain"
     ],
     [
       "趋势",
-      "整体发展的方向。"
+      "整体发展的方向。",
+      "the general direction of change; a trend"
     ]
   ],
   "accuracyLabel": "客观点选与配对首次正确率",
@@ -1122,5 +1127,32 @@ window.LESSON={
     "读准图表的对象、年份、单位与百分比范围。",
     "筛选四种水源的限制，用数据概括用水量的变化趋势。",
     "提出具体节水建议，并用信息或情境解释为什么。"
+  ],
+  "wordEnglishVisible": true,
+  "panelImages": [
+    "assets/panels/panel-01.png",
+    "assets/panels/panel-02.png",
+    "assets/panels/panel-03.png",
+    "assets/panels/panel-04.png",
+    "assets/panels/panel-05.png",
+    "assets/panels/panel-06.png",
+    "assets/panels/panel-07.png",
+    "assets/panels/panel-08.png",
+    "assets/panels/panel-09.png",
+    "assets/panels/panel-10.png",
+    "assets/panels/panel-11.png",
+    "assets/panels/panel-12.png",
+    "assets/panels/panel-13.png",
+    "assets/panels/panel-14.png",
+    "assets/panels/panel-15.png",
+    "assets/panels/panel-16.png",
+    "assets/panels/panel-17.png",
+    "assets/panels/panel-18.png",
+    "assets/panels/panel-19.png",
+    "assets/panels/panel-20.png",
+    "assets/panels/panel-21.png",
+    "assets/panels/panel-22.png",
+    "assets/panels/panel-23.png",
+    "assets/panels/panel-24.png"
   ]
 };

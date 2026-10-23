@@ -1,0 +1,5 @@
+const fs=require('fs'),path=require('path'),vm=require('vm'),cp=require('child_process');
+const root=path.resolve(__dirname,'../..');
+function inventory(original=false){return cp.execFileSync('git',['ls-files','du/textbook'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(p=>/\/reading.html$/.test(p)&&!p.includes('/downloads/')).map(f=>{const dir=path.dirname(f),w={};w.window=w;const c=vm.createContext(w),read=n=>original?cp.execFileSync('git',['show','88d102f6d15c4c7cc8672d2f31d332b4d3a91eaa:'+dir+'/'+n],{cwd:root,encoding:'utf8'}):fs.readFileSync(root+'/'+dir+'/'+n,'utf8');vm.runInContext(read('content.js')+';window.__data=typeof DATA!=="undefined"?DATA:window.LESSON;window.__assets=typeof ASSETS!=="undefined"?ASSETS:null;',c);vm.runInContext(read('lexicon.js')+';window.__words=typeof LESSON_WORDS!=="undefined"?LESSON_WORDS:window.LESSON_WORDS;',c);return {dir,L:w.LESSON||w.__data,words:w.__words,assets:w.__assets};});}
+module.exports=inventory;
+if(require.main===module)fs.writeFileSync(process.argv[2],JSON.stringify(inventory(process.argv.includes('--original')),null,2));

@@ -4,7 +4,7 @@ window.LESSON = {
   "label": "中二高级华文 · 单元四 · 生活空间",
   "grade": 2,
   "unit": 4,
-  "version": "20261020-xq-1",
+  "version": "20261023-ipad-all1",
   "sequenceVersion": 1,
   "unitNoun": "则",
   "simpleTaskGuide": true,
@@ -977,7 +977,34 @@ window.LESSON = {
       ]
     }
   ],
-  "idioms": []
+  "idioms": [],
+  "wordEnglishVisible": true,
+  "panelImages": [
+    "assets/panels/panel-01.png",
+    "assets/panels/panel-02.png",
+    "assets/panels/panel-03.png",
+    "assets/panels/panel-04.png",
+    "assets/panels/panel-05.png",
+    "assets/panels/panel-06.png",
+    "assets/panels/panel-07.png",
+    "assets/panels/panel-08.png",
+    "assets/panels/panel-09.png",
+    "assets/panels/panel-10.png",
+    "assets/panels/panel-11.png",
+    "assets/panels/panel-12.png",
+    "assets/panels/panel-13.png",
+    "assets/panels/panel-14.png",
+    "assets/panels/panel-15.png",
+    "assets/panels/panel-16.png",
+    "assets/panels/panel-17.png",
+    "assets/panels/panel-18.png",
+    "assets/panels/panel-19.png",
+    "assets/panels/panel-20.png",
+    "assets/panels/panel-21.png",
+    "assets/panels/panel-22.png",
+    "assets/panels/panel-23.png",
+    "assets/panels/panel-24.png"
+  ]
 };
 window.HWT_WORD_CONTEXT=()=>({lessonId:LESSON.id,lessonTitle:LESSON.title,grade:LESSON.grade,unit:LESSON.unit,paragraphs:LESSON.paragraphs,currentParagraph:(window.LessonEngine?.state().position.p)||1});
 window.HWT_WORD_LEXICON=()=>window.LESSON_WORDS;
