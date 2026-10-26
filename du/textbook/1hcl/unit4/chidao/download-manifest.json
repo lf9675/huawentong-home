@@ -1,0 +1,131 @@
+{
+  "version": "20261026-cn2",
+  "files": {
+    "offline": {
+      "filename": "迟到-学生单文件版.html",
+      "mime": "text/html;charset=utf-8",
+      "bytes": 6969489,
+      "sha256": "bda7a96ba731f9c95ada8997ed22158f9bcee6e34cf147e62e6b2cad2ee80851",
+      "parts": [
+        {
+          "url": "downloads/student.bin",
+          "bytes": 6969489,
+          "sha256": "bda7a96ba731f9c95ada8997ed22158f9bcee6e34cf147e62e6b2cad2ee80851"
+        }
+      ]
+    },
+    "pptx": {
+      "filename": "迟到-教师课件.pptx",
+      "mime": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "bytes": 1010993,
+      "sha256": "89a3cca06d38f0711a3cb3eca2a4d4ff9400220e28eff9e3ce1905810bd5eea3",
+      "parts": [
+        {
+          "url": "teacher_slides.pptx",
+          "bytes": 1010993
+        }
+      ]
+    },
+    "guide": {
+      "filename": "迟到-教学流程与参考答案.docx",
+      "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "bytes": 47145,
+      "sha256": "44a83f7c597a9e2016d1833b868127f1c24bfd1b6f3ebf415b729985e2ad6240",
+      "parts": [
+        {
+          "url": "teacher-guide.docx",
+          "bytes": 47145
+        }
+      ]
+    },
+    "readme": {
+      "filename": "使用说明.txt",
+      "mime": "text/plain;charset=utf-8",
+      "bytes": 854,
+      "sha256": "03c14b9fabf4c38f7e621ea0b915cf01a62fb221868b9e9458d7157b0ea22d69",
+      "parts": [
+        {
+          "url": "README.txt",
+          "bytes": 854
+        }
+      ]
+    },
+    "comic1": {
+      "filename": "原漫画/迟到-1.webp",
+      "mime": "image/webp",
+      "bytes": 505826,
+      "sha256": "20449168278f3b34de549ddfb3238d55af70062ae13360ca6f55de3740b5a105",
+      "parts": [
+        {
+          "url": "assets/comic1.webp",
+          "bytes": 505826
+        }
+      ]
+    },
+    "comic2": {
+      "filename": "原漫画/迟到-2.webp",
+      "mime": "image/webp",
+      "bytes": 431348,
+      "sha256": "7ae0f55bfdff55ae1cc3ba5b21c3a85807e4b6a39fa3b6bfe82ff081e604cf53",
+      "parts": [
+        {
+          "url": "assets/comic2.webp",
+          "bytes": 431348
+        }
+      ]
+    },
+    "comic3": {
+      "filename": "原漫画/迟到-3.webp",
+      "mime": "image/webp",
+      "bytes": 508554,
+      "sha256": "8b14e4aa38401461b4b96ff9173620f072bb43889bd513a7bebcccb3fdf2760d",
+      "parts": [
+        {
+          "url": "assets/comic3.webp",
+          "bytes": 508554
+        }
+      ]
+    },
+    "comic4": {
+      "filename": "原漫画/迟到-4.webp",
+      "mime": "image/webp",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "parts": [
+        {
+          "url": "assets/comic4.webp",
+          "bytes": 0
+        }
+      ]
+    },
+    "comic5": {
+      "filename": "原漫画/迟到-5.webp",
+      "mime": "image/webp",
+      "bytes": 506912,
+      "sha256": "c06ac988ab3476ee9c4d3cbfa885ca7eb7fb3bdd4c82438dd66f2ad64fca584c",
+      "parts": [
+        {
+          "url": "assets/comic5.webp",
+          "bytes": 506912
+        }
+      ]
+    }
+  },
+  "package": {
+    "filename": "迟到-完整中文教学配套.zip",
+    "files": [
+      "offline",
+      "pptx",
+      "guide",
+      "readme",
+      "comic1",
+      "comic2",
+      "comic3",
+      "comic4",
+      "comic5"
+    ],
+    "url": "downloads/chidao-package.zip",
+    "bytes": 8169979,
+    "sha256": "60716132acd9716014de33eb5a996d6fd5aa41f359b7fd517bc523d4202fb62d"
+  }
+}
