@@ -23,6 +23,7 @@ for(const file of walk(path.join(base,'du/textbook')).filter(p=>p.endsWith('/con
 }
 // Two earlier published worksheets retain their own UI and storage format.
 for(const [unit,slug,id,title] of [[5,'haidi','s1u5l2','海底牧场游记'],[6,'shicheng','s1u6l2','我为狮城做贡献']]){
+ if(all.some(lesson=>lesson.id===id))continue; // New package supersedes legacy catalogue entry.
  const rel=`du/textbook/1hcl/unit${unit}/1hcl-unit${unit}-${slug}.html`,html=fs.readFileSync(path.join(base,rel),'utf8');
  const code=html.slice(html.indexOf('const VOC_A'),html.indexOf('/* ================= 存储'));
  const c=vm.createContext({});vm.runInContext(code,c);const get=name=>vm.runInContext(name,c),tasks=[];

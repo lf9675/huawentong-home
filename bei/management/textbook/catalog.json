@@ -52,13 +52,12 @@
   {
     "id": "s1u5l2",
     "title": "海底牧场游记",
-    "version": "haidi-collection-v1",
+    "version": "20261026-haidi-2",
     "grade": "1hcl",
     "gradeLabel": "中一高级华文",
     "unit": 5,
-    "readingPath": "/du/textbook/1hcl/unit5/1hcl-unit5-haidi.html",
-    "format": "旧版自主学习单",
-    "taskCount": 30
+    "readingPath": "/du/textbook/1hcl/unit5/haidi-muchang/reading.html",
+    "taskCount": 10
   },
   {
     "id": "s1u6l2",

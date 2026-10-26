@@ -1,0 +1,32 @@
+{
+  "filename": "海底牧场游记_完整教学配套.zip",
+  "bytes": 37768695,
+  "sha256": "93dbf489b748234667140da60a1422ab44c142c9745434d2cd317d5b212cb967",
+  "parts": [
+    {
+      "url": "downloads/package.part01.bin",
+      "bytes": 8388608,
+      "sha256": "2e86607f20be93d1be43eaf9cb78a7bace676421b7d2862439aa1c2c7a19d9bf"
+    },
+    {
+      "url": "downloads/package.part02.bin",
+      "bytes": 8388608,
+      "sha256": "ac9751d9da0e82e7168d7b4ca810645874adfbbb6eef75032c0bc03d7c0a211f"
+    },
+    {
+      "url": "downloads/package.part03.bin",
+      "bytes": 8388608,
+      "sha256": "a4ccef9736b2185bfb07a77b1dfbdca8d618bcfd0851647ba00991b3c751a579"
+    },
+    {
+      "url": "downloads/package.part04.bin",
+      "bytes": 8388608,
+      "sha256": "08e59c4634a46371fdd0b75d78270e75fcbee3ad8a7f9ffe6bcc597b201839e1"
+    },
+    {
+      "url": "downloads/package.part05.bin",
+      "bytes": 4214263,
+      "sha256": "50cdef66071cb9298c53c8058691d2d160c8622fe5dbfca1f2647335711b4cd2"
+    }
+  ]
+}
