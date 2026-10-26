@@ -1,0 +1,32 @@
+{
+  "offline": {
+    "name": "差不多先生-学生单文件版.html",
+    "parts": [
+      "offline.part01.bin",
+      "offline.part02.bin",
+      "offline.part03.bin",
+      "offline.part04.bin",
+      "offline.part05.bin",
+      "offline.part06.bin",
+      "offline.part07.bin"
+    ],
+    "bytes": 21459606,
+    "sha256": "402e7aa2524b9c4fdab687a37fc558e81ef64abe6516fb95dc363c1339d88c0c"
+  },
+  "package": {
+    "name": "差不多先生-完整教学配套.zip",
+    "parts": [
+      "package.part01.bin",
+      "package.part02.bin",
+      "package.part03.bin",
+      "package.part04.bin",
+      "package.part05.bin",
+      "package.part06.bin",
+      "package.part07.bin",
+      "package.part08.bin",
+      "package.part09.bin"
+    ],
+    "bytes": 25491543,
+    "sha256": "37e5437060bb9b62e4ed42bf1fc63fcb2d534afda1f7f3acf2147ff0878a1c0f"
+  }
+}
