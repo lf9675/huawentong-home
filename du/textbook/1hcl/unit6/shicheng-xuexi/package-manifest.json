@@ -308,18 +308,18 @@
     },
     {
       "path": "du/textbook/shared/lesson-v1/app.js",
-      "size": 29700,
-      "sha256": "597228b282539df3e634b3b6099ed2e0019042716b20ad666e0f31a5f5e1ad8e"
+      "size": 29699,
+      "sha256": "ba350caa146b92acf2dbbe9a090a374a14ee60bcf71813fe3653573962ceb4fa"
     },
     {
       "path": "du/textbook/shared/lesson-v1/catalog.js",
-      "size": 3622,
-      "sha256": "25e594f85ded8c0dbfb9a4741e46b9ab46c8490888dec556af38d61a5b45e344"
+      "size": 3621,
+      "sha256": "a682f0f13519cb57d31ce67f9f0e18f6ebc7e4a4e7eeeb624384567b66d8e386"
     },
     {
       "path": "du/textbook/shared/lesson-v1/identity.js",
-      "size": 957,
-      "sha256": "c0cea6671a3a5a8043c499e6401562a9968c55c3c580ac965b692c9c958c41cc"
+      "size": 956,
+      "sha256": "968c2bea60b9d25144bcbe861c180c7b8ae7a9ae3796c10af89aaed249f12012"
     },
     {
       "path": "du/textbook/shared/lesson-v1/songti.woff2",
@@ -328,8 +328,8 @@
     },
     {
       "path": "du/textbook/shared/lesson-v1/style.css",
-      "size": 9941,
-      "sha256": "e8b79cc82f34a7d74b15dcf20ec266abacb7d647a925cb13902fc852ca41f596"
+      "size": 9940,
+      "sha256": "3196502670fd7c22628174ee9f68e4eb8af2e4eae9ec315c0d5fe48e2a3681ce"
     },
     {
       "path": "du/textbook/shared/lesson-v1/wenkai.woff2",
@@ -338,8 +338,8 @@
     },
     {
       "path": "du/textbook/shared/lesson-v1/wordbook.js",
-      "size": 96176,
-      "sha256": "a9d83e74b36a17d2da4fb161bc581333a83536e050e669ce162bf22b0c3032fd"
+      "size": 96175,
+      "sha256": "5ce24c8408a15c7ea0ee8f2c07d91141c8fc07ccec8d94c51c430fb504ef8da6"
     }
   ]
 }
