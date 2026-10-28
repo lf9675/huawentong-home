@@ -1,0 +1,345 @@
+{
+  "version": "20261028-shicheng-v2",
+  "files": [
+    {
+      "path": "assets/huawentong-logo.png",
+      "size": 642241,
+      "sha256": "4853a20bcae0a4ace1d3ce35141e26e1c0eda4b312cd77edb1e94ef6260cd99c"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/app.js",
+      "size": 30029,
+      "sha256": "3cf792d75c3f8819304d68c6bafd0475bde4f0bcfada193993f5ec0f4eb3e6f9"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/comic1.webp",
+      "size": 2029238,
+      "sha256": "2211a7276a5700ab01a2c60f469ac14e374a23c8e773bfdb32941bc78a8ea227"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/comic2.webp",
+      "size": 1930448,
+      "sha256": "c50d5e03f43c003afdab9cbdbf2a8833165d653a09d691f7b334990341c0781e"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/comic3.webp",
+      "size": 2044628,
+      "sha256": "49b4006f3ac7fe8e4914e27957ef93286a9f2eee32b68ace533675e26fb3c1b3"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/comic4.webp",
+      "size": 2149138,
+      "sha256": "3eb4298c00acf5ffbb41226563fa167eceb826703ef2ae6839523e6d18627139"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/comic5.webp",
+      "size": 2047788,
+      "sha256": "f3db169ee43f71c3922c86080cef4892472853c034474212b2aafa385eeb01ee"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-01.png",
+      "size": 269907,
+      "sha256": "f2c555ce62260231a5370b257436eed7c1f893dd10c3983df49b119062a850d5"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-02.png",
+      "size": 276971,
+      "sha256": "5eee38af6224f2afae064d76ba0c52575e11b4abf369095145320065ac6a83b2"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-03.png",
+      "size": 337064,
+      "sha256": "be69d586acec2f1cf34d1ebdbebcfac76f91ea5d32d7317ad64ef6844d822a50"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-04.png",
+      "size": 351941,
+      "sha256": "804c36289c3882388a9398630ca3052280b9b852b2c0c88ec5d763a2f7c740b2"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-05.png",
+      "size": 276340,
+      "sha256": "e7aef6235e7c0be2f041264c95904099063a7b7a60b1a23e449373ff5734db7e"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-06.png",
+      "size": 278409,
+      "sha256": "57df98458f3cf740ed12a13ae3c365ea99c24fe9fe081e79282f122c11e5e269"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-07.png",
+      "size": 295791,
+      "sha256": "32c056f48e859503669bcb01002d7c7f29eb435fd25b2ce4026b75de12c4fd4c"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-08.png",
+      "size": 307759,
+      "sha256": "858f6a506ac9122d37e26ccaec7ae7a8657a2abc77bb6abcae35c4436cbc836b"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-09.png",
+      "size": 246344,
+      "sha256": "f28249f008c51671a6bf0125995e5aed7f8c8d76ac8459a455e7928ca30997f2"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-10.png",
+      "size": 234043,
+      "sha256": "5624cc5367c624bbc1ef4f13530b28899ea38f5661281cc08ea8694260c85f42"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-11.png",
+      "size": 265952,
+      "sha256": "0dfb1e60b328d7cb265c6fd70de53960aaac77861904452ff8ce5a634ed1bbd6"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-12.png",
+      "size": 247242,
+      "sha256": "5bb37542612a6ec2499350b69cef4e9681a2aff8184e9bd4e116c07159fd451f"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-13.png",
+      "size": 258367,
+      "sha256": "9a906473978b85d3a03b1ac8c7739e537bbe59cda1a35446d3aa3f788c73bed4"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-14.png",
+      "size": 283934,
+      "sha256": "9d750c9a057a0ae8bb39d009a35bc03806031d40f3c0550b47163ef2f97f79c2"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-15.png",
+      "size": 299370,
+      "sha256": "3f770e46727fd86f2af7515808dc342302e38116b5af72a869024d99b1d19e3d"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-16.png",
+      "size": 322022,
+      "sha256": "c8c0928977bb7a2205ae60c7a0cd8162a9ad4c261995bea77233a3fab3f217a9"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-17.png",
+      "size": 253865,
+      "sha256": "e54a62c86b19736d3697d3dc4e098ff2d5cdadc529227f589ede063c55b0ffd4"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-18.png",
+      "size": 249562,
+      "sha256": "abd5664a7beff81461d3a6f2d85a27115f1b01a87664737ca7a91967898fb465"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-19.png",
+      "size": 272922,
+      "sha256": "413577287c29ea981a7d2eefc4ddefdb58ed57275a342ee36b497aa9aa5e6adf"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-20.png",
+      "size": 277877,
+      "sha256": "ccad7cceb3c850ca4d65ceced5d43624fc93ecf0055f98b5fed22626d1ce9dc0"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-21.png",
+      "size": 287277,
+      "sha256": "59f2ecac55b5c5b01463f454adee2ca11cfd484582808efdae0dadc97c7e160d"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-22.png",
+      "size": 284721,
+      "sha256": "50952bfbb6f634ecfb427c0f748f43bfd808a59cfa86addf09e2e5a2bcce0bbe"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-23.png",
+      "size": 357517,
+      "sha256": "d62acebeb1162bc740b96a4dd2902ea2af196180048f67a775cbc52d203a3b7b"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-24.png",
+      "size": 315223,
+      "sha256": "af2c4585493766d7f38da38caf11c95037cce91c6e1b53927240490f51466f96"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-25.png",
+      "size": 298301,
+      "sha256": "e1eab95f26a1df3abd4dc6c3d5d1bcd3ebed9a9b10ad26e91c2ead7f26435158"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-26.png",
+      "size": 267534,
+      "sha256": "9de01feb6b1ddbbec7cc9db42c56c50a98efea10eb90e487c0a045f3de888bd2"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-27.png",
+      "size": 318369,
+      "sha256": "3f3a6f186d9e61e7e1965ab89c245fdb1aeaa311cb7bbe0bc2d7118a01d22c11"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-28.png",
+      "size": 323795,
+      "sha256": "1391874e90008afc67573b50ad3708fd1234f7c99192561025cb57f28688382b"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-29.png",
+      "size": 256680,
+      "sha256": "05958d3edb06e38e6cd990ddcb708362d80eb4358a025aee7837ca96a0b1b102"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-30.png",
+      "size": 271188,
+      "sha256": "4d21555c1bb3edb036704a0ef874a5633eabf09aa78766bceb4946d5cf3421ba"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-31.png",
+      "size": 342242,
+      "sha256": "16708aca4e97c9b329482ec8f373abf32417b051d1bc594ae511c100f540b950"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-32.png",
+      "size": 330380,
+      "sha256": "13fa736f82b74509bd1faf44546e4492e79e5fa10dfde4b6eedee0fa73c886da"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-33.png",
+      "size": 283481,
+      "sha256": "81982b0fc6f8947af49e74fc2b213c553f43e83a4f960249aeb1369edc17710d"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-34.png",
+      "size": 282715,
+      "sha256": "2fe6347880f696d91e351bb7c38cad848e31fec3166c91b24a21b826b6bdf89e"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-35.png",
+      "size": 238956,
+      "sha256": "c6b041b5cb4f62dc564a0e2b62ad214604abbc4c8afdfe0a92e49074aa46cd0e"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-36.png",
+      "size": 247312,
+      "sha256": "01cce1415ca818752b84363ae0db80f81a63d4d1ffe0e67ec004b468e2c012ad"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-37.png",
+      "size": 310888,
+      "sha256": "f3a6615172051ebdd2ee0ce8b98d1fdcd11a9a473c10dfbea46b804b99475091"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-38.png",
+      "size": 288769,
+      "sha256": "d9c6937c20cbadf7ba77f758eeeaf0d30304a500eb8a47edf0eb7889b58ab22c"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-39.png",
+      "size": 363487,
+      "sha256": "4f6d7415524c7e6ba5113ef4ec67375d7db5893c663210bb00864ea4932a8aba"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/assets/panel-40.png",
+      "size": 351609,
+      "sha256": "47bc6271cd00219c685ae615437617124915da7c517c07876453f1bd9b0a013a"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/comic.html",
+      "size": 6928,
+      "sha256": "bdaf16ab97e2efb1e80626d7f206b0229270aefe0813ff4e53a2e36286847bbb"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/content.js",
+      "size": 36948,
+      "sha256": "ecc56921da5f2deaa8cd68441933a67df5dd3cd8f4238bc51196e764a6539a31"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/index.html",
+      "size": 1255,
+      "sha256": "1c6f1b279c6862d44e0cd7033e84e96cacfdb3429dde2f9298dc746c0766c920"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/lesson.css",
+      "size": 5951,
+      "sha256": "850a73ce980409a0850092f807471ad7b38bbb6b161d8e690db34857cde31e51"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/lesson.json",
+      "size": 36558,
+      "sha256": "95c597f528f261a86f589148e87e5d0a2caaa3142851c38177d003cf56c7d7e9"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/lexicon.js",
+      "size": 2670,
+      "sha256": "6fe9db2237e0acf336eea5fd936ea6c19a6c4ea2942df2be3e03af88e9885ac3"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/pack.js",
+      "size": 5168,
+      "sha256": "7738122d22f9b582382d3e10c3434c9fbfbdcc6d4496974d29e570674703de96"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/reading.html",
+      "size": 1956,
+      "sha256": "1c87caf717915ea53fb6bb7ab5f72effbaa3fcffbedd493068dd2541fe83c914"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/slides-data.js",
+      "size": 11404,
+      "sha256": "e389c26b2cc56b27f234ebe73de3035f8da06b18d22b2b82211afc6ed78e52bd"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/slides.html",
+      "size": 2838,
+      "sha256": "d83774efbff34713d731448b29812aa474f9300d04ee696886f08b94dd32e2db"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/slides.json",
+      "size": 12403,
+      "sha256": "113f56a0886392c8265285456b340149e05cf1e3a19dce020789e31a63a15780"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/teacher-slides.pptx",
+      "size": 2083889,
+      "sha256": "2c1d24aee7c74b5199c65f0af84a8f7519aba5759d7dfbef6208582131413a7f"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/teacher.docx",
+      "size": 43271,
+      "sha256": "f61883550e12ac4d70117a053eaa16da7b8b195ca466454151903e90fd4645b0"
+    },
+    {
+      "path": "du/textbook/1hcl/unit6/shicheng-xuexi/teacher.html",
+      "size": 12535,
+      "sha256": "def421bfe6db35465ca1c55a601ea1ac153447f064ea938f9744668dd5dfa0d8"
+    },
+    {
+      "path": "du/textbook/shared/lesson-v1/app.js",
+      "size": 29700,
+      "sha256": "597228b282539df3e634b3b6099ed2e0019042716b20ad666e0f31a5f5e1ad8e"
+    },
+    {
+      "path": "du/textbook/shared/lesson-v1/catalog.js",
+      "size": 3622,
+      "sha256": "25e594f85ded8c0dbfb9a4741e46b9ab46c8490888dec556af38d61a5b45e344"
+    },
+    {
+      "path": "du/textbook/shared/lesson-v1/identity.js",
+      "size": 957,
+      "sha256": "c0cea6671a3a5a8043c499e6401562a9968c55c3c580ac965b692c9c958c41cc"
+    },
+    {
+      "path": "du/textbook/shared/lesson-v1/songti.woff2",
+      "size": 3382592,
+      "sha256": "c5c46d474c4ea0ec54a731f0e245ed1f810f4755a7d93700d3057ae700002f8d"
+    },
+    {
+      "path": "du/textbook/shared/lesson-v1/style.css",
+      "size": 9941,
+      "sha256": "e8b79cc82f34a7d74b15dcf20ec266abacb7d647a925cb13902fc852ca41f596"
+    },
+    {
+      "path": "du/textbook/shared/lesson-v1/wenkai.woff2",
+      "size": 1818720,
+      "sha256": "4d66f4496eead7d7d3bc008604671074e19d9e7f19c91b5554bc0d015c587209"
+    },
+    {
+      "path": "du/textbook/shared/lesson-v1/wordbook.js",
+      "size": 96176,
+      "sha256": "a9d83e74b36a17d2da4fb161bc581333a83536e050e669ce162bf22b0c3032fd"
+    }
+  ]
+}
